@@ -1,0 +1,302 @@
+# Lärrutan — Product Requirements Document
+
+**Status:** Working baseline, revised 2026-10-22 after review (see `docs/REVIEW.md`)
+**Product:** Free, Swedish-first educational pixel-art adventure
+**Target age:** 5–7
+**Platform:** Browser first; iPad touch is the priority device
+**Name:** Lärrutan (working title). Replaces "Kunskapslandet", which is already used by an older game. A quick web search found no game called Lärrutan; no formal trademark check has been done.
+
+## 1. Vision
+
+A welcoming adventure world where children learn to read Swedish through short, playful challenges, exploration, and collecting things for their character.
+
+A child aged 5–7 must be able to play **alone**: without reading, without an adult explaining, and without getting stuck. The game should work for a broad range of children, including those who benefit from predictable interfaces, explicit spoken instructions, low sensory load and extra support. It is an educational game, not a diagnostic or therapeutic product.
+
+### Principles
+
+1. Learning comes before engagement metrics.
+2. No advertising, purchases, loot boxes or paid advantages.
+3. No punishment for wrong answers, slow play or asking for help.
+4. Predictable controls and immediate, supportive feedback.
+5. Rewards recognise effort and progress; they can't be farmed by clicking.
+6. Content is age-appropriate and approved before release.
+7. Children's data stays on the device.
+8. **Playable first, systems later.** Build the smallest thing a child can play, test it, then grow it. No speculative infrastructure.
+
+## 2. Who does what
+
+| Who | Does |
+|---|---|
+| Claude | All code, **all graphics**, **all audio** (generated, or sourced under a suitable licence), content drafts, tools, tests and documentation. Shows the user screenshots or sample sheets for every visual change. |
+| User | Approves or rejects content, graphics and generated speech; suggests changes; tests builds on an iPad; runs playtests with a child. Does **not** create art or record audio. |
+| Child (5–7) | Playtests at checkpoints. The real test of whether something works. |
+
+No human voice recordings are planned; all speech is generated (§7). No teacher reviewer is available for now, so content quality relies on the rules in §5, Claude's drafting, the user's approval, and child playtests.
+
+## 3. Phases and scope
+
+### Phase 1 — Playable prototype
+
+Goal: a child can play real Swedish literacy challenges on an iPad and walk between them.
+
+Included:
+- Three challenge types (§5): find the letter, first letter of a word, word to picture.
+- Spoken instructions and words using the device's built-in Swedish voice (§7).
+- A small hub map where the character walks between challenge stations (tap/click to move, keyboard).
+- Immediate feedback, hints, retry, short rounds.
+- XP, levels and a few unlockable items within a play session, following the reward rules (§10).
+- Placeholder graphics only: simple shapes, colours and emoji. No art pipeline.
+
+Deliberately excluded from Phase 1:
+- Saving (progress resets on reload).
+- Real art, character layering, asset tools.
+- Generated audio files.
+- Settings screens, adaptation, mastery tracking.
+
+### Phase 2 — First real game
+
+- Generated, approved Swedish speech stored as audio files (§7).
+- Local saving and installation to the iPad home screen (§12).
+- Real graphics for the world, character and stations (§9).
+- Layered character with a wardrobe and the full rarity system (§9, §10).
+- More content, simple mastery tracking and gentle adaptation (§6).
+
+### Later — Roadmap
+
+Listed in `docs/CLAUDE_TASKS.md` under *Roadmap*: more activity types, letter sounds, pets, more regions, skin tones and character creation, parent area, sound effects and music, settings, asset workshop, release review and more.
+
+### Never
+
+Accounts, cloud sync, multiplayer, public profiles, chat, recording children's voices, advertising, purchases, subscriptions, loot boxes, paid content, runtime AI-generated learning content, combat, time-pressure rewards.
+
+## 4. Core loop
+
+1. The child sees their character in the world.
+2. They walk to a visible challenge station.
+3. They play a short round (about 20–90 seconds, never timed).
+4. Every answer gets immediate spoken and visual feedback; a wrong answer is followed by help.
+5. Completing the round gives XP and may unlock an item.
+6. The child returns to the world, explores, or dresses up their character.
+
+The child can always replay the instruction, retry, and leave a challenge.
+
+## 5. Curriculum and challenges
+
+### Learning focus
+
+Swedish literacy first, deliberately small:
+- Recognise Swedish letters, including Å, Ä and Ö.
+- Connect familiar words to their first letter.
+- Connect spoken words to pictures (vocabulary).
+- Later: letter sounds, initial-sound identification, rhyme, syllables (roadmap).
+
+Start with **upper-case letters**; lower case is a later difficulty step. Mathematics is a planned expansion, not part of Phase 1 or 2.
+
+### Challenge types (Phase 1)
+
+| Challenge | Child hears | Child does |
+|---|---|---|
+| **Hitta bokstaven** (find the letter) | "Var är A?" | Taps the letter among 2–4 choices |
+| **Första bokstaven** (first letter) | Sees a picture, hears "sol" | Taps the letter the word starts with |
+| **Ord och bild** (word to picture) | "Var är katten?" | Taps the matching picture among 2–4 |
+
+Each challenge is a small engine fed by content data. A round is about 5 questions. Add a new challenge type only when the existing ones work well with a child.
+
+### Content rules
+
+Content lives in typed data files, never inside UI components. Each record has a stable ID, the learning objective, the correct answer, allowed distractors, a picture reference, the spoken text (separate from the displayed text, so pronunciation can be fixed in data), difficulty, and approval status.
+
+Swedish-specific rules, validated by tests where possible:
+1. **First sound must match first letter in early content.** Store each word's first sound separately from its spelling. Early levels only use words where they match in the simple way. Words such as *sked* (sj-sound), *kök* (tj-sound), *get*, *hjärta*, *djur* and *ljus* (j-sound) are excluded until a sound-focused challenge handles them.
+2. **Vowel caution.** Short E and short Ä sound the same in most of Sweden, and O can sound like *u* (*ost*) or *å* (*olja*). Never ask children to tell these apart by sound alone.
+3. **Look-alike letters are a difficulty dial.** At easy levels, never use A/Å/Ä or O/Ö (or M/N/W and similar) as distractors for each other; at harder levels use them on purpose.
+4. **Picturable words only.** A word needs a picture a 5-year-old names correctly without help. If a child calls the picture something else in a playtest, the word or the picture changes.
+5. **Distractors must be unambiguously wrong** and distinct from the answer.
+6. **Variation without invention.** Rounds may shuffle and pick from approved content; they never invent words or answers. Rounds are seeded so a reported problem can be reproduced.
+
+The user approves the letter and word lists. Claude presents them as a readable table (word, picture, first letter, notes) before they are used.
+
+### Pictures
+
+Phase 1 uses emoji as placeholder pictures: no asset work, recognisable, available on every device (they look different on iPad and Windows). Phase 2 replaces them with project pictures in a consistent style.
+
+## 6. Feedback and learning
+
+Every answer gets immediate, supportive feedback, both spoken and visual (never text-only).
+
+After a wrong answer:
+- Say and show the right answer ("Det här är Ä").
+- Offer a hint, for example removing a wrong option.
+- Allow retry without penalty.
+- Don't loop the same question endlessly with shuffled positions.
+
+Attempts, hints and successes are tracked separately from rewards.
+
+**Phase 2:** simple mastery tracking per letter and word using Leitner boxes (correct moves an item up a box, wrong moves it down, higher boxes come back less often), and gentle, reversible difficulty adaptation that changes the challenge, never the interface, and never labels the child.
+
+## 7. Voice and audio
+
+Spoken instructions are essential because most players can't read. No human recordings are planned; all speech is generated.
+
+### Stage 1 — Prototype: the device's built-in voice (Phase 1)
+
+Phase 1 uses the browser's built-in speech (Web Speech API) with a Swedish voice. No setup, good enough to playtest. Quality varies by device; iPad and Microsoft Edge usually have decent Swedish voices. If no Swedish voice is available, the game shows a visible warning instead of speaking another language.
+
+### Stage 2 — Generated audio files (Phase 2)
+
+A script generates every needed clip from the content data using a cloud text-to-speech (TTS) service, once, at build time. The files are stored in the project; the game never calls a speech service while a child plays.
+
+- **Recommended: Microsoft Azure Speech.** Several Swedish neural voices, a documented Swedish phonetic alphabet for fixing pronunciations, and a free tier of 0.5 million characters per month. The whole game needs a few tens of thousands of characters, so the cost is effectively zero.
+- **Compared in the same test:** Google Cloud Text-to-Speech (Swedish Chirp 3 HD voices; its pronunciation-override feature doesn't list Swedish) and Piper (free, offline, no account; quality and the Swedish voice's licence to be checked).
+- The user creates the provider account and puts the key in a local `.env` file that is never committed. Claude never types or handles the key.
+- Before choosing, Claude generates the same sample set with each candidate (letter names A–Ö, tricky words such as *kök*, *sked*, *hjärta*, a few instructions) and the user picks by ear.
+
+### Approval
+
+Every generated clip has an approval status. The user listens on a simple review page and approves or rejects. Rejected clips are regenerated with a changed spelling, a phonetic override or another voice. Release builds only contain approved clips, and a check flags missing or unapproved required audio.
+
+### Letter names, words and letter sounds
+
+- **Letter names** ("A", or "K" said as "kå") and **whole words** ("kök") are reliable with good TTS voices.
+- **Isolated letter sounds** ("sss", "mmm", a short "k") are unreliable in every TTS engine. Phases 1 and 2 avoid them. The roadmap's letter-sound challenge starts only after a dedicated test; letters whose sound can't be generated acceptably are taught as "S som i sol" instead.
+
+### Sound effects and music
+
+Roadmap. Sound effects can be generated by code; music from CC0 sources or simple generated loops, quiet or off by default. Speech, effects and music each get their own volume setting.
+
+## 8. World and controls
+
+A scrolling top-down world with a following camera that never shows space outside the map.
+
+- **Tap/click to move** is the main control. Tapping a spot walks there; tapping a station walks there and opens it.
+- **Keyboard:** arrow keys and WASD; Enter/Space opens a nearby station.
+- Virtual joystick: roadmap, optional, off by default.
+- Movement is forgiving; reaching a challenge never needs precise navigation.
+- Map layout lives in data (text grids), separate from movement code.
+
+Phase 1 has one small hub with the three stations and a few things to look at. Further regions appear as visible locked places once there is a second region worth building.
+
+Orientation: landscape first; in portrait, show a picture hint to rotate the iPad.
+
+## 9. Graphics
+
+### Ownership
+
+Claude produces or sources **all** graphics and integrates them. Sources:
+1. **Code-generated pixel art** from reproducible scripts (sprites as text grids, one fixed palette, recolour variants).
+2. **Free assets with a clear licence**, preferably CC0 (public domain), such as Kenney's packs. Every external asset is logged with source and licence in `docs/ASSET_LICENSES.md`.
+
+Claude picks whatever mix looks best. For every visual change Claude shows the user screenshots or sample sheets; the user approves or asks for changes.
+
+### Phase 1: placeholders
+
+Simple shapes, flat colours and emoji only. No art pipeline and no asset tooling.
+
+### Phase 2: art direction
+
+Before real art there is one comparison of candidate styles (for example 16×16 vs 32×32 tiles, own vs CC0 environment), shown side by side at iPad and desktop size. The user picks; the decision goes in `docs/ART_DIRECTION.md`. Claude's starting recommendation is 16×16 tiles with a chibi character around 16×32, but the comparison decides.
+
+Pixel art is displayed at integer scale. Letters for learning use a clear literacy font (Andika, SIL Open Font License), not a pixel font.
+
+### Character and items (Phase 2)
+
+- One base character with a single default skin tone for now. Skin tones and character creation are on the roadmap.
+- Items are layered on the base character. Each slot holds one item; equipping another item in the same slot replaces it. Start with a few slots (for example headwear, top, bottoms, back item, held item) and add more when needed.
+- Slot and drawing order are separate concepts: a cape is drawn behind the body, a hat over the hair.
+- Body-covering clothes are generated from body masks so they fit every direction and walk frame automatically. Attached items (hats, backpacks) use per-frame anchor points.
+- Three directions are drawn (down, up, side); the other side is mirrored.
+- One character renderer is used everywhere the character appears: world, wardrobe, reward pop-ups.
+- A new item is added through art plus a data entry, without renderer code changes.
+
+## 10. Rewards and progression
+
+Three separate things:
+1. **Answer feedback:** immediate, on every answer.
+2. **Learning progress:** what the child knows (Phase 2).
+3. **Rewards:** XP, levels and items.
+
+### XP rules
+
+- No XP for clicks, single answers, or retrying an answer.
+- XP is given for **completed rounds**.
+- The **first completion** of a challenge level gives full XP. **Replays** give reduced XP (starting point: about a quarter), so practice is still worth something but the first success counts most.
+- Hints and wrong answers along the way don't reduce the reward. "First completion" means finishing the round, not finishing without mistakes.
+- Milestones and unlocks are granted **exactly once**, even if events repeat or the page reloads.
+- No daily-streak pressure: any "days played" goal counts total days, never consecutive days.
+- All numbers live in one config file and are tuned after playtests.
+
+XP is shown as a filling bar and levels as a visible celebration, not as numbers a child must read.
+
+### Rarity: bragging rights
+
+Five tiers, cosmetic only, shown as **1–5 stars plus colour** (never colour alone):
+
+| Tier | Swedish | Typical time to earn |
+|---|---|---|
+| Common | Vanlig | First play session |
+| Uncommon | Ovanlig | First few sessions |
+| Rare | Sällsynt | About a week of regular play |
+| Epic | Episk | Several weeks |
+| Legendary | Legendarisk | Long-term goals, e.g. every letter mastered, every station finished at its hardest level, every secret found |
+
+Golden hats and dragon pets are **bragging items** and must never appear in the first minutes. High tiers are earned through effort over time and real progress. They are never random, never bought, and never require error-free play: a child who needs more hints gets there later, not never.
+
+Locked items are visible with their stars and a friendly spoken explanation of how to earn them. No countdowns, scarcity pressure or manipulative prompts.
+
+Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the real catalogue.
+
+## 11. Accessibility
+
+Phase 1:
+- No timers and no speed requirements.
+- Every instruction can be replayed with a big speaker button that is always in the same place.
+- Large touch targets (at least about 64 px on iPad) with generous spacing.
+- Stable layout: essential buttons never move.
+- No reliance on colour alone.
+- Navigation works without reading.
+- Keyboard support.
+- A clear exit from every challenge.
+
+Later: reduced motion (respecting `prefers-reduced-motion`), separate volume settings, an optional gentle re-prompt when the child is idle, a high-contrast option.
+
+## 12. Saving and privacy (Phase 2)
+
+- Local saving (IndexedDB), versioned from the first version, with migration tests and safe recovery from broken or old saves.
+- Saved data: XP, level, completed challenge levels, granted milestones, unlocked and equipped items, learning progress, settings.
+- One local profile, but the data model must not assume there will only ever be one.
+- **iPad storage risk:** Safari may delete a website's stored data after 7 days of browser use without visiting it, unless the site is added to the Home Screen. The game is therefore installable as a PWA (home-screen icon, offline, full screen) and requests persistent storage where supported. This needs HTTPS hosting. Save export/import is on the roadmap.
+- No accounts, no analytics, no personal information. Never ask for the child's name.
+- Before any public release: review child privacy, dependency licences, asset and font licences, and the TTS provider's terms for distributing generated audio.
+
+## 13. Technical architecture
+
+- **TypeScript + React + Vite** for the app shell, challenges and menus. The DOM handles big buttons, keyboard focus, accessibility and fonts well.
+- **Phaser** for the world map, movement and camera, from the hub task onward.
+- **Vitest** for logic tests; **Playwright** for a few browser tests, run in WebKit as well as Chromium (WebKit is the closest stand-in for iPad Safari).
+- No backend.
+- Folders grow with the work. Start with only what Phase 1 needs (for example `app`, `challenges`, `content`, `speech`, `world`, `rewards`) and add `persistence`, `character`, `assets` and so on when their phase starts. No generic engine, no speculative abstraction.
+- Image and audio scripts use pure-JavaScript libraries (no native modules) to avoid Windows build problems.
+- iPad: disable double-tap zoom, pinch zoom, text selection and long-press menus inside the game. Start audio on the first tap. Verify on a real iPad that speech plays with the silent switch on.
+
+## 14. Quality and definition of done
+
+A task is done when:
+- It works in the browser, verified by Claude with screenshots at desktop and iPad sizes, and the user has a short list of what to check on the iPad.
+- Logic with real consequences has focused tests: content validation, round generation, reward rules (no farming, exactly-once unlocks), and later saving and migration.
+- Type check, lint and build pass.
+- Docs are updated when a decision changes.
+- There are no unrelated rewrites and no unrequested dependencies.
+
+Tests are proportionate: test the rules that would hurt a child if they were wrong, and don't build test infrastructure for its own sake.
+
+## 15. Known risks
+
+| Risk | Mitigation |
+|---|---|
+| Built-in browser voices differ between devices | Prototype only; Phase 2 moves to generated, approved files |
+| TTS can't produce isolated letter sounds | Avoided in Phases 1–2; "S som i sol" fallback |
+| The silent switch mutes audio on iPad | Test on the device; show a picture hint to turn sound on |
+| Safari deletes data for unused websites | PWA install, persistent storage request, later export/import |
+| Emoji look different per device; new emoji may be missing | Placeholders only, checked on the user's iPad; replaced in Phase 2 |
+| No teacher reviews content | Strict content rules, user approval, child playtests |
+| Generated art looks amateurish | Style comparison before committing; CC0 packs as fallback |

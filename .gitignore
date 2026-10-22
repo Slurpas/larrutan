@@ -1,0 +1,21 @@
+node_modules/
+dist/
+*.local
+
+# Secrets (TTS keys etc.) never go in git
+.env
+.env.*
+!.env.example
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

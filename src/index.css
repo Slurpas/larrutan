@@ -1,0 +1,56 @@
+:root {
+  --color-sky-top: #9fd8ff;
+  --color-sky-bottom: #dff3ff;
+  --color-grass: #7cc56f;
+  --color-grass-edge: #5aa451;
+  --color-ink: #2b4a6b;
+  --color-white: #ffffff;
+  --color-button: #ffc93c;
+  --color-button-edge: #e09b00;
+  --color-button-ink: #4a2f00;
+  --color-focus: #1f6feb;
+
+  --font-rounded: ui-rounded, 'SF Pro Rounded', 'Segoe UI', system-ui, sans-serif;
+
+  color-scheme: light;
+  font-family: var(--font-rounded);
+  color: var(--color-ink);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  /* Stops double-tap zoom on iPad while keeping taps fast. */
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--color-sky-top);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  height: 100%;
+  height: 100dvh;
+}
+
+button {
+  font: inherit;
+}

@@ -28,6 +28,29 @@ The second command downloads the browsers used by the browser tests (about 380 M
 | `npm run lint` | ESLint |
 | `npm test` | Unit tests (Vitest) |
 | `npm run test:e2e` | Browser tests (Playwright, desktop Chromium + iPad WebKit) |
+| `npm run speech` | Generate missing speech clips (see below) |
+
+## Generating speech
+
+Everything the game says plays from MP3 files in `src/speech/audio/sv/`, generated from the content with the free, offline Piper text-to-speech engine. The files are committed, so this is only needed after changing letters, words or phrases. A unit test fails if any sentence is missing its file.
+
+One-time setup (Python 3 and ffmpeg on PATH needed; everything installs into `.tools/`, which git ignores):
+
+```bash
+python -m venv .tools/piper-venv
+.tools/piper-venv/Scripts/python -m pip install piper-tts==1.8.0
+.tools/piper-venv/Scripts/python -m piper.download_voices sv_SE-nst-medium --data-dir .tools/piper-voices
+```
+
+(On macOS/Linux use `.tools/piper-venv/bin/python`.)
+
+Then:
+
+```bash
+npm run speech
+```
+
+It only generates missing clips and deletes unused ones; `npm run speech -- --all` regenerates everything. Open the game with `?debug=voices` to see what plays and why.
 
 ## Testing on an iPad
 

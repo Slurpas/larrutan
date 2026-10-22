@@ -9,6 +9,7 @@ import type { ChoiceQuestion, ChoiceRound } from './choiceQuestion'
 import { RoundComplete } from './RoundComplete'
 import { RoundProgress } from './RoundProgress'
 import { advance, choose, currentQuestion, isAnswerRevealed, startRound, type RoundState } from './roundState'
+import type { ChallengeVoice } from './voices'
 import styles from './ChoiceChallenge.module.css'
 
 /** The green "correct" card stays at least this long, even when there is no voice to wait for. */
@@ -16,14 +17,8 @@ const CORRECT_PAUSE_MS = 900
 
 export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
   round: ChoiceRound<Q>
-  /** Said when a question starts and when the speaker is pressed: "Var är A?" */
-  ask: (question: Q) => string
-  /** Said once only the answer is left: "Här är A!" */
-  reveal: (question: Q) => string
-  /** Names a wrong choice the child tapped: "Det där är S." */
-  nameChoice: (choice: string) => string
-  /** Said on the end-of-round screen. */
-  complete: string
+  /** What the challenge says (src/challenges/voices.ts). */
+  voice: ChallengeVoice<Q>
   choiceKind: 'letter' | 'picture'
   renderChoice: (choice: string) => ReactNode
   /** Accessible name of a choice button (also used by tests). */
@@ -42,10 +37,7 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
  */
 export function ChoiceChallenge<Q extends ChoiceQuestion>({
   round,
-  ask,
-  reveal,
-  nameChoice,
-  complete,
+  voice,
   choiceKind,
   renderChoice,
   choiceLabel,
@@ -60,12 +52,12 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
 
   const question = currentQuestion(state)
   const revealed = isAnswerRevealed(state)
-  const questionText = question ? ask(question) : null
+  const questionText = question ? voice.ask(question) : null
 
   function promptFor(s: RoundState<Q>): string {
     const q = currentQuestion(s)
     if (!q) return ''
-    return isAnswerRevealed(s) ? reveal(q) : ask(q)
+    return isAnswerRevealed(s) ? voice.reveal(q) : voice.ask(q)
   }
 
   // Ask each new question out loud.
@@ -95,7 +87,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
     setState(next)
     if (next.phase === 'asking') {
       // Wrong: name what they tapped, then ask again (or point at the answer once it is the only one left).
-      void speak(`${nameChoice(choice)} ${promptFor(next)}`)
+      void speak([voice.nameChoice(choice), promptFor(next)])
     }
   }
 
@@ -127,7 +119,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   }, [])
 
   if (state.phase === 'finished' || !question) {
-    return <RoundComplete message={complete} onPlayAgain={onPlayAgain} onExit={handleExit} />
+    return <RoundComplete message={voice.complete} onPlayAgain={onPlayAgain} onExit={handleExit} />
   }
 
   return (

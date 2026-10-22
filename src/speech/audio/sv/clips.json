@@ -1,0 +1,710 @@
+{
+  "engine": "Piper (piper-tts 1.8.0)",
+  "voice": "sv_SE-nst-medium",
+  "clips": [
+    {
+      "text": "Tryck på en skylt för att spela!",
+      "file": "tryck-pa-en-skylt-for-att-spela-0edcd726.mp3"
+    },
+    {
+      "text": "Rätt!",
+      "file": "ratt-b5c17516.mp3"
+    },
+    {
+      "text": "Bra!",
+      "file": "bra-1e48f2c7.mp3"
+    },
+    {
+      "text": "Snyggt!",
+      "file": "snyggt-804a1186.mp3"
+    },
+    {
+      "text": "Ja, precis!",
+      "file": "ja-precis-53156bd1.mp3"
+    },
+    {
+      "text": "Toppen!",
+      "file": "toppen-06fa2bf2.mp3"
+    },
+    {
+      "text": "Bra jobbat! Du hittade alla bokstäverna!",
+      "file": "bra-jobbat-du-hittade-alla-bokstaverna-a7d3dced.mp3"
+    },
+    {
+      "text": "Bra jobbat! Du hittade alla första bokstäverna!",
+      "file": "bra-jobbat-du-hittade-alla-forsta-boksta-7fe01593.mp3"
+    },
+    {
+      "text": "Bra jobbat! Du hittade alla bilderna!",
+      "file": "bra-jobbat-du-hittade-alla-bilderna-1b56c97b.mp3"
+    },
+    {
+      "text": "Var är A?",
+      "file": "var-ar-a-ed42207c.mp3"
+    },
+    {
+      "text": "Här är A!",
+      "file": "har-ar-a-318f8a61.mp3"
+    },
+    {
+      "text": "Det där är A.",
+      "file": "det-dar-ar-a-730d5fe5.mp3"
+    },
+    {
+      "text": "Var är I?",
+      "file": "var-ar-i-ed2e98c4.mp3"
+    },
+    {
+      "text": "Här är I!",
+      "file": "har-ar-i-017bb719.mp3"
+    },
+    {
+      "text": "Det där är I.",
+      "file": "det-dar-ar-i-7320e79d.mp3"
+    },
+    {
+      "text": "Var är L?",
+      "file": "var-ar-l-6d361e09.mp3"
+    },
+    {
+      "text": "Här är L!",
+      "file": "har-ar-l-8d7444b8.mp3"
+    },
+    {
+      "text": "Det där är L.",
+      "file": "det-dar-ar-l-11289c1c.mp3"
+    },
+    {
+      "text": "Var är M?",
+      "file": "var-ar-m-6d385ca0.mp3"
+    },
+    {
+      "text": "Här är M!",
+      "file": "har-ar-m-297168b5.mp3"
+    },
+    {
+      "text": "Det där är M.",
+      "file": "det-dar-ar-m-f32aab79.mp3"
+    },
+    {
+      "text": "Var är O?",
+      "file": "var-ar-o-ed3da34e.mp3"
+    },
+    {
+      "text": "Här är O!",
+      "file": "har-ar-o-1d6cd8a3.mp3"
+    },
+    {
+      "text": "Det där är O.",
+      "file": "det-dar-ar-o-f3262e4b.mp3"
+    },
+    {
+      "text": "Var är S?",
+      "file": "var-ar-s-ed6f401a.mp3"
+    },
+    {
+      "text": "Här är S!",
+      "file": "har-ar-s-8562eeff.mp3"
+    },
+    {
+      "text": "Det där är S.",
+      "file": "det-dar-ar-s-92e072a7.mp3"
+    },
+    {
+      "text": "Var är Å?",
+      "file": "var-ar-a-6e8918d8.mp3"
+    },
+    {
+      "text": "Här är Å!",
+      "file": "har-ar-a-9ac2d53d.mp3"
+    },
+    {
+      "text": "Det där är Å.",
+      "file": "det-dar-ar-a-11da21a1.mp3"
+    },
+    {
+      "text": "Var är Ä?",
+      "file": "var-ar-a-6e86da41.mp3"
+    },
+    {
+      "text": "Här är Ä!",
+      "file": "har-ar-a-7ec4e7c0.mp3"
+    },
+    {
+      "text": "Det där är Ä.",
+      "file": "det-dar-ar-a-efd7ad84.mp3"
+    },
+    {
+      "text": "Var är Ö?",
+      "file": "var-ar-o-eeb3305f.mp3"
+    },
+    {
+      "text": "Här är Ö!",
+      "file": "har-ar-o-1298b11e.mp3"
+    },
+    {
+      "text": "Det där är Ö.",
+      "file": "det-dar-ar-o-efaa8de6.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar apa på?",
+      "file": "vilken-bokstav-borjar-apa-pa-bf710721.mp3"
+    },
+    {
+      "text": "apa börjar på A!",
+      "file": "apa-borjar-pa-a-68748f05.mp3"
+    },
+    {
+      "text": "Var är apan?",
+      "file": "var-ar-apan-ef7f6c4f.mp3"
+    },
+    {
+      "text": "Här är apan!",
+      "file": "har-ar-apan-1717c7a8.mp3"
+    },
+    {
+      "text": "Det där är en apa.",
+      "file": "det-dar-ar-en-apa-b01ff7a5.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar anka på?",
+      "file": "vilken-bokstav-borjar-anka-pa-9d5dccf0.mp3"
+    },
+    {
+      "text": "anka börjar på A!",
+      "file": "anka-borjar-pa-a-02c582da.mp3"
+    },
+    {
+      "text": "Var är ankan?",
+      "file": "var-ar-ankan-3281913c.mp3"
+    },
+    {
+      "text": "Här är ankan!",
+      "file": "har-ar-ankan-402a55d5.mp3"
+    },
+    {
+      "text": "Det där är en anka.",
+      "file": "det-dar-ar-en-anka-0d795c12.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar ananas på?",
+      "file": "vilken-bokstav-borjar-ananas-pa-9f9256af.mp3"
+    },
+    {
+      "text": "ananas börjar på A!",
+      "file": "ananas-borjar-pa-a-bde9ff57.mp3"
+    },
+    {
+      "text": "Var är ananasen?",
+      "file": "var-ar-ananasen-90c694f0.mp3"
+    },
+    {
+      "text": "Här är ananasen!",
+      "file": "har-ar-ananasen-fac5542b.mp3"
+    },
+    {
+      "text": "Det där är en ananas.",
+      "file": "det-dar-ar-en-ananas-31d79a7f.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar apelsin på?",
+      "file": "vilken-bokstav-borjar-apelsin-pa-6b728ccb.mp3"
+    },
+    {
+      "text": "apelsin börjar på A!",
+      "file": "apelsin-borjar-pa-a-7bff705b.mp3"
+    },
+    {
+      "text": "Var är apelsinen?",
+      "file": "var-ar-apelsinen-9a175d82.mp3"
+    },
+    {
+      "text": "Här är apelsinen!",
+      "file": "har-ar-apelsinen-0bb7d22f.mp3"
+    },
+    {
+      "text": "Det där är en apelsin.",
+      "file": "det-dar-ar-en-apelsin-eb013e1b.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar igelkott på?",
+      "file": "vilken-bokstav-borjar-igelkott-pa-4036485c.mp3"
+    },
+    {
+      "text": "igelkott börjar på I!",
+      "file": "igelkott-borjar-pa-i-649fd002.mp3"
+    },
+    {
+      "text": "Var är igelkotten?",
+      "file": "var-ar-igelkotten-f69a581d.mp3"
+    },
+    {
+      "text": "Här är igelkotten!",
+      "file": "har-ar-igelkotten-52555ba6.mp3"
+    },
+    {
+      "text": "Det där är en igelkott.",
+      "file": "det-dar-ar-en-igelkott-540085de.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar isbit på?",
+      "file": "vilken-bokstav-borjar-isbit-pa-a3efcc66.mp3"
+    },
+    {
+      "text": "isbit börjar på I!",
+      "file": "isbit-borjar-pa-i-5e5ab248.mp3"
+    },
+    {
+      "text": "Var är isbiten?",
+      "file": "var-ar-isbiten-2649d4e9.mp3"
+    },
+    {
+      "text": "Här är isbiten!",
+      "file": "har-ar-isbiten-eda4efa4.mp3"
+    },
+    {
+      "text": "Det där är en isbit.",
+      "file": "det-dar-ar-en-isbit-2b562c44.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar lejon på?",
+      "file": "vilken-bokstav-borjar-lejon-pa-4959ccc3.mp3"
+    },
+    {
+      "text": "lejon börjar på L!",
+      "file": "lejon-borjar-pa-l-cc8ed60e.mp3"
+    },
+    {
+      "text": "Var är lejonet?",
+      "file": "var-ar-lejonet-a5f85d40.mp3"
+    },
+    {
+      "text": "Här är lejonet!",
+      "file": "har-ar-lejonet-0dfa6709.mp3"
+    },
+    {
+      "text": "Det där är ett lejon.",
+      "file": "det-dar-ar-ett-lejon-c20703f7.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar lastbil på?",
+      "file": "vilken-bokstav-borjar-lastbil-pa-cd71640a.mp3"
+    },
+    {
+      "text": "lastbil börjar på L!",
+      "file": "lastbil-borjar-pa-l-52707845.mp3"
+    },
+    {
+      "text": "Var är lastbilen?",
+      "file": "var-ar-lastbilen-9d5b9f19.mp3"
+    },
+    {
+      "text": "Här är lastbilen!",
+      "file": "har-ar-lastbilen-489e5ee0.mp3"
+    },
+    {
+      "text": "Det där är en lastbil.",
+      "file": "det-dar-ar-en-lastbil-fd0df6c8.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar lås på?",
+      "file": "vilken-bokstav-borjar-las-pa-45dde3e9.mp3"
+    },
+    {
+      "text": "lås börjar på L!",
+      "file": "las-borjar-pa-l-0518bc10.mp3"
+    },
+    {
+      "text": "Var är låset?",
+      "file": "var-ar-laset-b3ec6152.mp3"
+    },
+    {
+      "text": "Här är låset!",
+      "file": "har-ar-laset-d6d2b597.mp3"
+    },
+    {
+      "text": "Det där är ett lås.",
+      "file": "det-dar-ar-ett-las-be04b2e1.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar löv på?",
+      "file": "vilken-bokstav-borjar-lov-pa-86a2938d.mp3"
+    },
+    {
+      "text": "löv börjar på L!",
+      "file": "lov-borjar-pa-l-115a0fe8.mp3"
+    },
+    {
+      "text": "Var är lövet?",
+      "file": "var-ar-lovet-ff39ca92.mp3"
+    },
+    {
+      "text": "Här är lövet!",
+      "file": "har-ar-lovet-e425362b.mp3"
+    },
+    {
+      "text": "Det där är ett löv.",
+      "file": "det-dar-ar-ett-lov-33b6443d.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar mus på?",
+      "file": "vilken-bokstav-borjar-mus-pa-82bce8ee.mp3"
+    },
+    {
+      "text": "mus börjar på M!",
+      "file": "mus-borjar-pa-m-f3f3a598.mp3"
+    },
+    {
+      "text": "Var är musen?",
+      "file": "var-ar-musen-9e7a4d35.mp3"
+    },
+    {
+      "text": "Här är musen!",
+      "file": "har-ar-musen-df4250f4.mp3"
+    },
+    {
+      "text": "Det där är en mus.",
+      "file": "det-dar-ar-en-mus-c2392e0c.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar måne på?",
+      "file": "vilken-bokstav-borjar-mane-pa-58bcf26c.mp3"
+    },
+    {
+      "text": "måne börjar på M!",
+      "file": "mane-borjar-pa-m-1bfcff76.mp3"
+    },
+    {
+      "text": "Var är månen?",
+      "file": "var-ar-manen-fc5e2c74.mp3"
+    },
+    {
+      "text": "Här är månen!",
+      "file": "har-ar-manen-a5db8dd1.mp3"
+    },
+    {
+      "text": "Det där är en måne.",
+      "file": "det-dar-ar-en-mane-ced8412e.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar morot på?",
+      "file": "vilken-bokstav-borjar-morot-pa-42f33e3c.mp3"
+    },
+    {
+      "text": "morot börjar på M!",
+      "file": "morot-borjar-pa-m-db2bfd6a.mp3"
+    },
+    {
+      "text": "Var är moroten?",
+      "file": "var-ar-moroten-9552e727.mp3"
+    },
+    {
+      "text": "Här är moroten!",
+      "file": "har-ar-moroten-c68a704e.mp3"
+    },
+    {
+      "text": "Det där är en morot.",
+      "file": "det-dar-ar-en-morot-d446623e.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar myra på?",
+      "file": "vilken-bokstav-borjar-myra-pa-1e43fdc8.mp3"
+    },
+    {
+      "text": "myra börjar på M!",
+      "file": "myra-borjar-pa-m-5bf6ead2.mp3"
+    },
+    {
+      "text": "Var är myran?",
+      "file": "var-ar-myran-2e5aba48.mp3"
+    },
+    {
+      "text": "Här är myran!",
+      "file": "har-ar-myran-e266ac1d.mp3"
+    },
+    {
+      "text": "Det där är en myra.",
+      "file": "det-dar-ar-en-myra-7b37151a.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar orm på?",
+      "file": "vilken-bokstav-borjar-orm-pa-5a49e105.mp3"
+    },
+    {
+      "text": "orm börjar på O!",
+      "file": "orm-borjar-pa-o-07ce590b.mp3"
+    },
+    {
+      "text": "Var är ormen?",
+      "file": "var-ar-ormen-ddd9320c.mp3"
+    },
+    {
+      "text": "Här är ormen!",
+      "file": "har-ar-ormen-3fbd4bb5.mp3"
+    },
+    {
+      "text": "Det där är en orm.",
+      "file": "det-dar-ar-en-orm-445bfa79.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar ost på?",
+      "file": "vilken-bokstav-borjar-ost-pa-d8188d97.mp3"
+    },
+    {
+      "text": "ost börjar på O!",
+      "file": "ost-borjar-pa-o-11d11cad.mp3"
+    },
+    {
+      "text": "Var är osten?",
+      "file": "var-ar-osten-6925ab4a.mp3"
+    },
+    {
+      "text": "Här är osten!",
+      "file": "har-ar-osten-4aafb32b.mp3"
+    },
+    {
+      "text": "Det där är en ost.",
+      "file": "det-dar-ar-en-ost-30a21d57.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar sol på?",
+      "file": "vilken-bokstav-borjar-sol-pa-e0562aa7.mp3"
+    },
+    {
+      "text": "sol börjar på S!",
+      "file": "sol-borjar-pa-s-c29f02e1.mp3"
+    },
+    {
+      "text": "Var är solen?",
+      "file": "var-ar-solen-d7f33c7a.mp3"
+    },
+    {
+      "text": "Här är solen!",
+      "file": "har-ar-solen-4701b31b.mp3"
+    },
+    {
+      "text": "Det där är en sol.",
+      "file": "det-dar-ar-en-sol-bccb59d7.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar sax på?",
+      "file": "vilken-bokstav-borjar-sax-pa-799258c9.mp3"
+    },
+    {
+      "text": "sax börjar på S!",
+      "file": "sax-borjar-pa-s-2fedf7df.mp3"
+    },
+    {
+      "text": "Var är saxen?",
+      "file": "var-ar-saxen-85f54c6c.mp3"
+    },
+    {
+      "text": "Här är saxen!",
+      "file": "har-ar-saxen-f5319f51.mp3"
+    },
+    {
+      "text": "Det där är en sax.",
+      "file": "det-dar-ar-en-sax-e8377bad.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar snigel på?",
+      "file": "vilken-bokstav-borjar-snigel-pa-55638817.mp3"
+    },
+    {
+      "text": "snigel börjar på S!",
+      "file": "snigel-borjar-pa-s-c8dfc0b9.mp3"
+    },
+    {
+      "text": "Var är snigeln?",
+      "file": "var-ar-snigeln-2baa00af.mp3"
+    },
+    {
+      "text": "Här är snigeln!",
+      "file": "har-ar-snigeln-0db15b86.mp3"
+    },
+    {
+      "text": "Det där är en snigel.",
+      "file": "det-dar-ar-en-snigel-80a843a7.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar sko på?",
+      "file": "vilken-bokstav-borjar-sko-pa-ada80e6e.mp3"
+    },
+    {
+      "text": "sko börjar på S!",
+      "file": "sko-borjar-pa-s-fa1f7bc2.mp3"
+    },
+    {
+      "text": "Var är skon?",
+      "file": "var-ar-skon-314090f8.mp3"
+    },
+    {
+      "text": "Här är skon!",
+      "file": "har-ar-skon-019510cb.mp3"
+    },
+    {
+      "text": "Det där är en sko.",
+      "file": "det-dar-ar-en-sko-2630ce7c.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar åtta på?",
+      "file": "vilken-bokstav-borjar-atta-pa-ed43c5c1.mp3"
+    },
+    {
+      "text": "åtta börjar på Å!",
+      "file": "atta-borjar-pa-a-2b129ce5.mp3"
+    },
+    {
+      "text": "Var är åttan?",
+      "file": "var-ar-attan-9bbd72a1.mp3"
+    },
+    {
+      "text": "Här är åttan!",
+      "file": "har-ar-attan-58677678.mp3"
+    },
+    {
+      "text": "Det där är en åtta.",
+      "file": "det-dar-ar-en-atta-e8563175.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar åska på?",
+      "file": "vilken-bokstav-borjar-aska-pa-e95dcf4f.mp3"
+    },
+    {
+      "text": "åska börjar på Å!",
+      "file": "aska-borjar-pa-a-24aa3c2f.mp3"
+    },
+    {
+      "text": "Var är åskan?",
+      "file": "var-ar-askan-d99da91b.mp3"
+    },
+    {
+      "text": "Här är åskan!",
+      "file": "har-ar-askan-ac9673e6.mp3"
+    },
+    {
+      "text": "Det där är åska.",
+      "file": "det-dar-ar-aska-c3e1bfa0.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar äpple på?",
+      "file": "vilken-bokstav-borjar-apple-pa-1f3c34c6.mp3"
+    },
+    {
+      "text": "äpple börjar på Ä!",
+      "file": "apple-borjar-pa-a-997d8411.mp3"
+    },
+    {
+      "text": "Var är äpplet?",
+      "file": "var-ar-applet-772ff422.mp3"
+    },
+    {
+      "text": "Här är äpplet!",
+      "file": "har-ar-applet-e870463d.mp3"
+    },
+    {
+      "text": "Det där är ett äpple.",
+      "file": "det-dar-ar-ett-apple-54b13700.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar ägg på?",
+      "file": "vilken-bokstav-borjar-agg-pa-f8ad7847.mp3"
+    },
+    {
+      "text": "ägg börjar på Ä!",
+      "file": "agg-borjar-pa-a-36533fbe.mp3"
+    },
+    {
+      "text": "Var är ägget?",
+      "file": "var-ar-agget-d573d32c.mp3"
+    },
+    {
+      "text": "Här är ägget!",
+      "file": "har-ar-agget-713dd8cd.mp3"
+    },
+    {
+      "text": "Det där är ett ägg.",
+      "file": "det-dar-ar-ett-agg-b186c1f3.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar ängel på?",
+      "file": "vilken-bokstav-borjar-angel-pa-30e13fef.mp3"
+    },
+    {
+      "text": "ängel börjar på Ä!",
+      "file": "angel-borjar-pa-a-63b95286.mp3"
+    },
+    {
+      "text": "Var är ängeln?",
+      "file": "var-ar-angeln-97677641.mp3"
+    },
+    {
+      "text": "Här är ängeln!",
+      "file": "har-ar-angeln-8ddc6e1e.mp3"
+    },
+    {
+      "text": "Det där är en ängel.",
+      "file": "det-dar-ar-en-angel-ad91ca4f.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar öga på?",
+      "file": "vilken-bokstav-borjar-oga-pa-37ea7bff.mp3"
+    },
+    {
+      "text": "öga börjar på Ö!",
+      "file": "oga-borjar-pa-o-894c87b0.mp3"
+    },
+    {
+      "text": "Var är ögat?",
+      "file": "var-ar-ogat-96b00717.mp3"
+    },
+    {
+      "text": "Här är ögat!",
+      "file": "har-ar-ogat-aa70a370.mp3"
+    },
+    {
+      "text": "Det där är ett öga.",
+      "file": "det-dar-ar-ett-oga-35ac7303.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar öra på?",
+      "file": "vilken-bokstav-borjar-ora-pa-137dbba6.mp3"
+    },
+    {
+      "text": "öra börjar på Ö!",
+      "file": "ora-borjar-pa-o-e6ae9f6f.mp3"
+    },
+    {
+      "text": "Var är örat?",
+      "file": "var-ar-orat-e5c5c126.mp3"
+    },
+    {
+      "text": "Här är örat!",
+      "file": "har-ar-orat-fadef87d.mp3"
+    },
+    {
+      "text": "Det där är ett öra.",
+      "file": "det-dar-ar-ett-ora-9982ca40.mp3"
+    },
+    {
+      "text": "Vilken bokstav börjar ö på?",
+      "file": "vilken-bokstav-borjar-o-pa-7c404ed3.mp3"
+    },
+    {
+      "text": "ö börjar på Ö!",
+      "file": "o-borjar-pa-o-796175e8.mp3"
+    },
+    {
+      "text": "Var är ön?",
+      "file": "var-ar-on-424dfa99.mp3"
+    },
+    {
+      "text": "Här är ön!",
+      "file": "har-ar-on-e87c359a.mp3"
+    },
+    {
+      "text": "Det där är en ö.",
+      "file": "det-dar-ar-en-o-f8afeee3.mp3"
+    }
+  ]
+}

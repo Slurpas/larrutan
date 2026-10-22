@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createSpeech, type SpeechEnv, type VoiceStatus } from './speech'
+import { createBrowserVoice, type SpeechEnv, type VoiceStatus } from './browserVoice'
+import { createEventLog } from './eventLog'
 
 const swedish = { name: 'Alva', lang: 'sv-SE' } as SpeechSynthesisVoice
 const english = { name: 'Samantha', lang: 'en-US' } as SpeechSynthesisVoice
@@ -41,7 +42,7 @@ function fakeDevice() {
   return { device, env }
 }
 
-function recordStatuses(speech: ReturnType<typeof createSpeech>): VoiceStatus[] {
+function recordStatuses(speech: ReturnType<typeof createBrowserVoice>): VoiceStatus[] {
   const seen: VoiceStatus[] = []
   speech.subscribe(() => seen.push(speech.getStatus()))
   return seen
@@ -53,7 +54,7 @@ afterEach(() => vi.useRealTimers())
 describe('speech voice detection', () => {
   it('finds a Swedish voice that shows up late without any event (iPad Safari)', async () => {
     const { device, env } = fakeDevice()
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     const statuses = recordStatuses(speech)
     speech.init()
     expect(speech.getStatus()).toBe('loading')
@@ -68,7 +69,7 @@ describe('speech voice detection', () => {
 
   it('recovers when the voice arrives after it had given up', async () => {
     const { device, env } = fakeDevice()
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     speech.init()
 
     await vi.advanceTimersByTimeAsync(5100)
@@ -81,7 +82,7 @@ describe('speech voice detection', () => {
 
   it('lets speech asked for while voices load wait, then use the Swedish voice', async () => {
     const { device, env } = fakeDevice()
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     speech.init()
 
     const done = speech.speak('Tryck på en skylt för att spela!')
@@ -98,7 +99,7 @@ describe('speech voice detection', () => {
   it('reports a missing voice at once when the device only has other languages, without slowing the game', async () => {
     const { device, env } = fakeDevice()
     device.voices = [english]
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     speech.init()
     expect(speech.getStatus()).toBe('missing')
 
@@ -112,7 +113,7 @@ describe('speech voice detection', () => {
   it('never speaks in another language', async () => {
     const { device, env } = fakeDevice()
     device.voices = [english]
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     speech.init()
     await speech.speak('Var är A?')
     expect(device.spoken).toHaveLength(0)
@@ -121,7 +122,7 @@ describe('speech voice detection', () => {
   it('only says the newest of several quick requests', async () => {
     const { device, env } = fakeDevice()
     device.voices = [swedish]
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     speech.init()
 
     void speech.speak('Var är A?')
@@ -136,7 +137,7 @@ describe('speech voice detection', () => {
   it('cancels only when something is playing, then waits a moment before the next sentence', async () => {
     const { device, env } = fakeDevice()
     device.voices = [swedish]
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     speech.init()
 
     void speech.speak('Rätt!')
@@ -154,7 +155,7 @@ describe('speech voice detection', () => {
 
   it('stops a sentence that is still waiting when the child leaves', async () => {
     const { device, env } = fakeDevice()
-    const speech = createSpeech(env)
+    const speech = createBrowserVoice(env)
     speech.init()
 
     void speech.speak('Var är A?') // voices still loading, so it waits
@@ -164,23 +165,24 @@ describe('speech voice detection', () => {
     expect(device.spoken).toHaveLength(0)
   })
 
-  it('keeps a log for the diagnostic panel', async () => {
+  it('reports its voices and logs what happens, for the diagnostic panel', async () => {
     const { device, env } = fakeDevice()
     device.voices = [english, swedish]
-    const speech = createSpeech(env)
+    const log = createEventLog()
+    const speech = createBrowserVoice(env, log)
     speech.init()
     void speech.speak('Hej!')
     await vi.advanceTimersByTimeAsync(1500)
 
-    const info = speech.getDebugInfo()
+    const info = speech.getInfo()
     expect(info.chosenVoice).toMatch(/Alva/)
     expect(info.swedishVoices).toHaveLength(1)
     expect(info.totalVoices).toBe(2)
-    expect(info.events.join('\n')).toMatch(/finished: "Hej!"/)
+    expect(log.entries().join('\n')).toMatch(/finished: "Hej!"/)
   })
 
   it('copes with browsers that have no speech at all', async () => {
-    const speech = createSpeech(null)
+    const speech = createBrowserVoice(null)
     speech.init()
     expect(speech.getStatus()).toBe('missing')
     await expect(speech.speak('Hej')).resolves.toBeUndefined()

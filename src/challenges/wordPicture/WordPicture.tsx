@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { phrases } from '../../content/phrases'
 import { getWord, words } from '../../content/words'
 import { Picture } from '../../ui/Picture'
 import { ChoiceChallenge } from '../ChoiceChallenge'
+import { wordPictureVoice } from '../voices'
 import { createWordPictureRound } from './createRound'
 
 interface WordPictureProps {
@@ -18,10 +18,7 @@ export function WordPicture({ seed, onExit, onPlayAgain }: WordPictureProps) {
   return (
     <ChoiceChallenge
       round={round}
-      ask={(q) => phrases.wordPictureQuestion(getWord(q.target).definite)}
-      reveal={(q) => phrases.hereIs(getWord(q.target).definite)}
-      nameChoice={(id) => phrases.thatIs(getWord(id).indefinite)}
-      complete={phrases.wordPictureComplete}
+      voice={wordPictureVoice}
       choiceKind="picture"
       renderChoice={(id) => <Picture emoji={getWord(id).picture} />}
       choiceLabel={(id) => getWord(id).base}

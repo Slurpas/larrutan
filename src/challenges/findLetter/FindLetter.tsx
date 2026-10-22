@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { confusableLetters, getLetter, letters } from '../../content/letters'
-import { phrases } from '../../content/phrases'
 import { ChoiceChallenge } from '../ChoiceChallenge'
+import { findLetterVoice } from '../voices'
 import { createFindLetterRound } from './createRound'
 
 interface FindLetterProps {
@@ -13,15 +13,11 @@ interface FindLetterProps {
 /** Hitta bokstaven: hear "Var är A?" and tap the letter. */
 export function FindLetter({ seed, onExit, onPlayAgain }: FindLetterProps) {
   const [round] = useState(() => createFindLetterRound({ seed, letters, confusables: confusableLetters }))
-  const spoken = (id: string) => getLetter(id).spoken
 
   return (
     <ChoiceChallenge
       round={round}
-      ask={(q) => phrases.findLetterQuestion(spoken(q.target))}
-      reveal={(q) => phrases.hereIs(spoken(q.target))}
-      nameChoice={(id) => phrases.thatIs(spoken(id))}
-      complete={phrases.findLetterComplete}
+      voice={findLetterVoice}
       choiceKind="letter"
       renderChoice={(id) => getLetter(id).display}
       choiceLabel={(id) => getLetter(id).display}

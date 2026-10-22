@@ -138,13 +138,15 @@ Attempts, hints and successes are tracked separately from rewards.
 
 Spoken instructions are essential because most players can't read. No human recordings are planned; all speech is generated.
 
-### Stage 1 — Prototype: the device's built-in voice (Phase 1)
+### Stage 1 — Prototype: the device's built-in voice (replaced 2026-10-22)
 
-Phase 1 uses the browser's built-in speech (Web Speech API) with a Swedish voice. No setup, good enough to playtest. Quality varies by device; iPad and Microsoft Edge usually have decent Swedish voices. If no Swedish voice is available, the game shows a visible warning instead of speaking another language.
+The first prototype used the browser's built-in Swedish voice (Web Speech API). This proved unreliable: Brave and Firefox on an English Windows have no Swedish voice at all, and iPad Safari lists its voices late. The device voice is now only a fallback for a sentence without a clip, or a clip that won't play. If neither works, the game shows a visible warning instead of speaking another language.
 
-### Stage 2 — Generated audio files (Phase 2)
+### Stage 2 — Generated audio files (started early, 2026-10-22)
 
-A script generates every needed clip from the content data using a cloud text-to-speech (TTS) service, once, at build time. The files are stored in the project; the game never calls a speech service while a child plays.
+A script (`npm run speech`) generates every needed clip from the content data, once, at build time. The files are stored in the project; the game never calls a speech service while a child plays. A test fails if any sentence the game can say has no clip.
+
+Current engine: **Piper** (free, offline, no account) with the Swedish voice `sv_SE-nst-medium`. Still to do in Task 6: compare it by ear with the services below and add a review page for approving clips.
 
 - **Recommended: Microsoft Azure Speech.** Several Swedish neural voices, a documented Swedish phonetic alphabet for fixing pronunciations, and a free tier of 0.5 million characters per month. The whole game needs a few tens of thousands of characters, so the cost is effectively zero.
 - **Compared in the same test:** Google Cloud Text-to-Speech (Swedish Chirp 3 HD voices; its pronunciation-override feature doesn't list Swedish) and Piper (free, offline, no account; quality and the Swedish voice's licence to be checked).

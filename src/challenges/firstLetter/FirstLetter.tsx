@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { confusableLetters, getLetter, letters } from '../../content/letters'
-import { phrases } from '../../content/phrases'
 import { getWord, words } from '../../content/words'
 import { Picture } from '../../ui/Picture'
 import { ChoiceChallenge } from '../ChoiceChallenge'
+import { firstLetterVoice } from '../voices'
 import { createFirstLetterRound } from './createRound'
 
 interface FirstLetterProps {
@@ -21,10 +21,7 @@ export function FirstLetter({ seed, onExit, onPlayAgain }: FirstLetterProps) {
   return (
     <ChoiceChallenge
       round={round}
-      ask={(q) => phrases.firstLetterQuestion(getWord(q.word).base)}
-      reveal={(q) => phrases.firstLetterReveal(getWord(q.word).base, getLetter(q.target).spoken)}
-      nameChoice={(id) => phrases.thatIs(getLetter(id).spoken)}
-      complete={phrases.firstLetterComplete}
+      voice={firstLetterVoice}
       choiceKind="letter"
       renderChoice={(id) => getLetter(id).display}
       choiceLabel={(id) => getLetter(id).display}

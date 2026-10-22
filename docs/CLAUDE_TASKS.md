@@ -126,10 +126,10 @@ The user watches a child play for 15–30 minutes and notes where they got stuck
 Ordered by impact. Full Work and Acceptance sections are written when the phase starts, based on what the playtest shows.
 
 ### Task 6 — Generated voice
-- Generate the same sample set (letter names A–Ö, tricky words, instructions) with Azure, Google and Piper; the user picks by ear. The user creates the account and puts the key in a local `.env`.
-- A build-time script generates clips from the content data; the files are committed.
+Partly done early (2026-10-22), because Brave on Windows has no Swedish voice: `npm run speech` generates every sentence with Piper, the files are committed, the game plays them, and a test fails on missing clips. Remaining:
+- Generate the same sample set (letter names A–Ö, tricky words, instructions) with Azure and Google as well as Piper; the user picks by ear. The user creates any account and puts the key in a local `.env`.
 - A review page to play, approve or reject clips; rejected clips are regenerated with spelling or phoneme fixes.
-- The game plays approved files; a check fails on missing or unapproved required clips.
+- Release builds only contain approved clips.
 
 ### Task 7 — Saving and iPad install
 - Versioned local saving (IndexedDB) with migration and recovery tests.

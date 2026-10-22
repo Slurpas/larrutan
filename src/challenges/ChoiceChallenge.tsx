@@ -26,11 +26,13 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
   difficultyCount: number
   /** Called once when the last question is answered; returns what the round earned. */
   onRoundComplete?: (wrongTaps: number) => RoundOutcome
+  /** The child has finished this challenge before, so even the first question can be the short form. */
+  knowsChallenge?: boolean
   choiceKind: 'letter' | 'picture'
   renderChoice: (choice: string) => ReactNode
   /** Accessible name of a choice button (also used by tests). */
   choiceLabel: (choice: string) => string
-  /** Shown above the choices, e.g. the picture in Första bokstaven. Tapping it repeats the question. */
+  /** Shown above the choices, e.g. the picture in Första bokstaven. Tapping it says the short form again. */
   showcase?: (question: Q) => ReactNode
   /** Shown next to the speaker when there is no Swedish voice, so the question can still be seen. */
   silentPrompt?: (question: Q) => ReactNode
@@ -40,7 +42,8 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
 
 /**
  * Everything the challenges share: asking out loud, graduated help after a
- * wrong tap, praise, progress stars, keyboard support and the end screen.
+ * wrong tap, a happy sound for right answers, progress stars, keyboard support
+ * and the end screen.
  */
 export function ChoiceChallenge<Q extends ChoiceQuestion>({
   round,
@@ -48,6 +51,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   difficulty,
   difficultyCount,
   onRoundComplete,
+  knowsChallenge = false,
   choiceKind,
   renderChoice,
   choiceLabel,
@@ -63,17 +67,18 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
 
   const question = currentQuestion(state)
   const revealed = isAnswerRevealed(state)
-  // The full question first; later questions may use a shorter form. The speaker and hints always use the full one.
-  const questionText = !question
-    ? null
-    : state.questionIndex > 0 && voice.askAgain
-      ? voice.askAgain(question)
-      : voice.ask(question)
 
-  function promptFor(s: RoundState<Q>): string {
+  // The full question only until the child knows the game: the very first question they ever get here.
+  // After that the short form, also after a wrong tap. The speaker button always gives the full question.
+  const short = (q: Q) => (voice.askAgain ? voice.askAgain(q) : voice.ask(q))
+  const useShort = knowsChallenge || state.questionIndex > 0
+  const questionText = !question ? null : useShort ? short(question) : voice.ask(question)
+
+  function promptFor(s: RoundState<Q>, full = false): string {
     const q = currentQuestion(s)
     if (!q) return ''
-    return isAnswerRevealed(s) ? voice.reveal(q) : voice.ask(q)
+    if (isAnswerRevealed(s)) return voice.reveal(q)
+    return full ? voice.ask(q) : short(q)
   }
 
   // Ask each new question out loud; a hard round starts by saying so.
@@ -90,13 +95,12 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
     if (onRoundComplete) setOutcome(onRoundComplete(state.wrongTaps))
   })
 
-  // After a correct answer: praise, then the next question (or the end of the round).
+  // After a correct answer: a happy chime, then the next question (or the end of the round).
   useEffect(() => {
     if (state.phase !== 'correct') return
     let cancelled = false
     const isLast = state.questionIndex === state.round.questions.length - 1
-    const praise = phrases.praise[state.questionIndex % phrases.praise.length] ?? phrases.praise[0]
-    void Promise.all([speak(praise), pause(CORRECT_PAUSE_MS)]).then(() => {
+    void Promise.all([speak({ sound: 'correct' }), pause(CORRECT_PAUSE_MS)]).then(() => {
       if (cancelled) return
       if (isLast) finishRound()
       setState(advance)
@@ -116,7 +120,13 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
     }
   }
 
+  /** The speaker button: the full question, for a child who needs to hear what to do. */
   function handleReplay() {
+    if (state.phase === 'asking') void speak(promptFor(state, true))
+  }
+
+  /** Tapping the picture: just the word again. */
+  function handleShowcaseTap() {
     if (state.phase === 'asking') void speak(promptFor(state))
   }
 
@@ -144,7 +154,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   }, [])
 
   if (state.phase === 'finished' || !question) {
-    return <RoundComplete message={voice.complete} outcome={outcome} onPlayAgain={onPlayAgain} onExit={handleExit} />
+    return <RoundComplete outcome={outcome} onPlayAgain={onPlayAgain} onExit={handleExit} />
   }
 
   return (
@@ -179,7 +189,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
 
       <div className={styles.body}>
         {showcase && (
-          <button type="button" className={styles.showcase} aria-label="Lyssna på ordet" onClick={handleReplay}>
+          <button type="button" className={styles.showcase} aria-label="Lyssna på ordet" onClick={handleShowcaseTap}>
             {showcase(question)}
           </button>
         )}

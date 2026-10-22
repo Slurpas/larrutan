@@ -5,871 +5,1048 @@
   "clips": [
     {
       "text": "Tryck på en skylt för att spela!",
-      "file": "tryck-pa-en-skylt-for-att-spela-0edcd726.mp3"
-    },
-    {
-      "text": "Rätt!",
-      "file": "ratt-b5c17516.mp3"
-    },
-    {
-      "text": "Bra!",
-      "file": "bra-1e48f2c7.mp3"
-    },
-    {
-      "text": "Snyggt!",
-      "file": "snyggt-804a1186.mp3"
-    },
-    {
-      "text": "Ja, precis!",
-      "file": "ja-precis-53156bd1.mp3"
-    },
-    {
-      "text": "Toppen!",
-      "file": "toppen-06fa2bf2.mp3"
+      "file": "tryck-pa-en-skylt-for-att-spela-0edcd726.mp3",
+      "input": "Tryck på en skylt för att spela!"
     },
     {
       "text": "Nu blir det svårare. Titta noga!",
-      "file": "nu-blir-det-svarare-titta-noga-9776659e.mp3"
+      "file": "nu-blir-det-svarare-titta-noga-9776659e.mp3",
+      "input": "Nu blir det svårare. Titta noga!"
     },
     {
       "text": "Du har gått upp en nivå!",
-      "file": "du-har-gatt-upp-en-niva-8e0bb69c.mp3"
+      "file": "du-har-gatt-upp-en-niva-8e0bb69c.mp3",
+      "input": "Du har gått upp en nivå!"
     },
     {
       "text": "Här är dina saker. Tryck på en sak för att ta på den.",
-      "file": "har-ar-dina-saker-tryck-pa-en-sak-for-at-854c5eff.mp3"
+      "file": "har-ar-dina-saker-tryck-pa-en-sak-for-at-854c5eff.mp3",
+      "input": "Här är dina saker. Tryck på en sak för att ta på den."
     },
     {
       "text": "Du fick en keps!",
-      "file": "du-fick-en-keps-da67c8b0.mp3"
+      "file": "du-fick-en-keps-da67c8b0.mp3",
+      "input": "Du fick en [[ kˈɛps! ]]"
     },
     {
       "text": "Klara en runda så får du kepsen.",
-      "file": "klara-en-runda-sa-far-du-kepsen-51d6bdb9.mp3"
+      "file": "klara-en-runda-sa-far-du-kepsen-51d6bdb9.mp3",
+      "input": "Klara en runda så får du [[ kˈɛpsən. ]]"
     },
     {
       "text": "Du fick en rosett!",
-      "file": "du-fick-en-rosett-05112f3e.mp3"
+      "file": "du-fick-en-rosett-05112f3e.mp3",
+      "input": "Du fick en [[ rʊsˈɛt! ]]"
     },
     {
       "text": "Gå upp en nivå så får du rosetten.",
-      "file": "ga-upp-en-niva-sa-far-du-rosetten-f99699ed.mp3"
+      "file": "ga-upp-en-niva-sa-far-du-rosetten-f99699ed.mp3",
+      "input": "Gå upp en nivå så får du [[ rʊsˈɛtən. ]]"
     },
     {
       "text": "Du fick en hög hatt!",
-      "file": "du-fick-en-hog-hatt-7ca6c095.mp3"
+      "file": "du-fick-en-hog-hatt-7ca6c095.mp3",
+      "input": "Du fick en hög hatt!"
     },
     {
       "text": "Klara den svåra nivån i Hitta bokstaven så får du hatten.",
-      "file": "klara-den-svara-nivan-i-hitta-bokstaven-9b50adb4.mp3"
+      "file": "klara-den-svara-nivan-i-hitta-bokstaven-9b50adb4.mp3",
+      "input": "Klara den svåra [[ nɪvˈoːn ]] i Hitta bokstaven så får du hatten."
     },
     {
       "text": "Du fick en studentmössa!",
-      "file": "du-fick-en-studentmossa-cab70a84.mp3"
+      "file": "du-fick-en-studentmossa-cab70a84.mp3",
+      "input": "Du fick en [[ stʉdˈɛntmˌœsa! ]]"
     },
     {
       "text": "Klara alla tre skyltarna så får du studentmössan.",
-      "file": "klara-alla-tre-skyltarna-sa-far-du-stude-87fe8629.mp3"
+      "file": "klara-alla-tre-skyltarna-sa-far-du-stude-87fe8629.mp3",
+      "input": "Klara alla tre skyltarna så får du [[ stʉdˈɛntmˌœsan. ]]"
     },
     {
       "text": "Du fick en krona!",
-      "file": "du-fick-en-krona-e95c276e.mp3"
+      "file": "du-fick-en-krona-e95c276e.mp3",
+      "input": "Du fick en krona!"
     },
     {
       "text": "Nå nivå fem så får du kronan.",
-      "file": "na-niva-fem-sa-far-du-kronan-bccec3ab.mp3"
-    },
-    {
-      "text": "Bra jobbat! Du hittade alla bokstäverna!",
-      "file": "bra-jobbat-du-hittade-alla-bokstaverna-a7d3dced.mp3"
-    },
-    {
-      "text": "Bra jobbat! Du hittade alla första bokstäverna!",
-      "file": "bra-jobbat-du-hittade-alla-forsta-boksta-7fe01593.mp3"
-    },
-    {
-      "text": "Bra jobbat! Du hittade alla bilderna!",
-      "file": "bra-jobbat-du-hittade-alla-bilderna-1b56c97b.mp3"
+      "file": "na-niva-fem-sa-far-du-kronan-bccec3ab.mp3",
+      "input": "Nå nivå fem så får du kronan."
     },
     {
       "text": "Var är A?",
-      "file": "var-ar-a-ed42207c.mp3"
+      "file": "var-ar-a-ed42207c.mp3",
+      "input": "Var är A?"
     },
     {
       "text": "Här är A!",
-      "file": "har-ar-a-318f8a61.mp3"
+      "file": "har-ar-a-318f8a61.mp3",
+      "input": "Här är A!"
     },
     {
       "text": "Det där är A.",
-      "file": "det-dar-ar-a-730d5fe5.mp3"
+      "file": "det-dar-ar-a-730d5fe5.mp3",
+      "input": "Det där är A."
     },
     {
       "text": "Var är I?",
-      "file": "var-ar-i-ed2e98c4.mp3"
+      "file": "var-ar-i-ed2e98c4.mp3",
+      "input": "Var är I?"
     },
     {
       "text": "Här är I!",
-      "file": "har-ar-i-017bb719.mp3"
+      "file": "har-ar-i-017bb719.mp3",
+      "input": "Här är I!"
     },
     {
       "text": "Det där är I.",
-      "file": "det-dar-ar-i-7320e79d.mp3"
+      "file": "det-dar-ar-i-7320e79d.mp3",
+      "input": "Det där är I."
     },
     {
       "text": "Var är L?",
-      "file": "var-ar-l-6d361e09.mp3"
+      "file": "var-ar-l-6d361e09.mp3",
+      "input": "Var är L?"
     },
     {
       "text": "Här är L!",
-      "file": "har-ar-l-8d7444b8.mp3"
+      "file": "har-ar-l-8d7444b8.mp3",
+      "input": "Här är L!"
     },
     {
       "text": "Det där är L.",
-      "file": "det-dar-ar-l-11289c1c.mp3"
+      "file": "det-dar-ar-l-11289c1c.mp3",
+      "input": "Det där är L."
     },
     {
       "text": "Var är M?",
-      "file": "var-ar-m-6d385ca0.mp3"
+      "file": "var-ar-m-6d385ca0.mp3",
+      "input": "Var är M?"
     },
     {
       "text": "Här är M!",
-      "file": "har-ar-m-297168b5.mp3"
+      "file": "har-ar-m-297168b5.mp3",
+      "input": "Här är M!"
     },
     {
       "text": "Det där är M.",
-      "file": "det-dar-ar-m-f32aab79.mp3"
+      "file": "det-dar-ar-m-f32aab79.mp3",
+      "input": "Det där är M."
     },
     {
       "text": "Var är O?",
-      "file": "var-ar-o-ed3da34e.mp3"
+      "file": "var-ar-o-ed3da34e.mp3",
+      "input": "Var är O?"
     },
     {
       "text": "Här är O!",
-      "file": "har-ar-o-1d6cd8a3.mp3"
+      "file": "har-ar-o-1d6cd8a3.mp3",
+      "input": "Här är O!"
     },
     {
       "text": "Det där är O.",
-      "file": "det-dar-ar-o-f3262e4b.mp3"
+      "file": "det-dar-ar-o-f3262e4b.mp3",
+      "input": "Det där är O."
     },
     {
       "text": "Var är S?",
-      "file": "var-ar-s-ed6f401a.mp3"
+      "file": "var-ar-s-ed6f401a.mp3",
+      "input": "Var är S?"
     },
     {
       "text": "Här är S!",
-      "file": "har-ar-s-8562eeff.mp3"
+      "file": "har-ar-s-8562eeff.mp3",
+      "input": "Här är S!"
     },
     {
       "text": "Det där är S.",
-      "file": "det-dar-ar-s-92e072a7.mp3"
+      "file": "det-dar-ar-s-92e072a7.mp3",
+      "input": "Det där är S."
     },
     {
       "text": "Var är Å?",
-      "file": "var-ar-a-6e8918d8.mp3"
+      "file": "var-ar-a-6e8918d8.mp3",
+      "input": "Var är Å?"
     },
     {
       "text": "Här är Å!",
-      "file": "har-ar-a-9ac2d53d.mp3"
+      "file": "har-ar-a-9ac2d53d.mp3",
+      "input": "Här är Å!"
     },
     {
       "text": "Det där är Å.",
-      "file": "det-dar-ar-a-11da21a1.mp3"
+      "file": "det-dar-ar-a-11da21a1.mp3",
+      "input": "Det där är Å."
     },
     {
       "text": "Var är Ä?",
-      "file": "var-ar-a-6e86da41.mp3"
+      "file": "var-ar-a-6e86da41.mp3",
+      "input": "Var är Ä?"
     },
     {
       "text": "Här är Ä!",
-      "file": "har-ar-a-7ec4e7c0.mp3"
+      "file": "har-ar-a-7ec4e7c0.mp3",
+      "input": "Här är Ä!"
     },
     {
       "text": "Det där är Ä.",
-      "file": "det-dar-ar-a-efd7ad84.mp3"
+      "file": "det-dar-ar-a-efd7ad84.mp3",
+      "input": "Det där är Ä."
     },
     {
       "text": "Var är Ö?",
-      "file": "var-ar-o-eeb3305f.mp3"
+      "file": "var-ar-o-eeb3305f.mp3",
+      "input": "Var är Ö?"
     },
     {
       "text": "Här är Ö!",
-      "file": "har-ar-o-1298b11e.mp3"
+      "file": "har-ar-o-1298b11e.mp3",
+      "input": "Här är Ö!"
     },
     {
       "text": "Det där är Ö.",
-      "file": "det-dar-ar-o-efaa8de6.mp3"
+      "file": "det-dar-ar-o-efaa8de6.mp3",
+      "input": "Det där är Ö."
     },
     {
       "text": "Vilken bokstav börjar apa på?",
-      "file": "vilken-bokstav-borjar-apa-pa-bf710721.mp3"
+      "file": "vilken-bokstav-borjar-apa-pa-bf710721.mp3",
+      "input": "Vilken bokstav börjar apa på?"
     },
     {
       "text": "Apa.",
-      "file": "apa-f9036c73.mp3"
+      "file": "apa-f9036c73.mp3",
+      "input": "Apa."
     },
     {
       "text": "apa börjar på A!",
-      "file": "apa-borjar-pa-a-68748f05.mp3"
+      "file": "apa-borjar-pa-a-68748f05.mp3",
+      "input": "apa börjar på A!"
     },
     {
       "text": "Var är apan?",
-      "file": "var-ar-apan-ef7f6c4f.mp3"
+      "file": "var-ar-apan-ef7f6c4f.mp3",
+      "input": "Var är apan?"
     },
     {
       "text": "Här är apan!",
-      "file": "har-ar-apan-1717c7a8.mp3"
+      "file": "har-ar-apan-1717c7a8.mp3",
+      "input": "Här är apan!"
     },
     {
       "text": "Det där är en apa.",
-      "file": "det-dar-ar-en-apa-b01ff7a5.mp3"
+      "file": "det-dar-ar-en-apa-b01ff7a5.mp3",
+      "input": "Det där är en apa."
     },
     {
       "text": "Vilken bokstav börjar anka på?",
-      "file": "vilken-bokstav-borjar-anka-pa-9d5dccf0.mp3"
+      "file": "vilken-bokstav-borjar-anka-pa-9d5dccf0.mp3",
+      "input": "Vilken bokstav börjar anka på?"
     },
     {
       "text": "Anka.",
-      "file": "anka-8e131104.mp3"
+      "file": "anka-8e131104.mp3",
+      "input": "Anka."
     },
     {
       "text": "anka börjar på A!",
-      "file": "anka-borjar-pa-a-02c582da.mp3"
+      "file": "anka-borjar-pa-a-02c582da.mp3",
+      "input": "anka börjar på A!"
     },
     {
       "text": "Var är ankan?",
-      "file": "var-ar-ankan-3281913c.mp3"
+      "file": "var-ar-ankan-3281913c.mp3",
+      "input": "Var är ankan?"
     },
     {
       "text": "Här är ankan!",
-      "file": "har-ar-ankan-402a55d5.mp3"
+      "file": "har-ar-ankan-402a55d5.mp3",
+      "input": "Här är ankan!"
     },
     {
       "text": "Det där är en anka.",
-      "file": "det-dar-ar-en-anka-0d795c12.mp3"
+      "file": "det-dar-ar-en-anka-0d795c12.mp3",
+      "input": "Det där är en anka."
     },
     {
       "text": "Vilken bokstav börjar ananas på?",
-      "file": "vilken-bokstav-borjar-ananas-pa-9f9256af.mp3"
+      "file": "vilken-bokstav-borjar-ananas-pa-9f9256af.mp3",
+      "input": "Vilken bokstav börjar [[ ˈananas ]] på?"
     },
     {
       "text": "Ananas.",
-      "file": "ananas-0983f295.mp3"
+      "file": "ananas-0983f295.mp3",
+      "input": "[[ ˈananas. ]]"
     },
     {
       "text": "ananas börjar på A!",
-      "file": "ananas-borjar-pa-a-bde9ff57.mp3"
+      "file": "ananas-borjar-pa-a-bde9ff57.mp3",
+      "input": "[[ ˈananas ]] börjar på A!"
     },
     {
       "text": "Var är ananasen?",
-      "file": "var-ar-ananasen-90c694f0.mp3"
+      "file": "var-ar-ananasen-90c694f0.mp3",
+      "input": "Var är [[ ˈananasən? ]]"
     },
     {
       "text": "Här är ananasen!",
-      "file": "har-ar-ananasen-fac5542b.mp3"
+      "file": "har-ar-ananasen-fac5542b.mp3",
+      "input": "Här är [[ ˈananasən! ]]"
     },
     {
       "text": "Det där är en ananas.",
-      "file": "det-dar-ar-en-ananas-31d79a7f.mp3"
+      "file": "det-dar-ar-en-ananas-31d79a7f.mp3",
+      "input": "Det där är en [[ ˈananas. ]]"
     },
     {
       "text": "Vilken bokstav börjar apelsin på?",
-      "file": "vilken-bokstav-borjar-apelsin-pa-6b728ccb.mp3"
+      "file": "vilken-bokstav-borjar-apelsin-pa-6b728ccb.mp3",
+      "input": "Vilken bokstav börjar apelsin på?"
     },
     {
       "text": "Apelsin.",
-      "file": "apelsin-bb32f061.mp3"
+      "file": "apelsin-bb32f061.mp3",
+      "input": "Apelsin."
     },
     {
       "text": "apelsin börjar på A!",
-      "file": "apelsin-borjar-pa-a-7bff705b.mp3"
+      "file": "apelsin-borjar-pa-a-7bff705b.mp3",
+      "input": "apelsin börjar på A!"
     },
     {
       "text": "Var är apelsinen?",
-      "file": "var-ar-apelsinen-9a175d82.mp3"
+      "file": "var-ar-apelsinen-9a175d82.mp3",
+      "input": "Var är apelsinen?"
     },
     {
       "text": "Här är apelsinen!",
-      "file": "har-ar-apelsinen-0bb7d22f.mp3"
+      "file": "har-ar-apelsinen-0bb7d22f.mp3",
+      "input": "Här är apelsinen!"
     },
     {
       "text": "Det där är en apelsin.",
-      "file": "det-dar-ar-en-apelsin-eb013e1b.mp3"
+      "file": "det-dar-ar-en-apelsin-eb013e1b.mp3",
+      "input": "Det där är en apelsin."
     },
     {
       "text": "Vilken bokstav börjar igelkott på?",
-      "file": "vilken-bokstav-borjar-igelkott-pa-4036485c.mp3"
+      "file": "vilken-bokstav-borjar-igelkott-pa-4036485c.mp3",
+      "input": "Vilken bokstav börjar [[ ˈiːɡəlkˌɔt ]] på?"
     },
     {
       "text": "Igelkott.",
-      "file": "igelkott-66ba36e4.mp3"
+      "file": "igelkott-66ba36e4.mp3",
+      "input": "[[ ˈiːɡəlkˌɔt. ]]"
     },
     {
       "text": "igelkott börjar på I!",
-      "file": "igelkott-borjar-pa-i-649fd002.mp3"
+      "file": "igelkott-borjar-pa-i-649fd002.mp3",
+      "input": "[[ ˈiːɡəlkˌɔt ]] börjar på I!"
     },
     {
       "text": "Var är igelkotten?",
-      "file": "var-ar-igelkotten-f69a581d.mp3"
+      "file": "var-ar-igelkotten-f69a581d.mp3",
+      "input": "Var är [[ ˈiːɡəlkˌɔtən? ]]"
     },
     {
       "text": "Här är igelkotten!",
-      "file": "har-ar-igelkotten-52555ba6.mp3"
+      "file": "har-ar-igelkotten-52555ba6.mp3",
+      "input": "Här är [[ ˈiːɡəlkˌɔtən! ]]"
     },
     {
       "text": "Det där är en igelkott.",
-      "file": "det-dar-ar-en-igelkott-540085de.mp3"
+      "file": "det-dar-ar-en-igelkott-540085de.mp3",
+      "input": "Det där är en [[ ˈiːɡəlkˌɔt. ]]"
     },
     {
       "text": "Vilken bokstav börjar isbit på?",
-      "file": "vilken-bokstav-borjar-isbit-pa-a3efcc66.mp3"
+      "file": "vilken-bokstav-borjar-isbit-pa-a3efcc66.mp3",
+      "input": "Vilken bokstav börjar [[ ˈiːsbiːt ]] på?"
     },
     {
       "text": "Isbit.",
-      "file": "isbit-0e6b018a.mp3"
+      "file": "isbit-0e6b018a.mp3",
+      "input": "[[ ˈiːsbiːt. ]]"
     },
     {
       "text": "isbit börjar på I!",
-      "file": "isbit-borjar-pa-i-5e5ab248.mp3"
+      "file": "isbit-borjar-pa-i-5e5ab248.mp3",
+      "input": "[[ ˈiːsbiːt ]] börjar på I!"
     },
     {
       "text": "Var är isbiten?",
-      "file": "var-ar-isbiten-2649d4e9.mp3"
+      "file": "var-ar-isbiten-2649d4e9.mp3",
+      "input": "Var är [[ ˈiːsbiːtən? ]]"
     },
     {
       "text": "Här är isbiten!",
-      "file": "har-ar-isbiten-eda4efa4.mp3"
+      "file": "har-ar-isbiten-eda4efa4.mp3",
+      "input": "Här är [[ ˈiːsbiːtən! ]]"
     },
     {
       "text": "Det där är en isbit.",
-      "file": "det-dar-ar-en-isbit-2b562c44.mp3"
+      "file": "det-dar-ar-en-isbit-2b562c44.mp3",
+      "input": "Det där är en [[ ˈiːsbiːt. ]]"
     },
     {
       "text": "Vilken bokstav börjar lejon på?",
-      "file": "vilken-bokstav-borjar-lejon-pa-4959ccc3.mp3"
+      "file": "vilken-bokstav-borjar-lejon-pa-4959ccc3.mp3",
+      "input": "Vilken bokstav börjar [[ lˈɛjɔn ]] på?"
     },
     {
       "text": "Lejon.",
-      "file": "lejon-d8c473e5.mp3"
+      "file": "lejon-d8c473e5.mp3",
+      "input": "[[ lˈɛjɔn. ]]"
     },
     {
       "text": "lejon börjar på L!",
-      "file": "lejon-borjar-pa-l-cc8ed60e.mp3"
+      "file": "lejon-borjar-pa-l-cc8ed60e.mp3",
+      "input": "[[ lˈɛjɔn ]] börjar på L!"
     },
     {
       "text": "Var är lejonet?",
-      "file": "var-ar-lejonet-a5f85d40.mp3"
+      "file": "var-ar-lejonet-a5f85d40.mp3",
+      "input": "Var är [[ lˈɛjɔnət? ]]"
     },
     {
       "text": "Här är lejonet!",
-      "file": "har-ar-lejonet-0dfa6709.mp3"
+      "file": "har-ar-lejonet-0dfa6709.mp3",
+      "input": "Här är [[ lˈɛjɔnət! ]]"
     },
     {
       "text": "Det där är ett lejon.",
-      "file": "det-dar-ar-ett-lejon-c20703f7.mp3"
+      "file": "det-dar-ar-ett-lejon-c20703f7.mp3",
+      "input": "Det där är ett [[ lˈɛjɔn. ]]"
     },
     {
       "text": "Vilken bokstav börjar lastbil på?",
-      "file": "vilken-bokstav-borjar-lastbil-pa-cd71640a.mp3"
+      "file": "vilken-bokstav-borjar-lastbil-pa-cd71640a.mp3",
+      "input": "Vilken bokstav börjar lastbil på?"
     },
     {
       "text": "Lastbil.",
-      "file": "lastbil-28073996.mp3"
+      "file": "lastbil-28073996.mp3",
+      "input": "Lastbil."
     },
     {
       "text": "lastbil börjar på L!",
-      "file": "lastbil-borjar-pa-l-52707845.mp3"
+      "file": "lastbil-borjar-pa-l-52707845.mp3",
+      "input": "lastbil börjar på L!"
     },
     {
       "text": "Var är lastbilen?",
-      "file": "var-ar-lastbilen-9d5b9f19.mp3"
+      "file": "var-ar-lastbilen-9d5b9f19.mp3",
+      "input": "Var är lastbilen?"
     },
     {
       "text": "Här är lastbilen!",
-      "file": "har-ar-lastbilen-489e5ee0.mp3"
+      "file": "har-ar-lastbilen-489e5ee0.mp3",
+      "input": "Här är lastbilen!"
     },
     {
       "text": "Det där är en lastbil.",
-      "file": "det-dar-ar-en-lastbil-fd0df6c8.mp3"
+      "file": "det-dar-ar-en-lastbil-fd0df6c8.mp3",
+      "input": "Det där är en lastbil."
     },
     {
       "text": "Vilken bokstav börjar lås på?",
-      "file": "vilken-bokstav-borjar-las-pa-45dde3e9.mp3"
+      "file": "vilken-bokstav-borjar-las-pa-45dde3e9.mp3",
+      "input": "Vilken bokstav börjar lås på?"
     },
     {
       "text": "Lås.",
-      "file": "las-fb3dae0f.mp3"
+      "file": "las-fb3dae0f.mp3",
+      "input": "Lås."
     },
     {
       "text": "lås börjar på L!",
-      "file": "las-borjar-pa-l-0518bc10.mp3"
+      "file": "las-borjar-pa-l-0518bc10.mp3",
+      "input": "lås börjar på L!"
     },
     {
       "text": "Var är låset?",
-      "file": "var-ar-laset-b3ec6152.mp3"
+      "file": "var-ar-laset-b3ec6152.mp3",
+      "input": "Var är låset?"
     },
     {
       "text": "Här är låset!",
-      "file": "har-ar-laset-d6d2b597.mp3"
+      "file": "har-ar-laset-d6d2b597.mp3",
+      "input": "Här är låset!"
     },
     {
       "text": "Det där är ett lås.",
-      "file": "det-dar-ar-ett-las-be04b2e1.mp3"
+      "file": "det-dar-ar-ett-las-be04b2e1.mp3",
+      "input": "Det där är ett lås."
     },
     {
       "text": "Vilken bokstav börjar löv på?",
-      "file": "vilken-bokstav-borjar-lov-pa-86a2938d.mp3"
+      "file": "vilken-bokstav-borjar-lov-pa-86a2938d.mp3",
+      "input": "Vilken bokstav börjar löv på?"
     },
     {
       "text": "Löv.",
-      "file": "lov-bc17af17.mp3"
+      "file": "lov-bc17af17.mp3",
+      "input": "Löv."
     },
     {
       "text": "löv börjar på L!",
-      "file": "lov-borjar-pa-l-115a0fe8.mp3"
+      "file": "lov-borjar-pa-l-115a0fe8.mp3",
+      "input": "löv börjar på L!"
     },
     {
       "text": "Var är lövet?",
-      "file": "var-ar-lovet-ff39ca92.mp3"
+      "file": "var-ar-lovet-ff39ca92.mp3",
+      "input": "Var är lövet?"
     },
     {
       "text": "Här är lövet!",
-      "file": "har-ar-lovet-e425362b.mp3"
+      "file": "har-ar-lovet-e425362b.mp3",
+      "input": "Här är lövet!"
     },
     {
       "text": "Det där är ett löv.",
-      "file": "det-dar-ar-ett-lov-33b6443d.mp3"
+      "file": "det-dar-ar-ett-lov-33b6443d.mp3",
+      "input": "Det där är ett löv."
     },
     {
       "text": "Vilken bokstav börjar mus på?",
-      "file": "vilken-bokstav-borjar-mus-pa-82bce8ee.mp3"
+      "file": "vilken-bokstav-borjar-mus-pa-82bce8ee.mp3",
+      "input": "Vilken bokstav börjar mus på?"
     },
     {
       "text": "Mus.",
-      "file": "mus-58630566.mp3"
+      "file": "mus-58630566.mp3",
+      "input": "Mus."
     },
     {
       "text": "mus börjar på M!",
-      "file": "mus-borjar-pa-m-f3f3a598.mp3"
+      "file": "mus-borjar-pa-m-f3f3a598.mp3",
+      "input": "mus börjar på M!"
     },
     {
       "text": "Var är musen?",
-      "file": "var-ar-musen-9e7a4d35.mp3"
+      "file": "var-ar-musen-9e7a4d35.mp3",
+      "input": "Var är musen?"
     },
     {
       "text": "Här är musen!",
-      "file": "har-ar-musen-df4250f4.mp3"
+      "file": "har-ar-musen-df4250f4.mp3",
+      "input": "Här är musen!"
     },
     {
       "text": "Det där är en mus.",
-      "file": "det-dar-ar-en-mus-c2392e0c.mp3"
+      "file": "det-dar-ar-en-mus-c2392e0c.mp3",
+      "input": "Det där är en mus."
     },
     {
       "text": "Vilken bokstav börjar måne på?",
-      "file": "vilken-bokstav-borjar-mane-pa-58bcf26c.mp3"
+      "file": "vilken-bokstav-borjar-mane-pa-58bcf26c.mp3",
+      "input": "Vilken bokstav börjar måne på?"
     },
     {
       "text": "Måne.",
-      "file": "mane-21b538cc.mp3"
+      "file": "mane-21b538cc.mp3",
+      "input": "Måne."
     },
     {
       "text": "måne börjar på M!",
-      "file": "mane-borjar-pa-m-1bfcff76.mp3"
+      "file": "mane-borjar-pa-m-1bfcff76.mp3",
+      "input": "måne börjar på M!"
     },
     {
       "text": "Var är månen?",
-      "file": "var-ar-manen-fc5e2c74.mp3"
+      "file": "var-ar-manen-fc5e2c74.mp3",
+      "input": "Var är månen?"
     },
     {
       "text": "Här är månen!",
-      "file": "har-ar-manen-a5db8dd1.mp3"
+      "file": "har-ar-manen-a5db8dd1.mp3",
+      "input": "Här är månen!"
     },
     {
       "text": "Det där är en måne.",
-      "file": "det-dar-ar-en-mane-ced8412e.mp3"
+      "file": "det-dar-ar-en-mane-ced8412e.mp3",
+      "input": "Det där är en måne."
     },
     {
       "text": "Vilken bokstav börjar morot på?",
-      "file": "vilken-bokstav-borjar-morot-pa-42f33e3c.mp3"
+      "file": "vilken-bokstav-borjar-morot-pa-42f33e3c.mp3",
+      "input": "Vilken bokstav börjar morot på?"
     },
     {
       "text": "Morot.",
-      "file": "morot-6d377670.mp3"
+      "file": "morot-6d377670.mp3",
+      "input": "Morot."
     },
     {
       "text": "morot börjar på M!",
-      "file": "morot-borjar-pa-m-db2bfd6a.mp3"
+      "file": "morot-borjar-pa-m-db2bfd6a.mp3",
+      "input": "morot börjar på M!"
     },
     {
       "text": "Var är moroten?",
-      "file": "var-ar-moroten-9552e727.mp3"
+      "file": "var-ar-moroten-9552e727.mp3",
+      "input": "Var är moroten?"
     },
     {
       "text": "Här är moroten!",
-      "file": "har-ar-moroten-c68a704e.mp3"
+      "file": "har-ar-moroten-c68a704e.mp3",
+      "input": "Här är moroten!"
     },
     {
       "text": "Det där är en morot.",
-      "file": "det-dar-ar-en-morot-d446623e.mp3"
+      "file": "det-dar-ar-en-morot-d446623e.mp3",
+      "input": "Det där är en morot."
     },
     {
       "text": "Vilken bokstav börjar myra på?",
-      "file": "vilken-bokstav-borjar-myra-pa-1e43fdc8.mp3"
+      "file": "vilken-bokstav-borjar-myra-pa-1e43fdc8.mp3",
+      "input": "Vilken bokstav börjar myra på?"
     },
     {
       "text": "Myra.",
-      "file": "myra-851e89c8.mp3"
+      "file": "myra-851e89c8.mp3",
+      "input": "Myra."
     },
     {
       "text": "myra börjar på M!",
-      "file": "myra-borjar-pa-m-5bf6ead2.mp3"
+      "file": "myra-borjar-pa-m-5bf6ead2.mp3",
+      "input": "myra börjar på M!"
     },
     {
       "text": "Var är myran?",
-      "file": "var-ar-myran-2e5aba48.mp3"
+      "file": "var-ar-myran-2e5aba48.mp3",
+      "input": "Var är myran?"
     },
     {
       "text": "Här är myran!",
-      "file": "har-ar-myran-e266ac1d.mp3"
+      "file": "har-ar-myran-e266ac1d.mp3",
+      "input": "Här är myran!"
     },
     {
       "text": "Det där är en myra.",
-      "file": "det-dar-ar-en-myra-7b37151a.mp3"
+      "file": "det-dar-ar-en-myra-7b37151a.mp3",
+      "input": "Det där är en myra."
     },
     {
       "text": "Vilken bokstav börjar orm på?",
-      "file": "vilken-bokstav-borjar-orm-pa-5a49e105.mp3"
+      "file": "vilken-bokstav-borjar-orm-pa-5a49e105.mp3",
+      "input": "Vilken bokstav börjar [[ ˈʊrm ]] på?"
     },
     {
       "text": "Orm.",
-      "file": "orm-9a5caf9f.mp3"
+      "file": "orm-9a5caf9f.mp3",
+      "input": "[[ ˈʊrm. ]]"
     },
     {
       "text": "orm börjar på O!",
-      "file": "orm-borjar-pa-o-07ce590b.mp3"
+      "file": "orm-borjar-pa-o-07ce590b.mp3",
+      "input": "[[ ˈʊrm ]] börjar på O!"
     },
     {
       "text": "Var är ormen?",
-      "file": "var-ar-ormen-ddd9320c.mp3"
+      "file": "var-ar-ormen-ddd9320c.mp3",
+      "input": "Var är [[ ˈʊrmən? ]]"
     },
     {
       "text": "Här är ormen!",
-      "file": "har-ar-ormen-3fbd4bb5.mp3"
+      "file": "har-ar-ormen-3fbd4bb5.mp3",
+      "input": "Här är [[ ˈʊrmən! ]]"
     },
     {
       "text": "Det där är en orm.",
-      "file": "det-dar-ar-en-orm-445bfa79.mp3"
+      "file": "det-dar-ar-en-orm-445bfa79.mp3",
+      "input": "Det där är en [[ ˈʊrm. ]]"
     },
     {
       "text": "Vilken bokstav börjar ost på?",
-      "file": "vilken-bokstav-borjar-ost-pa-d8188d97.mp3"
+      "file": "vilken-bokstav-borjar-ost-pa-d8188d97.mp3",
+      "input": "Vilken bokstav börjar ost på?"
     },
     {
       "text": "Ost.",
-      "file": "ost-270574f5.mp3"
+      "file": "ost-270574f5.mp3",
+      "input": "Ost."
     },
     {
       "text": "ost börjar på O!",
-      "file": "ost-borjar-pa-o-11d11cad.mp3"
+      "file": "ost-borjar-pa-o-11d11cad.mp3",
+      "input": "ost börjar på O!"
     },
     {
       "text": "Var är osten?",
-      "file": "var-ar-osten-6925ab4a.mp3"
+      "file": "var-ar-osten-6925ab4a.mp3",
+      "input": "Var är [[ ˈʊstən? ]]"
     },
     {
       "text": "Här är osten!",
-      "file": "har-ar-osten-4aafb32b.mp3"
+      "file": "har-ar-osten-4aafb32b.mp3",
+      "input": "Här är [[ ˈʊstən! ]]"
     },
     {
       "text": "Det där är en ost.",
-      "file": "det-dar-ar-en-ost-30a21d57.mp3"
+      "file": "det-dar-ar-en-ost-30a21d57.mp3",
+      "input": "Det där är en ost."
     },
     {
       "text": "Vilken bokstav börjar sol på?",
-      "file": "vilken-bokstav-borjar-sol-pa-e0562aa7.mp3"
+      "file": "vilken-bokstav-borjar-sol-pa-e0562aa7.mp3",
+      "input": "Vilken bokstav börjar sol på?"
     },
     {
       "text": "Sol.",
-      "file": "sol-aa8ffdbd.mp3"
+      "file": "sol-aa8ffdbd.mp3",
+      "input": "Sol."
     },
     {
       "text": "sol börjar på S!",
-      "file": "sol-borjar-pa-s-c29f02e1.mp3"
+      "file": "sol-borjar-pa-s-c29f02e1.mp3",
+      "input": "sol börjar på S!"
     },
     {
       "text": "Var är solen?",
-      "file": "var-ar-solen-d7f33c7a.mp3"
+      "file": "var-ar-solen-d7f33c7a.mp3",
+      "input": "Var är solen?"
     },
     {
       "text": "Här är solen!",
-      "file": "har-ar-solen-4701b31b.mp3"
+      "file": "har-ar-solen-4701b31b.mp3",
+      "input": "Här är solen!"
     },
     {
       "text": "Det där är en sol.",
-      "file": "det-dar-ar-en-sol-bccb59d7.mp3"
+      "file": "det-dar-ar-en-sol-bccb59d7.mp3",
+      "input": "Det där är en sol."
     },
     {
       "text": "Vilken bokstav börjar sax på?",
-      "file": "vilken-bokstav-borjar-sax-pa-799258c9.mp3"
+      "file": "vilken-bokstav-borjar-sax-pa-799258c9.mp3",
+      "input": "Vilken bokstav börjar sax på?"
     },
     {
       "text": "Sax.",
-      "file": "sax-080a5e87.mp3"
+      "file": "sax-080a5e87.mp3",
+      "input": "Sax."
     },
     {
       "text": "sax börjar på S!",
-      "file": "sax-borjar-pa-s-2fedf7df.mp3"
+      "file": "sax-borjar-pa-s-2fedf7df.mp3",
+      "input": "sax börjar på S!"
     },
     {
       "text": "Var är saxen?",
-      "file": "var-ar-saxen-85f54c6c.mp3"
+      "file": "var-ar-saxen-85f54c6c.mp3",
+      "input": "Var är saxen?"
     },
     {
       "text": "Här är saxen!",
-      "file": "har-ar-saxen-f5319f51.mp3"
+      "file": "har-ar-saxen-f5319f51.mp3",
+      "input": "Här är saxen!"
     },
     {
       "text": "Det där är en sax.",
-      "file": "det-dar-ar-en-sax-e8377bad.mp3"
+      "file": "det-dar-ar-en-sax-e8377bad.mp3",
+      "input": "Det där är en sax."
     },
     {
       "text": "Vilken bokstav börjar snigel på?",
-      "file": "vilken-bokstav-borjar-snigel-pa-55638817.mp3"
+      "file": "vilken-bokstav-borjar-snigel-pa-55638817.mp3",
+      "input": "Vilken bokstav börjar snigel på?"
     },
     {
       "text": "Snigel.",
-      "file": "snigel-70845dd5.mp3"
+      "file": "snigel-70845dd5.mp3",
+      "input": "Snigel."
     },
     {
       "text": "snigel börjar på S!",
-      "file": "snigel-borjar-pa-s-c8dfc0b9.mp3"
+      "file": "snigel-borjar-pa-s-c8dfc0b9.mp3",
+      "input": "snigel börjar på S!"
     },
     {
       "text": "Var är snigeln?",
-      "file": "var-ar-snigeln-2baa00af.mp3"
+      "file": "var-ar-snigeln-2baa00af.mp3",
+      "input": "Var är [[ snˈiːɡəln? ]]"
     },
     {
       "text": "Här är snigeln!",
-      "file": "har-ar-snigeln-0db15b86.mp3"
+      "file": "har-ar-snigeln-0db15b86.mp3",
+      "input": "Här är [[ snˈiːɡəln! ]]"
     },
     {
       "text": "Det där är en snigel.",
-      "file": "det-dar-ar-en-snigel-80a843a7.mp3"
+      "file": "det-dar-ar-en-snigel-80a843a7.mp3",
+      "input": "Det där är en snigel."
     },
     {
       "text": "Vilken bokstav börjar sko på?",
-      "file": "vilken-bokstav-borjar-sko-pa-ada80e6e.mp3"
+      "file": "vilken-bokstav-borjar-sko-pa-ada80e6e.mp3",
+      "input": "Vilken bokstav börjar sko på?"
     },
     {
       "text": "Sko.",
-      "file": "sko-f39c93c6.mp3"
+      "file": "sko-f39c93c6.mp3",
+      "input": "Sko."
     },
     {
       "text": "sko börjar på S!",
-      "file": "sko-borjar-pa-s-fa1f7bc2.mp3"
+      "file": "sko-borjar-pa-s-fa1f7bc2.mp3",
+      "input": "sko börjar på S!"
     },
     {
       "text": "Var är skon?",
-      "file": "var-ar-skon-314090f8.mp3"
+      "file": "var-ar-skon-314090f8.mp3",
+      "input": "Var är skon?"
     },
     {
       "text": "Här är skon!",
-      "file": "har-ar-skon-019510cb.mp3"
+      "file": "har-ar-skon-019510cb.mp3",
+      "input": "Här är skon!"
     },
     {
       "text": "Det där är en sko.",
-      "file": "det-dar-ar-en-sko-2630ce7c.mp3"
+      "file": "det-dar-ar-en-sko-2630ce7c.mp3",
+      "input": "Det där är en sko."
     },
     {
       "text": "Vilken bokstav börjar åtta på?",
-      "file": "vilken-bokstav-borjar-atta-pa-ed43c5c1.mp3"
+      "file": "vilken-bokstav-borjar-atta-pa-ed43c5c1.mp3",
+      "input": "Vilken bokstav börjar åtta på?"
     },
     {
       "text": "Åtta.",
-      "file": "atta-b432556f.mp3"
+      "file": "atta-b432556f.mp3",
+      "input": "Åtta."
     },
     {
       "text": "åtta börjar på Å!",
-      "file": "atta-borjar-pa-a-2b129ce5.mp3"
+      "file": "atta-borjar-pa-a-2b129ce5.mp3",
+      "input": "åtta börjar på Å!"
     },
     {
       "text": "Var är åttan?",
-      "file": "var-ar-attan-9bbd72a1.mp3"
+      "file": "var-ar-attan-9bbd72a1.mp3",
+      "input": "Var är åttan?"
     },
     {
       "text": "Här är åttan!",
-      "file": "har-ar-attan-58677678.mp3"
+      "file": "har-ar-attan-58677678.mp3",
+      "input": "Här är åttan!"
     },
     {
       "text": "Det där är en åtta.",
-      "file": "det-dar-ar-en-atta-e8563175.mp3"
+      "file": "det-dar-ar-en-atta-e8563175.mp3",
+      "input": "Det där är en åtta."
     },
     {
       "text": "Vilken bokstav börjar åska på?",
-      "file": "vilken-bokstav-borjar-aska-pa-e95dcf4f.mp3"
+      "file": "vilken-bokstav-borjar-aska-pa-e95dcf4f.mp3",
+      "input": "Vilken bokstav börjar [[ ˈɔska ]] på?"
     },
     {
       "text": "Åska.",
-      "file": "aska-e11e4511.mp3"
+      "file": "aska-e11e4511.mp3",
+      "input": "[[ ˈɔska. ]]"
     },
     {
       "text": "åska börjar på Å!",
-      "file": "aska-borjar-pa-a-24aa3c2f.mp3"
+      "file": "aska-borjar-pa-a-24aa3c2f.mp3",
+      "input": "[[ ˈɔska ]] börjar på Å!"
     },
     {
       "text": "Var är åskan?",
-      "file": "var-ar-askan-d99da91b.mp3"
+      "file": "var-ar-askan-d99da91b.mp3",
+      "input": "Var är [[ ˈɔskan? ]]"
     },
     {
       "text": "Här är åskan!",
-      "file": "har-ar-askan-ac9673e6.mp3"
+      "file": "har-ar-askan-ac9673e6.mp3",
+      "input": "Här är [[ ˈɔskan! ]]"
     },
     {
       "text": "Det där är åska.",
-      "file": "det-dar-ar-aska-c3e1bfa0.mp3"
+      "file": "det-dar-ar-aska-c3e1bfa0.mp3",
+      "input": "Det där är [[ ˈɔska. ]]"
     },
     {
       "text": "Vilken bokstav börjar äpple på?",
-      "file": "vilken-bokstav-borjar-apple-pa-1f3c34c6.mp3"
+      "file": "vilken-bokstav-borjar-apple-pa-1f3c34c6.mp3",
+      "input": "Vilken bokstav börjar äpple på?"
     },
     {
       "text": "Äpple.",
-      "file": "apple-24cbe72a.mp3"
+      "file": "apple-24cbe72a.mp3",
+      "input": "Äpple."
     },
     {
       "text": "äpple börjar på Ä!",
-      "file": "apple-borjar-pa-a-997d8411.mp3"
+      "file": "apple-borjar-pa-a-997d8411.mp3",
+      "input": "äpple börjar på Ä!"
     },
     {
       "text": "Var är äpplet?",
-      "file": "var-ar-applet-772ff422.mp3"
+      "file": "var-ar-applet-772ff422.mp3",
+      "input": "Var är äpplet?"
     },
     {
       "text": "Här är äpplet!",
-      "file": "har-ar-applet-e870463d.mp3"
+      "file": "har-ar-applet-e870463d.mp3",
+      "input": "Här är äpplet!"
     },
     {
       "text": "Det där är ett äpple.",
-      "file": "det-dar-ar-ett-apple-54b13700.mp3"
+      "file": "det-dar-ar-ett-apple-54b13700.mp3",
+      "input": "Det där är ett äpple."
     },
     {
       "text": "Vilken bokstav börjar ägg på?",
-      "file": "vilken-bokstav-borjar-agg-pa-f8ad7847.mp3"
+      "file": "vilken-bokstav-borjar-agg-pa-f8ad7847.mp3",
+      "input": "Vilken bokstav börjar ägg på?"
     },
     {
       "text": "Ägg.",
-      "file": "agg-c80aec1d.mp3"
+      "file": "agg-c80aec1d.mp3",
+      "input": "Ägg."
     },
     {
       "text": "ägg börjar på Ä!",
-      "file": "agg-borjar-pa-a-36533fbe.mp3"
+      "file": "agg-borjar-pa-a-36533fbe.mp3",
+      "input": "ägg börjar på Ä!"
     },
     {
       "text": "Var är ägget?",
-      "file": "var-ar-agget-d573d32c.mp3"
+      "file": "var-ar-agget-d573d32c.mp3",
+      "input": "Var är ägget?"
     },
     {
       "text": "Här är ägget!",
-      "file": "har-ar-agget-713dd8cd.mp3"
+      "file": "har-ar-agget-713dd8cd.mp3",
+      "input": "Här är ägget!"
     },
     {
       "text": "Det där är ett ägg.",
-      "file": "det-dar-ar-ett-agg-b186c1f3.mp3"
+      "file": "det-dar-ar-ett-agg-b186c1f3.mp3",
+      "input": "Det där är ett ägg."
     },
     {
       "text": "Vilken bokstav börjar ängel på?",
-      "file": "vilken-bokstav-borjar-angel-pa-30e13fef.mp3"
+      "file": "vilken-bokstav-borjar-angel-pa-30e13fef.mp3",
+      "input": "Vilken bokstav börjar ängel på?"
     },
     {
       "text": "Ängel.",
-      "file": "angel-91bd31a5.mp3"
+      "file": "angel-91bd31a5.mp3",
+      "input": "Ängel."
     },
     {
       "text": "ängel börjar på Ä!",
-      "file": "angel-borjar-pa-a-63b95286.mp3"
+      "file": "angel-borjar-pa-a-63b95286.mp3",
+      "input": "ängel börjar på Ä!"
     },
     {
       "text": "Var är ängeln?",
-      "file": "var-ar-angeln-97677641.mp3"
+      "file": "var-ar-angeln-97677641.mp3",
+      "input": "Var är ängeln?"
     },
     {
       "text": "Här är ängeln!",
-      "file": "har-ar-angeln-8ddc6e1e.mp3"
+      "file": "har-ar-angeln-8ddc6e1e.mp3",
+      "input": "Här är ängeln!"
     },
     {
       "text": "Det där är en ängel.",
-      "file": "det-dar-ar-en-angel-ad91ca4f.mp3"
+      "file": "det-dar-ar-en-angel-ad91ca4f.mp3",
+      "input": "Det där är en ängel."
     },
     {
       "text": "Vilken bokstav börjar öga på?",
-      "file": "vilken-bokstav-borjar-oga-pa-37ea7bff.mp3"
+      "file": "vilken-bokstav-borjar-oga-pa-37ea7bff.mp3",
+      "input": "Vilken bokstav börjar öga på?"
     },
     {
       "text": "Öga.",
-      "file": "oga-85c0a50d.mp3"
+      "file": "oga-85c0a50d.mp3",
+      "input": "Öga."
     },
     {
       "text": "öga börjar på Ö!",
-      "file": "oga-borjar-pa-o-894c87b0.mp3"
+      "file": "oga-borjar-pa-o-894c87b0.mp3",
+      "input": "öga börjar på Ö!"
     },
     {
       "text": "Var är ögat?",
-      "file": "var-ar-ogat-96b00717.mp3"
+      "file": "var-ar-ogat-96b00717.mp3",
+      "input": "Var är ögat?"
     },
     {
       "text": "Här är ögat!",
-      "file": "har-ar-ogat-aa70a370.mp3"
+      "file": "har-ar-ogat-aa70a370.mp3",
+      "input": "Här är ögat!"
     },
     {
       "text": "Det där är ett öga.",
-      "file": "det-dar-ar-ett-oga-35ac7303.mp3"
+      "file": "det-dar-ar-ett-oga-35ac7303.mp3",
+      "input": "Det där är ett öga."
     },
     {
       "text": "Vilken bokstav börjar öra på?",
-      "file": "vilken-bokstav-borjar-ora-pa-137dbba6.mp3"
+      "file": "vilken-bokstav-borjar-ora-pa-137dbba6.mp3",
+      "input": "Vilken bokstav börjar öra på?"
     },
     {
       "text": "Öra.",
-      "file": "ora-6b72cb0a.mp3"
+      "file": "ora-6b72cb0a.mp3",
+      "input": "Öra."
     },
     {
       "text": "öra börjar på Ö!",
-      "file": "ora-borjar-pa-o-e6ae9f6f.mp3"
+      "file": "ora-borjar-pa-o-e6ae9f6f.mp3",
+      "input": "öra börjar på Ö!"
     },
     {
       "text": "Var är örat?",
-      "file": "var-ar-orat-e5c5c126.mp3"
+      "file": "var-ar-orat-e5c5c126.mp3",
+      "input": "Var är [[ ˈøːrat? ]]"
     },
     {
       "text": "Här är örat!",
-      "file": "har-ar-orat-fadef87d.mp3"
+      "file": "har-ar-orat-fadef87d.mp3",
+      "input": "Här är [[ ˈøːrat! ]]"
     },
     {
       "text": "Det där är ett öra.",
-      "file": "det-dar-ar-ett-ora-9982ca40.mp3"
+      "file": "det-dar-ar-ett-ora-9982ca40.mp3",
+      "input": "Det där är ett öra."
     },
     {
       "text": "Vilken bokstav börjar ö på?",
-      "file": "vilken-bokstav-borjar-o-pa-7c404ed3.mp3"
+      "file": "vilken-bokstav-borjar-o-pa-7c404ed3.mp3",
+      "input": "Vilken bokstav börjar ö på?"
     },
     {
       "text": "Ö.",
-      "file": "o-81bd4545.mp3"
+      "file": "o-81bd4545.mp3",
+      "input": "Ö."
     },
     {
       "text": "ö börjar på Ö!",
-      "file": "o-borjar-pa-o-796175e8.mp3"
+      "file": "o-borjar-pa-o-796175e8.mp3",
+      "input": "ö börjar på Ö!"
     },
     {
       "text": "Var är ön?",
-      "file": "var-ar-on-424dfa99.mp3"
+      "file": "var-ar-on-424dfa99.mp3",
+      "input": "Var är ön?"
     },
     {
       "text": "Här är ön!",
-      "file": "har-ar-on-e87c359a.mp3"
+      "file": "har-ar-on-e87c359a.mp3",
+      "input": "Här är ön!"
     },
     {
       "text": "Det där är en ö.",
-      "file": "det-dar-ar-en-o-f8afeee3.mp3"
+      "file": "det-dar-ar-en-o-f8afeee3.mp3",
+      "input": "Det där är en ö."
     }
   ]
 }

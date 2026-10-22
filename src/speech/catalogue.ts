@@ -12,20 +12,12 @@ export const voiceTestPhrase = phrases.hubWelcome
  * file; a test checks that real rounds never say anything missing from here.
  */
 export function spokenTexts(): string[] {
-  const texts = new Set<string>([
-    phrases.hubWelcome,
-    ...phrases.praise,
-    phrases.hardLevelIntro,
-    phrases.levelUp,
-    phrases.myThingsHelp,
-  ])
+  const texts = new Set<string>([phrases.hubWelcome, phrases.hardLevelIntro, phrases.levelUp, phrases.myThingsHelp])
 
   for (const item of items) {
     texts.add(phrases.itemUnlocked(item.indefinite))
     texts.add(item.hint)
   }
-
-  for (const voice of [findLetterVoice, firstLetterVoice, wordPictureVoice]) texts.add(voice.complete)
 
   for (const letter of letters) {
     const question = { target: letter.id, choices: [letter.id] }

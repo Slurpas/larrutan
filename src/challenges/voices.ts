@@ -9,16 +9,14 @@ import type { FirstLetterQuestion } from './firstLetter/createRound'
  * the same builders, so every sentence the game can say has an audio clip.
  */
 export interface ChallengeVoice<Q extends ChoiceQuestion> {
-  /** Said for the first question of a round, when the speaker is pressed, and after a wrong tap: "Var är A?" */
+  /** The full question: the first time a child plays, and whenever the speaker is pressed. "Var är A?" */
   ask(question: Q): string
-  /** A shorter form for later questions in a round, once the child knows the pattern. Defaults to `ask`. */
+  /** A shorter form once the child knows the game, also after a wrong tap. Defaults to `ask`. */
   askAgain?(question: Q): string
   /** Said once only the answer is left: "Här är A!" */
   reveal(question: Q): string
   /** Names a wrong choice the child tapped: "Det där är S." */
   nameChoice(choice: string): string
-  /** Said on the end-of-round screen. */
-  complete: string
 }
 
 const letterName = (id: string) => getLetter(id).spoken
@@ -27,7 +25,6 @@ export const findLetterVoice: ChallengeVoice<ChoiceQuestion> = {
   ask: (q) => phrases.findLetterQuestion(letterName(q.target)),
   reveal: (q) => phrases.hereIs(letterName(q.target)),
   nameChoice: (id) => phrases.thatIs(letterName(id)),
-  complete: phrases.findLetterComplete,
 }
 
 export const firstLetterVoice: ChallengeVoice<FirstLetterQuestion> = {
@@ -35,12 +32,10 @@ export const firstLetterVoice: ChallengeVoice<FirstLetterQuestion> = {
   askAgain: (q) => phrases.firstLetterShort(getWord(q.word).base),
   reveal: (q) => phrases.firstLetterReveal(getWord(q.word).base, letterName(q.target)),
   nameChoice: (id) => phrases.thatIs(letterName(id)),
-  complete: phrases.firstLetterComplete,
 }
 
 export const wordPictureVoice: ChallengeVoice<ChoiceQuestion> = {
   ask: (q) => phrases.wordPictureQuestion(getWord(q.target).definite),
   reveal: (q) => phrases.hereIs(getWord(q.target).definite),
   nameChoice: (id) => phrases.thatIs(getWord(id).indefinite),
-  complete: phrases.wordPictureComplete,
 }

@@ -29,6 +29,7 @@ The second command downloads the browsers used by the browser tests (about 380 M
 | `npm test` | Unit tests (Vitest) |
 | `npm run test:e2e` | Browser tests (Playwright, desktop Chromium + iPad WebKit) |
 | `npm run speech` | Generate missing speech clips (see below) |
+| `npm run sfx` | Re-synthesise the sound effects in `src/sound/sfx/` (needs ffmpeg) |
 
 ## Generating speech
 
@@ -50,7 +51,7 @@ Then:
 npm run speech
 ```
 
-It only generates missing clips and deletes unused ones; `npm run speech -- --all` regenerates everything. Open the game with `?debug=voices` to see what plays and why.
+It generates new clips, regenerates any whose pronunciation or voice settings changed, and deletes unused ones; `npm run speech -- --all` regenerates everything. Words the engine says wrong are fixed in `src/content/pronunciation.ts`. Open the game with `?debug=voices` to see what plays and why.
 
 ## Testing on an iPad
 

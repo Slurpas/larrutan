@@ -7,16 +7,24 @@ import { createEventLog } from './eventLog'
 export type { VoiceStatus } from './browserVoice'
 
 /**
- * Everything the game says goes through here. Sentences play from generated
- * audio files (`npm run speech`, PRD §7), which work in every browser. The
- * device's own Swedish voice is only used for a sentence without a file.
+ * Everything the game says or plays goes through here. Sentences play from
+ * generated audio files (`npm run speech`, PRD §7), which work in every
+ * browser; the device's own Swedish voice is only used for a sentence without
+ * a file. Sound effects (`npm run sfx`) play through the same channel, so a
+ * new sentence or sound always stops the previous one.
  */
 
+export type SoundId = 'correct' | 'fanfare' | 'levelUp' | 'newItem'
+/** Something to say (a sentence) or play (a sound effect). */
+export type Utterance = string | { sound: SoundId }
+
+const byFileName = (urls: Record<string, string>) =>
+  new Map(Object.entries(urls).map(([path, url]) => [path.slice(path.lastIndexOf('/') + 1), url]))
+
 /** Generated clips, by file name. Bundled with the game. */
-const clipUrls = new Map(
-  Object.entries(
-    import.meta.glob<string>('./audio/sv/*.mp3', { eager: true, query: '?url', import: 'default' }),
-  ).map(([path, url]) => [path.slice(path.lastIndexOf('/') + 1), url]),
+const clipUrls = byFileName(import.meta.glob<string>('./audio/sv/*.mp3', { eager: true, query: '?url', import: 'default' }))
+const soundUrls = byFileName(
+  import.meta.glob<string>('../sound/sfx/*.mp3', { eager: true, query: '?url', import: 'default' }),
 )
 
 const log = createEventLog()
@@ -43,13 +51,20 @@ export function unlockSpeech(): void {
   deviceVoice.unlock()
 }
 
-/** Says one or more sentences in order, interrupting anything already being said. Resolves when done. */
-export async function speak(sentences: string | readonly string[]): Promise<void> {
+/** Says sentences and plays sounds in order, interrupting anything already playing. Resolves when done. */
+export async function speak(items: Utterance | readonly Utterance[]): Promise<void> {
   const myTurn = ++turn
   clips.stop()
   deviceVoice.stop()
-  for (const text of typeof sentences === 'string' ? [sentences] : sentences) {
+  const list: readonly Utterance[] = typeof items === 'string' || !Array.isArray(items) ? [items as Utterance] : items
+  for (const item of list) {
     if (myTurn !== turn) return
+    if (typeof item !== 'string') {
+      const soundUrl = soundUrls.get(`${item.sound}.mp3`)
+      if (soundUrl) await clips.play(soundUrl, `sound ${item.sound}`)
+      continue
+    }
+    const text = item
     const url = clipUrls.get(clipFileName(text))
     if (url) {
       const outcome = await clips.play(url, quote(text))

@@ -1,12 +1,12 @@
 // Generates an MP3 for every sentence in src/speech/catalogue.ts.
 //
-//   npm run speech           only sentences without a file yet
-//   npm run speech -- --all  regenerate everything (e.g. after changing voice settings)
+//   npm run speech           new sentences, and any whose pronunciation or voice settings changed
+//   npm run speech -- --all  regenerate everything
 //
 // Needs: the Piper venv and voice in .tools/ (see README), and ffmpeg on PATH (or FFMPEG=path).
 
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -34,18 +34,42 @@ for (const [what, file] of [['Piper venv', python], ['Piper voice', modelPath]])
 const server = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false } })
 const { spokenTexts } = await server.ssrLoadModule('/src/speech/catalogue.ts')
 const { clipFileName } = await server.ssrLoadModule('/src/speech/clipName.ts')
+const { pronunciations, withPronunciations } = await server.ssrLoadModule('/src/content/pronunciation.ts')
 await server.close()
 
-const clips = spokenTexts().map((text) => ({ text, file: clipFileName(text) }))
+// Every symbol in a pronunciation fix must be one the voice knows, or it would be silently dropped.
+const knownSymbols = new Set(Object.keys(JSON.parse(readFileSync(`${modelPath}.json`, 'utf8')).phoneme_id_map))
+for (const [word, ipa] of Object.entries(pronunciations)) {
+  const unknown = [...ipa].filter((symbol) => !knownSymbols.has(symbol))
+  if (unknown.length > 0) {
+    console.error(`Pronunciation of "${word}" uses symbols the voice doesn't know: ${unknown.join(' ')}`)
+    process.exit(1)
+  }
+}
+
+// What Piper is asked to say: the sentence, with fixed pronunciations swapped in.
+const clips = spokenTexts().map((text) => ({ text, file: clipFileName(text), input: withPronunciations(text) }))
 mkdirSync(audioDir, { recursive: true })
+
+// Regenerate a clip when it's new, its pronunciation changed, or the voice settings changed.
+const manifestPath = path.join(audioDir, 'clips.json')
+const previous = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : null
+const sameSettings = previous?.voice === voiceName && previous?.lengthScale === lengthScale
+const previousInput = new Map((previous?.clips ?? []).map((clip) => [clip.file, clip.input ?? clip.text]))
 
 const work = path.join(tmpdir(), `larrutan-speech-${Date.now()}`)
 mkdirSync(work, { recursive: true })
-const todo = clips.filter((clip) => regenerateAll || !existsSync(path.join(audioDir, clip.file)))
+const todo = clips.filter(
+  (clip) =>
+    regenerateAll ||
+    !sameSettings ||
+    !existsSync(path.join(audioDir, clip.file)) ||
+    previousInput.get(clip.file) !== clip.input,
+)
 console.log(`${clips.length} sentences, ${todo.length} to generate`)
 
 if (todo.length > 0) {
-  const jobs = todo.map((clip, i) => ({ text: clip.text, wav: path.join(work, `${i}.wav`) }))
+  const jobs = todo.map((clip, i) => ({ text: clip.input, wav: path.join(work, `${i}.wav`) }))
   const jobsPath = path.join(work, 'jobs.json')
   writeFileSync(jobsPath, JSON.stringify(jobs), 'utf8')
   execFileSync(python, [path.join(root, 'scripts/piper_batch.py'), modelPath, jobsPath, String(lengthScale)], {
@@ -82,7 +106,7 @@ for (const file of readdirSync(audioDir)) {
 
 // What was generated with what, for review and licence records.
 writeFileSync(
-  path.join(audioDir, 'clips.json'),
+  manifestPath,
   `${JSON.stringify({ engine: 'Piper (piper-tts 1.8.0)', voice: voiceName, lengthScale, clips }, null, 2)}\n`,
   'utf8',
 )

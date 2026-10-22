@@ -11,6 +11,12 @@ Every asset in the game, where it comes from, and under what terms. Update this 
 | Text-to-speech engine Piper (`piper-tts` 1.8.0) | [PyPI](https://pypi.org/project/piper-tts/) | GPL-3.0-or-later | Build tool only: runs on the developer's machine, is not shipped or linked; its output audio is not covered by the GPL |
 | `src/speech/audio/silence.mp3` | Generated with ffmpeg | Ours | 0.1 s of silence used to enable audio on iPad |
 
+## Sound effects
+
+| What | Source | Licence | Notes |
+|---|---|---|---|
+| `src/sound/sfx/*.mp3` (chime, fanfare, level-up, new item) | Synthesised from plain tones by `scripts/generate-sfx.mjs` (`npm run sfx`) | Ours | No samples or recordings used |
+
 Before a public release, re-check the voice model's card and the terms of any TTS service chosen in Task 6 for distributing generated audio.
 
 ## Graphics

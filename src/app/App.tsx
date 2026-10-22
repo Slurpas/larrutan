@@ -20,6 +20,8 @@ interface OpenChallenge {
   id: ChallengeId
   seed: number
   difficulty: Difficulty
+  /** Finished before in this session, so the long instructions can be skipped. */
+  knowsChallenge: boolean
   /** Unique for this round, so its reward can never be granted twice. */
   roundId: string
 }
@@ -48,22 +50,28 @@ export function App() {
 
   /** Opens a challenge at the first level not completed yet (or the hardest once all are done). */
   function openChallenge(id: ChallengeId, seed: number) {
-    const difficulty = nextDifficulty(id, getProgress().completedLevels)
+    const { completedLevels } = getProgress()
+    const difficulty = nextDifficulty(id, completedLevels)
+    const knowsChallenge = completedLevels.some((level) => level.startsWith(`${id}:`))
     const roundId = `${id}:${difficulty}:${seed}:${++roundCounter.current}`
-    setScreen({ name: 'world', overlay: { name: 'challenge', challenge: { id, seed, difficulty, roundId } } })
+    setScreen({
+      name: 'world',
+      overlay: { name: 'challenge', challenge: { id, seed, difficulty, knowsChallenge, roundId } },
+    })
   }
 
   const backToMap = () => setScreen({ name: 'world', overlay: null })
 
   let overlay = null
   if (screen.name === 'world' && screen.overlay?.name === 'challenge') {
-    const { id, seed, difficulty, roundId } = screen.overlay.challenge
+    const { id, seed, difficulty, knowsChallenge, roundId } = screen.overlay.challenge
     const Challenge = challengeComponents[id]
     overlay = (
       <Challenge
         key={roundId}
         seed={seed}
         difficulty={difficulty}
+        knowsChallenge={knowsChallenge}
         onRoundComplete={(wrongTaps) => recordRound({ roundId, challenge: id, difficulty, wrongTaps })}
         onExit={backToMap}
         onPlayAgain={() => openChallenge(id, randomSeed())}

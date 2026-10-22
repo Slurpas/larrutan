@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
-    "speech": "node scripts/generate-speech.mjs"
+    "speech": "node scripts/generate-speech.mjs",
+    "sfx": "node scripts/generate-sfx.mjs"
   },
   "dependencies": {
     "phaser": "^4.2.1",

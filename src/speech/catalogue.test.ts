@@ -17,6 +17,7 @@ import { words } from '../content/words'
 import { items } from '../rewards/items'
 import { spokenTexts } from './catalogue'
 import { clipFileName } from './clipName'
+import type { SoundId } from './speech'
 
 const catalogue = new Set(spokenTexts())
 const seeds = Array.from({ length: 300 }, (_, i) => i * 104729 + 3)
@@ -81,6 +82,12 @@ describe('speech catalogue', () => {
     expect(new Set(names).size).toBe(names.length)
     expect(clipFileName('Var är Å?')).toMatch(/^var-ar-a-[0-9a-f]{8}\.mp3$/)
     expect(clipFileName('Var är Å?')).not.toBe(clipFileName('Var är A?'))
+  })
+
+  it('has a sound file for every sound effect (run `npm run sfx` to make them)', () => {
+    for (const sound of ['correct', 'fanfare', 'levelUp', 'newItem'] satisfies SoundId[]) {
+      expect(existsSync(fileURLToPath(new URL(`../sound/sfx/${sound}.mp3`, import.meta.url))), sound).toBe(true)
+    }
   })
 
   it('has a generated audio file for every sentence (run `npm run speech` after changing content)', () => {

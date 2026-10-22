@@ -9,7 +9,7 @@ import { firstLetterVoice } from '../voices'
 import { createFirstLetterRound } from './createRound'
 
 /** Första bokstaven: see a picture, hear "Vilken bokstav börjar sol på?", tap the letter. */
-export function FirstLetter({ seed, difficulty, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
+export function FirstLetter({ seed, difficulty, knowsChallenge, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
   const [round] = useState(() =>
     createFirstLetterRound({ seed, words, letters, confusables: confusableLetters, difficulty }),
   )
@@ -21,6 +21,7 @@ export function FirstLetter({ seed, difficulty, onRoundComplete, onExit, onPlayA
       difficulty={difficulty}
       difficultyCount={challengeDifficulties.firstLetter.length}
       onRoundComplete={onRoundComplete}
+      knowsChallenge={knowsChallenge}
       choiceKind="letter"
       renderChoice={(id) => getLetter(id).display}
       choiceLabel={(id) => getLetter(id).display}

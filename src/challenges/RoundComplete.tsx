@@ -12,27 +12,26 @@ import { Picture } from '../ui/Picture'
 import styles from './RoundComplete.module.css'
 
 interface RoundCompleteProps {
-  /** Said out loud when the screen appears. */
-  message: string
   /** What this round earned; shown as a filling XP bar, a level-up and new items. */
   outcome: RoundOutcome | null
   onPlayAgain: () => void
   onExit: () => void
 }
 
-export function RoundComplete({ message, outcome, onPlayAgain, onExit }: RoundCompleteProps) {
+export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompleteProps) {
   const levelUp = outcome !== null && outcome.levelAfter > outcome.levelBefore
   const newItems = outcome?.newItems.map(getItem) ?? []
 
+  // A fanfare, then a sound and a few words for each new level or item.
   useEffect(() => {
     const leveledUp = outcome !== null && outcome.levelAfter > outcome.levelBefore
     const unlocked = outcome?.newItems.map(getItem) ?? []
     void speak([
-      message,
-      ...(leveledUp ? [phrases.levelUp] : []),
-      ...unlocked.map((item) => phrases.itemUnlocked(item.indefinite)),
+      { sound: 'fanfare' },
+      ...(leveledUp ? [{ sound: 'levelUp' } as const, phrases.levelUp] : []),
+      ...unlocked.flatMap((item) => [{ sound: 'newItem' } as const, phrases.itemUnlocked(item.indefinite)]),
     ])
-  }, [message, outcome])
+  }, [outcome])
 
   return (
     <main className={styles.screen}>

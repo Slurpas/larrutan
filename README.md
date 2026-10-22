@@ -39,7 +39,7 @@ One-time setup (Python 3 and ffmpeg on PATH needed; everything installs into `.t
 ```bash
 python -m venv .tools/piper-venv
 .tools/piper-venv/Scripts/python -m pip install piper-tts==1.8.0
-.tools/piper-venv/Scripts/python -m piper.download_voices sv_SE-nst-medium --data-dir .tools/piper-voices
+.tools/piper-venv/Scripts/python -m piper.download_voices sv_SE-alma-medium --data-dir .tools/piper-voices
 ```
 
 (On macOS/Linux use `.tools/piper-venv/bin/python`.)

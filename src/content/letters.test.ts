@@ -31,6 +31,8 @@ describe('letter content', () => {
     expect(phrases.findLetterQuestion(getLetter('a-ring').spoken)).toBe('Var är Å?')
     expect(phrases.thatIs(getLetter('a-umlaut').spoken)).toBe('Det där är Ä.')
     expect(phrases.hereIs(getLetter('o-umlaut').spoken)).toBe('Här är Ö!')
+    expect(phrases.firstLetterShort('öra')).toBe('Öra.')
+    expect(phrases.firstLetterShort('åska')).toBe('Åska.')
   })
 
   it('sorts in Swedish alphabetical order, with Å Ä Ö after the other letters', () => {

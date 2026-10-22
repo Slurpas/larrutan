@@ -26,6 +26,7 @@ export function spokenTexts(): string[] {
   for (const word of words) {
     const firstLetterQuestion = { word: word.id, target: word.firstLetter, choices: [word.firstLetter] }
     texts.add(firstLetterVoice.ask(firstLetterQuestion))
+    if (firstLetterVoice.askAgain) texts.add(firstLetterVoice.askAgain(firstLetterQuestion))
     texts.add(firstLetterVoice.reveal(firstLetterQuestion))
 
     const pictureQuestion = { target: word.id, choices: [word.id] }

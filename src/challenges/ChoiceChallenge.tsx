@@ -52,7 +52,12 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
 
   const question = currentQuestion(state)
   const revealed = isAnswerRevealed(state)
-  const questionText = question ? voice.ask(question) : null
+  // The full question first; later questions may use a shorter form. The speaker and hints always use the full one.
+  const questionText = !question
+    ? null
+    : state.questionIndex > 0 && voice.askAgain
+      ? voice.askAgain(question)
+      : voice.ask(question)
 
   function promptFor(s: RoundState<Q>): string {
     const q = currentQuestion(s)

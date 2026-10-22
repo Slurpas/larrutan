@@ -15,7 +15,9 @@ import { createServer } from 'vite'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const audioDir = path.join(root, 'src/speech/audio/sv')
 const silencePath = path.join(root, 'src/speech/audio/silence.mp3')
-const voiceName = 'sv_SE-nst-medium'
+// Alma: a female Swedish voice (CC BY 4.0, NST dataset). Her natural pace is quick, so slow her down for young listeners.
+const voiceName = 'sv_SE-alma-medium'
+const lengthScale = 1.2
 const modelPath = path.join(root, `.tools/piper-voices/${voiceName}.onnx`)
 const python = path.join(root, process.platform === 'win32' ? '.tools/piper-venv/Scripts/python.exe' : '.tools/piper-venv/bin/python')
 const ffmpeg = process.env.FFMPEG ?? 'ffmpeg'
@@ -46,7 +48,7 @@ if (todo.length > 0) {
   const jobs = todo.map((clip, i) => ({ text: clip.text, wav: path.join(work, `${i}.wav`) }))
   const jobsPath = path.join(work, 'jobs.json')
   writeFileSync(jobsPath, JSON.stringify(jobs), 'utf8')
-  execFileSync(python, [path.join(root, 'scripts/piper_batch.py'), modelPath, jobsPath], {
+  execFileSync(python, [path.join(root, 'scripts/piper_batch.py'), modelPath, jobsPath, String(lengthScale)], {
     stdio: 'inherit',
     env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
   })
@@ -81,7 +83,7 @@ for (const file of readdirSync(audioDir)) {
 // What was generated with what, for review and licence records.
 writeFileSync(
   path.join(audioDir, 'clips.json'),
-  `${JSON.stringify({ engine: 'Piper (piper-tts 1.8.0)', voice: voiceName, clips }, null, 2)}\n`,
+  `${JSON.stringify({ engine: 'Piper (piper-tts 1.8.0)', voice: voiceName, lengthScale, clips }, null, 2)}\n`,
   'utf8',
 )
 rmSync(work, { recursive: true, force: true })

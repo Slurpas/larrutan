@@ -11,6 +11,8 @@ export const phrases = {
   findLetterComplete: 'Bra jobbat! Du hittade alla bokstäverna!',
 
   firstLetterQuestion: (word: string) => `Vilken bokstav börjar ${word} på?`,
+  /** After the first picture of a round, just the word: the child already knows what to do. */
+  firstLetterShort: (word: string) => `${word.charAt(0).toLocaleUpperCase('sv')}${word.slice(1)}.`,
   firstLetterReveal: (word: string, letter: string) => `${word} börjar på ${letter}!`,
   firstLetterComplete: 'Bra jobbat! Du hittade alla första bokstäverna!',
 

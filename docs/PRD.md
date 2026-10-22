@@ -146,7 +146,9 @@ The first prototype used the browser's built-in Swedish voice (Web Speech API). 
 
 A script (`npm run speech`) generates every needed clip from the content data, once, at build time. The files are stored in the project; the game never calls a speech service while a child plays. A test fails if any sentence the game can say has no clip.
 
-Current engine: **Piper** (free, offline, no account) with the Swedish voice `sv_SE-nst-medium`. Still to do in Task 6: compare it by ear with the services below and add a review page for approving clips.
+Current engine: **Piper** (free, offline, no account) with the female Swedish voice "Alma" (`sv_SE-alma-medium`, CC BY 4.0, credit required), slowed slightly for young listeners. Still to do in Task 6: compare it by ear with the services below and add a review page for approving clips.
+
+Questions that repeat within a round may use a shorter form after the first one (Första bokstaven: "Vilken bokstav börjar sol på?" first, then just "Öra."). The speaker button and the help after a wrong tap always use the full question.
 
 - **Recommended: Microsoft Azure Speech.** Several Swedish neural voices, a documented Swedish phonetic alphabet for fixing pronunciations, and a free tier of 0.5 million characters per month. The whole game needs a few tens of thousands of characters, so the cost is effectively zero.
 - **Compared in the same test:** Google Cloud Text-to-Speech (Swedish Chirp 3 HD voices; its pronunciation-override feature doesn't list Swedish) and Piper (free, offline, no account; quality and the Swedish voice's licence to be checked).

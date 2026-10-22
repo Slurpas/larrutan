@@ -21,7 +21,12 @@ const seeds = Array.from({ length: 300 }, (_, i) => i * 104729 + 3)
 
 /** Everything a round can make the challenge say, including every wrong choice the child might tap. */
 function everythingSaid<Q extends ChoiceQuestion>(round: ChoiceRound<Q>, voice: ChallengeVoice<Q>): string[] {
-  return round.questions.flatMap((q) => [voice.ask(q), voice.reveal(q), ...q.choices.map(voice.nameChoice)])
+  return round.questions.flatMap((q) => [
+    voice.ask(q),
+    ...(voice.askAgain ? [voice.askAgain(q)] : []),
+    voice.reveal(q),
+    ...q.choices.map(voice.nameChoice),
+  ])
 }
 
 describe('speech catalogue', () => {

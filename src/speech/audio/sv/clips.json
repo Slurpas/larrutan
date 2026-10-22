@@ -1,6 +1,7 @@
 {
   "engine": "Piper (piper-tts 1.8.0)",
-  "voice": "sv_SE-nst-medium",
+  "voice": "sv_SE-alma-medium",
+  "lengthScale": 1.2,
   "clips": [
     {
       "text": "Tryck på en skylt för att spela!",
@@ -151,6 +152,10 @@
       "file": "vilken-bokstav-borjar-apa-pa-bf710721.mp3"
     },
     {
+      "text": "Apa.",
+      "file": "apa-f9036c73.mp3"
+    },
+    {
       "text": "apa börjar på A!",
       "file": "apa-borjar-pa-a-68748f05.mp3"
     },
@@ -169,6 +174,10 @@
     {
       "text": "Vilken bokstav börjar anka på?",
       "file": "vilken-bokstav-borjar-anka-pa-9d5dccf0.mp3"
+    },
+    {
+      "text": "Anka.",
+      "file": "anka-8e131104.mp3"
     },
     {
       "text": "anka börjar på A!",
@@ -191,6 +200,10 @@
       "file": "vilken-bokstav-borjar-ananas-pa-9f9256af.mp3"
     },
     {
+      "text": "Ananas.",
+      "file": "ananas-0983f295.mp3"
+    },
+    {
       "text": "ananas börjar på A!",
       "file": "ananas-borjar-pa-a-bde9ff57.mp3"
     },
@@ -209,6 +222,10 @@
     {
       "text": "Vilken bokstav börjar apelsin på?",
       "file": "vilken-bokstav-borjar-apelsin-pa-6b728ccb.mp3"
+    },
+    {
+      "text": "Apelsin.",
+      "file": "apelsin-bb32f061.mp3"
     },
     {
       "text": "apelsin börjar på A!",
@@ -231,6 +248,10 @@
       "file": "vilken-bokstav-borjar-igelkott-pa-4036485c.mp3"
     },
     {
+      "text": "Igelkott.",
+      "file": "igelkott-66ba36e4.mp3"
+    },
+    {
       "text": "igelkott börjar på I!",
       "file": "igelkott-borjar-pa-i-649fd002.mp3"
     },
@@ -249,6 +270,10 @@
     {
       "text": "Vilken bokstav börjar isbit på?",
       "file": "vilken-bokstav-borjar-isbit-pa-a3efcc66.mp3"
+    },
+    {
+      "text": "Isbit.",
+      "file": "isbit-0e6b018a.mp3"
     },
     {
       "text": "isbit börjar på I!",
@@ -271,6 +296,10 @@
       "file": "vilken-bokstav-borjar-lejon-pa-4959ccc3.mp3"
     },
     {
+      "text": "Lejon.",
+      "file": "lejon-d8c473e5.mp3"
+    },
+    {
       "text": "lejon börjar på L!",
       "file": "lejon-borjar-pa-l-cc8ed60e.mp3"
     },
@@ -289,6 +318,10 @@
     {
       "text": "Vilken bokstav börjar lastbil på?",
       "file": "vilken-bokstav-borjar-lastbil-pa-cd71640a.mp3"
+    },
+    {
+      "text": "Lastbil.",
+      "file": "lastbil-28073996.mp3"
     },
     {
       "text": "lastbil börjar på L!",
@@ -311,6 +344,10 @@
       "file": "vilken-bokstav-borjar-las-pa-45dde3e9.mp3"
     },
     {
+      "text": "Lås.",
+      "file": "las-fb3dae0f.mp3"
+    },
+    {
       "text": "lås börjar på L!",
       "file": "las-borjar-pa-l-0518bc10.mp3"
     },
@@ -329,6 +366,10 @@
     {
       "text": "Vilken bokstav börjar löv på?",
       "file": "vilken-bokstav-borjar-lov-pa-86a2938d.mp3"
+    },
+    {
+      "text": "Löv.",
+      "file": "lov-bc17af17.mp3"
     },
     {
       "text": "löv börjar på L!",
@@ -351,6 +392,10 @@
       "file": "vilken-bokstav-borjar-mus-pa-82bce8ee.mp3"
     },
     {
+      "text": "Mus.",
+      "file": "mus-58630566.mp3"
+    },
+    {
       "text": "mus börjar på M!",
       "file": "mus-borjar-pa-m-f3f3a598.mp3"
     },
@@ -369,6 +414,10 @@
     {
       "text": "Vilken bokstav börjar måne på?",
       "file": "vilken-bokstav-borjar-mane-pa-58bcf26c.mp3"
+    },
+    {
+      "text": "Måne.",
+      "file": "mane-21b538cc.mp3"
     },
     {
       "text": "måne börjar på M!",
@@ -391,6 +440,10 @@
       "file": "vilken-bokstav-borjar-morot-pa-42f33e3c.mp3"
     },
     {
+      "text": "Morot.",
+      "file": "morot-6d377670.mp3"
+    },
+    {
       "text": "morot börjar på M!",
       "file": "morot-borjar-pa-m-db2bfd6a.mp3"
     },
@@ -409,6 +462,10 @@
     {
       "text": "Vilken bokstav börjar myra på?",
       "file": "vilken-bokstav-borjar-myra-pa-1e43fdc8.mp3"
+    },
+    {
+      "text": "Myra.",
+      "file": "myra-851e89c8.mp3"
     },
     {
       "text": "myra börjar på M!",
@@ -431,6 +488,10 @@
       "file": "vilken-bokstav-borjar-orm-pa-5a49e105.mp3"
     },
     {
+      "text": "Orm.",
+      "file": "orm-9a5caf9f.mp3"
+    },
+    {
       "text": "orm börjar på O!",
       "file": "orm-borjar-pa-o-07ce590b.mp3"
     },
@@ -449,6 +510,10 @@
     {
       "text": "Vilken bokstav börjar ost på?",
       "file": "vilken-bokstav-borjar-ost-pa-d8188d97.mp3"
+    },
+    {
+      "text": "Ost.",
+      "file": "ost-270574f5.mp3"
     },
     {
       "text": "ost börjar på O!",
@@ -471,6 +536,10 @@
       "file": "vilken-bokstav-borjar-sol-pa-e0562aa7.mp3"
     },
     {
+      "text": "Sol.",
+      "file": "sol-aa8ffdbd.mp3"
+    },
+    {
       "text": "sol börjar på S!",
       "file": "sol-borjar-pa-s-c29f02e1.mp3"
     },
@@ -489,6 +558,10 @@
     {
       "text": "Vilken bokstav börjar sax på?",
       "file": "vilken-bokstav-borjar-sax-pa-799258c9.mp3"
+    },
+    {
+      "text": "Sax.",
+      "file": "sax-080a5e87.mp3"
     },
     {
       "text": "sax börjar på S!",
@@ -511,6 +584,10 @@
       "file": "vilken-bokstav-borjar-snigel-pa-55638817.mp3"
     },
     {
+      "text": "Snigel.",
+      "file": "snigel-70845dd5.mp3"
+    },
+    {
       "text": "snigel börjar på S!",
       "file": "snigel-borjar-pa-s-c8dfc0b9.mp3"
     },
@@ -529,6 +606,10 @@
     {
       "text": "Vilken bokstav börjar sko på?",
       "file": "vilken-bokstav-borjar-sko-pa-ada80e6e.mp3"
+    },
+    {
+      "text": "Sko.",
+      "file": "sko-f39c93c6.mp3"
     },
     {
       "text": "sko börjar på S!",
@@ -551,6 +632,10 @@
       "file": "vilken-bokstav-borjar-atta-pa-ed43c5c1.mp3"
     },
     {
+      "text": "Åtta.",
+      "file": "atta-b432556f.mp3"
+    },
+    {
       "text": "åtta börjar på Å!",
       "file": "atta-borjar-pa-a-2b129ce5.mp3"
     },
@@ -569,6 +654,10 @@
     {
       "text": "Vilken bokstav börjar åska på?",
       "file": "vilken-bokstav-borjar-aska-pa-e95dcf4f.mp3"
+    },
+    {
+      "text": "Åska.",
+      "file": "aska-e11e4511.mp3"
     },
     {
       "text": "åska börjar på Å!",
@@ -591,6 +680,10 @@
       "file": "vilken-bokstav-borjar-apple-pa-1f3c34c6.mp3"
     },
     {
+      "text": "Äpple.",
+      "file": "apple-24cbe72a.mp3"
+    },
+    {
       "text": "äpple börjar på Ä!",
       "file": "apple-borjar-pa-a-997d8411.mp3"
     },
@@ -609,6 +702,10 @@
     {
       "text": "Vilken bokstav börjar ägg på?",
       "file": "vilken-bokstav-borjar-agg-pa-f8ad7847.mp3"
+    },
+    {
+      "text": "Ägg.",
+      "file": "agg-c80aec1d.mp3"
     },
     {
       "text": "ägg börjar på Ä!",
@@ -631,6 +728,10 @@
       "file": "vilken-bokstav-borjar-angel-pa-30e13fef.mp3"
     },
     {
+      "text": "Ängel.",
+      "file": "angel-91bd31a5.mp3"
+    },
+    {
       "text": "ängel börjar på Ä!",
       "file": "angel-borjar-pa-a-63b95286.mp3"
     },
@@ -649,6 +750,10 @@
     {
       "text": "Vilken bokstav börjar öga på?",
       "file": "vilken-bokstav-borjar-oga-pa-37ea7bff.mp3"
+    },
+    {
+      "text": "Öga.",
+      "file": "oga-85c0a50d.mp3"
     },
     {
       "text": "öga börjar på Ö!",
@@ -671,6 +776,10 @@
       "file": "vilken-bokstav-borjar-ora-pa-137dbba6.mp3"
     },
     {
+      "text": "Öra.",
+      "file": "ora-6b72cb0a.mp3"
+    },
+    {
       "text": "öra börjar på Ö!",
       "file": "ora-borjar-pa-o-e6ae9f6f.mp3"
     },
@@ -689,6 +798,10 @@
     {
       "text": "Vilken bokstav börjar ö på?",
       "file": "vilken-bokstav-borjar-o-pa-7c404ed3.mp3"
+    },
+    {
+      "text": "Ö.",
+      "file": "o-81bd4545.mp3"
     },
     {
       "text": "ö börjar på Ö!",

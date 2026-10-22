@@ -19,11 +19,27 @@ const POLL_FOR_MS = 60_000
 const GIVE_UP_MS = 5000
 /** How long one speak() may wait for voices that are still loading. */
 const SPEAK_WAIT_MS = 1500
+/** Online voices in Chrome and Edge can drop an utterance queued right after a cancel; give them a moment. */
+const CANCEL_SETTLE_MS = 120
+/** How many recent speech events the diagnostic panel shows. */
+const EVENT_LOG_SIZE = 30
 
 /** The parts of the Web Speech API we use, so tests can supply a fake. */
 export interface SpeechEnv {
-  synth: Pick<SpeechSynthesis, 'getVoices' | 'speak' | 'cancel' | 'addEventListener'>
+  synth: Pick<
+    SpeechSynthesis,
+    'getVoices' | 'speak' | 'cancel' | 'resume' | 'speaking' | 'pending' | 'addEventListener'
+  >
   createUtterance: (text: string) => SpeechSynthesisUtterance
+}
+
+/** What the ?debug=voices panel shows. */
+export interface SpeechDebugInfo {
+  status: VoiceStatus
+  chosenVoice: string | null
+  swedishVoices: string[]
+  totalVoices: number
+  events: string[]
 }
 
 export interface Speech {
@@ -36,7 +52,10 @@ export interface Speech {
   stop(): void
   getStatus(): VoiceStatus
   subscribe(listener: () => void): () => void
+  getDebugInfo(): SpeechDebugInfo
 }
+
+const describeVoice = (v: SpeechSynthesisVoice) => `${v.name} (${v.lang}, ${v.localService ? 'local' : 'online'})`
 
 export function createSpeech(env: SpeechEnv | null): Speech {
   let status: VoiceStatus = 'loading'
@@ -44,11 +63,21 @@ export function createSpeech(env: SpeechEnv | null): Speech {
   let unlocked = false
   // Chrome can garbage-collect an utterance mid-speech and never fire 'end'; holding a reference prevents that.
   let currentUtterance: SpeechSynthesisUtterance | null = null
+  /** Bumped by every speak() and stop(); an older speak() that is still waiting gives up. */
+  let turn = 0
   const listeners = new Set<() => void>()
+  const events: string[] = []
+  const startedAt = Date.now()
+
+  function note(event: string) {
+    events.push(`${((Date.now() - startedAt) / 1000).toFixed(1)}s ${event}`)
+    if (events.length > EVENT_LOG_SIZE) events.shift()
+  }
 
   function setStatus(next: VoiceStatus) {
     if (next === status) return
     status = next
+    note(`status ${next}${voice ? `: ${describeVoice(voice)}` : ''}`)
     listeners.forEach((listener) => listener())
   }
 
@@ -91,6 +120,7 @@ export function createSpeech(env: SpeechEnv | null): Speech {
     unlock() {
       if (!env || unlocked) return
       unlocked = true
+      note('unlock')
       refreshVoices()
       const utterance = env.createUtterance('')
       utterance.volume = 0
@@ -99,12 +129,27 @@ export function createSpeech(env: SpeechEnv | null): Speech {
 
     async speak(text) {
       if (!env) return
+      const { synth } = env
+      const myTurn = ++turn
+      const label = JSON.stringify(text.length > 40 ? `${text.slice(0, 40)}…` : text)
+
       refreshVoices()
       if (!voice) await waitForVoice()
       const chosen = voice
-      if (!chosen) return
+      if (myTurn !== turn) return
+      if (!chosen) {
+        note(`skipped, no Swedish voice: ${label}`)
+        return
+      }
 
-      env.synth.cancel()
+      if (synth.speaking || synth.pending) {
+        synth.cancel()
+        await sleep(CANCEL_SETTLE_MS)
+        if (myTurn !== turn) return
+      }
+      // Chrome and Edge can get stuck paused (e.g. after the tab was in the background); harmless otherwise.
+      synth.resume()
+
       const utterance = env.createUtterance(text)
       utterance.voice = chosen
       utterance.lang = chosen.lang
@@ -113,23 +158,38 @@ export function createSpeech(env: SpeechEnv | null): Speech {
 
       await new Promise<void>((resolve) => {
         // Some browsers never fire 'end'; the game must never wait forever.
-        const fallback = setTimeout(finish, 2000 + text.length * 150)
-        function finish() {
+        const fallback = setTimeout(() => finish('no end event, gave up waiting'), 2000 + text.length * 150)
+        function finish(how: string) {
           clearTimeout(fallback)
+          note(`${how}: ${label}`)
           if (currentUtterance === utterance) currentUtterance = null
           resolve()
         }
-        utterance.onend = finish
-        utterance.onerror = finish
-        env.synth.speak(utterance)
+        utterance.onstart = () => note(`started: ${label}`)
+        utterance.onend = () => finish('finished')
+        utterance.onerror = (event) => finish(`error "${event.error}"`)
+        note(`speak with ${describeVoice(chosen)}: ${label}`)
+        synth.speak(utterance)
       })
     },
 
     stop() {
-      env?.synth.cancel()
+      turn++
+      if (env && (env.synth.speaking || env.synth.pending)) env.synth.cancel()
     },
 
     getStatus: () => status,
+
+    getDebugInfo() {
+      const voices = env?.synth.getVoices() ?? []
+      return {
+        status,
+        chosenVoice: voice ? describeVoice(voice) : null,
+        swedishVoices: voices.filter((v) => v.lang.toLowerCase().replace('_', '-').startsWith('sv')).map(describeVoice),
+        totalVoices: voices.length,
+        events: [...events],
+      }
+    },
 
     subscribe(listener) {
       listeners.add(listener)
@@ -156,3 +216,4 @@ export const speak = (text: string) => browserSpeech.speak(text)
 export const stopSpeech = () => browserSpeech.stop()
 export const getVoiceStatus = () => browserSpeech.getStatus()
 export const subscribeVoiceStatus = (listener: () => void) => browserSpeech.subscribe(listener)
+export const getSpeechDebugInfo = () => browserSpeech.getDebugInfo()

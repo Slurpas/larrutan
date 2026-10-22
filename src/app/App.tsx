@@ -4,6 +4,7 @@ import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { NoVoiceWarning } from '../speech/NoVoiceWarning'
+import { VoiceDebug, voiceDebugRequested } from '../speech/VoiceDebug'
 import { unlockSpeech } from '../speech/speech'
 import { HubWorld } from '../world/HubWorld'
 import { RotateHint } from './RotateHint'
@@ -70,6 +71,7 @@ export function App() {
       {challenge}
       <RotateHint />
       <NoVoiceWarning />
+      {voiceDebugRequested && <VoiceDebug />}
     </>
   )
 }

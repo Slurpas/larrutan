@@ -7,20 +7,25 @@ export interface Letter {
   display: string
   /** What the voice says. Usually the letter itself; change it here if a voice mispronounces a letter. */
   spoken: string
+  /**
+   * The letter's plain sound, used to check that a word really starts with it.
+   * Other sounds are written as their Swedish names: "sj", "tj", "j" and so on.
+   */
+  sound: string
   status: ContentStatus
 }
 
-/** Upper-case letters for Hitta bokstaven, in Swedish alphabetical order. */
+/** Upper-case letters, in Swedish alphabetical order. Approved by the user 2026-10-22. */
 export const letters: readonly Letter[] = [
-  { id: 'a', display: 'A', spoken: 'A', status: 'draft' },
-  { id: 'i', display: 'I', spoken: 'I', status: 'draft' },
-  { id: 'l', display: 'L', spoken: 'L', status: 'draft' },
-  { id: 'm', display: 'M', spoken: 'M', status: 'draft' },
-  { id: 'o', display: 'O', spoken: 'O', status: 'draft' },
-  { id: 's', display: 'S', spoken: 'S', status: 'draft' },
-  { id: 'a-ring', display: 'Å', spoken: 'Å', status: 'draft' },
-  { id: 'a-umlaut', display: 'Ä', spoken: 'Ä', status: 'draft' },
-  { id: 'o-umlaut', display: 'Ö', spoken: 'Ö', status: 'draft' },
+  { id: 'a', display: 'A', spoken: 'A', sound: 'a', status: 'approved' },
+  { id: 'i', display: 'I', spoken: 'I', sound: 'i', status: 'approved' },
+  { id: 'l', display: 'L', spoken: 'L', sound: 'l', status: 'approved' },
+  { id: 'm', display: 'M', spoken: 'M', sound: 'm', status: 'approved' },
+  { id: 'o', display: 'O', spoken: 'O', sound: 'o', status: 'approved' },
+  { id: 's', display: 'S', spoken: 'S', sound: 's', status: 'approved' },
+  { id: 'a-ring', display: 'Å', spoken: 'Å', sound: 'å', status: 'approved' },
+  { id: 'a-umlaut', display: 'Ä', spoken: 'Ä', sound: 'ä', status: 'approved' },
+  { id: 'o-umlaut', display: 'Ö', spoken: 'Ö', sound: 'ö', status: 'approved' },
 ]
 
 export interface ConfusableGroup {
@@ -46,4 +51,14 @@ export function getLetter(id: string): Letter {
   const letter = lettersById.get(id)
   if (!letter) throw new Error(`Unknown letter id "${id}"`)
   return letter
+}
+
+export function areConfusable(a: string, b: string, groups: readonly ConfusableGroup[]): boolean {
+  return groups.some((group) => group.ids.includes(a) && group.ids.includes(b))
+}
+
+/** The id of the letter a word or name starts with, if it is one of ours. */
+export function firstLetterOf(text: string, from: readonly Letter[]): string | undefined {
+  const first = text.normalize('NFC').charAt(0).toLocaleUpperCase('sv')
+  return from.find((letter) => letter.display === first)?.id
 }

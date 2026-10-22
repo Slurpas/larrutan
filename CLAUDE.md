@@ -42,8 +42,8 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 ## Code layout
 
 - `src/app`: shell, start screen, touch setup, seeds
-- `src/challenges`: one folder per challenge (pure round logic + screen), plus shared round UI
-- `src/content`: letters, phrases and other learning content (typed data)
+- `src/challenges`: `ChoiceChallenge` (the shared screen: speech, hints, praise, progress, keyboard), shared round logic, and one folder per challenge with its pure round builder and a thin wrapper
+- `src/content`: letters, words, phrases (typed data) and `validation.ts` with the PRD §5 content rules
 - `src/speech`: speech output (browser voice for now) and the no-voice warning
 - `src/ui`: shared buttons, icons, helpers
 

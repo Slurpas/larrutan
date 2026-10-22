@@ -43,4 +43,4 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 
 - TypeScript is pinned to 6.0.x because typescript-eslint doesn't support TypeScript 7 yet.
 - Styling: CSS Modules plus design tokens in `src/index.css`. Touch targets at least 64 px.
-- iPad gesture blocking lives in `src/app/blockBrowserGestures.ts` and `src/index.css`.
+- iPad touch setup (pressed-button states, gesture blocking) lives in `src/app/touchBehaviour.ts` and `src/index.css`.

@@ -9,6 +9,11 @@
   --color-button-edge: #e09b00;
   --color-button-ink: #4a2f00;
   --color-focus: #1f6feb;
+  --color-card-edge: #c9d6e3;
+  --color-correct: #8fd694;
+  --color-correct-edge: #4f9a57;
+  --color-reveal: #ffe28a;
+  --color-star: #ffc93c;
 
   --font-rounded: ui-rounded, 'SF Pro Rounded', 'Segoe UI', system-ui, sans-serif;
 

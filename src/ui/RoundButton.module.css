@@ -1,0 +1,41 @@
+.button {
+  display: inline-grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  padding: 0;
+  border: 4px solid var(--color-ink);
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 7px 0 var(--color-card-edge), 0 7px 0 4px var(--color-ink);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out;
+}
+
+.button svg {
+  width: 60%;
+  height: 60%;
+}
+
+.button:active {
+  transform: translateY(6px);
+  box-shadow: 0 1px 0 var(--color-card-edge), 0 1px 0 4px var(--color-ink);
+}
+
+.button:focus-visible {
+  outline: 6px solid var(--color-focus);
+  outline-offset: 8px;
+}
+
+.large {
+  width: 108px;
+  height: 108px;
+  background: var(--color-button);
+  box-shadow: 0 9px 0 var(--color-button-edge), 0 9px 0 4px var(--color-ink);
+  color: var(--color-button-ink);
+}
+
+.large:active {
+  box-shadow: 0 2px 0 var(--color-button-edge), 0 2px 0 4px var(--color-ink);
+}

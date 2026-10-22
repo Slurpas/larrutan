@@ -39,6 +39,21 @@ Changed files, commands run and their results, screenshots, known limitations, a
 
 Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 
+## Code layout
+
+- `src/app`: shell, start screen, touch setup, seeds
+- `src/challenges`: one folder per challenge (pure round logic + screen), plus shared round UI
+- `src/content`: letters, phrases and other learning content (typed data)
+- `src/speech`: speech output (browser voice for now) and the no-voice warning
+- `src/ui`: shared buttons, icons, helpers
+
+## Gotchas
+
+- `?seed=123` in the URL replays a round; the seed shows in the corner of each challenge.
+- The dev server on Windows can miss a second quick edit to the same file and serve stale code. If behaviour doesn't match the source, restart it.
+- Playwright won't tap an element that's animating forever (the pulsing revealed answer); use `{ force: true }` there.
+- The in-app browser pane misplaces clicks when it emulates a viewport size. For iPad-sized visual checks, drive WebKit with Playwright and screenshot.
+
 ## Stack notes
 
 - TypeScript is pinned to 6.0.x because typescript-eslint doesn't support TypeScript 7 yet.

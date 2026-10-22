@@ -2,7 +2,7 @@ import styles from './RotateHint.module.css'
 
 /**
  * Picture-only hint to turn the iPad sideways. Shown in portrait on touch
- * devices only, and never blocks the game (rotation lock may be on).
+ * devices only, in a corner, and never blocks the game (rotation lock may be on).
  */
 export function RotateHint() {
   return (

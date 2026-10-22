@@ -124,10 +124,10 @@ Phase 1 uses emoji as placeholder pictures: no asset work, recognisable, availab
 
 Every answer gets immediate, supportive feedback, both spoken and visual (never text-only).
 
-After a wrong answer:
-- Say and show the right answer ("Det här är Ä").
-- Offer a hint, for example removing a wrong option.
-- Allow retry without penalty.
+After a wrong answer, help is graduated:
+- Name what the child tapped ("Det där är S."), grey that choice out in place, and ask again. Nothing moves.
+- When only the right answer is left, point at it: highlight it and say "Här är Ä!". The child taps it to finish.
+- Retry is always allowed and never penalised.
 - Don't loop the same question endlessly with shuffled positions.
 
 Attempts, hints and successes are tracked separately from rewards.

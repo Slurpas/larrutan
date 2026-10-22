@@ -17,6 +17,8 @@ export function createHubGame(parent: HTMLElement, options: HubSceneOptions): Hu
     banner: false,
     // The scene listens to the DOM itself, so nothing is captured while a challenge is open.
     input: { keyboard: false },
+    // All sound is speech (src/speech). Phaser's own audio context could compete with it on iPad.
+    audio: { noAudio: true },
     scale: {
       mode: Phaser.Scale.RESIZE,
       width: parent.clientWidth || 1,

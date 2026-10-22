@@ -1,0 +1,40 @@
+import { describe, expect, it } from 'vitest'
+import { TILE, cameraZoom } from './camera'
+import { hubMap } from './hubMap'
+
+const mapWidth = hubMap.cols * TILE
+const mapHeight = hubMap.rows * TILE
+
+describe('cameraZoom', () => {
+  it('shows tiles at 64 px on iPads held sideways', () => {
+    expect(cameraZoom(1180, 820, mapWidth, mapHeight) * TILE).toBe(64)
+    expect(cameraZoom(1024, 768, mapWidth, mapHeight) * TILE).toBe(64)
+  })
+
+  it('zooms out on iPads held upright so all signs still fit across', () => {
+    for (const [width, height] of [
+      [810, 1080],
+      [768, 1024],
+    ] as const) {
+      const tilesAcross = width / (cameraZoom(width, height, mapWidth, mapHeight) * TILE)
+      expect(tilesAcross, `${width}×${height}`).toBeGreaterThanOrEqual(15.5)
+    }
+  })
+
+  it('never shows more than the map, so there is no empty space at the edges', () => {
+    const viewports = [
+      [375, 812],
+      [820, 1180],
+      [1180, 820],
+      [1366, 1024],
+      [1920, 1080],
+      [2560, 1440],
+      [3840, 2160],
+    ] as const
+    for (const [width, height] of viewports) {
+      const zoom = cameraZoom(width, height, mapWidth, mapHeight)
+      expect(width / zoom, `${width}×${height}`).toBeLessThanOrEqual(mapWidth + 1e-9)
+      expect(height / zoom, `${width}×${height}`).toBeLessThanOrEqual(mapHeight + 1e-9)
+    }
+  })
+})

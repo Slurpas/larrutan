@@ -24,7 +24,7 @@ export function RoundComplete({ message, onPlayAgain, onExit }: RoundCompletePro
         <RoundButton label="Spela igen" size="large" onClick={onPlayAgain}>
           <ReplayIcon />
         </RoundButton>
-        <RoundButton label="Till menyn" size="large" onClick={onExit}>
+        <RoundButton label="Till kartan" size="large" onClick={onExit}>
           <HouseIcon />
         </RoundButton>
       </div>

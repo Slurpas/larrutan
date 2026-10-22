@@ -1,0 +1,6 @@
+/* A challenge covers the map, which stays underneath so the child returns to the same spot. */
+.overlay {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+}

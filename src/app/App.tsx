@@ -1,15 +1,23 @@
 import { useState } from 'react'
+import type { ChallengeId } from '../challenges/challengeIds'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { NoVoiceWarning } from '../speech/NoVoiceWarning'
 import { unlockSpeech } from '../speech/speech'
-import { ChallengeMenu, type ChallengeId } from './ChallengeMenu'
+import { HubWorld } from '../world/HubWorld'
 import { RotateHint } from './RotateHint'
 import { StartScreen } from './StartScreen'
 import { randomSeed, readSeedFromUrl } from './seed'
+import styles from './App.module.css'
 
-type Screen = { name: 'start' } | { name: 'menu' } | { name: 'challenge'; challenge: ChallengeId; seed: number }
+interface OpenChallenge {
+  id: ChallengeId
+  seed: number
+}
+
+/** Start screen, or the map with at most one challenge open on top of it. */
+type Screen = { name: 'start' } | { name: 'world'; challenge: OpenChallenge | null }
 
 const challengeComponents = {
   findLetter: FindLetter,
@@ -23,38 +31,43 @@ export function App() {
   function handlePlay() {
     // Must run inside the tap itself, or iPad Safari stays silent.
     unlockSpeech()
-    setScreen({ name: 'menu' })
+    setScreen({ name: 'world', challenge: null })
   }
 
-  function startChallenge(challenge: ChallengeId, seed: number) {
-    setScreen({ name: 'challenge', challenge, seed })
+  function openChallenge(id: ChallengeId, seed: number) {
+    setScreen({ name: 'world', challenge: { id, seed } })
   }
 
-  let content
-  if (screen.name === 'start') {
-    content = <StartScreen onPlay={handlePlay} />
-  } else if (screen.name === 'menu') {
-    content = (
-      <ChallengeMenu
-        onPick={(id) => startChallenge(id, readSeedFromUrl(window.location.search) ?? randomSeed())}
-        onHome={() => setScreen({ name: 'start' })}
-      />
-    )
-  } else {
-    const Challenge = challengeComponents[screen.challenge]
-    content = (
-      <Challenge
-        key={`${screen.challenge}-${screen.seed}`}
-        seed={screen.seed}
-        onExit={() => setScreen({ name: 'menu' })}
-        onPlayAgain={() => startChallenge(screen.challenge, randomSeed())}
-      />
+  const backToMap = () => setScreen({ name: 'world', challenge: null })
+
+  let challenge = null
+  if (screen.name === 'world' && screen.challenge) {
+    const { id, seed } = screen.challenge
+    const Challenge = challengeComponents[id]
+    challenge = (
+      <div className={styles.overlay}>
+        <Challenge
+          key={`${id}-${seed}`}
+          seed={seed}
+          onExit={backToMap}
+          onPlayAgain={() => openChallenge(id, randomSeed())}
+        />
+      </div>
     )
   }
 
   return (
     <>
-      {content}
+      {screen.name === 'start' ? (
+        <StartScreen onPlay={handlePlay} />
+      ) : (
+        <HubWorld
+          active={screen.challenge === null}
+          onOpenStation={(id) => openChallenge(id, readSeedFromUrl(window.location.search) ?? randomSeed())}
+          onHome={() => setScreen({ name: 'start' })}
+        />
+      )}
+      {challenge}
       <RotateHint />
       <NoVoiceWarning />
     </>

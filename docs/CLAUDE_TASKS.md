@@ -135,6 +135,7 @@ Ordered by impact. Full Work and Acceptance sections are written when the phase 
 - Versioned local saving (IndexedDB) with migration and recovery tests.
 - Free static HTTPS hosting (needed for installing on the iPad); the user creates the hosting account.
 - PWA: home-screen install, offline play, full screen; request persistent storage.
+- Load Phaser lazily so the start screen appears fast (the bundle is about 440 KB gzipped with Phaser).
 
 ### Task 8 — Art direction
 - Side-by-side comparison of candidate styles (tile resolutions, own vs CC0 environment) at iPad and desktop size; the user picks.

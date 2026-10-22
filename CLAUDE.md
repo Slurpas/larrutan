@@ -45,6 +45,7 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - `src/challenges`: `ChoiceChallenge` (the shared screen: speech, hints, praise, progress, keyboard), shared round logic, and one folder per challenge with its pure round builder and a thin wrapper
 - `src/content`: letters, words, phrases (typed data) and `validation.ts` with the PRD §5 content rules
 - `src/speech`: speech output (browser voice for now) and the no-voice warning
+- `src/world`: the hub map (Phaser). `hubMap.ts` is the map as a text grid; `tileMap.ts`, `pathfinding.ts` and `camera.ts` are pure, tested rules; `HubScene.ts` draws and moves; `HubWorld.tsx` mounts it in React
 - `src/ui`: shared buttons, icons, helpers
 
 ## Gotchas
@@ -53,6 +54,9 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - The dev server on Windows can miss a second quick edit to the same file and serve stale code. If behaviour doesn't match the source, restart it.
 - Playwright won't tap an element that's animating forever (the pulsing revealed answer); use `{ force: true }` there.
 - The in-app browser pane misplaces clicks when it emulates a viewport size. For iPad-sized visual checks, drive WebKit with Playwright and screenshot.
+- Phaser: the canvas must stay absolutely positioned (React mounts twice in dev and a dying canvas would push the new one down, breaking tap positions), and movement uses `performance.now()` because Phaser's own time/delta are smoothed and run slow on slow devices.
+- The map stays mounted while a challenge is open (overlay on top); the game loop sleeps and keyboard listeners are removed meanwhile.
+- Dev builds expose `window.__larrutanHub` (player tile, station screen points) for Playwright; see `src/world/hubTestApi.ts`.
 
 ## Stack notes
 

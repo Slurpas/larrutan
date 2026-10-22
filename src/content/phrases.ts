@@ -1,5 +1,6 @@
 /** Everything the game says out loud, in one place so wording and pronunciation can be fixed here. */
 export const phrases = {
+  hubWelcome: 'Tryck på en skylt för att spela!',
   praise: ['Rätt!', 'Bra!', 'Snyggt!', 'Ja, precis!', 'Toppen!'],
   /** Names a wrong choice the child tapped: "Det där är S." / "Det där är en mus." */
   thatIs: (what: string) => `Det där är ${what}.`,

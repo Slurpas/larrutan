@@ -1,0 +1,32 @@
+.hub {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-grass);
+}
+
+.world {
+  position: absolute;
+  inset: 0;
+}
+
+.world canvas {
+  /*
+   * Pinned to the corner: a canvas from a game that is still being destroyed
+   * (React mounts twice in development) must not push the new one down, or
+   * Phaser measures the wrong position and every tap lands in the wrong place.
+   */
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  /* Taps go to the game, never to browser panning or zooming. */
+  touch-action: none;
+}
+
+.topBar {
+  position: absolute;
+  z-index: 1;
+  top: calc(env(safe-area-inset-top) + 1rem);
+  left: calc(env(safe-area-inset-left) + 1.25rem);
+}

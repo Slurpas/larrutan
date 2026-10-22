@@ -133,7 +133,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   return (
     <main className={cx(styles.screen, showcase && styles.withShowcase)}>
       <div className={styles.topBar}>
-        <RoundButton label="Till menyn" onClick={handleExit}>
+        <RoundButton label="Till kartan" onClick={handleExit}>
           <HouseIcon />
         </RoundButton>
         <div className={styles.prompt}>

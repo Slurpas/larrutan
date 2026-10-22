@@ -56,6 +56,25 @@ export function CheckIcon({ className }: IconProps) {
   )
 }
 
+export function BagIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...strokeProps}>
+      <path d="M9 7V5.5a3 3 0 0 1 6 0V7" />
+      <path d="M5.5 8.5A1.5 1.5 0 0 1 7 7h10a1.5 1.5 0 0 1 1.5 1.5V19a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19z" />
+      <path d="M9 12.5h6" />
+    </svg>
+  )
+}
+
+export function LockIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...strokeProps}>
+      <rect x="5" y="10.5" width="14" height="10" rx="2" fill="currentColor" />
+      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
+    </svg>
+  )
+}
+
 export function StarIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true">

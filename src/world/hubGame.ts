@@ -5,6 +5,8 @@ import './hubTestApi'
 export interface HubGame {
   /** Inactive while a challenge covers the map: the game loop sleeps and ignores the keyboard. */
   setActive(active: boolean): void
+  /** The worn hat (emoji) on the character, or null. */
+  setHat(hat: string | null): void
   destroy(): void
 }
 
@@ -49,12 +51,14 @@ export function createHubGame(parent: HTMLElement, options: HubSceneOptions): Hu
     window.__larrutanHub = {
       playerTile: () => scene.getPlayerTile(),
       isMoving: () => scene.isMoving(),
+      hat: () => scene.getHat(),
       stationPoint: (challenge) => scene.stationScreenPoint(challenge),
     }
   }
 
   return {
     setActive,
+    setHat: (hat) => scene.setHat(hat),
     destroy() {
       setActive(false)
       game.destroy(true)

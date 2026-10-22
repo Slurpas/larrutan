@@ -249,6 +249,8 @@ Locked items are visible with their stars and a friendly spoken explanation of h
 
 Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the real catalogue.
 
+**Phase 1 implementation (Task 5):** easy XP 20, hard XP 30, replays a quarter; levels at 30, 70, 120, 180 XP. Hitta bokstaven and Första bokstaven have an easy and a hard level (hard offers exactly one look-alike of the answer); a sign opens the first level not yet completed. Five hats, one per rarity: keps (first round), rosett (level 2), hög hatt (hard Hitta bokstaven), studentmössa (all three challenges), krona (level 5). Progress lives in memory until saving arrives (Task 7).
+
 ## 11. Accessibility
 
 Phase 1:

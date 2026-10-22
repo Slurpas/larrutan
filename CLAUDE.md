@@ -43,10 +43,11 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 ## Code layout
 
 - `src/app`: shell, start screen, touch setup, seeds
-- `src/challenges`: `ChoiceChallenge` (the shared screen: speech, hints, praise, progress, keyboard), shared round logic, and one folder per challenge with its pure round builder and a thin wrapper
+- `src/challenges`: `ChoiceChallenge` (the shared screen: speech, hints, praise, progress, keyboard), shared round logic, and one folder per challenge with its pure round builder and a thin wrapper. `difficulty.ts`: easy/hard levels; a sign opens the first level not yet completed. Hard = exactly one look-alike of the answer (`letterChoices.ts`)
 - `src/content`: letters, words, phrases (typed data) and `validation.ts` with the PRD §5 content rules
 - `src/speech`: `speech.ts` is the one entry point (`speak`, `stopSpeech`, …). It plays generated clips from `audio/sv/` and falls back to the device voice (`browserVoice.ts`) only for a sentence without a clip or a clip that won't play. `catalogue.ts` lists every sentence; challenge wording lives in `src/challenges/voices.ts`
 - `src/world`: the hub map (Phaser). `hubMap.ts` is the map as a text grid; `tileMap.ts`, `pathfinding.ts` and `camera.ts` are pure, tested rules; `HubScene.ts` draws and moves; `HubWorld.tsx` mounts it in React
+- `src/rewards`: reward rules (`rules.ts`, all numbers in one place), hats (`items.ts`), pure progress logic (`progress.ts`, exactly-once by round id), an in-memory store (resets on reload until Task 7), the XP bar and "Mina saker"
 - `src/ui`: shared buttons, icons, helpers
 
 ## Gotchas

@@ -5,11 +5,13 @@ export interface RoundState<Q extends ChoiceQuestion = ChoiceQuestion> {
   questionIndex: number
   /** Wrong choices tapped in this question. They stay in place, greyed out, so nothing moves. */
   removed: string[]
+  /** Wrong taps in the whole round, for learning progress later. Never reduces a reward. */
+  wrongTaps: number
   phase: 'asking' | 'correct' | 'finished'
 }
 
 export function startRound<Q extends ChoiceQuestion>(round: ChoiceRound<Q>): RoundState<Q> {
-  return { round, questionIndex: 0, removed: [], phase: 'asking' }
+  return { round, questionIndex: 0, removed: [], wrongTaps: 0, phase: 'asking' }
 }
 
 export function currentQuestion<Q extends ChoiceQuestion>(state: RoundState<Q>): Q | undefined {
@@ -23,7 +25,7 @@ export function choose<Q extends ChoiceQuestion>(state: RoundState<Q>, choice: s
   if (!question.choices.includes(choice) || state.removed.includes(choice)) return state
 
   if (choice === question.target) return { ...state, phase: 'correct' }
-  return { ...state, removed: [...state.removed, choice] }
+  return { ...state, removed: [...state.removed, choice], wrongTaps: state.wrongTaps + 1 }
 }
 
 /** Moves on after the praise for a correct answer. */

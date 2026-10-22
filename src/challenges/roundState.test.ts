@@ -25,6 +25,7 @@ describe('round state', () => {
     const state = choose(startRound(round), 'm')
     expect(state.phase).toBe('asking')
     expect(state.removed).toEqual(['m'])
+    expect(state.wrongTaps).toBe(1)
     expect(isAnswerRevealed(state)).toBe(false)
     expect(choose(state, 'a').phase).toBe('correct')
   })

@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { areConfusable, confusableLetters, letters } from '../../content/letters'
+import { areConfusable, confusableLetters, letters, lookAlikesOf } from '../../content/letters'
 import { choicePairs } from '../choiceQuestion'
 import { createFindLetterRound, findFindLetterProblems } from './createRound'
 
-const rules = { letters, confusables: confusableLetters, choiceCount: 3 }
+const rules = { letters, confusables: confusableLetters, choiceCount: 3, difficulty: 'easy' as const }
+const hardRules = { ...rules, difficulty: 'hard' as const }
 const seeds = Array.from({ length: 500 }, (_, i) => i * 7919 + 1)
 const roundFor = (seed: number) => createFindLetterRound({ seed, letters, confusables: confusableLetters })
 
@@ -58,6 +59,33 @@ describe('createFindLetterRound', () => {
     expect(() =>
       createFindLetterRound({ seed: 1, letters: letters.slice(0, 2), confusables: [], questionCount: 5 }),
     ).toThrow(/needs at least/)
+  })
+})
+
+describe('createFindLetterRound, hard level', () => {
+  const hardRound = (seed: number) =>
+    createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty: 'hard' })
+
+  it('builds valid questions for many seeds', () => {
+    for (const seed of seeds) {
+      for (const question of hardRound(seed).questions) {
+        expect(findFindLetterProblems(question, hardRules), `seed ${seed}`).toEqual([])
+      }
+    }
+  })
+
+  it('asks about letters with look-alikes and offers exactly one of them', () => {
+    for (const seed of seeds.slice(0, 50)) {
+      for (const { target, choices } of hardRound(seed).questions) {
+        expect(lookAlikesOf(target, confusableLetters).length, target).toBeGreaterThan(0)
+        const lookAlikes = choices.filter((c) => c !== target && areConfusable(c, target, confusableLetters))
+        expect(lookAlikes, `seed ${seed}, ${target}`).toHaveLength(1)
+      }
+    }
+  })
+
+  it('differs from the easy level for the same seed', () => {
+    expect(hardRound(7)).not.toEqual(roundFor(7))
   })
 })
 

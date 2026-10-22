@@ -12,7 +12,9 @@ import {
 } from '../challenges/voices'
 import { createWordPictureRound } from '../challenges/wordPicture/createRound'
 import { confusableLetters, letters } from '../content/letters'
+import { phrases } from '../content/phrases'
 import { words } from '../content/words'
+import { items } from '../rewards/items'
 import { spokenTexts } from './catalogue'
 import { clipFileName } from './clipName'
 
@@ -48,6 +50,29 @@ describe('speech catalogue', () => {
     for (const seed of seeds) {
       const round = createWordPictureRound({ seed, words })
       for (const text of everythingSaid(round, wordPictureVoice)) expect(catalogue).toContain(text)
+    }
+  })
+
+  it('contains everything said about rewards', () => {
+    for (const text of [phrases.hardLevelIntro, phrases.levelUp, phrases.myThingsHelp]) expect(catalogue).toContain(text)
+    for (const item of items) {
+      expect(catalogue).toContain(phrases.itemUnlocked(item.indefinite))
+      expect(catalogue).toContain(item.hint)
+    }
+  })
+
+  it('contains everything the hard levels can say', () => {
+    for (const seed of seeds.slice(0, 100)) {
+      const findLetter = createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty: 'hard' })
+      for (const text of everythingSaid(findLetter, findLetterVoice)) expect(catalogue).toContain(text)
+      const firstLetter = createFirstLetterRound({
+        seed,
+        words,
+        letters,
+        confusables: confusableLetters,
+        difficulty: 'hard',
+      })
+      for (const text of everythingSaid(firstLetter, firstLetterVoice)) expect(catalogue).toContain(text)
     }
   })
 

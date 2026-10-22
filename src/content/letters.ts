@@ -57,6 +57,15 @@ export function areConfusable(a: string, b: string, groups: readonly ConfusableG
   return groups.some((group) => group.ids.includes(a) && group.ids.includes(b))
 }
 
+/** Letters that are easy to mix up with this one (e.g. Å and Ä for A). */
+export function lookAlikesOf(id: string, groups: readonly ConfusableGroup[]): string[] {
+  const result = new Set<string>()
+  for (const group of groups) {
+    if (group.ids.includes(id)) for (const other of group.ids) if (other !== id) result.add(other)
+  }
+  return [...result]
+}
+
 /** The id of the letter a word or name starts with, if it is one of ours. */
 export function firstLetterOf(text: string, from: readonly Letter[]): string | undefined {
   const first = text.normalize('NFC').charAt(0).toLocaleUpperCase('sv')

@@ -1,11 +1,13 @@
 import { useEffect, useEffectEvent, useRef, useState, type ReactNode } from 'react'
 import { phrases } from '../content/phrases'
+import type { RoundOutcome } from '../rewards/progress'
 import { speak, stopSpeech } from '../speech/speech'
 import { useVoiceStatus } from '../speech/useVoiceStatus'
 import { RoundButton } from '../ui/RoundButton'
 import { cx } from '../ui/cx'
 import { CheckIcon, HouseIcon, SpeakerIcon } from '../ui/icons'
 import type { ChoiceQuestion, ChoiceRound } from './choiceQuestion'
+import type { Difficulty } from './difficulty'
 import { RoundComplete } from './RoundComplete'
 import { RoundProgress } from './RoundProgress'
 import { advance, choose, currentQuestion, isAnswerRevealed, startRound, type RoundState } from './roundState'
@@ -19,6 +21,11 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
   round: ChoiceRound<Q>
   /** What the challenge says (src/challenges/voices.ts). */
   voice: ChallengeVoice<Q>
+  difficulty: Difficulty
+  /** How many difficulty levels this challenge has, for the level pips. */
+  difficultyCount: number
+  /** Called once when the last question is answered; returns what the round earned. */
+  onRoundComplete?: (wrongTaps: number) => RoundOutcome
   choiceKind: 'letter' | 'picture'
   renderChoice: (choice: string) => ReactNode
   /** Accessible name of a choice button (also used by tests). */
@@ -38,6 +45,9 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
 export function ChoiceChallenge<Q extends ChoiceQuestion>({
   round,
   voice,
+  difficulty,
+  difficultyCount,
+  onRoundComplete,
   choiceKind,
   renderChoice,
   choiceLabel,
@@ -47,6 +57,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   onPlayAgain,
 }: ChoiceChallengeProps<Q>) {
   const [state, setState] = useState(() => startRound(round))
+  const [outcome, setOutcome] = useState<RoundOutcome | null>(null)
   const voiceStatus = useVoiceStatus()
   const choicesRef = useRef<HTMLDivElement>(null)
 
@@ -65,26 +76,35 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
     return isAnswerRevealed(s) ? voice.reveal(q) : voice.ask(q)
   }
 
-  // Ask each new question out loud.
+  // Ask each new question out loud; a hard round starts by saying so.
+  const isFirstQuestion = state.questionIndex === 0
   useEffect(() => {
-    if (questionText) void speak(questionText)
-  }, [questionText])
+    if (!questionText) return
+    void speak(isFirstQuestion && difficulty === 'hard' ? [phrases.hardLevelIntro, questionText] : questionText)
+  }, [questionText, isFirstQuestion, difficulty])
 
   // Stop talking when the child leaves.
   useEffect(() => stopSpeech, [])
 
-  // After a correct answer: praise, then the next question.
+  const finishRound = useEffectEvent(() => {
+    if (onRoundComplete) setOutcome(onRoundComplete(state.wrongTaps))
+  })
+
+  // After a correct answer: praise, then the next question (or the end of the round).
   useEffect(() => {
     if (state.phase !== 'correct') return
     let cancelled = false
+    const isLast = state.questionIndex === state.round.questions.length - 1
     const praise = phrases.praise[state.questionIndex % phrases.praise.length] ?? phrases.praise[0]
     void Promise.all([speak(praise), pause(CORRECT_PAUSE_MS)]).then(() => {
-      if (!cancelled) setState(advance)
+      if (cancelled) return
+      if (isLast) finishRound()
+      setState(advance)
     })
     return () => {
       cancelled = true
     }
-  }, [state.phase, state.questionIndex])
+  }, [state.phase, state.questionIndex, state.round.questions.length])
 
   function handleChoose(choice: string) {
     const next = choose(state, choice)
@@ -124,7 +144,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   }, [])
 
   if (state.phase === 'finished' || !question) {
-    return <RoundComplete message={voice.complete} onPlayAgain={onPlayAgain} onExit={handleExit} />
+    return <RoundComplete message={voice.complete} outcome={outcome} onPlayAgain={onPlayAgain} onExit={handleExit} />
   }
 
   return (
@@ -141,7 +161,20 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
             <span className={styles.silentPrompt}>{silentPrompt(question)}</span>
           )}
         </div>
-        <RoundProgress total={state.round.questions.length} current={state.questionIndex} />
+        <div className={styles.status}>
+          {difficultyCount > 1 && (
+            <span
+              className={styles.level}
+              role="img"
+              aria-label={difficulty === 'hard' ? 'Svår nivå' : 'Lätt nivå'}
+            >
+              {Array.from({ length: difficultyCount }, (_, i) => (
+                <span key={i} className={cx(styles.pip, i <= (difficulty === 'hard' ? 1 : 0) && styles.pipOn)} />
+              ))}
+            </span>
+          )}
+          <RoundProgress total={state.round.questions.length} current={state.questionIndex} />
+        </div>
       </div>
 
       <div className={styles.body}>

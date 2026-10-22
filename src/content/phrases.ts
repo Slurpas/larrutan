@@ -18,4 +18,10 @@ export const phrases = {
 
   wordPictureQuestion: (definite: string) => `Var är ${definite}?`,
   wordPictureComplete: 'Bra jobbat! Du hittade alla bilderna!',
+
+  /** Before the first question of a hard round. */
+  hardLevelIntro: 'Nu blir det svårare. Titta noga!',
+  levelUp: 'Du har gått upp en nivå!',
+  itemUnlocked: (indefinite: string) => `Du fick ${indefinite}!`,
+  myThingsHelp: 'Här är dina saker. Tryck på en sak för att ta på den.',
 } as const

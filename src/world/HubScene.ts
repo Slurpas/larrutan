@@ -81,6 +81,9 @@ export class HubScene extends Phaser.Scene {
 
   private player!: Phaser.GameObjects.Container
   private playerBody!: Phaser.GameObjects.Container
+  private hatText: Phaser.GameObjects.Text | null = null
+  /** The worn hat (emoji); may be set before the scene has been created. */
+  private hat: string | null = null
   private playerTile: Tile
   /** The tile the player is walking into right now, if any. */
   private moveTarget: Tile | null = null
@@ -372,8 +375,27 @@ export class HubScene extends Phaser.Scene {
     body.arc(0, 0.6, 2.4, 0.15 * Math.PI, 0.85 * Math.PI)
     body.strokePath()
 
-    this.playerBody = this.add.container(0, 0, [body])
+    // The worn hat sits on top of the head and hops along with it.
+    this.hatText = this.add
+      .text(0, -4.5, '', { fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif', fontSize: '64px' })
+      .setOrigin(0.5, 1)
+      .setScale(0.15)
+    this.applyHat()
+
+    this.playerBody = this.add.container(0, 0, [body, this.hatText])
     return this.add.container(0, 0, [shadow, this.playerBody]).setDepth(10)
+  }
+
+  /** Shows the worn hat (an emoji) on the character, or none. */
+  setHat(hat: string | null) {
+    this.hat = hat
+    this.applyHat()
+  }
+
+  private applyHat() {
+    if (!this.hatText) return
+    this.hatText.setText(this.hat ?? '')
+    this.hatText.setVisible(this.hat !== null)
   }
 
   private updateHighlight() {
@@ -391,6 +413,10 @@ export class HubScene extends Phaser.Scene {
 
   getPlayerTile(): Tile {
     return { ...this.playerTile }
+  }
+
+  getHat(): string | null {
+    return this.hatText?.visible ? this.hat : null
   }
 
   isMoving(): boolean {

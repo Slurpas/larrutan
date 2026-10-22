@@ -5,6 +5,8 @@ import type { Tile } from './tileMap'
 export interface HubTestApi {
   playerTile(): Tile
   isMoving(): boolean
+  /** The hat (emoji) the character on the map is wearing, if any. */
+  hat(): string | null
   /** Where a station's sign is on screen, in CSS pixels from the top-left of the page. */
   stationPoint(challenge: ChallengeId): { x: number; y: number } | null
 }

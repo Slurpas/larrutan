@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { confusableLetters, letters } from '../../content/letters'
+import { areConfusable, confusableLetters, letters } from '../../content/letters'
 import { getWord, words, type Word } from '../../content/words'
 import { createFirstLetterRound, findFirstLetterProblems } from './createRound'
 
-const rules = { words, letters, confusables: confusableLetters, choiceCount: 3 }
+const rules = { words, letters, confusables: confusableLetters, choiceCount: 3, difficulty: 'easy' as const }
 const seeds = Array.from({ length: 500 }, (_, i) => i * 7919 + 1)
 const roundFor = (seed: number) => createFirstLetterRound({ seed, words, letters, confusables: confusableLetters })
 
@@ -51,6 +51,19 @@ describe('createFirstLetterRound', () => {
     expect(findFirstLetterProblems({ word: 'sun', target: 'm', choices: ['m', 's', 'l'] }, rules).join()).toMatch(
       /does not start with/,
     )
+  })
+
+  it('builds valid hard rounds that offer exactly one look-alike of the answer', () => {
+    for (const seed of seeds) {
+      const round = createFirstLetterRound({ seed, words, letters, confusables: confusableLetters, difficulty: 'hard' })
+      for (const question of round.questions) {
+        expect(findFirstLetterProblems(question, { ...rules, difficulty: 'hard' }), `seed ${seed}`).toEqual([])
+        const lookAlikes = question.choices.filter(
+          (c) => c !== question.target && areConfusable(c, question.target, confusableLetters),
+        )
+        expect(lookAlikes, `seed ${seed}, ${question.word}`).toHaveLength(1)
+      }
+    }
   })
 
   it('refuses to use a word whose first sound differs from its letter', () => {

@@ -29,4 +29,22 @@
   z-index: 1;
   top: calc(env(safe-area-inset-top) + 1rem);
   left: calc(env(safe-area-inset-left) + 1.25rem);
+  right: calc(env(safe-area-inset-right) + 1.25rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Only the buttons take taps; the rest of the bar lets taps through to the map. */
+  pointer-events: none;
+}
+
+.topBar > *,
+.topRight > * {
+  pointer-events: auto;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  pointer-events: none;
 }

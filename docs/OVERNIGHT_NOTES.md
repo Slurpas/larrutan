@@ -1,4 +1,25 @@
-# Overnight notes (2026-10-23)
+# Overnight notes
+
+## Night 2 (2026-10-24)
+
+You asked me to:
+- change Bubblor if spelling with bubbles is better;
+- build the other games;
+- give at most one item per round from a bigger set;
+- sort out "Nu blir det svårare".
+
+Each task below is its own local commit, **not pushed**: try them at http://localhost:5173 (on the iPad: your dev server's network address), then tell me what to change and when to publish.
+
+Queue (details in `docs/CLAUDE_TASKS.md`, Tasks 14–18):
+1. Items: at most one per round, bigger catalogue.
+2. Difficulty: really harder, and said out loud.
+3. Mata draken on the letter sign (replaces Bubblor's three identical bubbles).
+4. Bygg ordet: spelling with bubbles, a new sign.
+5. Memory: letters and pictures, a new sign.
+
+Results and decisions are added below as each task is done.
+
+# Night 1 (2026-10-23)
 
 You asked me to keep working while you sleep:
 - Hold back decisions that can wait.

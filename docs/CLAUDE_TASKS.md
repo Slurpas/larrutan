@@ -261,6 +261,27 @@ Status 2026-10-24: **built, waiting for a playtest.**
 - **Sound:** a pop sound (`npm run sfx`) that plays alongside the voice (`playEffect`), never cutting it off.
 - **Speech:** "Hitta alla A!" (with the pause before the letter) replaces "Var är A?" for letters; the 9 new clips wait for the voice review.
 
+### Night queue 2026-10-24 (the user asked for these, to review in the morning)
+
+Done one by one, each in its own local commit, not pushed until the user has checked them.
+
+#### Task 14 — Items: at most one per round, a bigger catalogue
+- A round gives at most one new item; anything else earned waits for a later round.
+- Many more items, so the good ones take real play.
+
+#### Task 15 — Difficulty that is really harder, and says how
+- The hard level is clearly harder (four choices, with look-alikes), and the voice says what changed instead of just "Nu blir det svårare".
+- A clear rule for when a station goes up a level, and back down (gentle, PRD §6).
+
+#### Task 16 — Mata draken (Hitta bokstaven)
+- The letter sign becomes a dragon that wants one letter cookie at a time ("bokstavskex"). One real decision per question, replacing Bubblor's three identical bubbles (user feedback).
+
+#### Task 17 — Bygg ordet (spelling with bubbles)
+- Bubblor turned into spelling short approved words: pop the letters in order to fill the word. Easy: the word is shown faintly; hard: only the picture and the voice. A new sign on the map.
+
+#### Task 18 — Memory
+- Turn over cards and match a letter with a picture that starts with it. A new sign on the map.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

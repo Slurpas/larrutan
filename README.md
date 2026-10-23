@@ -31,7 +31,7 @@ The second command downloads the browsers used by the browser tests (about 380 M
 | `npm run speech` | Generate missing speech clips (see below) |
 | `npm run sfx` | Re-synthesise the sound effects in `src/sound/sfx/` (needs ffmpeg) |
 | `npm run icons` | Render `scripts/app-icon.svg` to the PNG app icons in `public/icons/` |
-| `npm run sprites` | Render every sprite into `docs/sprites/contact-sheet.png` for review |
+| `npm run sprites` | Render every sprite and wardrobe item into `docs/sprites/` for review |
 
 ## Generating speech
 
@@ -84,7 +84,7 @@ The game is published at **https://slurpas.github.io/larrutan/** (GitHub Pages; 
 
 ## Saving, offline play and installing
 
-- Progress is saved on the device (IndexedDB) after every round and when a hat is put on. Nothing leaves the device.
+- Progress is saved on the device (IndexedDB) after every round and when something is put on or taken off. Nothing leaves the device.
 - To start over, clear the site's data in the browser. On an iPad home-screen app, remove the app and add it again.
 - A release build (`npm run build`) works offline after the first visit and can be added to the iPad home screen: in Safari, tap Share, then **Add to Home Screen**. It then opens full screen with its own icon.
 - Installing needs HTTPS, so it only works from the hosted site (https://slurpas.github.io/larrutan/), not from the `http://192.168.…` dev address.

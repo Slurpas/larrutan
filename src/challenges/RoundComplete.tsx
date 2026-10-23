@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { phrases } from '../content/phrases'
 import { getItem } from '../rewards/items'
+import { ItemPreview } from '../rewards/ItemPreview'
 import type { RoundOutcome } from '../rewards/progress'
 import { Stars } from '../rewards/Stars'
 import { XpBar } from '../rewards/XpBar'
@@ -8,7 +9,6 @@ import { speak } from '../speech/speech'
 import { RoundButton } from '../ui/RoundButton'
 import { cx } from '../ui/cx'
 import { HouseIcon, ReplayIcon, StarIcon } from '../ui/icons'
-import { Picture } from '../ui/Picture'
 import styles from './RoundComplete.module.css'
 
 interface RoundCompleteProps {
@@ -44,9 +44,7 @@ export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompletePro
           {levelUp && <p className={styles.levelUp}>Ny nivå!</p>}
           {newItems.map((item) => (
             <div key={item.id} className={styles.newItem} aria-label={`Ny sak: ${item.name}`} role="img">
-              <span className={styles.newItemPicture}>
-                <Picture emoji={item.emoji} />
-              </span>
+              <ItemPreview itemId={item.id} className={styles.newItemPicture} />
               <Stars rarity={item.rarity} />
             </div>
           ))}

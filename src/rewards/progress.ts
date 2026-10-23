@@ -1,7 +1,10 @@
+import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { challengeDifficulties, levelKey, type Difficulty } from '../challenges/difficulty'
-import { recordPractice, type Mastery, type Practiced } from '../learning/mastery'
-import { items, type UnlockCondition } from './items'
+import { levelKey, type Difficulty } from '../challenges/difficulty'
+import { letters } from '../content/letters'
+import { words } from '../content/words'
+import { boxOf, practiceKey, recordPractice, type Mastery, type Practiced } from '../learning/mastery'
+import { findItem, items, type UnlockCondition } from './items'
 import { levelForXp, roundXp } from './rules'
 
 export interface Progress {
@@ -10,7 +13,8 @@ export interface Progress {
   /** Challenge levels finished at least once, e.g. "findLetter:hard". */
   completedLevels: string[]
   unlockedItems: string[]
-  wornItem: string | null
+  /** What the character wears: one unlocked item per slot. */
+  worn: Outfit
   /** Leitner box per letter and word, per challenge (src/learning). Never shown to the child, never affects rewards. */
   mastery: Mastery
   /** The outcome of every round already counted, by round id. A repeated event returns it again and grants nothing. */
@@ -44,7 +48,7 @@ export const initialProgress: Progress = {
   roundsCompleted: 0,
   completedLevels: [],
   unlockedItems: [],
-  wornItem: null,
+  worn: {},
   mastery: {},
   rounds: {},
 }
@@ -91,6 +95,13 @@ export function completeRound(
   }
 }
 
+/** What each challenge practises, for the 'mastered' unlock: its letters, or its words. */
+const practisedIn: Record<ChallengeId, readonly string[]> = {
+  findLetter: letters.map((letter) => letter.id),
+  firstLetter: words.map((word) => word.id),
+  wordPicture: words.map((word) => word.id),
+}
+
 export function isUnlocked(condition: UnlockCondition, progress: Progress): boolean {
   switch (condition.type) {
     case 'roundsCompleted':
@@ -99,15 +110,19 @@ export function isUnlocked(condition: UnlockCondition, progress: Progress): bool
       return levelForXp(progress.xp) >= condition.level
     case 'levelCompleted':
       return progress.completedLevels.includes(levelKey(condition.challenge, condition.difficulty))
-    case 'everyChallengeCompleted':
-      return (Object.keys(challengeDifficulties) as ChallengeId[]).every((challenge) =>
-        progress.completedLevels.some((key) => key.startsWith(`${challenge}:`)),
+    case 'mastered':
+      return practisedIn[condition.challenge].every(
+        (item) => boxOf(progress.mastery, practiceKey(condition.challenge, item)) >= condition.box,
       )
   }
 }
 
-/** Puts on an unlocked item, or takes it off with null. Locked items can't be worn. */
-export function wear(progress: Progress, itemId: string | null): Progress {
-  if (itemId !== null && !progress.unlockedItems.includes(itemId)) return progress
-  return { ...progress, wornItem: itemId }
+/** Puts on an unlocked item in its slot (replacing what was there), or takes it off if it is already worn. */
+export function wear(progress: Progress, itemId: string): Progress {
+  const item = findItem(itemId)
+  if (!item || !progress.unlockedItems.includes(itemId)) return progress
+  const worn = { ...progress.worn }
+  if (worn[item.slot] === itemId) delete worn[item.slot]
+  else worn[item.slot] = itemId
+  return { ...progress, worn }
 }

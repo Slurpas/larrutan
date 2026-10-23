@@ -5,7 +5,6 @@ import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { boxOf, practiceKey } from '../learning/mastery'
-import { getItem } from '../rewards/items'
 import { MyThings } from '../rewards/MyThings'
 import { getProgress, loadProgress, recordRound, useProgress } from '../rewards/store'
 import { NoVoiceWarning } from '../speech/NoVoiceWarning'
@@ -92,7 +91,7 @@ export function App() {
         <HubWorld
           active={screen.overlay === null}
           xp={progress.xp}
-          hat={progress.wornItem ? getItem(progress.wornItem).emoji : null}
+          outfit={progress.worn}
           onOpenStation={(id) => openChallenge(id, readSeedFromUrl(window.location.search) ?? randomSeed())}
           onOpenMyThings={() => setScreen({ name: 'world', overlay: { name: 'myThings' } })}
           onHome={() => setScreen({ name: 'start' })}

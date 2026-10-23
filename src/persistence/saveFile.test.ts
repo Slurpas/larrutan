@@ -4,7 +4,7 @@ import { readSave, saveVersion, toSaveFile } from './saveFile'
 
 const now = new Date('2026-10-23T12:00:00Z')
 
-/** Some real progress: two rounds played (level 2), the cap and bow unlocked, the cap worn. */
+/** Some real progress: two rounds played (level 2), four items unlocked, the cap worn. */
 function playedProgress(): Progress {
   const first = completeRound(initialProgress, {
     roundId: 'r1',
@@ -66,16 +66,21 @@ describe('saving and loading', () => {
 
 describe('upgrading old saves', () => {
   it('upgrades a version 1 save (Task 7) without losing anything, starting mastery empty', () => {
-    const version1 = {
-      version: 1,
-      savedAt: '2026-10-23T02:00:00.000Z',
-      progress: { xp: 40, roundsCompleted: 2, completedLevels: ['findLetter:easy', 'firstLetter:easy'], unlockedItems: ['cap', 'bow'], wornItem: 'cap' },
-    }
+    const progress = { xp: 40, roundsCompleted: 2, completedLevels: ['findLetter:easy', 'firstLetter:easy'], unlockedItems: ['cap', 'bow'] }
+    const version1 = { version: 1, savedAt: '2026-10-23T02:00:00.000Z', progress: { ...progress, wornItem: 'cap' } }
     expect(readSave(version1)).toEqual({
       kind: 'loaded',
       repaired: false,
-      progress: { ...version1.progress, mastery: {}, rounds: {} },
+      progress: { ...progress, worn: { head: 'cap' }, mastery: {}, rounds: {} },
     })
+  })
+
+  it('upgrades a version 2 save (Task 11): the one worn hat moves into the head slot', () => {
+    const progress = { xp: 90, roundsCompleted: 4, completedLevels: ['findLetter:hard'], unlockedItems: ['cap', 'top-hat'], mastery: { 'findLetter:a': 3 } }
+    for (const [wornItem, worn] of [['top-hat', { head: 'top-hat' }], [null, {}]] as const) {
+      const version2 = { version: 2, savedAt: '2026-10-23T09:00:00.000Z', progress: { ...progress, wornItem } }
+      expect(readSave(version2)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, worn, rounds: {} } })
+    }
   })
 })
 
@@ -93,8 +98,8 @@ describe('recovering from broken saves', () => {
     expect(result).toMatchObject({ kind: 'loaded', repaired: true })
     if (result.kind !== 'loaded') return
     expect(result.progress.xp).toBe(0)
-    expect(result.progress.unlockedItems).toEqual(['cap', 'bow'])
-    expect(result.progress.wornItem).toBe('cap')
+    expect(result.progress.unlockedItems).toEqual(playedProgress().unlockedItems)
+    expect(result.progress.worn).toEqual({ head: 'cap' })
     expect(result.progress.completedLevels).toEqual(['findLetter:easy', 'firstLetter:easy'])
   })
 
@@ -118,10 +123,12 @@ describe('recovering from broken saves', () => {
     })
   })
 
-  it('takes off a worn item that is not unlocked', () => {
-    const file = stored(playedProgress()) as { progress: Record<string, unknown> }
-    file.progress.wornItem = 'crown'
-    expect(readSave(file)).toMatchObject({ kind: 'loaded', repaired: true, progress: { wornItem: null } })
+  it('takes off a worn item that is not unlocked, unknown, or in the wrong slot', () => {
+    for (const worn of [{ head: 'crown' }, { head: 'dragon' }, { top: 'cap' }, 'cap']) {
+      const file = stored(playedProgress()) as { progress: Record<string, unknown> }
+      file.progress.worn = worn
+      expect(readSave(file), JSON.stringify(worn)).toMatchObject({ kind: 'loaded', repaired: true, progress: { worn: {} } })
+    }
   })
 
   it('drops mastery for unknown letters, words or boxes, and keeps the rest', () => {
@@ -141,6 +148,6 @@ describe('recovering from broken saves', () => {
     file.progress.pets = ['dragon']
     const result = readSave(file)
     expect(result.kind).toBe('newer')
-    expect(result).toMatchObject({ progress: { unlockedItems: ['cap', 'bow'], wornItem: 'cap' } })
+    expect(result).toMatchObject({ progress: { unlockedItems: playedProgress().unlockedItems, worn: { head: 'cap' } } })
   })
 })

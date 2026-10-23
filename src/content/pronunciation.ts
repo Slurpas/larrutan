@@ -36,6 +36,23 @@ export const pronunciations: Record<string, string> = {
   // Long i in "is".
   isbit: 'ˈiːsbiːt',
   isbiten: 'ˈiːsbiːtən',
+  // Wardrobe items (Task 10).
+  // Stress on the second syllable, not "BAL-long".
+  ballong: 'balˈɔŋ',
+  ballongen: 'balˈɔŋən',
+  // Short y and short o, not "byy-xoor".
+  byxor: 'bˈʏksʊr',
+  byxorna: 'bˈʏksʊɳa',
+  regnbågsbyxor: 'rˈɛŋnboːɡsbˌʏksʊr',
+  regnbågsbyxorna: 'rˈɛŋnboːɡsbˌʏksʊɳa',
+  // Short y and a clear ä.
+  ryggsäck: 'rˈʏɡsˌɛk',
+  ryggsäcken: 'rˈʏɡsˌɛkən',
+  // Long a in "stav".
+  trollstav: 'trˈɔlstˌɑːv',
+  trollstaven: 'trˈɔlstˌɑːvən',
+  // "ord" has an o that sounds like u.
+  orden: 'ˈuːɖən',
 }
 
 /**

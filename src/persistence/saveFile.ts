@@ -1,17 +1,18 @@
+import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { challengeDifficulties, levelKey } from '../challenges/difficulty'
 import { letters } from '../content/letters'
 import { words } from '../content/words'
 import { highestBox, lowestBox, practiceKey, type Mastery } from '../learning/mastery'
-import { items } from '../rewards/items'
+import { findItem, items } from '../rewards/items'
 import { initialProgress, type Progress } from '../rewards/progress'
 
 /**
  * The saved form of one profile's progress (PRD §12). Bump the version whenever the
  * shape changes, and add an upgrade step from the old version, with a test, in `readSave`.
- * 1: Task 7. 2: mastery per letter and word (Task 11).
+ * 1: Task 7. 2: mastery per letter and word (Task 11). 3: an outfit, one item per slot (Task 10).
  */
-export const saveVersion = 2
+export const saveVersion = 3
 
 export interface SaveFile {
   version: number
@@ -29,11 +30,11 @@ export type ReadResult =
   | { kind: 'newer'; progress: Progress }
 
 export function toSaveFile(progress: Progress, now: Date): SaveFile {
-  const { xp, roundsCompleted, completedLevels, unlockedItems, wornItem, mastery } = progress
+  const { xp, roundsCompleted, completedLevels, unlockedItems, worn, mastery } = progress
   return {
     version: saveVersion,
     savedAt: now.toISOString(),
-    progress: { xp, roundsCompleted, completedLevels, unlockedItems, wornItem, mastery },
+    progress: { xp, roundsCompleted, completedLevels, unlockedItems, worn, mastery },
   }
 }
 
@@ -43,7 +44,9 @@ export function readSave(stored: unknown): ReadResult {
   if (!isRecord(stored) || !isCount(stored.version) || stored.version < 1) {
     return { kind: 'loaded', progress: initialProgress, repaired: true }
   }
-  const upgraded = stored.version === 1 ? upgradeFrom1(stored.progress) : stored.progress
+  let upgraded = stored.progress
+  if (stored.version <= 1) upgraded = upgradeFrom1(upgraded)
+  if (stored.version <= 2) upgraded = upgradeFrom2(upgraded)
   const { progress, repaired } = repair(upgraded)
   if (stored.version > saveVersion) return { kind: 'newer', progress }
   return { kind: 'loaded', progress, repaired }
@@ -66,6 +69,14 @@ const knownPractice = new Set([
 /** Version 1 had no mastery: everything starts unpractised. */
 function upgradeFrom1(progress: unknown): unknown {
   return isRecord(progress) ? { ...progress, mastery: {} } : progress
+}
+
+/** Version 2 had one worn item (always a hat then); it moves into its slot. */
+function upgradeFrom2(progress: unknown): unknown {
+  if (!isRecord(progress)) return progress
+  const { wornItem, ...rest } = progress
+  const item = typeof wornItem === 'string' ? findItem(wornItem) : undefined
+  return { ...rest, worn: item ? { [item.slot]: item.id } : {} }
 }
 
 /** Keeps every field that makes sense and resets the rest, so one bad value never loses everything. */
@@ -100,9 +111,19 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
   }
 
   const unlockedItems = known(saved.unlockedItems, knownItems)
-  let wornItem: string | null = null
-  if (typeof saved.wornItem === 'string' && unlockedItems.includes(saved.wornItem)) wornItem = saved.wornItem
-  else if (saved.wornItem !== null) repaired = true
+  /** Only unlocked items, each in its own slot. */
+  const outfitFrom = (value: unknown): Outfit => {
+    if (!isRecord(value)) {
+      repaired = true
+      return {}
+    }
+    const kept = Object.entries(value).filter(([slot, id]) => {
+      const item = typeof id === 'string' ? findItem(id) : undefined
+      return item !== undefined && item.slot === slot && unlockedItems.includes(item.id)
+    })
+    if (kept.length !== Object.keys(value).length) repaired = true
+    return Object.fromEntries(kept) as Outfit
+  }
 
   return {
     progress: {
@@ -110,7 +131,7 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
       roundsCompleted: count(saved.roundsCompleted),
       completedLevels: known(saved.completedLevels, knownLevels),
       unlockedItems,
-      wornItem,
+      worn: outfitFrom(saved.worn),
       mastery: masteryFrom(saved.mastery),
       rounds: {},
     },

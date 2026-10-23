@@ -1,12 +1,13 @@
 import Phaser from 'phaser'
+import type { Outfit } from '../art/outfit'
 import { HubScene, type HubSceneOptions } from './HubScene'
 import './hubTestApi'
 
 export interface HubGame {
   /** Inactive while a challenge covers the map: the game loop sleeps and ignores the keyboard. */
   setActive(active: boolean): void
-  /** The worn hat (emoji) on the character, or null. */
-  setHat(hat: string | null): void
+  /** What the character wears. */
+  setOutfit(outfit: Outfit): void
   destroy(): void
 }
 
@@ -53,14 +54,14 @@ export function createHubGame(parent: HTMLElement, options: HubSceneOptions): Hu
     window.__larrutanHub = {
       playerTile: () => scene.getPlayerTile(),
       isMoving: () => scene.isMoving(),
-      hat: () => scene.getHat(),
+      outfit: () => scene.getOutfit(),
       stationPoint: (challenge) => scene.stationScreenPoint(challenge),
     }
   }
 
   return {
     setActive,
-    setHat: (hat) => scene.setHat(hat),
+    setOutfit: (outfit) => scene.setOutfit(outfit),
     destroy() {
       setActive(false)
       game.destroy(true)

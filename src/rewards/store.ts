@@ -44,7 +44,8 @@ export function recordRound(completion: RoundCompletion): RoundOutcome {
   return result.outcome
 }
 
-export function wearItem(itemId: string | null): void {
+/** Puts on an unlocked item, or takes it off if it is already worn. */
+export function wearItem(itemId: string): void {
   update(wear(progress, itemId))
 }
 

@@ -14,7 +14,7 @@ async function playRoundByKeyboard(page: Page, round: ChoiceRound) {
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible()
 }
 
-/** The worn item in the save on the device, read straight from IndexedDB. */
+/** The worn hat in the save on the device, read straight from IndexedDB. */
 function savedWornItem(page: Page) {
   return page.evaluate(
     ({ name, store }) =>
@@ -25,7 +25,7 @@ function savedWornItem(page: Page) {
           const read = open.result.transaction(store).objectStore(store).get('default')
           read.onsuccess = () => {
             open.result.close()
-            resolve((read.result as { progress?: { wornItem?: string | null } } | undefined)?.progress?.wornItem ?? null)
+            resolve((read.result as { progress?: { worn?: { head?: string } } } | undefined)?.progress?.worn?.head ?? null)
           }
         }
       }),
@@ -59,15 +59,15 @@ test('a finished round unlocks the cap, which can be worn on the map', async ({ 
   await expect(cap).toHaveAttribute('aria-pressed', 'false')
   // Locked items are visible, with their rarity, but can't be worn.
   await expect(page.getByRole('button', { name: 'Krona, Legendarisk, låst' })).toBeVisible()
-  await expect(page.getByRole('img', { name: 'Legendarisk, 5 av 5 stjärnor' })).toBeVisible()
+  await expect(page.getByRole('img', { name: 'Legendarisk, 5 av 5 stjärnor' }).first()).toBeVisible()
 
   await press(cap, hasTouch)
   await expect(cap).toHaveAttribute('aria-pressed', 'true')
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
-  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.hat())).toBe('🧢')
+  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.outfit().head)).toBe('cap')
 })
 
-test('the second visit is the hard level, which earns the top hat', async ({ page, hasTouch }) => {
+test('the second visit is the hard level, which earns the striped sweater', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   await tapStation(page, 'findLetter', hasTouch)
   await playRoundByKeyboard(page, easyRound)
@@ -76,7 +76,7 @@ test('the second visit is the hard level, which earns the top hat', async ({ pag
   await tapStation(page, 'findLetter', hasTouch)
   await expect(page.getByRole('img', { name: 'Svår nivå' })).toBeVisible()
   await playRoundByKeyboard(page, hardRound)
-  await expect(page.getByRole('img', { name: 'Ny sak: Hög hatt' })).toBeVisible()
+  await expect(page.getByRole('img', { name: 'Ny sak: Randig tröja' })).toBeVisible()
 })
 
 test('progress is saved on the device and survives a reload', async ({ page, hasTouch }) => {
@@ -92,7 +92,7 @@ test('progress is saved on the device and survives a reload', async ({ page, has
   await page.reload()
   await enterMap(page, hasTouch)
   await expect(page.getByRole('img', { name: 'Nivå 1' })).toBeVisible()
-  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.hat())).toBe('🧢')
+  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.outfit().head)).toBe('cap')
   // The level is remembered too: the sign now opens the hard level.
   await tapStation(page, 'findLetter', hasTouch)
   await expect(page.getByRole('img', { name: 'Svår nivå' })).toBeVisible()
@@ -125,7 +125,7 @@ test('a broken save is repaired and kept as a backup, and the game still starts'
   // enterMap opens the page again, which loads (and repairs) the broken save exactly once.
   await enterMap(page, hasTouch)
   await expect(page.getByRole('img', { name: 'Nivå 1' })).toBeVisible()
-  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.hat())).toBe('🧢')
+  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.outfit().head)).toBe('cap')
   const backups = await page.evaluate(
     ({ name, store }) =>
       new Promise<number>((resolve, reject) => {

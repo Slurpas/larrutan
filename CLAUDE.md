@@ -39,7 +39,7 @@ Changed files, commands run and their results, screenshots, known limitations, a
 - `npm run speech`: generate missing speech clips with Piper (setup in README). Run it after any change to letters, words, phrases, challenge wording, `src/content/pronunciation.ts` or `src/speech/voiceSettings.ts`; `catalogue.test.ts` fails until you do. It also prints the review status and lists rejected clips with the user's notes
 - `npm run sfx`: re-synthesise the sound effects (chime, fanfare, level-up, new item) in `src/sound/sfx/`
 - `npm run icons`: render `scripts/app-icon.svg` to the PNG app icons in `public/icons/`
-- `npm run sprites`: render every sprite into `docs/sprites/contact-sheet.png` for review (run after changing `src/art`)
+- `npm run sprites`: render every sprite into `docs/sprites/contact-sheet.png` and every wardrobe item into `docs/sprites/wardrobe.png` for review (run after changing `src/art`)
 - Deploy: push to `main`. GitHub Actions (`.github/workflows/deploy.yml`) runs lint, unit tests and the build, then publishes to https://slurpas.github.io/larrutan/. Pushing publishes, so push only when the user has asked to.
 
 Before reporting a task done, run typecheck, lint, test, test:e2e and build.
@@ -51,8 +51,8 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - `src/content`: letters, words, phrases (typed data) and `validation.ts` with the PRD §5 content rules
 - `src/speech`: `speech.ts` is the one entry point (`speak`, `stopSpeech`, …). It plays generated clips from `audio/sv/` and falls back to the device voice (`browserVoice.ts`) only for a sentence without a clip or a clip that won't play. `catalogue.ts` lists every sentence (grouped for review); challenge wording lives in `src/challenges/voices.ts`. A clip's file name hashes its text, pronunciation fix and voice (`clipName.ts`, `voiceSettings.ts`), so changed audio always gets a new name. `review/`: the clip review page (`?review=voices`, dev server only) and approvals (`audio/sv/approvals.json`, saved by `scripts/voiceReviewPlugin.ts`)
 - `src/world`: the hub map (Phaser). `hubMap.ts` is the map as a text grid; `tileMap.ts`, `pathfinding.ts`, `camera.ts` (whole-number zoom for pixel art) and `groundTiles.ts` (which tile or sprite each map square shows) are pure, tested rules; `textures.ts` turns `src/art` grids into Phaser textures; `HubScene.ts` draws and moves; `HubWorld.tsx` mounts it in React
-- `src/art`: 16×16 pixel art (`docs/ART_DIRECTION.md`). `palette.ts` (Kenney's colours), sprites as text grids (`character.ts`, `signs.ts`, `scenery.ts`, drawn with the `pixels.ts` helper), and `kenney.ts` (the Tiny Town tiles in use, sheet and licence in `kenney/`)
-- `src/rewards`: reward rules (`rules.ts`, all numbers in one place), hats (`items.ts`), pure progress logic (`progress.ts`, exactly-once by round id), the store (`store.ts`: loads the save at startup, saves after every change), the XP bar and "Mina saker"
+- `src/art`: 16×16 pixel art (`docs/ART_DIRECTION.md`). `palette.ts` (Kenney's colours), sprites as text grids (`character.ts`, `signs.ts`, `scenery.ts`, drawn with the `pixels.ts` helper), and `kenney.ts` (the Tiny Town tiles in use, sheet and licence in `kenney/`). The wardrobe: item art in `wardrobe.ts` (recolours for tops and trousers, placed sprites for the rest) and `outfit.ts`, the one character renderer (`composeCharacter`) for the map, "Mina saker" and the reward screen
+- `src/rewards`: reward rules (`rules.ts`, all numbers in one place), the item catalogue (`items.ts`: slot, rarity, unlock, spoken hint), pure progress logic (`progress.ts`, exactly-once by round id), the store (`store.ts`: loads the save at startup, saves after every change), the XP bar and "Mina saker"
 - `src/learning`: mastery (`mastery.ts`): Leitner boxes per challenge item, updated from first-try results, and `practiceOrder`, which round builders use to favour what is still being learned (identical to a plain shuffle for a new player)
 - `src/persistence`: saving (PRD §12). `saveFile.ts` is the pure, tested save format (version, per-field repair); `database.ts` is the thin IndexedDB layer; `saveGame.ts` loads and saves the default profile
 - `src/pwa`: the service worker template (filled in by the plugin in `vite.config.ts`) and its registration (release builds only)
@@ -75,6 +75,7 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - Pixel art: Phaser runs with `pixelArt: true` (no smoothing), so any Phaser text must call `text.texture.setFilter(Phaser.Textures.FilterMode.LINEAR)` or it looks jagged. Letters are never drawn as pixels: they use Andika (`src/fonts`, `--font-letters`), and the map waits for the font before drawing signs. Sprites are drawn with their feet at the bottom of their tile and sorted by depth (y), so the character can stand in front of or behind signs and tall trees.
 - Deleting files from Claude's Bash sandbox can fail silently (`rm`/Node report success, the file stays). Use PowerShell `Remove-Item` when a folder must really be emptied, e.g. `dist` before checking a build.
 - Dev builds expose `window.__larrutanHub` (player tile, station screen points) for Playwright; see `src/world/hubTestApi.ts`.
+- A new wardrobe item is a data entry in `src/rewards/items.ts` plus its art in `src/art/wardrobe.ts` (`outfit.test.ts` fails if either is missing). Its unlock sentence and hint are spoken, so run `npm run speech` (and check the words' pronunciation), then `npm run sprites` to review it.
 
 ## Stack notes
 

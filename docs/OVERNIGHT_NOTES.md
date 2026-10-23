@@ -48,11 +48,13 @@ Every check passes on the final state:
 | ~~W1~~ | **Hosting: decided, GitHub Pages.** Live at https://slurpas.github.io/larrutan/. The repository is public, with commit emails switched to GitHub's no-reply address first | Done |
 | W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet). *Speed decided 2026-10-23: 1.4, with a pause before the target in "Var är … Å?". All clips regenerated.* | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
 | W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Ready now, see "Check on the iPad" below |
-| W4 | **Voice review:** go through the 209 clips on `?review=voices` (about 15–20 minutes) | Only your ear can approve them |
+| W4 | **Voice review:** go through the 235 clips on `?review=voices` (about 20 minutes). 30 are new: the wardrobe sentences ("Du fick en ballong!" and the hints) | Only your ear can approve them |
 | ~~W5~~ | **Art style: decided, 16×16 pixel art** (`docs/ART_DIRECTION.md`) | Done |
 | ~~W6~~ | **Downloads: approved.** Kenney's Tiny Town and Andika are in the game (Task 9) | Done |
 | W7 | **Learning:** difficulty adaptation, yes or no and which option? A `?debug=mastery` page for playtests? | Changes how the game behaves for your child |
 | W8 | **New content:** approve the next letters (R, N, T, F) and 15 words in `docs/CONTENT_PROPOSAL.md`; E and U wait (sound rules) | You approve content (PRD §5) |
+| W9 | **Wardrobe (Task 10):** are the 18 items, their looks and their rarity right? Should the rainbow trousers (every letter mastered) stay epic, or become legendary? | Your child's reaction decides |
+| W10 | **Publish Tasks 9 and 10** to https://slurpas.github.io/larrutan/ (a push to `main`) | Pushing publishes; only on your OK |
 
 ## Task 11 — Smarter learning: mastery (core done)
 

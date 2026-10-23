@@ -140,7 +140,7 @@ Attempts, hints and successes are tracked separately from rewards.
 - **Choosing a round:** questions are picked in a weighted random order, and each box comes up about half as often as the one below. Items still being learned dominate, but known items still come back.
 - **New players:** everything is in box 1, so they get exactly the same seeded rounds as before mastery existed.
 - **Hard level:** it still asks about the look-alike letters; mastery only changes their order.
-- **Saving and visibility:** boxes are saved with the progress (save version 2, upgraded from version 1) and never shown to the child.
+- **Saving and visibility:** boxes are saved with the progress (since save version 2) and never shown to the child.
 - **Not done yet:** changing difficulty (easy/hard) from performance.
 
 ## 7. Voice and audio
@@ -226,7 +226,7 @@ Pixel art is displayed at integer scale. Letters for learning use a clear litera
 - One base character with a single default skin tone for now. Skin tones and character creation are on the roadmap.
 - Items are layered on the base character. Each slot holds one item; equipping another item in the same slot replaces it. Start with a few slots (for example headwear, top, bottoms, back item, held item) and add more when needed.
 - Slot and drawing order are separate concepts: a cape is drawn behind the body, a hat over the hair.
-- Body-covering clothes are generated from body masks so they fit every direction and walk frame automatically. Attached items (hats, backpacks) use per-frame anchor points.
+- Body-covering clothes are generated from body masks so they fit every direction and walk frame automatically. Attached items (hats, backpacks) use anchor points. *Built (Task 10):* one point per facing, because the walk frames only move the legs; per-frame points can come if a frame ever moves the head.
 - Three directions are drawn (down, up, side); the other side is mirrored.
 - One character renderer is used everywhere the character appears: world, wardrobe, reward pop-ups.
 - A new item is added through art plus a data entry, without renderer code changes.
@@ -268,7 +268,19 @@ Locked items are visible with their stars and a friendly spoken explanation of h
 
 Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the real catalogue.
 
-**Phase 1 implementation (Task 5):** easy XP 20, hard XP 30, replays a quarter; levels at 30, 70, 120, 180 XP. Hitta bokstaven and Första bokstaven have an easy and a hard level (hard offers exactly one look-alike of the answer); a sign opens the first level not yet completed. Five hats, one per rarity: keps (first round), rosett (level 2), hög hatt (hard Hitta bokstaven), studentmössa (all three challenges), krona (level 5). Progress is saved on the device since Task 7 (§12).
+**Phase 1 implementation (Task 5):** easy XP 20, hard XP 30, replays a quarter; levels at 30, 70, 120, 180 XP. Hitta bokstaven and Första bokstaven have an easy and a hard level (hard offers exactly one look-alike of the answer); a sign opens the first level not yet completed. Five emoji hats, one per rarity (replaced by the wardrobe in Task 10). Progress is saved on the device since Task 7 (§12).
+
+**Wardrobe (Task 10):** 18 pixel-art items in five slots. The hard levels can be finished in the first session, so they give uncommon items, not rare ones.
+
+| Tier | Items and how they are earned |
+|---|---|
+| Vanlig | keps (first round), blå tröja, gröna byxor, mössa (the easy level of each challenge), blomma (3 rounds) |
+| Ovanlig | rosett (level 3), randig tröja and ballong (the hard levels), ryggsäck (10 rounds) |
+| Sällsynt | hög hatt (level 6), stjärntröja (level 7), mantel (25 rounds), trollstav (35 rounds) |
+| Episk | studentmössa (level 9), vingar (60 rounds), regnbågsbyxor (every letter of Hitta bokstaven in the top mastery box) |
+| Legendarisk | krona (level 10), guldmantel (every word of Första bokstaven in the top mastery box) |
+
+Unit tests play rounds and check the timing: at most uncommon after a first session, rare by 40 rounds, nothing epic at 50, the crown between 70 and 100 rounds. The mastery items depend on how well and how often the child plays; with 12 letters, the rainbow trousers need at least 10 perfect rounds of Hitta bokstaven.
 
 ## 11. Accessibility
 

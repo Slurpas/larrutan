@@ -1,22 +1,12 @@
 import Phaser from 'phaser'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { characterFeetRow, characterHeadTop, characterSize } from '../art/character'
+import { outfitFeetRow, outfitSize, type CharacterFacing, type Outfit } from '../art/outfit'
 import { tinyTown } from '../art/kenney'
 import { signPanel, signSize } from '../art/signs'
 import { TILE, cameraZoom } from './camera'
 import { groundTile } from './groundTiles'
 import { findPath, nearestWalkable } from './pathfinding'
-import {
-  addArtTextures,
-  characterFrameKey,
-  iconKeys,
-  rockKey,
-  shadowKey,
-  signKey,
-  tinyTownKey,
-  waterTexture,
-  type CharacterFacing,
-} from './textures'
+import { addArtTextures, characterTextures, iconKeys, rockKey, shadowKey, signKey, tinyTownKey, waterTexture } from './textures'
 import {
   sameTile,
   stationApproaches,
@@ -81,9 +71,10 @@ export class HubScene extends Phaser.Scene {
   private player!: Phaser.GameObjects.Container
   private playerSprite!: Phaser.GameObjects.Image
   private facing: CharacterFacing = 'down'
-  private hatText: Phaser.GameObjects.Text | null = null
-  /** The worn hat (emoji); may be set before the scene has been created. */
-  private hat: string | null = null
+  /** What the character wears; may be set before the scene has been created. */
+  private outfit: Outfit = {}
+  /** Texture names of the current outfit's frames. */
+  private frameKey: ((facing: CharacterFacing, frame: number) => string) | null = null
   private playerTile: Tile
   /** The tile the player is walking into right now, if any. */
   private moveTarget: Tile | null = null
@@ -179,7 +170,7 @@ export class HubScene extends Phaser.Scene {
       }
       frame = Math.floor((now / 1000) * WALK_FRAMES_PER_SECOND) % 4
     }
-    this.playerSprite.setTexture(characterFrameKey(this.facing, frame))
+    if (this.frameKey) this.playerSprite.setTexture(this.frameKey(this.facing, frame))
     // Drawn in front of whatever is above it on the map, and behind what is below.
     this.player.setDepth(this.player.y + FEET_Y)
   }
@@ -338,32 +329,19 @@ export class HubScene extends Phaser.Scene {
 
   private drawPlayer(): Phaser.GameObjects.Container {
     const shadow = this.add.image(0, FEET_Y - 1, shadowKey).setAlpha(0.25)
+    this.frameKey = characterTextures(this, this.outfit)
     this.playerSprite = this.add
-      .image(0, FEET_Y, characterFrameKey('down', 0))
-      .setOrigin(0.5, (characterFeetRow + 1) / characterSize.height)
-
-    // The worn hat sits on top of the head.
-    const headTop = FEET_Y - (characterFeetRow + 1 - characterHeadTop)
-    this.hatText = this.add
-      .text(0, headTop + 7, '', { fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif', fontSize: '64px' })
-      .setOrigin(0.5, 1)
-      .setScale(0.16)
-    this.hatText.texture.setFilter(Phaser.Textures.FilterMode.LINEAR)
-    this.applyHat()
-
-    return this.add.container(0, 0, [shadow, this.playerSprite, this.hatText])
+      .image(0, FEET_Y, this.frameKey('down', 0))
+      .setOrigin(0.5, (outfitFeetRow + 1) / outfitSize.height)
+    return this.add.container(0, 0, [shadow, this.playerSprite])
   }
 
-  /** Shows the worn hat (an emoji) on the character, or none. */
-  setHat(hat: string | null) {
-    this.hat = hat
-    this.applyHat()
-  }
-
-  private applyHat() {
-    if (!this.hatText) return
-    this.hatText.setText(this.hat ?? '')
-    this.hatText.setVisible(this.hat !== null)
+  /** Dresses the character (src/art/outfit.ts); its frames are made the first time an outfit is worn. */
+  setOutfit(outfit: Outfit) {
+    this.outfit = outfit
+    if (!this.playerSprite) return
+    this.frameKey = characterTextures(this, outfit)
+    this.playerSprite.setTexture(this.frameKey(this.facing, 0))
   }
 
   private updateHighlight() {
@@ -379,8 +357,8 @@ export class HubScene extends Phaser.Scene {
     return { ...this.playerTile }
   }
 
-  getHat(): string | null {
-    return this.hatText?.visible ? this.hat : null
+  getOutfit(): Outfit {
+    return { ...this.outfit }
   }
 
   isMoving(): boolean {

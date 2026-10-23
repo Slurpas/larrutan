@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { ChallengeId } from '../challenges/challengeIds'
 import type { Difficulty } from '../challenges/difficulty'
-import { items } from './items'
+import { getItem, items } from './items'
 import { completeRound, initialProgress, wear, type Progress } from './progress'
 import { levelForXp, levelProgress, xpForLevel } from './rules'
 
@@ -60,66 +60,88 @@ describe('XP', () => {
   })
 })
 
+/**
+ * A plausible way to play (at about five rounds a day): every level once in the first
+ * session, then rounds at each sign's hardest level, in turn.
+ */
+function playRounds(count: number): Progress {
+  const firstSession = [
+    ['findLetter', 'easy'],
+    ['findLetter', 'hard'],
+    ['firstLetter', 'easy'],
+    ['firstLetter', 'hard'],
+    ['wordPicture', 'easy'],
+  ] as const
+  const replays = [
+    ['findLetter', 'hard'],
+    ['firstLetter', 'hard'],
+    ['wordPicture', 'easy'],
+  ] as const
+  let progress = initialProgress
+  for (let i = 0; i < count; i++) {
+    const [challenge, difficulty] = firstSession[i] ?? replays[i % replays.length]!
+    progress = play(progress, challenge, difficulty).progress
+  }
+  return progress
+}
+
+const highestRarity = (progress: Progress) => Math.max(0, ...progress.unlockedItems.map((id) => getItem(id).rarity))
+
 describe('unlocks', () => {
-  it('unlocks the cap after the first round, and each item exactly once', () => {
-    let progress = initialProgress
-    const first = play(progress, 'findLetter')
-    expect(first.outcome.newItems).toEqual(['cap'])
-    progress = first.progress
-    for (let i = 0; i < 30; i++) progress = play(progress, 'wordPicture').progress
+  it('unlocks the cap and the blue sweater after the first round of Hitta bokstaven', () => {
+    expect(play(initialProgress, 'findLetter').outcome.newItems).toEqual(['cap', 'blue-sweater'])
+  })
+
+  it('unlocks each item exactly once', () => {
+    const progress = playRounds(120)
     expect(new Set(progress.unlockedItems).size).toBe(progress.unlockedItems.length)
   })
 
-  it('unlocks the bow on reaching level 2', () => {
-    const one = play(initialProgress, 'findLetter')
-    const two = play(one.progress, 'wordPicture')
-    expect(two.outcome.levelBefore).toBe(1)
-    expect(two.outcome.levelAfter).toBe(2)
-    expect(two.outcome.newItems).toContain('bow')
+  it('gives only common and uncommon items in the first session (PRD §10)', () => {
+    expect(highestRarity(playRounds(6))).toBe(2)
   })
 
-  it('unlocks the top hat for the hard level of Hitta bokstaven', () => {
-    const easy = play(initialProgress, 'findLetter', 'easy')
-    expect(easy.progress.unlockedItems).not.toContain('top-hat')
-    const hard = play(easy.progress, 'findLetter', 'hard')
-    expect(hard.outcome.newItems).toContain('top-hat')
+  it('keeps rare items for about a week of play, and epic ones for longer', () => {
+    expect(highestRarity(playRounds(15))).toBe(2)
+    expect(highestRarity(playRounds(40))).toBe(3)
+    expect(highestRarity(playRounds(50))).toBeLessThan(4)
   })
 
-  it('unlocks the graduation cap once every challenge has been completed', () => {
-    let progress = play(initialProgress, 'findLetter').progress
-    progress = play(progress, 'firstLetter').progress
-    expect(progress.unlockedItems).not.toContain('graduation-cap')
-    const last = play(progress, 'wordPicture')
-    expect(last.outcome.newItems).toContain('graduation-cap')
+  it('keeps legendary items for long-term goals', () => {
+    expect(playRounds(70).unlockedItems).not.toContain('crown')
+    expect(playRounds(100).unlockedItems).toContain('crown')
   })
 
-  it('keeps the legendary crown for real effort: not even every level once is enough', () => {
-    let progress = initialProgress
-    for (const [challenge, difficulty] of [
-      ['findLetter', 'easy'],
-      ['findLetter', 'hard'],
-      ['firstLetter', 'easy'],
-      ['firstLetter', 'hard'],
-      ['wordPicture', 'easy'],
-    ] as const) {
-      progress = play(progress, challenge, difficulty).progress
-    }
-    expect(progress.unlockedItems).not.toContain('crown')
-    while (!progress.unlockedItems.includes('crown')) progress = play(progress, 'wordPicture').progress
-    expect(levelForXp(progress.xp)).toBe(5)
+  it('unlocks the rainbow trousers once every letter is mastered, however long it took', () => {
+    const allLetters = Object.fromEntries(['a', 'i', 'l', 'm', 'o', 's', 'a-ring', 'a-umlaut', 'o-umlaut'].map((id) => [`findLetter:${id}`, 5]))
+    const almost = { ...initialProgress, mastery: { ...allLetters, 'findLetter:m': 4 } }
+    expect(play(almost, 'wordPicture').outcome.newItems).not.toContain('rainbow-trousers')
+    const all = { ...initialProgress, mastery: allLetters }
+    expect(play(all, 'wordPicture').outcome.newItems).toContain('rainbow-trousers')
   })
 
-  it('has one item per rarity, from common to legendary', () => {
-    expect(items.map((item) => item.rarity)).toEqual([1, 2, 3, 4, 5])
+  it('has items of every rarity, and more common ones than legendary', () => {
+    const count = (rarity: number) => items.filter((item) => item.rarity === rarity).length
+    for (const rarity of [1, 2, 3, 4, 5]) expect(count(rarity), `rarity ${rarity}`).toBeGreaterThan(0)
+    expect(count(1)).toBeGreaterThan(count(5))
+    expect(items.length).toBeGreaterThanOrEqual(15)
   })
 })
 
 describe('wearing items', () => {
-  it('only lets unlocked items be worn, and can take them off', () => {
-    expect(wear(initialProgress, 'crown').wornItem).toBeNull()
-    const progress = play(initialProgress, 'findLetter').progress
-    const wearing = wear(progress, 'cap')
-    expect(wearing.wornItem).toBe('cap')
-    expect(wear(wearing, null).wornItem).toBeNull()
+  it('wears one item per slot, swaps within a slot, and takes an item off on a second tap', () => {
+    let progress = playRounds(6)
+    progress = wear(progress, 'cap')
+    progress = wear(progress, 'blue-sweater')
+    expect(progress.worn).toEqual({ head: 'cap', top: 'blue-sweater' })
+    progress = wear(progress, 'beanie')
+    expect(progress.worn).toEqual({ head: 'beanie', top: 'blue-sweater' })
+    progress = wear(progress, 'beanie')
+    expect(progress.worn).toEqual({ top: 'blue-sweater' })
+  })
+
+  it('only lets unlocked items be worn', () => {
+    expect(wear(initialProgress, 'crown').worn).toEqual({})
+    expect(wear(initialProgress, 'no-such-item').worn).toEqual({})
   })
 })

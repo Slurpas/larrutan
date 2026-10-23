@@ -187,11 +187,24 @@ Status 2026-10-23: **done.**
 - **Map layout:** the hub now has two houses, tall trees the child can walk behind, bushes, mushrooms and flower patches.
 - **Mina saker:** shows the pixel character.
 - **Contact sheet:** `npm run sprites`.
-- **Not done:** hats (Task 10) and challenge pictures (Task 11) are still emoji.
+- **Not done:** challenge pictures (Task 11) are still emoji. Hats became pixel art in Task 10.
 
 ### Task 10 — Wardrobe and item catalogue
 - Layered items with slots and drawing order, one shared character renderer, mask-based clothing and anchor points.
 - 15–20 items across all five rarities following the time-to-earn table; locked previews.
+
+Status 2026-10-23: **done.**
+- **18 items in five slots:** head, top, trousers, back, in the hand.
+  - 5 common, 4 uncommon, 4 rare, 3 epic, 2 legendary (list in PRD §10).
+  - Unlocks and spoken hints in `src/rewards/items.ts`; the art in `src/art/wardrobe.ts`.
+- **One renderer** (`composeCharacter`, `src/art/outfit.ts`) for the map, "Mina saker" and the reward screen.
+  - Tops and trousers repaint the body's shirt and trouser colours (masks), so they fit every direction and walk frame.
+  - Hats, back items and held items are small sprites placed per facing, drawn behind or in front of the body.
+- **"Mina saker":** one row per slot. Each card shows the character wearing the item, back items from behind. Tap to wear (it replaces what was in that slot), tap again to take it off.
+- **Unlocks rebalanced:** the hard levels are reachable in the first session, so they now give uncommon items. A simulation in the unit tests checks the time-to-earn table.
+- **New unlock type:** mastery, e.g. every letter of Hitta bokstaven in the top box.
+- **Save version 3:** what is worn, per slot. Older saves upgrade.
+- **Review sheet:** `docs/sprites/wardrobe.png` (`npm run sprites`).
 
 ### Task 11 — Smarter learning
 - Leitner-box mastery per letter and word; gentle, reversible adaptation.

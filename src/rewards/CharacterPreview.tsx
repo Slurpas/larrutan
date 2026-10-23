@@ -1,27 +1,16 @@
-import { characterFrames, characterHeadTop, characterSize } from '../art/character'
+import { composeCharacter, type Outfit } from '../art/outfit'
 import { PixelSprite } from '../ui/PixelSprite'
-import { Picture } from '../ui/Picture'
 import styles from './CharacterPreview.module.css'
 
 interface CharacterPreviewProps {
-  /** Emoji of the worn hat, if any. */
-  hat: string | null
+  outfit: Outfit
 }
 
-/**
- * The character, large: the same pixel art as on the map (src/art/character.ts),
- * facing the child. Hats are still emoji until the wardrobe (Task 10) draws them.
- */
-export function CharacterPreview({ hat }: CharacterPreviewProps) {
-  const standing = characterFrames.down[0] ?? []
+/** The character, large, facing the child, in what they are wearing: the same renderer as the map (src/art/outfit.ts). */
+export function CharacterPreview({ outfit }: CharacterPreviewProps) {
   return (
-    <div className={styles.character} aria-hidden="true" style={{ '--head-top': characterHeadTop / characterSize.height } as React.CSSProperties}>
-      <PixelSprite grid={standing} className={styles.body} />
-      {hat && (
-        <span className={styles.hat}>
-          <Picture emoji={hat} />
-        </span>
-      )}
+    <div className={styles.character} aria-hidden="true">
+      <PixelSprite grid={composeCharacter('down', 0, outfit)} className={styles.body} />
     </div>
   )
 }

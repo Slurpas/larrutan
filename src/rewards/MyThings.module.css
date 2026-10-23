@@ -13,18 +13,25 @@
   align-items: center;
 }
 
+/* The character beside the cards, also in portrait: stacked, the cards would run off the screen. */
 .body {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: clamp(1.5rem, 5vw, 4rem);
 }
 
-.items {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 1.25rem;
+/* One row per slot (head, tops, trousers, back, in the hand). */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1.4vh, 0.8rem);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.4rem, 1vw, 0.75rem);
 }
 
 /* Rarity colours; the stars carry the same information for anyone who can't tell colours apart. */
@@ -50,21 +57,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  width: clamp(110px, 15vw, 150px);
-  height: clamp(120px, 17vw, 165px);
-  padding: 0.5rem;
-  border: 5px solid var(--rarity);
-  border-radius: 1.5rem;
+  gap: 0.15rem;
+  width: clamp(74px, 8.6vw, 104px);
+  height: clamp(100px, calc((100dvh - 9rem) / 5 - 0.8rem), 140px);
+  padding: 0.3rem;
+  border: 4px solid var(--rarity);
+  border-radius: 1rem;
   background: var(--color-white);
-  box-shadow: 0 8px 0 var(--color-ink);
-  font-size: 1rem;
+  box-shadow: 0 6px 0 var(--color-ink);
+  /* Sizes the stars: five must fit across the card. */
+  font-size: clamp(0.55rem, 0.75vw, 0.72rem);
   cursor: pointer;
   transition: transform 80ms ease-out, box-shadow 80ms ease-out;
 }
 
 .item:active {
-  transform: translateY(6px);
+  transform: translateY(4px);
   box-shadow: 0 2px 0 var(--color-ink);
 }
 
@@ -73,9 +81,11 @@
   outline-offset: 6px;
 }
 
+/* The character wearing the item, as large as the card allows (26×40 pixels). */
 .picture {
-  font-size: clamp(3rem, 6vw, 4rem);
-  line-height: 1;
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: 26 / 40;
 }
 
 .locked .picture {
@@ -85,15 +95,15 @@
 
 .lock {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 1.6rem;
-  height: 1.6rem;
+  top: 0.3rem;
+  right: 0.3rem;
+  width: 1.25rem;
+  height: 1.25rem;
   color: var(--color-ink);
 }
 
 .worn {
   background: var(--color-correct);
-  outline: 5px solid var(--color-ink);
-  outline-offset: 3px;
+  outline: 4px solid var(--color-ink);
+  outline-offset: 2px;
 }

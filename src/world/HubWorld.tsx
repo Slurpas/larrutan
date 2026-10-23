@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, useRef } from 'react'
+import { outfitKey, type Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { phrases } from '../content/phrases'
 import { XpBar } from '../rewards/XpBar'
@@ -14,8 +15,8 @@ interface HubWorldProps {
   /** False while a challenge or "Mina saker" is open on top of the map. */
   active: boolean
   xp: number
-  /** The worn hat (emoji), shown on the character. */
-  hat: string | null
+  /** What the character wears. */
+  outfit: Outfit
   onOpenStation: (challenge: ChallengeId) => void
   onOpenMyThings: () => void
   onHome: () => void
@@ -25,14 +26,14 @@ interface HubWorldProps {
  * The map the child walks around (Phaser), with React buttons on top. It stays
  * mounted while a challenge is open, so the child comes back to the same spot.
  */
-export function HubWorld({ active, xp, hat, onOpenStation, onOpenMyThings, onHome }: HubWorldProps) {
+export function HubWorld({ active, xp, outfit, onOpenStation, onOpenMyThings, onHome }: HubWorldProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const hubRef = useRef<HubGame | null>(null)
   const openStation = useEffectEvent((challenge: ChallengeId) => onOpenStation(challenge))
   // The game arrives after the first render, so it starts from whatever the props are by then.
   const catchUp = useEffectEvent((hub: HubGame) => {
     hub.setActive(active)
-    hub.setHat(hat)
+    hub.setOutfit(outfit)
   })
 
   useEffect(() => {
@@ -62,9 +63,12 @@ export function HubWorld({ active, xp, hat, onOpenStation, onOpenMyThings, onHom
     hubRef.current?.setActive(active)
   }, [active])
 
+  // A new outfit object comes with every progress update; only redress when what is worn changed.
+  const worn = outfitKey(outfit)
+  const dress = useEffectEvent(() => hubRef.current?.setOutfit(outfit))
   useEffect(() => {
-    hubRef.current?.setHat(hat)
-  }, [hat])
+    dress()
+  }, [worn])
 
   return (
     <div className={styles.hub}>

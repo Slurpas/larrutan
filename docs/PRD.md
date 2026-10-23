@@ -217,7 +217,7 @@ Simple shapes, flat colours and emoji only. No art pipeline and no asset tooling
 
 ### Phase 2: art direction
 
-Before real art there is one comparison of candidate styles (for example 16×16 vs 32×32 tiles, own vs CC0 environment), shown side by side at iPad and desktop size. The user picks; the decision goes in `docs/ART_DIRECTION.md`. Claude's starting recommendation is 16×16 tiles with a chibi character around 16×32, but the comparison decides.
+Before real art there is one comparison of candidate styles (for example 16×16 vs 32×32 tiles, own vs CC0 environment), shown side by side at iPad and desktop size. The user picks; the decision goes in `docs/ART_DIRECTION.md`. **Decided 2026-10-23: 16×16 pixel art** with a 16×32 chibi character and the soft UI kept, because that is where the most clothes and items will actually get made. Rules and palette are in `docs/ART_DIRECTION.md`.
 
 Pixel art is displayed at integer scale. Letters for learning use a clear literacy font (Andika, SIL Open Font License), not a pixel font.
 

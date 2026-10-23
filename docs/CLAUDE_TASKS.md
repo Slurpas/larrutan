@@ -173,11 +173,9 @@ Remaining:
 - `docs/ART_DIRECTION.md`, `docs/ASSET_LICENSES.md`, the palette, and the Andika font for letters.
 
 Status 2026-10-23:
-- **Candidates ready:** pixel 16×16, pixel 32×32 and soft vector, all drawn by code (`docs/art-direction/*.png`). Claude recommends soft vector.
-- **Waiting for the user:**
-  - The pick.
-  - An OK to download the Andika font (SIL OFL).
-  - Optionally, an OK to download a CC0 pack (Kenney) to compare as well.
+- **Decided: 16×16 pixel art.** Compared against pixel 32×32 and soft vector (`docs/art-direction/*.png`).
+- **Done:** rules, palette and the sprite approach are in `docs/ART_DIRECTION.md`.
+- **Still open:** the Andika font download and the CC0 scenery packs (Kenney) wait for the user's OK.
 
 ### Task 9 — Real world and character graphics
 - Replace placeholders on the map with the chosen style.

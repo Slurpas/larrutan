@@ -1,61 +1,61 @@
 # Art direction
 
-**Status: candidates ready, waiting for the user's pick (Task 8, PRD §9).** Nothing in the game has changed yet.
+**Decided 2026-10-23: 16×16 pixel art** (candidate A), with the soft, rounded UI kept for buttons and cards.
 
-The same scene is drawn in three styles: the hub with paths, a pond, trees, the three signs and the character. Each is shown at iPad size (1080×810) and desktop size (1440×900), at the game's 64 CSS px per tile, with the real HUD on top.
+**Why** (the user's criterion was where Claude will actually produce the most clothes, items and options, not what is possible in theory):
+- Every sprite is a small grid drawn by code, so many items can be made quickly and stay consistent.
+- Colour variants are palette swaps, and walk frames are tiny.
+- Large free CC0 pixel libraries exist for scenery.
+- Children aged 6–8 know and like the look (Minecraft, Pokémon).
+- **Trade-off:** clothes are small on the map, about like a Minecraft skin. "Mina saker" shows the character large.
 
-All three are drawn entirely by code (`scripts/art-direction/candidates.html`, rendered by `node scripts/art-direction/render.mjs`). Nothing is downloaded.
+The candidates that were compared (`docs/art-direction/`: overview, iPad, desktop and close-up for each) are kept as a record:
+- **A:** pixel art, 16×16 tiles. Chosen.
+- **B:** pixel art, 32×32 tiles.
+- **C:** soft vector.
 
-| | Overview | iPad | Desktop | Close-up |
-|---|---|---|---|---|
-| All three | `art-direction/overview.png` | | | |
-| A — Pixel art, 16×16 tiles | | `pixel16-ipad.png` | `pixel16-desktop.png` | `pixel16-details.png` |
-| B — Pixel art, 32×32 tiles | | `pixel32-ipad.png` | `pixel32-desktop.png` | `pixel32-details.png` |
-| C — Soft vector | | `vector-ipad.png` | `vector-desktop.png` | `vector-details.png` |
+## Rules
 
-## The candidates
+- **Sizes:** tiles are 16×16 pixels, shown at 4× (64 CSS px per tile, as `src/world/camera.ts` already uses). Scaling is always by whole numbers, with nearest-neighbour sampling (no smoothing).
+- **The character:** 16×32 pixels (one tile wide, two tall), chibi proportions, one default skin tone (PRD §9).
+- **Directions:** down, up and side are drawn; the other side is mirrored.
+- **Outlines:** a 1-pixel dark outline (`#263445`) around characters, objects and signs. Ground tiles have no outline.
+- **Light:** comes from the top left. Each colour has a light and a dark shade, and there are soft shadows under objects.
+- **Letters and words are never pixels.** They use a clear literacy font at screen resolution: Andika (SIL Open Font License) once downloaded, the system's rounded font until then.
+- **The UI stays as it is:** round buttons, cards with the dark ink outline. Pixel art is for the world, the character and the items.
+- **Licences:** every asset is logged in `docs/ASSET_LICENSES.md`. CC0 packs only, and only after the user's OK to download.
 
-**A — Pixel art, 16×16 tiles** (the PRD's starting recommendation)
-- **Look:** a chibi character of 16×32 pixels, shown at 4× (64 px per tile).
-- **For:** the classic adventure-game look; very quick to make lots of consistent art by code; many CC0 packs at this size.
-- **Against:** very little room for detail. A hat is about 10×4 pixels and a face is two dots, which matters for the wardrobe (Task 10). Its blocky look also differs from the smooth UI (buttons, cards, start screen).
+## Palette
 
-**B — Pixel art, 32×32 tiles**
-- **Look:** the same layout with four times the pixels, shown at 2×.
-- **For:** room for faces, hair, clothes and readable items while staying pixel art. At game size it looks close to A, with finer detail.
-- **Against:** about four times the drawing work per sprite and animation frame, and fewer CC0 packs match.
+One fixed palette. Every sprite uses only these colours; a colour variant swaps one group for another. It is defined in `scripts/art-direction/candidates.html` (`PAL`) and moves into the game's code in Task 9.
 
-**C — Soft vector**
-- **Look:** rounded shapes with the dark ink outline the UI already uses, soft shadows and smooth paths.
-- **For:**
-  - It matches the start screen, buttons and challenge cards, so the game looks like one thing.
-  - Sharp at any size and screen density.
-  - Items and clothes can be as detailed as needed.
-  - Shapes are easy to recolour and layer (wardrobe).
-- **Against:**
-  - Less of a classic "game" feel.
-  - Walk animation needs moving body parts rather than drawn frames, which is simple for this round character.
-  - Fewer matching CC0 packs, so nearly everything is drawn by code.
+| Group | Colours (base, dark, light) |
+|---|---|
+| Grass | `#63b863` `#4f9e53` `#80cf74` |
+| Path | `#e6cc93` `#c9a86b` (edge) `#f3deb0` |
+| Water | `#4ea8e6` `#3b8ccc` `#a3d9f8`, shore `#ecd9a2` |
+| Leaves | `#3f9449` `#2d7139` `#62bb5c` |
+| Wood | trunk `#8b5a3c` `#6a4330`, sign post `#b07a48` `#8a5a33` |
+| Stone | `#a7adb8` `#7f8695` `#c9ced7` |
+| Skin | `#ffd5b5` `#efb490`, cheeks `#ff9aa6` |
+| Hair | `#7a4e2d` `#56351e` |
+| Shirt | `#ff8a4c` `#de6a33` |
+| Trousers | `#3f72bf` `#2f5895` |
+| Shoes, eyes, outline | `#3a3a4c`, `#263445`, `#263445` |
+| Signs | board `#fff6e3`, edge `#e8d6b4` |
+| Accents | sun `#ffd23f` `#f2a922`, apple `#ec4b4b` `#c33232`, green `#4caf50`, white `#ffffff` |
 
-**D — CC0 environment packs (not shown).** For example Kenney's "Tiny Town" (16×16, CC0). Showing them means downloading the files, which waits for the user's OK. They would be mixed with our own character in style A or B.
+More colours (clothes, items, more nature) are added as palette groups when they are needed, never one-off colours inside a sprite.
 
-**Claude's recommendation: C**, with B as the choice if the user prefers pixel art.
-- C fits the UI the child already uses.
-- It gives the wardrobe room for detail.
-- It is crisp on a retina iPad.
+## How sprites are made (Task 9)
 
-## Rules whatever the choice
+1. **Text grids:** each sprite is a text grid in a data file, one character per palette colour (PRD §9: "sprites as text grids, one fixed palette, recolour variants"). They are readable, show up in reviews, and diff cleanly in git.
+2. **Code for textures:** repeated textures, such as grass variation or water ripples, may be generated by small seeded helpers, as in the candidates.
+3. **No build step:** the game turns the grids into Phaser textures when it starts.
+4. **Contact sheet:** a script renders every sprite into PNG sheets for review.
+5. **Clothes (Task 10):** layered on the 16×32 body, using body masks and per-frame anchor points.
 
-- Letters and words are never drawn as pixels. They use a clear literacy font, Andika (SIL Open Font License), at screen resolution. Downloading the font waits for the user's OK; the candidates use the system's rounded font.
-- 64 CSS px per tile on screen, as now. Pixel art at integer scale only.
-- The character is about one tile wide and two tiles tall, chibi proportions, with one default skin tone (PRD §9).
-- One fixed palette per style (in `candidates.html`), dark outlines, soft drop shadows under objects.
-- Every asset is logged in `docs/ASSET_LICENSES.md`.
+## Open
 
-## After the pick (Task 9)
-
-The chosen style's drawing code becomes the start of the real sprite pipeline:
-- Sprites are drawn by code, then rendered to PNG atlases at build time (2× for retina in style C).
-- The map is drawn from the text grid as today, but with real tiles.
-- The character gets three walk directions.
-- A contact sheet of every sprite is made for review.
+- **Andika font:** waits for the user's OK to download it (about 300 KB, SIL OFL).
+- **Kenney's CC0 pixel packs** (for example "Tiny Town") for scenery: waits for the user's OK. Without them, all scenery is drawn by Claude too.

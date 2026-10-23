@@ -71,6 +71,11 @@ More colours are only added from the same 33.
 - **The cart** carries the child's own character, dressed, seen from behind (`composeCharacter`).
 - **The letters stay UI:** the choices are the usual white cards, hanging on the rock above each tunnel.
 
+## Bubblor (Task 13)
+
+- **The scene** (`src/art/bubbles.ts`): a meadow seen from the side (grass and soil tiles), clouds, and the child's own character holding up a bubble wand, at the biggest whole-number zoom that fits (4× on an iPad).
+- **Bubbles:** a pixel rim (white, light blue at the bottom right, a shine) over a see-through fill; the letter is UI text in Andika. A pop leaves droplets.
+
 ## Challenge pictures (Task 11)
 
 - **32×32 pixels**, not 16×16. On a challenge card each art pixel is then about 4–5 screen pixels, close to the map's 4×, so the pictures match the world. At 16×16 a hedgehog, an angel or an ear would not be recognisable.

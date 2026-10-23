@@ -5,14 +5,15 @@ import { confusableLetters, letters } from '../../src/content/letters'
 import { boxOf, practiceKey, recordPractice } from '../../src/learning/mastery'
 import { backupStore, databaseName, profileStore } from '../../src/persistence/database'
 import { expect, test } from './fixtures'
-import { SEED, answerKey, enterMap, press, tapStation, waitForQuestion } from './helpers'
+import { SEED, enterMap, popAll, press, tapStation, waitForQuestion } from './helpers'
 
+/** Hitta bokstaven (Bubblor): pops every right bubble of every question with the keyboard. */
 async function playRoundByKeyboard(page: Page, round: ChoiceRound) {
   for (const [index, question] of round.questions.entries()) {
-    await waitForQuestion(page, index, round.questions.length)
-    await page.keyboard.press(answerKey(question.choices, question.target))
+    await waitForQuestion(page, index, round.questions.length, 15_000)
+    await popAll(page, question)
   }
-  await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible({ timeout: 15_000 })
 }
 
 /** The worn hat in the save on the device, read straight from IndexedDB. */
@@ -33,6 +34,9 @@ function savedWornItem(page: Page) {
     { name: databaseName, store: profileStore },
   )
 }
+
+// Bubblor rounds take a while: bubbles are blown in and float away between questions.
+test.slow()
 
 const easyRound = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters, difficulty: 'easy' })
 // The hard round comes after the easy one, so it favours letters the easy round didn't practise (src/learning).

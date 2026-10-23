@@ -13,8 +13,4 @@ export const retakes: Readonly<Record<string, number>> = {
   // approved; take 2 of gröna byxor still said "Dou".
   'Du fick en rosett!': 2,
   'Du fick gröna byxor!': 3,
-  // The letter on its own after the pause came out as "Dä" and "Ör" (review 2026-10-23);
-  // Ä and Ö were fine in every other sentence.
-  'Var är Ä?': 2,
-  'Var är Ö?': 2,
 }

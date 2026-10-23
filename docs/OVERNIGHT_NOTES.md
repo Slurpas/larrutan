@@ -54,6 +54,7 @@ Every check passes on the final state:
 | W7 | **Learning:** difficulty adaptation, yes or no and which option? A `?debug=mastery` page for playtests? | Changes how the game behaves for your child |
 | W8 | **New content:** approve the next letters (R, N, T, F) and 15 words in `docs/CONTENT_PROPOSAL.md`; E and U wait (sound rules) | You approve content (PRD §5) |
 | W9 | **Wardrobe (Task 10):** are the 18 items, their looks and their rarity right? Should the rainbow trousers (every letter mastered) stay epic, or become legendary? | Your child's reaction decides |
+| W13 | **Bubblor (Task 13):** play Hitta bokstaven (the AÖ sign). Is popping several bubbles fun? Are 7 bubbles too many or too few? Then listen to the 9 new "Hitta alla A!" clips on `?review=voices` | Your child's reaction decides |
 | W12 | **Gruvvagnen (Task 12):** play Första bokstaven (the sun + S sign), then Hitta bokstaven (still cards). Which does your child like more? Is the ride too slow or too fast, and does steering by swiping work? | Decides whether more stations become games |
 | W11 | **Pictures (Task 11):** 28 pixel pictures replace the emoji (`docs/sprites/pictures.png`). With your child: can they name each one ("Vad är det här?")? I'm least sure about öra, isbit, åska and ängel | Only a child can tell what reads well |
 | ~~W10~~ | **Published:** Tasks 9 and 10 are live at https://slurpas.github.io/larrutan/ (pushed 2026-10-23) | Done |

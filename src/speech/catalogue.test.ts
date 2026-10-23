@@ -4,12 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type { ChoiceQuestion, ChoiceRound } from '../challenges/choiceQuestion'
 import { createFindLetterRound } from '../challenges/findLetter/createRound'
 import { createFirstLetterRound } from '../challenges/firstLetter/createRound'
-import {
-  findLetterVoice,
-  firstLetterVoice,
-  wordPictureVoice,
-  type ChallengeVoice,
-} from '../challenges/voices'
+import { findAllVoice, firstLetterVoice, wordPictureVoice, type ChallengeVoice } from '../challenges/voices'
 import { createWordPictureRound } from '../challenges/wordPicture/createRound'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
@@ -35,10 +30,10 @@ function everythingSaid<Q extends ChoiceQuestion>(round: ChoiceRound<Q>, voice: 
 }
 
 describe('speech catalogue', () => {
-  it('contains everything Hitta bokstaven can say', () => {
+  it('contains everything Hitta bokstaven (Bubblor) can say', () => {
     for (const seed of seeds) {
       const round = createFindLetterRound({ seed, letters, confusables: confusableLetters })
-      for (const text of everythingSaid(round, findLetterVoice)) expect(catalogue).toContain(text)
+      for (const text of everythingSaid(round, findAllVoice)) expect(catalogue).toContain(text)
     }
   })
 
@@ -67,7 +62,7 @@ describe('speech catalogue', () => {
   it('contains everything the hard levels can say', () => {
     for (const seed of seeds.slice(0, 100)) {
       const findLetter = createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty: 'hard' })
-      for (const text of everythingSaid(findLetter, findLetterVoice)) expect(catalogue).toContain(text)
+      for (const text of everythingSaid(findLetter, findAllVoice)) expect(catalogue).toContain(text)
       const firstLetter = createFirstLetterRound({
         seed,
         words,
@@ -99,7 +94,7 @@ describe('speech catalogue', () => {
   })
 
   it('has a sound file for every sound effect (run `npm run sfx` to make them)', () => {
-    for (const sound of ['correct', 'fanfare', 'levelUp', 'newItem'] satisfies SoundId[]) {
+    for (const sound of ['correct', 'fanfare', 'levelUp', 'newItem', 'pop'] satisfies SoundId[]) {
       expect(existsSync(fileURLToPath(new URL(`../sound/sfx/${sound}.mp3`, import.meta.url))), sound).toBe(true)
     }
   })

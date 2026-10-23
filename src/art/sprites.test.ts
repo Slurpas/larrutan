@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { words } from '../content/words'
 import { characterFeetRow, characterFrames, characterHeadTop, characterSize } from './character'
+import { bubbleBlower, bubbleBurst, bubbleFill, bubbleRing, cloud, meadowFlower, meadowSoil, meadowTop } from './bubbles'
 import { tinyTownHouses, tinyTownTiles } from './kenney'
 import { cartSize, cartWithRider, floorTile, lantern, mineTile, planks, railTile, rockTile, tunnelMouth, tunnelSize } from './mine'
 import { palette } from './palette'
@@ -40,6 +41,14 @@ describe('sprites', () => {
       planks,
       lantern,
       cart: cartWithRider({ head: 'crown', top: 'star-sweater', back: 'cape', held: 'balloon' }),
+      bubbleRing,
+      bubbleFill,
+      bubbleBurst,
+      blower: bubbleBlower({ head: 'top-hat', held: 'balloon' }),
+      meadowTop,
+      meadowSoil,
+      meadowFlower,
+      cloud,
     }
     for (const [name, grid] of Object.entries(sprites)) expect(problems(grid), name).toEqual([])
   })

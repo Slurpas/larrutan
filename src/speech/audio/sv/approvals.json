@@ -320,16 +320,6 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T20:37:48.447Z"
     },
-    "var-ar-a-38c4b01f.mp3": {
-      "text": "Var är A?",
-      "status": "approved",
-      "reviewedAt": "2026-10-23T20:39:56.931Z"
-    },
-    "var-ar-a-b84bb9af.mp3": {
-      "text": "Var är Å?",
-      "status": "approved",
-      "reviewedAt": "2026-10-23T20:40:39.567Z"
-    },
     "var-ar-ananasen-c5559293.mp3": {
       "text": "Var är ananasen?",
       "status": "approved",
@@ -344,26 +334,6 @@
       "text": "Var är apan?",
       "status": "approved",
       "reviewedAt": "2026-10-23T20:41:18.807Z"
-    },
-    "var-ar-i-a6244d8f.mp3": {
-      "text": "Var är I?",
-      "status": "approved",
-      "reviewedAt": "2026-10-23T20:40:01.301Z"
-    },
-    "var-ar-l-18942cb9.mp3": {
-      "text": "Var är L?",
-      "status": "approved",
-      "reviewedAt": "2026-10-23T20:40:04.999Z"
-    },
-    "var-ar-o-ec15fd73.mp3": {
-      "text": "Var är O?",
-      "status": "approved",
-      "reviewedAt": "2026-10-23T20:40:31.972Z"
-    },
-    "var-ar-s-fd758b7b.mp3": {
-      "text": "Var är S?",
-      "status": "approved",
-      "reviewedAt": "2026-10-23T20:40:36.091Z"
     },
     "vilken-bokstav-borjar-ananas-pa-b2f3d83f.mp3": {
       "text": "Vilken bokstav börjar ananas på?",

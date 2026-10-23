@@ -246,6 +246,20 @@ Status 2026-10-23: **prototype done, waiting for a playtest.**
 - **The rider:** the child's own character, dressed, sits in the cart.
 - **Shared logic:** asking, help and rewards moved to `useChoiceRound`, shared with the card screen; Hitta bokstaven and Ord och bild still use cards, so the two can be compared.
 - **Next:** a playtest. If the child likes it, other stations can get their own game on the same rounds.
+- **Feedback 2026-10-23:** the tunnels went too dark; now a light dip (0.4 instead of 0.75).
+
+### Task 13 — Bubblor: Hitta bokstaven as a game
+
+**Goal:** the second station as a game (the user's pick, 2026-10-24), with more practice per round.
+
+Status 2026-10-24: **built, waiting for a playtest.**
+- **The game:** the child's character blows soap bubbles with letters over a meadow; the voice says "Hitta alla A!" and the child pops every bubble with that letter (`src/challenges/bubbles`).
+  - Three bubbles of the asked letter and two of each other letter per question, so 15 right taps per round instead of 5.
+  - A wrong letter doesn't pop: all its bubbles turn grey and the voice names it, the same help as everywhere. When only the right letter is left, its bubbles pulse.
+  - The bubbles bob in place: nothing is timed and nothing flies away (PRD §11).
+- **Controls:** tap a bubble. Keyboard: the letter itself (or 1–3 for the letters in order) pops the next bubble with it; arrows move between bubbles.
+- **Sound:** a pop sound (`npm run sfx`) that plays alongside the voice (`playEffect`), never cutting it off.
+- **Speech:** "Hitta alla A!" (with the pause before the letter) replaces "Var är A?" for letters; the 9 new clips wait for the voice review.
 
 ## Roadmap — later
 
@@ -262,7 +276,7 @@ Not scheduled. Pull an item in when it becomes the most valuable next step.
 **Games** (ways to answer by playing, on the same rounds; the user's picks 2026-10-23)
 - **Ordbygget:** pick up letter boxes and carry them to build a short word ("Bygg ordet sol"). Spelling; needs letter sounds first (see Learning).
 - **Mata draken:** a hungry dragon wants something that starts with a sound; drag the right picture into its mouth.
-- **Bubblor:** pop every bubble with the asked letter; several right answers per screen, nothing timed.
+- ~~**Bubblor**~~: built as Task 13.
 - **Memory:** turn over cards and match a letter with a picture.
 - **Bron:** each right answer lays a plank; a finished bridge opens a new part of the map.
 - Not wanted (the user, 2026-10-23): a post delivery game, a fishing pond, a letter hunt on the map.

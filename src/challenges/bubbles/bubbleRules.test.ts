@@ -1,0 +1,52 @@
+import { describe, expect, it } from 'vitest'
+import { createFindLetterRound } from '../findLetter/createRound'
+import { confusableLetters, letters } from '../../content/letters'
+import { bubbleLayout, bubblesFor, otherBubbles, targetBubbles } from './bubbleRules'
+
+const round = createFindLetterRound({ seed: 7, letters, confusables: confusableLetters })
+
+describe('the bubbles of a question', () => {
+  it('has three of the asked letter and two of each other letter, all with their own id', () => {
+    for (const [i, question] of round.questions.entries()) {
+      const bubbles = bubblesFor(question, round.seed, i)
+      expect(bubbles.filter((b) => b.letter === question.target)).toHaveLength(targetBubbles)
+      for (const other of question.choices.filter((c) => c !== question.target))
+        expect(bubbles.filter((b) => b.letter === other)).toHaveLength(otherBubbles)
+      expect(new Set(bubbles.map((b) => b.id)).size).toBe(bubbles.length)
+    }
+  })
+
+  it('is the same for the same round and question, and mixed differently for the next', () => {
+    const question = round.questions[0]!
+    expect(bubblesFor(question, round.seed, 0)).toEqual(bubblesFor(question, round.seed, 0))
+    const orders = new Set(Array.from({ length: 6 }, (_, i) => bubblesFor(question, round.seed, i).map((b) => b.id).join()))
+    expect(orders.size).toBeGreaterThan(1)
+  })
+})
+
+describe('where the bubbles float', () => {
+  // The sky above the meadow, below the top bar, on the screens the game is played on.
+  const screens = {
+    'iPad landscape': { area: { left: 180, top: 170, width: 860, height: 470 }, size: 140 },
+    'iPad portrait': { area: { left: 40, top: 170, width: 730, height: 720 }, size: 120 },
+    desktop: { area: { left: 200, top: 160, width: 1040, height: 400 }, size: 120 },
+    'small laptop': { area: { left: 150, top: 150, width: 840, height: 330 }, size: 96 },
+  }
+
+  it('keeps every bubble inside the sky and apart from the others', () => {
+    for (const [name, { area, size }] of Object.entries(screens))
+      for (const count of [7, 9])
+        for (const seed of [1, 2, 3]) {
+          const points = bubbleLayout(count, area, size, seed)
+          expect(points, name).toHaveLength(count)
+          for (const p of points) {
+            expect(p.x - size / 2, `${name}: left`).toBeGreaterThanOrEqual(area.left - 1)
+            expect(p.x + size / 2, `${name}: right`).toBeLessThanOrEqual(area.left + area.width + 1)
+            expect(p.y - size / 2, `${name}: top`).toBeGreaterThanOrEqual(area.top - 1)
+            expect(p.y + size / 2, `${name}: bottom`).toBeLessThanOrEqual(area.top + area.height + 1)
+          }
+          for (const [i, a] of points.entries())
+            for (const b of points.slice(i + 1)) expect(Math.hypot(a.x - b.x, a.y - b.y), `${name}: overlap`).toBeGreaterThanOrEqual(size)
+        }
+  })
+})

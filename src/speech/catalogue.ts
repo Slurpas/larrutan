@@ -1,4 +1,4 @@
-import { findLetterVoice, firstLetterVoice, wordPictureVoice } from '../challenges/voices'
+import { findAllVoice, firstLetterVoice, wordPictureVoice } from '../challenges/voices'
 import { letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
@@ -34,9 +34,9 @@ export function spokenGroups(): SpokenGroup[] {
     groups.push({
       title: `Letter ${letter.id}`,
       texts: [
-        findLetterVoice.ask(question),
-        findLetterVoice.reveal(question),
-        findLetterVoice.nameChoice(letter.id),
+        findAllVoice.ask(question),
+        findAllVoice.reveal(question),
+        findAllVoice.nameChoice(letter.id),
         firstLetterVoice.nameChoice(letter.id),
       ],
     })

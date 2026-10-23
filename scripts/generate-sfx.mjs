@@ -60,6 +60,20 @@ const sounds = {
     ;['G5', 'B5', 'D6', 'G6', 'B6', 'D7'].forEach((note, i) => addNote(buffer, { note, start: i * 0.06, decay: 0.2, volume: 0.32 }))
     for (let i = 0; i < 8; i++) addNote(buffer, { note: i % 2 ? 'G7' : 'D7', start: 0.38 + i * 0.045, decay: 0.08, volume: 0.09 })
   },
+  /** A bubble popping: a quick rising "plip" and a tiny click. */
+  pop(buffer) {
+    let phase = 0
+    let noise = 12345
+    for (let i = 0; i < buffer.length; i++) {
+      const t = i / RATE
+      const f = 500 + 2600 * Math.min(1, t / 0.045)
+      phase += (2 * Math.PI * f) / RATE
+      const envelope = Math.min(1, t / 0.002) * Math.exp(-t / 0.035)
+      noise = (noise * 1103515245 + 12345) % 2147483648
+      const click = t < 0.006 ? ((noise / 2147483648) * 2 - 1) * (1 - t / 0.006) * 0.5 : 0
+      buffer[i] += envelope * Math.sin(phase) + click
+    }
+  },
   /** A new hat: a glittering run of high notes over a soft bell. */
   newItem(buffer) {
     addNote(buffer, { note: 'C6', start: 0, decay: 0.4, volume: 0.25 })
@@ -69,7 +83,7 @@ const sounds = {
   },
 }
 
-const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9 }
+const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9, pop: 0.2 }
 
 function toWav(samples) {
   const data = Buffer.alloc(samples.length * 2)

@@ -27,6 +27,13 @@ export const findLetterVoice: ChallengeVoice<ChoiceQuestion> = {
   nameChoice: (id) => phrases.thatIs(letterName(id)),
 }
 
+/** Bubblor (Hitta bokstaven): "Hitta alla A!" */
+export const findAllVoice: ChallengeVoice<ChoiceQuestion> = {
+  ask: (q) => phrases.findAllQuestion(letterName(q.target)),
+  reveal: (q) => phrases.hereIs(letterName(q.target)),
+  nameChoice: (id) => phrases.thatIs(letterName(id)),
+}
+
 export const firstLetterVoice: ChallengeVoice<FirstLetterQuestion> = {
   ask: (q) => phrases.firstLetterQuestion(getWord(q.word).base),
   askAgain: (q) => phrases.firstLetterShort(getWord(q.word).base),

@@ -11,10 +11,11 @@ export type { VoiceStatus } from './browserVoice'
  * generated audio files (`npm run speech`, PRD §7), which work in every
  * browser; the device's own Swedish voice is only used for a sentence without
  * a file. Sound effects (`npm run sfx`) play through the same channel, so a
- * new sentence or sound always stops the previous one.
+ * new sentence or sound always stops the previous one; playEffect is the exception,
+ * for small sounds (a bubble popping) that must never cut off what is being said.
  */
 
-export type SoundId = 'correct' | 'fanfare' | 'levelUp' | 'newItem'
+export type SoundId = 'correct' | 'fanfare' | 'levelUp' | 'newItem' | 'pop'
 /** Something to say (a sentence) or play (a sound effect). */
 export type Utterance = string | { sound: SoundId }
 
@@ -35,6 +36,8 @@ const deviceVoice = createBrowserVoice(
   log,
 )
 const clips = createClipPlayer(silenceUrl, log)
+/** A second player for playEffect, so effects and speech can sound at the same time. */
+const effects = createClipPlayer(silenceUrl, log)
 /** Bumped by every speak() and stopSpeech(); an older speak() still in progress gives up. */
 let turn = 0
 
@@ -53,7 +56,14 @@ export function initSpeech(): void {
 /** Call synchronously inside the first tap: iPad Safari only allows sound after a tap has started some. */
 export function unlockSpeech(): void {
   clips.unlock()
+  effects.unlock()
   deviceVoice.unlock()
+}
+
+/** Plays a short sound effect right away, on its own, without stopping any speech. */
+export function playEffect(sound: SoundId): void {
+  const url = soundUrls.get(`${sound}.mp3`)
+  if (url) void effects.play(url, `effect ${sound}`)
 }
 
 /** Says sentences and plays sounds in order, interrupting anything already playing. Resolves when done. */

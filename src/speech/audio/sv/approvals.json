@@ -70,12 +70,6 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T20:40:07.652Z"
     },
-    "det-dar-ar-m-65eb4a51.mp3": {
-      "text": "Det där är M.",
-      "status": "rejected",
-      "note": "Det där är N",
-      "reviewedAt": "2026-10-23T20:40:30.095Z"
-    },
     "det-dar-ar-o-adf77711.mp3": {
       "text": "Det där är O.",
       "status": "approved",
@@ -151,12 +145,6 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T18:52:45.086Z"
     },
-    "du-fick-en-stjarntroja-c51aac35.mp3": {
-      "text": "Du fick en stjärntröja!",
-      "status": "rejected",
-      "note": "Du fick en sjötröja?",
-      "reviewedAt": "2026-10-23T20:38:22.592Z"
-    },
     "du-fick-en-studentmossa-2da070b5.mp3": {
       "text": "Du fick en studentmössa!",
       "status": "approved",
@@ -166,12 +154,6 @@
       "text": "Du fick en trollstav!",
       "status": "approved",
       "reviewedAt": "2026-10-23T20:39:05.758Z"
-    },
-    "du-fick-grona-byxor-ffcc6c07.mp3": {
-      "text": "Du fick gröna byxor!",
-      "status": "rejected",
-      "note": "Dou fick gröna byxor",
-      "reviewedAt": "2026-10-23T20:37:58.066Z"
     },
     "du-fick-regnbagsbyxor-441eb098.mp3": {
       "text": "Du fick regnbågsbyxor!",
@@ -232,12 +214,6 @@
       "text": "Här är L!",
       "status": "approved",
       "reviewedAt": "2026-10-23T20:40:06.306Z"
-    },
-    "har-ar-m-96cd4e09.mp3": {
-      "text": "Här är M!",
-      "status": "rejected",
-      "note": "Här är N!",
-      "reviewedAt": "2026-10-23T20:40:24.497Z"
     },
     "har-ar-o-991fa735.mp3": {
       "text": "Här är Ö!",
@@ -314,12 +290,6 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T20:39:26.652Z"
     },
-    "lar-dig-vilken-bokstav-alla-orden-borjar-cb161a3b.mp3": {
-      "text": "Lär dig vilken bokstav alla orden börjar på så får du guldmanteln.",
-      "status": "rejected",
-      "note": "Lär dig vilken bokstav alla oen börjar på så får du guldmanteln.",
-      "reviewedAt": "2026-10-23T20:39:54.307Z"
-    },
     "na-niva-nio-sa-far-du-studentmossan-e229c8ae.mp3": {
       "text": "Nå nivå nio så får du studentmössan.",
       "status": "approved",
@@ -329,12 +299,6 @@
       "text": "Nå nivå sex så får du hatten.",
       "status": "approved",
       "reviewedAt": "2026-10-23T19:58:13.665Z"
-    },
-    "na-niva-sju-sa-far-du-stjarntrojan-f3446bba.mp3": {
-      "text": "Nå nivå sju så får du stjärntröjan.",
-      "status": "rejected",
-      "note": "Nå nivå sju så får du sjötröjan?",
-      "reviewedAt": "2026-10-23T20:38:39.070Z"
     },
     "na-niva-tio-sa-far-du-kronan-91405544.mp3": {
       "text": "Nå nivå tio så får du kronan.",
@@ -360,12 +324,6 @@
       "text": "Var är A?",
       "status": "approved",
       "reviewedAt": "2026-10-23T20:39:56.931Z"
-    },
-    "var-ar-a-3f0ec9b9.mp3": {
-      "text": "Var är Ä?",
-      "status": "rejected",
-      "note": "Var är Dä?",
-      "reviewedAt": "2026-10-23T20:40:52.515Z"
     },
     "var-ar-a-b84bb9af.mp3": {
       "text": "Var är Å?",
@@ -397,22 +355,10 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T20:40:04.999Z"
     },
-    "var-ar-m-237b00bf.mp3": {
-      "text": "Var är M?",
-      "status": "rejected",
-      "note": "Var är N?",
-      "reviewedAt": "2026-10-23T20:40:20.751Z"
-    },
     "var-ar-o-ec15fd73.mp3": {
       "text": "Var är O?",
       "status": "approved",
       "reviewedAt": "2026-10-23T20:40:31.972Z"
-    },
-    "var-ar-o-ec9c8761.mp3": {
-      "text": "Var är Ö?",
-      "status": "rejected",
-      "note": "Var är Ör?",
-      "reviewedAt": "2026-10-23T20:41:03.448Z"
     },
     "var-ar-s-fd758b7b.mp3": {
       "text": "Var är S?",

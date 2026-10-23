@@ -9,7 +9,12 @@
  * always wrong in `src/content/pronunciation.ts` instead.
  */
 export const retakes: Readonly<Record<string, number>> = {
-  // "Dou fick …" (review 2026-10-23); "Du fick en ballong!" was fine.
+  // "Dou fick …" (review 2026-10-23); "Du fick en ballong!" was fine. Take 2 of rosett was
+  // approved; take 2 of gröna byxor still said "Dou".
   'Du fick en rosett!': 2,
-  'Du fick gröna byxor!': 2,
+  'Du fick gröna byxor!': 3,
+  // The letter on its own after the pause came out as "Dä" and "Ör" (review 2026-10-23);
+  // Ä and Ö were fine in every other sentence.
+  'Var är Ä?': 2,
+  'Var är Ö?': 2,
 }

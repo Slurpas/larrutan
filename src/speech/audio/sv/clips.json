@@ -46,7 +46,7 @@
     },
     {
       "text": "Du fick gröna byxor!",
-      "file": "du-fick-grona-byxor-ffcc6c07.mp3",
+      "file": "du-fick-grona-byxor-fecc6a74.mp3",
       "input": "Du fick gröna [[ bˈʏksʊr! ]]"
     },
     {
@@ -136,13 +136,13 @@
     },
     {
       "text": "Du fick en stjärntröja!",
-      "file": "du-fick-en-stjarntroja-c51aac35.mp3",
-      "input": "Du fick en [[ ʂˈæːɳtrˌøːja! ]]"
+      "file": "du-fick-en-stjarntroja-7eec3fe5.mp3",
+      "input": "Du fick en [[ ʂˈɛːrntrˌøːja! ]]"
     },
     {
       "text": "Nå nivå sju så får du stjärntröjan.",
-      "file": "na-niva-sju-sa-far-du-stjarntrojan-f3446bba.mp3",
-      "input": "Nå nivå [[ ʂˈʉː ]] så får du [[ ʂˈæːɳtrˌøːjan. ]]"
+      "file": "na-niva-sju-sa-far-du-stjarntrojan-630ad072.mp3",
+      "input": "Nå nivå [[ ʂˈʉː ]] så får du [[ ʂˈɛːrntrˌøːjan. ]]"
     },
     {
       "text": "Du fick en trollstav!",
@@ -201,8 +201,8 @@
     },
     {
       "text": "Lär dig vilken bokstav alla orden börjar på så får du guldmanteln.",
-      "file": "lar-dig-vilken-bokstav-alla-orden-borjar-cb161a3b.mp3",
-      "input": "Lär dig vilken bokstav alla [[ ˈuːɖən ]] börjar på så får du guldmanteln."
+      "file": "lar-dig-vilken-bokstav-alla-orden-borjar-b6797311.mp3",
+      "input": "Lär dig vilken bokstav alla [[ ˈuːdən ]] börjar på så får du guldmanteln."
     },
     {
       "text": "Var är A?",
@@ -251,18 +251,18 @@
     },
     {
       "text": "Var är M?",
-      "file": "var-ar-m-237b00bf.mp3",
-      "input": "Var är, | M?"
+      "file": "var-ar-m-98b6c738.mp3",
+      "input": "Var är, | [[ ˈɛmː? ]]"
     },
     {
       "text": "Här är M!",
-      "file": "har-ar-m-96cd4e09.mp3",
-      "input": "Här är M!"
+      "file": "har-ar-m-3793a576.mp3",
+      "input": "Här är [[ ˈɛmː! ]]"
     },
     {
       "text": "Det där är M.",
-      "file": "det-dar-ar-m-65eb4a51.mp3",
-      "input": "Det där är M."
+      "file": "det-dar-ar-m-3fc2763e.mp3",
+      "input": "Det där är [[ ˈɛmː. ]]"
     },
     {
       "text": "Var är O?",
@@ -311,7 +311,7 @@
     },
     {
       "text": "Var är Ä?",
-      "file": "var-ar-a-3f0ec9b9.mp3",
+      "file": "var-ar-a-7225ec54.mp3",
       "input": "Var är, | Ä?"
     },
     {
@@ -326,7 +326,7 @@
     },
     {
       "text": "Var är Ö?",
-      "file": "var-ar-o-ec9c8761.mp3",
+      "file": "var-ar-o-13c0722c.mp3",
       "input": "Var är, | Ö?"
     },
     {
@@ -651,8 +651,8 @@
     },
     {
       "text": "mus börjar på M!",
-      "file": "mus-borjar-pa-m-08e47293.mp3",
-      "input": "mus börjar på M!"
+      "file": "mus-borjar-pa-m-707c3968.mp3",
+      "input": "mus börjar på [[ ˈɛmː! ]]"
     },
     {
       "text": "Var är musen?",
@@ -681,8 +681,8 @@
     },
     {
       "text": "måne börjar på M!",
-      "file": "mane-borjar-pa-m-9b3454e9.mp3",
-      "input": "måne börjar på M!"
+      "file": "mane-borjar-pa-m-e4041656.mp3",
+      "input": "måne börjar på [[ ˈɛmː! ]]"
     },
     {
       "text": "Var är månen?",
@@ -711,8 +711,8 @@
     },
     {
       "text": "morot börjar på M!",
-      "file": "morot-borjar-pa-m-c51753cb.mp3",
-      "input": "morot börjar på M!"
+      "file": "morot-borjar-pa-m-da2354b0.mp3",
+      "input": "morot börjar på [[ ˈɛmː! ]]"
     },
     {
       "text": "Var är moroten?",
@@ -741,8 +741,8 @@
     },
     {
       "text": "myra börjar på M!",
-      "file": "myra-borjar-pa-m-033ab651.mp3",
-      "input": "myra börjar på M!"
+      "file": "myra-borjar-pa-m-3dee63ae.mp3",
+      "input": "myra börjar på [[ ˈɛmː! ]]"
     },
     {
       "text": "Var är myran?",

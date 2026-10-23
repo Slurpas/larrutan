@@ -52,17 +52,20 @@ export const pronunciations: Record<string, string> = {
   // Long a in "stav".
   trollstav: 'trˈɔlstˌɑːv',
   trollstaven: 'trˈɔlstˌɑːvən',
-  // "ord" has an o that sounds like u.
-  orden: 'ˈuːɖən',
-  // The final retroflex d got lost ("or och bild"); a plain d is heard (review 2026-10-23).
+  // "ord" has an o that sounds like u. The retroflex d got lost ("or och bild", "oen"),
+  // a plain d is heard (reviews 2026-10-23).
   ord: 'ˈuːd',
+  orden: 'ˈuːdən',
   // The voice drops the sj-sound (ɧ) entirely: "sju" came out as "lu", "skylt" as "vilt",
   // "stjärntröja" as "ä-tröja" (review 2026-10-23; no hiss at all in any take). The
   // sh-like ʂ (as in "första") is clearly heard, and many Swedes say sj that way.
   sju: 'ʂˈʉː',
   skylt: 'ʂˈʏlt',
-  stjärntröja: 'ʂˈæːɳtrˌøːja',
-  stjärntröjan: 'ʂˈæːɳtrˌøːjan',
+  // With the retroflex ɳ "stjärn" came out as "sjö"; an explicit r and n, as in "byxorna".
+  stjärntröja: 'ʂˈɛːrntrˌøːja',
+  stjärntröjan: 'ʂˈɛːrntrˌøːjan',
+  // The letter M, said "emm": with a short m it was heard as N (review 2026-10-23).
+  m: 'ˈɛmː',
   // No j-glide between i and o: "tio" sounded like "tiko" (review 2026-10-23).
   tio: 'tˈiːʊ',
   nio: 'nˈiːʊ',

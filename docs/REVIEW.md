@@ -13,6 +13,11 @@
 - **Deferred to the roadmap:** skin tones and character creation, parent area and parent gate, settings screen, sound effects and music, pets, asset workshop.
 - The original 10-task order in §7 is superseded by the phase plan in `CLAUDE_TASKS.md`.
 
+## Later decisions
+
+- **2026-10-23: hosting is GitHub Pages.** The game is published at https://slurpas.github.io/larrutan/ and deploys on every push to `main`. The repository is public. Before the first push, all commit emails were rewritten to GitHub's no-reply address, which is also used from now on. Cloudflare Pages was the alternative; it keeps the code private but needs a new account.
+- The other open decisions from the night of 2026-10-23 are in `docs/OVERNIGHT_NOTES.md` until they're settled.
+
 ## Verdict
 
 The two documents are **strong on values and weak on logistics**.

@@ -27,8 +27,7 @@ Before a public release, re-check the voice model's card and the terms of any TT
 | App icon (`scripts/app-icon.svg`, rendered to `public/icons/*.png`) | Drawn as SVG by Claude | Ours | Home screen and install icon |
 | Art direction candidates (`docs/art-direction/*.png`) | Drawn by code by Claude (`scripts/art-direction/`) | Ours | Comparison for Task 8; not in the game |
 | Scenery tiles (`src/art/kenney/tiny-town.png`): grass, path, trees, mushrooms, houses | [Kenney, "Tiny Town" 1.1](https://kenney.nl/assets/tiny-town), downloaded 2026-10-23 with the user's OK | CC0 1.0 (public domain) | Licence in `src/art/kenney/tiny-town-License.txt`; credit welcome but not required |
-| Character, wardrobe items, station signs and their pictures, water, rock (`src/art/*.ts`) | Drawn as pixel grids by Claude, in Kenney's colours | Ours | Sheets: `docs/sprites/contact-sheet.png` and `docs/sprites/wardrobe.png` (`npm run sprites`) |
-| Pictures (emoji) | The device's system emoji font | Not shipped | Placeholders; replaced by project pictures in Phase 2 |
+| Character, wardrobe items, challenge pictures, station signs and their pictures, water, rock (`src/art/*.ts`) | Drawn as pixel grids by Claude, in Kenney's colours | Ours | Sheets: `docs/sprites/contact-sheet.png`, `wardrobe.png` and `pictures.png` (`npm run sprites`) |
 
 ## Fonts
 

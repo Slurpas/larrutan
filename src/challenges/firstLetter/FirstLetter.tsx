@@ -26,7 +26,7 @@ export function FirstLetter({ seed, difficulty, knowsChallenge, practiceBox, onR
       choiceKind="letter"
       renderChoice={(id) => getLetter(id).display}
       choiceLabel={(id) => getLetter(id).display}
-      showcase={(q) => <Picture emoji={getWord(q.word).picture} />}
+      showcase={(q) => <Picture word={q.word} />}
       // Without a voice, show the word so an adult can read it out.
       silentPrompt={(q) => getWord(q.word).base}
       onExit={onExit}

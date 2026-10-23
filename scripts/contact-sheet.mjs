@@ -2,6 +2,7 @@
 // - docs/sprites/contact-sheet.png: the character in every direction and walk frame, the station
 //   signs with their letters and pictures, our own scenery, and the Kenney tiles in use (Task 9).
 // - docs/sprites/wardrobe.png: every item, worn, seen from the front, the back and both sides (Task 10).
+// - docs/sprites/pictures.png: every challenge picture on a card, with its word (Task 11).
 import { mkdirSync, readFileSync } from 'node:fs'
 import { chromium } from '@playwright/test'
 import { createServer } from 'vite'
@@ -15,6 +16,8 @@ const { rock, waterTile } = await load('/src/art/scenery.ts')
 const { tinyTownHouses, tinyTownTiles } = await load('/src/art/kenney.ts')
 const { composeCharacter, outfitSize } = await load('/src/art/outfit.ts')
 const { items, rarityNames } = await load('/src/rewards/items.ts')
+const { pictures } = await load('/src/art/pictures.ts')
+const { words } = await load('/src/content/words.ts')
 await server.close()
 
 // A small pond, to show water edges and corners together.
@@ -240,4 +243,50 @@ const wardrobePng = await page.evaluate(
 )
 writeFileSync('docs/sprites/wardrobe.png', Buffer.from(wardrobePng.split(',')[1], 'base64'))
 console.log('docs/sprites/wardrobe.png')
+
+// The challenge pictures, each on a white card about the size it has in the game.
+const cards = words.map((word) => ({ word: word.base, letter: word.firstLetter, grid: pictures[word.id] }))
+const picturesPng = await page.evaluate(
+  ({ palette, cards }) => {
+    const scale = 5
+    const card = 32 * scale + 24
+    const perRow = 7
+    const cellW = card + 16
+    const cellH = card + 40
+    const canvas = document.createElement('canvas')
+    canvas.width = perRow * cellW + 24
+    canvas.height = Math.ceil(cards.length / perRow) * cellH + 64
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = '#cfe8fb'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = '#3f2631'
+    ctx.font = '600 24px system-ui'
+    ctx.fillText('Lärrutan challenge pictures: 32×32 pixels, shown at 5×', 24, 38)
+    cards.forEach(({ word, grid }, i) => {
+      const x = 24 + (i % perRow) * cellW
+      const y = 60 + Math.floor(i / perRow) * cellH
+      ctx.fillStyle = '#ffffff'
+      ctx.strokeStyle = '#2d4a6b'
+      ctx.lineWidth = 4
+      ctx.beginPath()
+      ctx.roundRect(x, y, card, card, 22)
+      ctx.fill()
+      ctx.stroke()
+      grid.forEach((row, r) =>
+        [...row].forEach((c, col) => {
+          if (c === '.') return
+          ctx.fillStyle = palette[c]
+          ctx.fillRect(x + 12 + col * scale, y + 12 + r * scale, scale, scale)
+        }),
+      )
+      ctx.fillStyle = '#3f2631'
+      ctx.font = '600 18px system-ui'
+      ctx.fillText(word, x + 4, y + card + 26)
+    })
+    return canvas.toDataURL()
+  },
+  { palette, cards },
+)
+writeFileSync('docs/sprites/pictures.png', Buffer.from(picturesPng.split(',')[1], 'base64'))
+console.log('docs/sprites/pictures.png')
 await browser.close()

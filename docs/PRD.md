@@ -118,7 +118,7 @@ The user approves the letter and word lists. Claude presents them as a readable 
 
 ### Pictures
 
-Phase 1 uses emoji as placeholder pictures: no asset work, recognisable, available on every device (they look different on iPad and Windows). Phase 2 replaces them with project pictures in a consistent style.
+Phase 1 used emoji as placeholder pictures: no asset work, recognisable, available on every device (they look different on iPad and Windows). *Since Task 11 (2026-10-23):* every word has its own 32×32 pixel picture in the game's style (`src/art/pictures.ts`, `docs/ART_DIRECTION.md`). A new word needs its picture before it can be used; a test checks this.
 
 ## 6. Feedback and learning
 
@@ -350,6 +350,6 @@ Tests are proportionate: test the rules that would hurt a child if they were wro
 | TTS can't produce isolated letter sounds | Avoided in Phases 1–2; "S som i sol" fallback |
 | The silent switch mutes audio on iPad | Test on the device; show a picture hint to turn sound on |
 | Safari deletes data for unused websites | PWA install, persistent storage request, later export/import |
-| Emoji look different per device; new emoji may be missing | Placeholders only, checked on the user's iPad; replaced in Phase 2 |
+| Emoji look different per device; new emoji may be missing | Resolved in Task 11: our own pixel pictures, the same on every device |
 | No teacher reviews content | Strict content rules, user approval, child playtests |
 | Generated art looks amateurish | Style comparison before committing; CC0 packs as fallback |

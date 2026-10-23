@@ -21,7 +21,7 @@ export function WordPicture({ seed, difficulty, knowsChallenge, practiceBox, onR
       practiceItem={(q) => q.target}
       knowsChallenge={knowsChallenge}
       choiceKind="picture"
-      renderChoice={(id) => <Picture emoji={getWord(id).picture} />}
+      renderChoice={(id) => <Picture word={id} />}
       choiceLabel={(id) => getWord(id).base}
       // Without a voice, show the word so an adult can read it out.
       silentPrompt={(q) => getWord(q.target).base}

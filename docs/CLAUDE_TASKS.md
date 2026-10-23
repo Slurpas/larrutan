@@ -187,7 +187,7 @@ Status 2026-10-23: **done.**
 - **Map layout:** the hub now has two houses, tall trees the child can walk behind, bushes, mushrooms and flower patches.
 - **Mina saker:** shows the pixel character.
 - **Contact sheet:** `npm run sprites`.
-- **Not done:** challenge pictures (Task 11) are still emoji. Hats became pixel art in Task 10.
+- **Not done:** challenge pictures were still emoji (done later in Task 11). Hats became pixel art in Task 10.
 
 ### Task 10 — Wardrobe and item catalogue
 - Layered items with slots and drawing order, one shared character renderer, mask-based clothing and anchor points.
@@ -219,7 +219,12 @@ Status 2026-10-23:
 - **Not started:**
   - Difficulty adaptation (options in `docs/OVERNIGHT_NOTES.md`).
   - More content: needs the user's approval of new words and letters.
-  - Picture cards: waits for the art style (Task 8).
+  - ~~Picture cards~~: **done 2026-10-23.** 28 pixel pictures replace the emoji (see below).
+- **Picture cards, done 2026-10-23:**
+  - One 32×32 pixel picture per word (`src/art/pictures.ts`), drawn from shapes in Kenney's palette with the dark outline.
+  - Used in Första bokstaven, Ord och bild and on the voice review page. The emoji field is gone from the word data.
+  - A test fails if a word has no picture, or a picture has no word, or a picture runs off its frame.
+  - Review sheet: `docs/sprites/pictures.png` (`npm run sprites`).
 
 ---
 

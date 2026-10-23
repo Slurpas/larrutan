@@ -65,6 +65,10 @@ More colours are only added from the same 33.
 - **Things put on or held** (hats, capes, backpacks, wings, the flower, balloon and wand) are small grids with a position per facing (down, up, side; left is mirrored). Each can be drawn behind the body (a cape from the front) or in front of it (a backpack from behind).
 - **Adding an item:** a data entry in `src/rewards/items.ts` plus its art in `src/art/wardrobe.ts`. `src/art/outfit.test.ts` fails if either is missing, if art uses a colour outside the palette, or if it reaches outside the canvas.
 
-## Still to do
+## Challenge pictures (Task 11)
 
-- **Pictures in the challenges are still emoji** until the picture cards (Task 11).
+- **32×32 pixels**, not 16×16. On a challenge card each art pixel is then about 4–5 screen pixels, close to the map's 4×, so the pictures match the world. At 16×16 a hedgehog, an angel or an ear would not be recognisable.
+- **Drawn by code** from shapes (`src/art/pictures.ts`), with three more of Kenney's 33 colours: cream `#fec99c`, light green `#8bd87d` and tan `#cf8254`.
+- **Faces only on animals and people**, never on things (no smiling sun or moon), so a picture shows just the word.
+- **"Åtta"** is the numeral 8 drawn as a picture. It is a picture of the number, not text to read, so it is pixel art like the rest.
+- **The sheet** `docs/sprites/pictures.png` shows every picture on a card at about game size.

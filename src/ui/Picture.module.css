@@ -1,5 +1,6 @@
+/* 32×32 pixel art, as big as the emoji it replaced (a card sets font-size). */
 .picture {
-  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
-  font-weight: normal;
-  line-height: 1;
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
 }

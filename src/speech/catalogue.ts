@@ -10,8 +10,8 @@ export const voiceTestPhrase = phrases.hubWelcome
 /** Sentences that belong together, for the review page: the map and rewards, then each letter and each word. */
 export interface SpokenGroup {
   title: string
-  /** The word's placeholder picture, if the group is a word. */
-  picture?: string
+  /** The word's id, if the group is a word: the review page shows its picture. */
+  word?: string
   texts: string[]
 }
 
@@ -47,7 +47,7 @@ export function spokenGroups(): SpokenGroup[] {
     const pictureQuestion = { target: word.id, choices: [word.id] }
     groups.push({
       title: `Word: ${word.base}`,
-      picture: word.picture,
+      word: word.id,
       texts: [
         firstLetterVoice.ask(firstLetterQuestion),
         ...(firstLetterVoice.askAgain ? [firstLetterVoice.askAgain(firstLetterQuestion)] : []),

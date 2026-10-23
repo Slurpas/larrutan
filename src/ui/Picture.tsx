@@ -1,14 +1,17 @@
+import { pictures } from '../art/pictures'
+import { cx } from './cx'
+import { PixelSprite } from './PixelSprite'
 import styles from './Picture.module.css'
 
 interface PictureProps {
-  emoji: string
+  /** The word whose picture to show (src/content/words.ts); the art is in src/art/pictures.ts. */
+  word: string
+  className?: string
 }
 
-/** Placeholder picture: an emoji in a colour emoji font. Replaced by project art in Phase 2. */
-export function Picture({ emoji }: PictureProps) {
-  return (
-    <span className={styles.picture} aria-hidden="true">
-      {emoji}
-    </span>
-  )
+/** A word's pixel-art picture. It sizes with the font, so a card sets its size with font-size. */
+export function Picture({ word, className }: PictureProps) {
+  const grid = pictures[word]
+  if (!grid) throw new Error(`No picture for word "${word}"`)
+  return <PixelSprite grid={grid} className={cx(styles.picture, className)} />
 }

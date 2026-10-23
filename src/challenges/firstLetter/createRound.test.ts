@@ -67,7 +67,7 @@ describe('createFirstLetterRound', () => {
   })
 
   it('refuses to use a word whose first sound differs from its letter', () => {
-    const sked: Word = { ...getWord('sun'), id: 'spoon', base: 'sked', picture: '🥄', firstSound: 'sj' }
+    const sked: Word = { ...getWord('sun'), id: 'spoon', base: 'sked', firstSound: 'sj' }
     const problems = findFirstLetterProblems(
       { word: 'spoon', target: 's', choices: ['s', 'm', 'l'] },
       { ...rules, words: [...words, sked] },

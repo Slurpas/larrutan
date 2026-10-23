@@ -8,7 +8,6 @@ const valid: Word = {
   base: 'sol',
   indefinite: 'en sol',
   definite: 'solen',
-  picture: '☀️',
   firstLetter: 's',
   firstSound: 's',
   alsoCalled: [],
@@ -71,11 +70,10 @@ describe('content validation catches broken entries', () => {
     expect(findWordProblems(decomposed, letters).join()).toMatch(/not NFC-normalised/)
   })
 
-  it('rejects duplicate ids, words and pictures', () => {
+  it('rejects duplicate ids and words', () => {
     const problems = findWordListProblems([valid, { ...valid }], letters).join()
     expect(problems).toMatch(/duplicate id/)
     expect(problems).toMatch(/duplicate base/)
-    expect(problems).toMatch(/duplicate picture/)
   })
 })
 
@@ -87,7 +85,7 @@ describe('ambiguous pictures', () => {
   })
 
   it('treats pictures as mistakable when one can be called by the other name', () => {
-    const rat = { ...valid, id: 'rat', base: 'råtta', picture: '🐀', alsoCalled: [] }
+    const rat = { ...valid, id: 'rat', base: 'råtta', alsoCalled: [] }
     expect(couldBeMistaken(getWord('mouse'), rat)).toBe(true)
     expect(couldBeMistaken(getWord('mouse'), getWord('sun'))).toBe(false)
   })

@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react'
+import { Picture } from '../../ui/Picture'
 import { spokenGroups } from '../catalogue'
 import { clipFileName } from '../clipName'
 import { clipUrl } from '../speech'
@@ -10,7 +11,7 @@ interface Clip {
   text: string
   url: string | undefined
   group: string
-  picture?: string
+  word?: string
 }
 
 type Filter = 'unreviewed' | 'rejected' | 'approved' | 'all'
@@ -35,7 +36,7 @@ export default function VoiceReview() {
           text,
           url: clipUrl(text),
           group: group.title,
-          picture: group.picture,
+          word: group.word,
         })),
       ),
     [],
@@ -179,7 +180,7 @@ export default function VoiceReview() {
               <li key={clip.file} className={styles.item}>
                 {firstOfGroup && (
                   <h2 className={styles.group}>
-                    {clip.picture && <span aria-hidden="true">{clip.picture} </span>}
+                    {clip.word && <Picture word={clip.word} className={styles.picture} />}
                     {clip.group}
                   </h2>
                 )}

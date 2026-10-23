@@ -39,4 +39,8 @@ export const palette: Readonly<Record<string, string>> = {
   q: '#84c669',
   Q: '#65a556',
   G: '#479f4a',
+  // Also in Kenney's sheet, used by the challenge pictures: cream, light green and tan
+  e: '#fec99c',
+  l: '#8bd87d',
+  a: '#cf8254',
 }

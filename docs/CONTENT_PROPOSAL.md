@@ -21,7 +21,7 @@ Today: A I L M O S Å Ä Ö (9). Proposed next: **R, N, T, F** (13 in total).
 ## Words (15 new and a spare; 43 in total)
 
 Every word starts with the plain sound of its letter (PRD §5 rule 1). None start with sj-, tj- or j-sounds.
-- **Pictures:** emoji placeholders from Unicode 13 or older, so they work on older iPads.
+- **Pictures:** the emoji below only show what each picture will be. Approved words get their own pixel picture before they are added, like the first 28 (`docs/sprites/pictures.png`).
 - **"Also called":** other names a child might use. They keep misleading choices out of a question. For example, *tåg* is also *lok*, so L is never a wrong choice for *tåg*.
 
 | Word | Picture | Letter | Also called | Notes |

@@ -37,7 +37,7 @@ describe('createWordPictureRound', () => {
   })
 
   it('never shows two pictures that share a name', () => {
-    const rat: Word = { ...getWord('mouse'), id: 'rat', base: 'råtta', definite: 'råttan', picture: '🐀', alsoCalled: [] }
+    const rat: Word = { ...getWord('mouse'), id: 'rat', base: 'råtta', definite: 'råttan', alsoCalled: [] }
     const problems = findWordPictureProblems(
       { target: 'mouse', choices: ['mouse', 'rat', 'sun'] },
       { ...rules, words: [...words, rat] },

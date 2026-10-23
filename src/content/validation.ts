@@ -15,7 +15,6 @@ export function findWordProblems(word: Word, from: readonly Letter[]): string[] 
     base: word.base,
     indefinite: word.indefinite,
     definite: word.definite,
-    picture: word.picture,
   })) {
     if (value.trim() === '') problems.push(`${label}: ${field} is empty`)
     if (value !== value.normalize('NFC')) problems.push(`${label}: ${field} is not NFC-normalised`)
@@ -40,7 +39,7 @@ export function findWordProblems(word: Word, from: readonly Letter[]): string[] 
 
 export function findWordListProblems(list: readonly Word[], from: readonly Letter[]): string[] {
   const problems = list.flatMap((word) => findWordProblems(word, from))
-  for (const field of ['id', 'base', 'picture'] as const) {
+  for (const field of ['id', 'base'] as const) {
     const seen = new Set<string>()
     for (const word of list) {
       if (seen.has(word[field])) problems.push(`duplicate ${field} "${word[field]}"`)

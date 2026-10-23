@@ -38,6 +38,39 @@ export class Pixels {
     return this
   }
 
+  /** Paints every pixel whose centre satisfies `where` (any shape that is easy to write as a rule). */
+  fill(where: (x: number, y: number) => boolean, color: string): this {
+    for (let y = 0; y < this.height; y++) for (let x = 0; x < this.width; x++) if (where(x + 0.5, y + 0.5)) this.set(x, y, color)
+    return this
+  }
+
+  /** A filled polygon through the given corners. */
+  polygon(points: readonly (readonly [number, number])[], color: string): this {
+    return this.fill((x, y) => {
+      let inside = false
+      for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+        const [xi, yi] = points[i]!
+        const [xj, yj] = points[j]!
+        if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside
+      }
+      return inside
+    }, color)
+  }
+
+  /** A thick line through the given points, `radius` pixels from its middle (tails, legs, blades). */
+  stroke(points: readonly (readonly [number, number])[], radius: number, color: string): this {
+    return this.fill((x, y) => {
+      for (let i = 1; i < points.length; i++) {
+        const [ax, ay] = points[i - 1]!
+        const [bx, by] = points[i]!
+        const length = (bx - ax) ** 2 + (by - ay) ** 2
+        const t = length ? Math.max(0, Math.min(1, ((x - ax) * (bx - ax) + (y - ay) * (by - ay)) / length)) : 0
+        if ((x - ax - t * (bx - ax)) ** 2 + (y - ay - t * (by - ay)) ** 2 <= radius * radius) return true
+      }
+      return false
+    }, color)
+  }
+
   /** Recolours the pixels of one colour where `where` holds (e.g. a shadow on one side). */
   shade(from: string, to: string, where: (x: number, y: number) => boolean): this {
     for (let y = 0; y < this.height; y++) for (let x = 0; x < this.width; x++) if (this.get(x, y) === from && where(x, y)) this.set(x, y, to)

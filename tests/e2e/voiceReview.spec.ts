@@ -1,7 +1,7 @@
-import { expect, test } from '@playwright/test'
 import { spokenTexts } from '../../src/speech/catalogue'
 import { clipFileName } from '../../src/speech/clipName'
 import type { Approvals } from '../../src/speech/review/approvals'
+import { expect, test } from './fixtures'
 
 // The review page saves through the dev server; here the endpoint is faked, so tests never touch approvals.json.
 test('the voice review page plays clips and saves good and wrong, with a note', async ({ page }) => {

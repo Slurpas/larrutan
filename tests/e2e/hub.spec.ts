@@ -1,8 +1,9 @@
-import { expect, test, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import { challengeNames, type ChallengeId } from '../../src/challenges/challengeIds'
 import { hubMap } from '../../src/world/hubMap'
 import { findPath } from '../../src/world/pathfinding'
 import { stationApproaches, type Tile } from '../../src/world/tileMap'
+import { expect, test } from './fixtures'
 import { enterMap, playerTile, press, tapStation } from './helpers'
 
 const stationFor = (challenge: ChallengeId) => hubMap.stations.find((s) => s.challenge === challenge)!

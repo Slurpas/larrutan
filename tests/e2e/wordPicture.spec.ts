@@ -1,6 +1,7 @@
-import { expect, test, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import { createWordPictureRound } from '../../src/challenges/wordPicture/createRound'
 import { getWord, words } from '../../src/content/words'
+import { expect, test } from './fixtures'
 import { SEED, answerKey, expectRoundCompleteThenMap, press, startChallenge, waitForQuestion } from './helpers'
 
 const round = createWordPictureRound({ seed: SEED, words })

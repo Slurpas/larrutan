@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test'
 import { phrases } from '../../src/content/phrases'
+import { expect, test } from './fixtures'
 import { press } from './helpers'
 
 // Runs against a release build (see playwright.config.ts): the service worker only exists there.

@@ -1,6 +1,7 @@
-import { expect, test, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import { createFindLetterRound } from '../../src/challenges/findLetter/createRound'
 import { confusableLetters, getLetter, letters } from '../../src/content/letters'
+import { expect, test } from './fixtures'
 import { SEED, answerKey, expectRoundCompleteThenMap, press, startChallenge, waitForQuestion } from './helpers'
 
 const round = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters })

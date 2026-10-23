@@ -20,4 +20,15 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // Browser tests must use the muted `test` from fixtures.ts, so they never play sound out loud.
+    files: ['tests/e2e/**/*.ts'],
+    ignores: ['tests/e2e/fixtures.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { paths: [{ name: '@playwright/test', importNames: ['test'], message: "Import `test` from './fixtures' (it mutes all audio)." }] },
+      ],
+    },
+  },
 ])

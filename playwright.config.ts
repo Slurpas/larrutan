@@ -5,6 +5,8 @@ const port = 5199
 // The offline tests need a release build: the service worker only runs there.
 const releasePort = 4199
 const offlineSpec = /offline\.spec\.ts/
+// Tests never play sound out loud: Chromium is muted, and tests/e2e/fixtures.ts mutes every page (WebKit has no flag).
+const muted = { args: ['--mute-audio'] }
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -16,12 +18,12 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
-    { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: offlineSpec },
+    { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'], launchOptions: muted }, testIgnore: offlineSpec },
     // WebKit is the closest automated stand-in for iPad Safari.
     { name: 'ipad-webkit', use: { ...devices['iPad (gen 7) landscape'] }, testIgnore: offlineSpec },
     {
       name: 'offline-chromium',
-      use: { ...devices['Desktop Chrome'], baseURL: `http://localhost:${releasePort}` },
+      use: { ...devices['Desktop Chrome'], launchOptions: muted, baseURL: `http://localhost:${releasePort}` },
       testMatch: offlineSpec,
     },
     {

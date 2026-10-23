@@ -1,9 +1,10 @@
-import { expect, test, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import type { ChoiceRound } from '../../src/challenges/choiceQuestion'
 import { createFindLetterRound } from '../../src/challenges/findLetter/createRound'
 import { confusableLetters, letters } from '../../src/content/letters'
 import { boxOf, practiceKey, recordPractice } from '../../src/learning/mastery'
 import { backupStore, databaseName, profileStore } from '../../src/persistence/database'
+import { expect, test } from './fixtures'
 import { SEED, answerKey, enterMap, press, tapStation, waitForQuestion } from './helpers'
 
 async function playRoundByKeyboard(page: Page, round: ChoiceRound) {

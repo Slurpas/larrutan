@@ -40,10 +40,27 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T18:52:21.961Z"
     },
+    "du-fick-en-rosett-cabcefb5.mp3": {
+      "text": "Du fick en rosett!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:38:10.057Z"
+    },
     "du-fick-en-ryggsack-71edd20c.mp3": {
       "text": "Du fick en ryggsäck!",
       "status": "approved",
       "reviewedAt": "2026-10-23T18:52:45.086Z"
+    },
+    "du-fick-en-stjarntroja-c51aac35.mp3": {
+      "text": "Du fick en stjärntröja!",
+      "status": "rejected",
+      "note": "Du fick en sjötröja?",
+      "reviewedAt": "2026-10-23T20:38:22.592Z"
+    },
+    "du-fick-grona-byxor-ffcc6c07.mp3": {
+      "text": "Du fick gröna byxor!",
+      "status": "rejected",
+      "note": "Dou fick gröna byxor",
+      "reviewedAt": "2026-10-23T20:37:58.066Z"
     },
     "du-har-gatt-upp-en-niva-60f74893.mp3": {
       "text": "Du har gått upp en nivå!",
@@ -70,10 +87,25 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T18:50:54.252Z"
     },
+    "klara-forsta-bokstaven-sa-far-du-de-gron-236fc3de.mp3": {
+      "text": "Klara Första bokstaven så får du de gröna byxorna.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:38:04.817Z"
+    },
     "klara-hitta-bokstaven-sa-far-du-den-bla-8a352d81.mp3": {
       "text": "Klara Hitta bokstaven så får du den blå tröjan.",
       "status": "approved",
       "reviewedAt": "2026-10-23T18:51:02.888Z"
+    },
+    "klara-ord-och-bild-sa-far-du-mossan-62c11d43.mp3": {
+      "text": "Klara Ord och bild så får du mössan.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:38:07.738Z"
+    },
+    "klara-tio-rundor-sa-far-du-ryggsacken-adead84b.mp3": {
+      "text": "Klara tio rundor så får du ryggsäcken.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:38:13.188Z"
     },
     "klara-tjugofem-rundor-sa-far-du-manteln-6056dd7f.mp3": {
       "text": "Klara tjugofem rundor så får du manteln.",
@@ -90,6 +122,12 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T19:58:13.665Z"
     },
+    "na-niva-sju-sa-far-du-stjarntrojan-f3446bba.mp3": {
+      "text": "Nå nivå sju så får du stjärntröjan.",
+      "status": "rejected",
+      "note": "Nå nivå sju så får du sjötröjan?",
+      "reviewedAt": "2026-10-23T20:38:39.070Z"
+    },
     "na-niva-tre-sa-far-du-rosetten-de4f56ec.mp3": {
       "text": "Nå nivå tre så får du rosetten.",
       "status": "approved",
@@ -99,6 +137,11 @@
       "text": "Nu blir det svårare. Titta noga!",
       "status": "approved",
       "reviewedAt": "2026-10-23T18:50:39.955Z"
+    },
+    "tryck-pa-en-skylt-for-att-spela-83655cb3.mp3": {
+      "text": "Tryck på en skylt för att spela!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:37:48.447Z"
     }
   }
 }

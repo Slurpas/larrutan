@@ -1,5 +1,5 @@
 import type { RoundOutcome } from '../rewards/progress'
-import type { RoundResult } from './ChoiceChallenge'
+import type { RoundResult } from './useChoiceRound'
 import type { Difficulty } from './difficulty'
 
 /** What the app gives every challenge screen. */

@@ -65,6 +65,12 @@ More colours are only added from the same 33.
 - **Things put on or held** (hats, capes, backpacks, wings, the flower, balloon and wand) are small grids with a position per facing (down, up, side; left is mirrored). Each can be drawn behind the body (a cape from the front) or in front of it (a backpack from behind).
 - **Adding an item:** a data entry in `src/rewards/items.ts` plus its art in `src/art/wardrobe.ts`. `src/art/outfit.test.ts` fails if either is missing, if art uses a colour outside the palette, or if it reaches outside the canvas.
 
+## Gruvvagnen (Task 12)
+
+- **The mine** (`src/art/mine.ts`): a dirt floor, tracks, rock walls, wooden tunnel mouths, planks and lanterns, as 16×16 tiles seen from above like the map. Shown at the biggest whole-number zoom that fits (5× on an iPad in landscape).
+- **The cart** carries the child's own character, dressed, seen from behind (`composeCharacter`).
+- **The letters stay UI:** the choices are the usual white cards, hanging on the rock above each tunnel.
+
 ## Challenge pictures (Task 11)
 
 - **32×32 pixels**, not 16×16. On a challenge card each art pixel is then about 4–5 screen pixels, close to the map's 4×, so the pictures match the world. At 16×16 a hedgehog, an angel or an ear would not be recognisable.

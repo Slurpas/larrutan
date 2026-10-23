@@ -37,12 +37,13 @@ export async function startChallenge(page: Page, hasTouch: boolean, challenge: C
   await expect(page.getByRole('button', { name: 'Lyssna igen' })).toBeVisible()
 }
 
-export async function waitForQuestion(page: Page, index: number, total: number) {
-  await expect(page.getByRole('img', { name: `Fråga ${index + 1} av ${total}` })).toBeVisible()
+/** `timeout`: the mine cart takes a few seconds per question (riding in and through a tunnel). */
+export async function waitForQuestion(page: Page, index: number, total: number, timeout?: number) {
+  await expect(page.getByRole('img', { name: `Fråga ${index + 1} av ${total}` })).toBeVisible({ timeout })
 }
 
-export async function expectRoundCompleteThenMap(page: Page) {
-  await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible()
+export async function expectRoundCompleteThenMap(page: Page, timeout?: number) {
+  await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible({ timeout })
   await page.getByRole('button', { name: 'Till kartan' }).click()
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeHidden()
   await expect(page.getByRole('button', { name: 'Till start' })).toBeVisible()

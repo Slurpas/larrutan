@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { words } from '../content/words'
 import { characterFeetRow, characterFrames, characterHeadTop, characterSize } from './character'
 import { tinyTownHouses, tinyTownTiles } from './kenney'
+import { cartSize, cartWithRider, floorTile, lantern, mineTile, planks, railTile, rockTile, tunnelMouth, tunnelSize } from './mine'
 import { palette } from './palette'
 import { pictures, pictureSize } from './pictures'
 import { rock, waterTile } from './scenery'
@@ -32,6 +33,13 @@ describe('sprites', () => {
       rock,
       water: waterTile(allSides, 0),
       ...pictures,
+      floorTile,
+      railTile,
+      rockTile,
+      tunnelMouth,
+      planks,
+      lantern,
+      cart: cartWithRider({ head: 'crown', top: 'star-sweater', back: 'cape', held: 'balloon' }),
     }
     for (const [name, grid] of Object.entries(sprites)) expect(problems(grid), name).toEqual([])
   })
@@ -70,6 +78,20 @@ describe('sprites', () => {
     for (const [id, grid] of Object.entries(pictures)) {
       const edge = [grid[0], grid[pictureSize - 1], grid.map((row) => row[0]).join(''), grid.map((row) => row[pictureSize - 1]).join('')]
       for (const line of edge) expect(line, id).toMatch(/^[.o]*$/)
+    }
+  })
+
+  it('makes the mine tiles repeat at 16×16, the tunnel 32×32 and the cart with its rider one size', () => {
+    for (const tile of [floorTile, railTile, rockTile]) {
+      expect(tile).toHaveLength(mineTile)
+      expect(tile[0]).toHaveLength(mineTile)
+    }
+    expect(tunnelMouth).toHaveLength(tunnelSize.height)
+    expect(tunnelMouth[0]).toHaveLength(tunnelSize.width)
+    for (const outfit of [{}, { back: 'wings', held: 'balloon', head: 'top-hat' }]) {
+      const cart = cartWithRider(outfit)
+      expect(cart).toHaveLength(cartSize.height)
+      expect(cart[0]).toHaveLength(cartSize.width)
     }
   })
 

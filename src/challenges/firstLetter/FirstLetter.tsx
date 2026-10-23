@@ -3,19 +3,19 @@ import { confusableLetters, getLetter, letters } from '../../content/letters'
 import { getWord, words } from '../../content/words'
 import { Picture } from '../../ui/Picture'
 import type { ChallengeScreenProps } from '../challengeProps'
-import { ChoiceChallenge } from '../ChoiceChallenge'
 import { challengeDifficulties } from '../difficulty'
+import { MineCart } from '../mineCart/MineCart'
 import { firstLetterVoice } from '../voices'
 import { createFirstLetterRound } from './createRound'
 
-/** Första bokstaven: see a picture, hear "Vilken bokstav börjar sol på?", tap the letter. */
+/** Första bokstaven, as Gruvvagnen: see a picture, hear "Vilken bokstav börjar sol på?", ride into the tunnel with that letter. */
 export function FirstLetter({ seed, difficulty, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
   const [round] = useState(() =>
     createFirstLetterRound({ seed, words, letters, confusables: confusableLetters, difficulty, practiceBox }),
   )
 
   return (
-    <ChoiceChallenge
+    <MineCart
       round={round}
       voice={firstLetterVoice}
       difficulty={difficulty}

@@ -228,6 +228,25 @@ Status 2026-10-23:
 
 ---
 
+### Task 12 — Gruvvagnen: answering by moving
+
+**Goal:** answer by steering instead of tapping cards (the user's idea, 2026-10-23), to see whether a playful action makes practice more fun.
+
+Status 2026-10-23: **prototype done, waiting for a playtest.**
+- **The ride:** Första bokstaven is now a mine cart ride (`src/challenges/mineCart`):
+  - The cart rolls about 3 seconds and brakes in front of a rock wall with one tunnel per choice, a letter card above each.
+  - It then waits as long as the child needs: no timers (PRD §11).
+- **Answering:** the child steers into a tunnel.
+  - Right: through the tunnel to the next question.
+  - Wrong: the tunnel is nailed shut with planks and the cart bumps back gently. The same graduated help as the cards.
+- **Controls:**
+  - iPad: tap a card or a track; swipe left/right to steer and up to go.
+  - Keyboard: arrows to steer, up to go, or the number keys.
+  - A choice made while the cart is still rolling in is kept for the stop.
+- **The rider:** the child's own character, dressed, sits in the cart.
+- **Shared logic:** asking, help and rewards moved to `useChoiceRound`, shared with the card screen; Hitta bokstaven and Ord och bild still use cards, so the two can be compared.
+- **Next:** a playtest. If the child likes it, other stations can get their own game on the same rounds.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.
@@ -239,6 +258,14 @@ Not scheduled. Pull an item in when it becomes the most valuable next step.
 - Lower-case letters.
 - Letter tracing with a finger.
 - Mathematics region.
+
+**Games** (ways to answer by playing, on the same rounds; the user's picks 2026-10-23)
+- **Ordbygget:** pick up letter boxes and carry them to build a short word ("Bygg ordet sol"). Spelling; needs letter sounds first (see Learning).
+- **Mata draken:** a hungry dragon wants something that starts with a sound; drag the right picture into its mouth.
+- **Bubblor:** pop every bubble with the asked letter; several right answers per screen, nothing timed.
+- **Memory:** turn over cards and match a letter with a picture.
+- **Bron:** each right answer lays a plank; a finished bridge opens a new part of the map.
+- Not wanted (the user, 2026-10-23): a post delivery game, a fishing pond, a letter hunt on the map.
 
 **World and game**
 - More regions, shown as locked places first.

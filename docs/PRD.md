@@ -97,10 +97,12 @@ Start with **upper-case letters**; lower case is a later difficulty step. Mathem
 | Challenge | Child hears | Child does |
 |---|---|---|
 | **Hitta bokstaven** (find the letter) | "Var är A?" | Taps the letter among 2–4 choices |
-| **Första bokstaven** (first letter) | Sees a picture, hears "sol" | Taps the letter the word starts with |
+| **Första bokstaven** (first letter) | Sees a picture, hears "sol" | Taps the letter the word starts with. *Since Task 12:* rides a mine cart (Gruvvagnen) and steers it into the tunnel with that letter |
 | **Ord och bild** (word to picture) | "Var är katten?" | Taps the matching picture among 2–4 |
 
 Each challenge is a small engine fed by content data. A round is about 5 questions. Add a new challenge type only when the existing ones work well with a child.
+
+A challenge can be played in different ways on the same rounds, speech, help and rewards (`useChoiceRound`): tapping cards, or a game where the child answers by moving, like Gruvvagnen (Task 12). Games never add time pressure: whatever moves, it waits for the child (§11).
 
 ### Content rules
 

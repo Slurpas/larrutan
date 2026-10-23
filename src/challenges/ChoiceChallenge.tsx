@@ -1,25 +1,16 @@
-import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
-import { phrases } from '../content/phrases'
-import type { Practiced } from '../learning/mastery'
+import { useEffectEvent, useLayoutEffect, useRef, type ReactNode } from 'react'
 import type { RoundOutcome } from '../rewards/progress'
-import { speak, stopSpeech } from '../speech/speech'
+import { stopSpeech } from '../speech/speech'
 import { useVoiceStatus } from '../speech/useVoiceStatus'
-import { RoundButton } from '../ui/RoundButton'
 import { cx } from '../ui/cx'
-import { CheckIcon, HouseIcon, SpeakerIcon } from '../ui/icons'
+import { CheckIcon } from '../ui/icons'
+import { ChallengeTopBar } from './ChallengeTopBar'
 import type { ChoiceQuestion, ChoiceRound } from './choiceQuestion'
 import type { Difficulty } from './difficulty'
 import { RoundComplete } from './RoundComplete'
-import { RoundProgress } from './RoundProgress'
-import { advance, choose, currentQuestion, isAnswerRevealed, startRound, type RoundState } from './roundState'
+import { useChoiceRound, type RoundResult } from './useChoiceRound'
 import type { ChallengeVoice } from './voices'
 import styles from './ChoiceChallenge.module.css'
-
-/** What a finished round tells the app. */
-export interface RoundResult {
-  wrongTaps: number
-  practiced: Practiced[]
-}
 
 /** The green "correct" card stays at least this long, even when there is no voice to wait for. */
 const CORRECT_PAUSE_MS = 900
@@ -50,9 +41,8 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
 }
 
 /**
- * Everything the challenges share: asking out loud, graduated help after a
- * wrong tap, a happy sound for right answers, progress stars, keyboard support
- * and the end screen.
+ * The card screen: the choices as big cards to tap, with progress stars, keyboard
+ * support and the end screen. Asking, help and rewards come from useChoiceRound.
  */
 export function ChoiceChallenge<Q extends ChoiceQuestion>({
   round,
@@ -70,77 +60,17 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   onExit,
   onPlayAgain,
 }: ChoiceChallengeProps<Q>) {
-  const [state, setState] = useState(() => startRound(round))
-  const [outcome, setOutcome] = useState<RoundOutcome | null>(null)
+  const { state, question, revealed, outcome, choose, replay, sayAgain } = useChoiceRound({
+    round,
+    voice,
+    difficulty,
+    onRoundComplete,
+    practiceItem,
+    knowsChallenge,
+    correctPauseMs: CORRECT_PAUSE_MS,
+  })
   const voiceStatus = useVoiceStatus()
   const choicesRef = useRef<HTMLDivElement>(null)
-
-  const question = currentQuestion(state)
-  const revealed = isAnswerRevealed(state)
-
-  // The full question only until the child knows the game: the very first question they ever get here.
-  // After that the short form, also after a wrong tap. The speaker button always gives the full question.
-  const short = (q: Q) => (voice.askAgain ? voice.askAgain(q) : voice.ask(q))
-  const useShort = knowsChallenge || state.questionIndex > 0
-  const questionText = !question ? null : useShort ? short(question) : voice.ask(question)
-
-  function promptFor(s: RoundState<Q>, full = false): string {
-    const q = currentQuestion(s)
-    if (!q) return ''
-    if (isAnswerRevealed(s)) return voice.reveal(q)
-    return full ? voice.ask(q) : short(q)
-  }
-
-  // Ask each new question out loud; a hard round starts by saying so.
-  const isFirstQuestion = state.questionIndex === 0
-  useEffect(() => {
-    if (!questionText) return
-    void speak(isFirstQuestion && difficulty === 'hard' ? [phrases.hardLevelIntro, questionText] : questionText)
-  }, [questionText, isFirstQuestion, difficulty])
-
-  // Stop talking when the child leaves.
-  useEffect(() => stopSpeech, [])
-
-  const finishRound = useEffectEvent(() => {
-    if (!onRoundComplete) return
-    const practiced = state.round.questions.map((q, i) => ({ item: practiceItem(q), firstTry: state.firstTry[i] ?? false }))
-    setOutcome(onRoundComplete({ wrongTaps: state.wrongTaps, practiced }))
-  })
-
-  // After a correct answer: a happy chime, then the next question (or the end of the round).
-  useEffect(() => {
-    if (state.phase !== 'correct') return
-    let cancelled = false
-    const isLast = state.questionIndex === state.round.questions.length - 1
-    void Promise.all([speak({ sound: 'correct' }), pause(CORRECT_PAUSE_MS)]).then(() => {
-      if (cancelled) return
-      if (isLast) finishRound()
-      setState(advance)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [state.phase, state.questionIndex, state.round.questions.length])
-
-  function handleChoose(choice: string) {
-    const next = choose(state, choice)
-    if (next === state) return
-    setState(next)
-    if (next.phase === 'asking') {
-      // Wrong: name what they tapped, then ask again (or point at the answer once it is the only one left).
-      void speak([voice.nameChoice(choice), promptFor(next)])
-    }
-  }
-
-  /** The speaker button: the full question, for a child who needs to hear what to do. */
-  function handleReplay() {
-    if (state.phase === 'asking') void speak(promptFor(state, true))
-  }
-
-  /** Tapping the picture: just the word again. */
-  function handleShowcaseTap() {
-    if (state.phase === 'asking') void speak(promptFor(state))
-  }
 
   function handleExit() {
     stopSpeech()
@@ -152,7 +82,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
     const number = Number(event.key)
     const choice = question.choices[number - 1]
     if (Number.isInteger(number) && number >= 1 && choice) {
-      handleChoose(choice)
+      choose(choice)
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault()
       moveFocus(choicesRef.current, event.key === 'ArrowRight' ? 1 : -1)
@@ -172,37 +102,21 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
 
   return (
     <main className={cx(styles.screen, showcase && styles.withShowcase)}>
-      <div className={styles.topBar}>
-        <RoundButton label="Till kartan" onClick={handleExit}>
-          <HouseIcon />
-        </RoundButton>
-        <div className={styles.prompt}>
-          <RoundButton label="Lyssna igen" size="large" onClick={handleReplay}>
-            <SpeakerIcon />
-          </RoundButton>
-          {voiceStatus === 'missing' && silentPrompt && (
-            <span className={styles.silentPrompt}>{silentPrompt(question)}</span>
-          )}
-        </div>
-        <div className={styles.status}>
-          {difficultyCount > 1 && (
-            <span
-              className={styles.level}
-              role="img"
-              aria-label={difficulty === 'hard' ? 'Svår nivå' : 'Lätt nivå'}
-            >
-              {Array.from({ length: difficultyCount }, (_, i) => (
-                <span key={i} className={cx(styles.pip, i <= (difficulty === 'hard' ? 1 : 0) && styles.pipOn)} />
-              ))}
-            </span>
-          )}
-          <RoundProgress total={state.round.questions.length} current={state.questionIndex} />
-        </div>
-      </div>
+      <ChallengeTopBar
+        onExit={handleExit}
+        onReplay={replay}
+        difficulty={difficulty}
+        difficultyCount={difficultyCount}
+        total={state.round.questions.length}
+        current={state.questionIndex}
+        beside={
+          voiceStatus === 'missing' && silentPrompt && <span className={styles.silentPrompt}>{silentPrompt(question)}</span>
+        }
+      />
 
       <div className={styles.body}>
         {showcase && (
-          <button type="button" className={styles.showcase} aria-label="Lyssna på ordet" onClick={handleShowcaseTap}>
+          <button type="button" className={styles.showcase} aria-label="Lyssna på ordet" onClick={sayAgain}>
             {showcase(question)}
           </button>
         )}
@@ -226,7 +140,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
                 )}
                 aria-label={choiceLabel(id)}
                 disabled={isRemoved}
-                onClick={() => handleChoose(id)}
+                onClick={() => choose(id)}
               >
                 {renderChoice(id)}
                 {isCorrect && (
@@ -252,8 +166,4 @@ function moveFocus(container: HTMLElement | null, step: 1 | -1) {
   const index = buttons.findIndex((button) => button === document.activeElement)
   const next = index === -1 ? (step === 1 ? 0 : buttons.length - 1) : (index + step + buttons.length) % buttons.length
   buttons[next]?.focus()
-}
-
-function pause(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
 }

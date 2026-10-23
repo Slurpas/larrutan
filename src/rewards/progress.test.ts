@@ -152,6 +152,24 @@ describe('unlocks', () => {
   })
 })
 
+describe('station levels', () => {
+  it('announces when a station gets harder, and changes back quietly', () => {
+    const clean = play(initialProgress, 'findLetter', 'easy', 0)
+    expect(clean.outcome.levelChange).toBe('up')
+    expect(clean.progress.levels.findLetter).toBe('hard')
+    const stillHard = play(clean.progress, 'findLetter', 'hard', 2)
+    expect(stillHard.outcome.levelChange).toBe(null)
+    const tooHard = play(stillHard.progress, 'findLetter', 'hard', 5)
+    expect(tooHard.outcome.levelChange).toBe('down')
+    expect(tooHard.progress.levels.findLetter).toBe('easy')
+  })
+
+  it('stays easy after an easy round with several slips, and never changes Ord och bild', () => {
+    expect(play(initialProgress, 'firstLetter', 'easy', 3).outcome.levelChange).toBe(null)
+    expect(play(initialProgress, 'wordPicture', 'easy', 0).outcome.levelChange).toBe(null)
+  })
+})
+
 describe('wearing items', () => {
   it('wears one item per slot, swaps within a slot, and takes an item off on a second tap', () => {
     let progress = playRounds(10)

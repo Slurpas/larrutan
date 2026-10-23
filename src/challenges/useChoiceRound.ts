@@ -1,5 +1,4 @@
 import { useEffect, useEffectEvent, useState } from 'react'
-import { phrases } from '../content/phrases'
 import type { Practiced } from '../learning/mastery'
 import type { RoundOutcome } from '../rewards/progress'
 import { speak, stopSpeech } from '../speech/speech'
@@ -62,12 +61,13 @@ export function useChoiceRound<Q extends ChoiceQuestion>({
     return full ? voice.ask(q) : short(q)
   }
 
-  // Ask each new question out loud; a hard round starts by saying so.
+  // Ask each new question out loud; a hard round starts by saying what is harder.
   const isFirstQuestion = state.questionIndex === 0
+  const hardIntro = difficulty === 'hard' ? voice.hardIntro : undefined
   useEffect(() => {
     if (!questionText) return
-    void speak(isFirstQuestion && difficulty === 'hard' ? [phrases.hardLevelIntro, questionText] : questionText)
-  }, [questionText, isFirstQuestion, difficulty])
+    void speak(isFirstQuestion && hardIntro ? [hardIntro, questionText] : questionText)
+  }, [questionText, isFirstQuestion, hardIntro])
 
   // Stop talking when the child leaves.
   useEffect(() => stopSpeech, [])

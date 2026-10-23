@@ -279,6 +279,15 @@ Status 2026-10-24: **done.**
 - The hard level is clearly harder (four choices, with look-alikes), and the voice says what changed instead of just "Nu blir det svårare".
 - A clear rule for when a station goes up a level, and back down (gentle, PRD §6).
 
+Status 2026-10-24: **done.**
+- **Hard is really harder:** four choices instead of three, with all the asked letter's look-alikes (A with Å and Ä, O with Ö). The mine cart gets four tunnels.
+- **The voice says what changed:** "Nu blir det svårare! Nu finns det fyra tunnlar." (mine cart), "… Några bokstäver är nästan lika. Titta noga!" (letters).
+- **When:**
+  - An easy round with at most one wrong tap makes the station hard next time. The round end says "Nästa gång blir det svårare." and shows the level pips.
+  - A hard round with four or more wrong taps makes it easy again, quietly.
+  - The numbers are in `src/challenges/difficulty.ts`.
+- **Saved per station** (save version 4). Older saves keep their current levels.
+
 #### Task 16 — Mata draken (Hitta bokstaven)
 - The letter sign becomes a dragon that wants one letter cookie at a time ("bokstavskex"). One real decision per question, replacing Bubblor's three identical bubbles (user feedback).
 

@@ -143,7 +143,11 @@ Attempts, hints and successes are tracked separately from rewards.
 - **New players:** everything is in box 1, so they get exactly the same seeded rounds as before mastery existed.
 - **Hard level:** it still asks about the look-alike letters; mastery only changes their order.
 - **Saving and visibility:** boxes are saved with the progress (since save version 2) and never shown to the child.
-- **Not done yet:** changing difficulty (easy/hard) from performance.
+- **Difficulty (Task 15):**
+  - **Hard is clearly harder:** four choices instead of three, with the look-alikes of the answer.
+  - **The level is per station:** an easy round with at most one wrong tap makes the next one hard, and the end of the round says so ("Nästa gång blir det svårare."). A hard round with four or more wrong taps makes the next one easy again, without a word.
+  - **Every hard round** starts by saying what is harder. The level pips show it too.
+  - **Saved:** the level is part of the save (version 4).
 
 ## 7. Voice and audio
 

@@ -21,7 +21,9 @@ export function spokenGroups(): SpokenGroup[] {
       title: 'Map, rewards and Mina saker',
       texts: [
         phrases.hubWelcome,
-        phrases.hardLevelIntro,
+        phrases.lookAlikesIntro,
+        phrases.fourTunnelsIntro,
+        phrases.nextTimeHarder,
         phrases.levelUp,
         phrases.myThingsHelp,
         ...items.flatMap((item) => [phrases.itemUnlocked(item.indefinite), item.hint]),

@@ -21,8 +21,9 @@ interface RoundCompleteProps {
 export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompleteProps) {
   const levelUp = outcome !== null && outcome.levelAfter > outcome.levelBefore
   const newItems = outcome?.newItems.map(getItem) ?? []
+  const harderNextTime = outcome?.levelChange === 'up'
 
-  // A fanfare, then a sound and a few words for each new level or item.
+  // A fanfare, then a sound and a few words for each new level or item, and whether the station gets harder.
   useEffect(() => {
     const leveledUp = outcome !== null && outcome.levelAfter > outcome.levelBefore
     const unlocked = outcome?.newItems.map(getItem) ?? []
@@ -30,6 +31,7 @@ export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompletePro
       { sound: 'fanfare' },
       ...(leveledUp ? [{ sound: 'levelUp' } as const, phrases.levelUp] : []),
       ...unlocked.flatMap((item) => [{ sound: 'newItem' } as const, phrases.itemUnlocked(item.indefinite)]),
+      ...(outcome?.levelChange === 'up' ? [phrases.nextTimeHarder] : []),
     ])
   }, [outcome])
 
@@ -42,6 +44,13 @@ export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompletePro
         <div className={styles.rewards}>
           <XpBar xp={outcome.xpAfter} fromXp={outcome.xpBefore} size="large" />
           {levelUp && <p className={styles.levelUp}>Ny nivå!</p>}
+          {harderNextTime && (
+            // The station's level pips: the second one fills in. The words are for adults; the voice says it.
+            <p className={styles.harder} role="img" aria-label="Nästa gång: svårare">
+              <span className={styles.pip} />
+              <span className={cx(styles.pip, styles.pipNew)} />
+            </p>
+          )}
           {newItems.map((item) => (
             <div key={item.id} className={styles.newItem} aria-label={`Ny sak: ${item.name}`} role="img">
               <ItemPreview itemId={item.id} className={styles.newItemPicture} />

@@ -1,6 +1,6 @@
 import type { ConfusableGroup, Letter } from '../../content/letters'
 import { assertNoProblems, findChoiceProblems, type ChoiceQuestion, type ChoiceRound } from '../choiceQuestion'
-import type { Difficulty } from '../difficulty'
+import { choiceCounts, type Difficulty } from '../difficulty'
 import { findLookAlikeProblems, hardTargetsFirst, pickLetterChoices } from '../letterChoices'
 import { practiceOrder } from '../../learning/mastery'
 import { createRng } from '../random'
@@ -22,8 +22,8 @@ export interface FindLetterOptions extends Omit<FindLetterRules, 'choiceCount' |
 }
 
 /**
- * Hitta bokstaven. Each target appears once per round. Easy: no look-alikes.
- * Hard: asks about letters with look-alikes first, and offers one of them.
+ * Hitta bokstaven. Each target appears once per round. Easy: three letters, no look-alikes.
+ * Hard: four letters; asks about letters with look-alikes first, and offers them.
  */
 export function createFindLetterRound({
   seed,
@@ -31,7 +31,7 @@ export function createFindLetterRound({
   confusables,
   difficulty = 'easy',
   questionCount = 5,
-  choiceCount = 3,
+  choiceCount = choiceCounts[difficulty],
   practiceBox = () => 1,
 }: FindLetterOptions): ChoiceRound {
   if (questionCount > letters.length) {

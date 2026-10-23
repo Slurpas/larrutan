@@ -49,10 +49,10 @@ export function App() {
     void loadProgress().then(() => setScreen({ name: 'world', overlay: null }))
   }
 
-  /** Opens a challenge at the first level not completed yet (or the hardest once all are done). */
+  /** Opens a challenge at the station's current level (src/challenges/difficulty.ts). */
   function openChallenge(id: ChallengeId, seed: number) {
-    const { completedLevels } = getProgress()
-    const difficulty = nextDifficulty(id, completedLevels)
+    const { completedLevels, levels } = getProgress()
+    const difficulty = nextDifficulty(id, levels)
     const knowsChallenge = completedLevels.some((level) => level.startsWith(`${id}:`))
     const roundId = `${id}:${difficulty}:${seed}:${++roundCounter.current}`
     setScreen({

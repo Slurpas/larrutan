@@ -32,6 +32,19 @@ Results and decisions are added below as each task is done.
 - **To check:** do the items still feel like a treat, or too rare at the start? 38 new sentences ("Du fick en vikingahjälm!" and the hints) wait on `?review=voices`.
 - **Note:** I used `npx prettier` once to check a file. Prettier isn't part of the project, so npm downloaded it to its cache. It changed nothing, and I won't use it again.
 
+### 2. Difficulty (Task 15): done
+- **What was wrong:** "Nu blir det svårare" came after any finished easy round, and the only change was one look-alike among three letters. That was easy to miss, and nothing said what had changed.
+- **Now:**
+  - **Hard means four choices,** including the letters that look alike (A, Å, Ä; O, Ö). In the mine cart that's four tunnels.
+  - **Each hard round starts by saying what is harder:** "Nu blir det svårare! Nu finns det fyra tunnlar."
+  - **When it goes up:** an easy round with at most one wrong tap. The round end then says "Nästa gång blir det svårare." and shows the level pips.
+  - **When it goes down:** a hard round with four or more wrong taps makes it easy again, without a word, so the child is never told they did badly.
+- **Decisions I made:** this is your W7 question, option (a) from last night, with these thresholds.
+  - Options I'd have asked about: (b) choose by how well the letters are known, which is invisible and can flip back and forth; (c) never change automatically.
+  - The thresholds (1 slip up, 4 down) are one line in `src/challenges/difficulty.ts`.
+- **Saved per station:** save version 4. Your child's current levels carry over.
+- **To check:** listen to the three new sentences. Does your child notice that hard is harder?
+
 # Night 1 (2026-10-23)
 
 You asked me to keep working while you sleep:

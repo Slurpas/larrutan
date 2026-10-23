@@ -71,7 +71,8 @@ describe('upgrading old saves', () => {
     expect(readSave(version1)).toEqual({
       kind: 'loaded',
       repaired: false,
-      progress: { ...progress, worn: { head: 'cap' }, mastery: {}, rounds: {} },
+      // Easy done at both stations: they opened hard, and still do.
+      progress: { ...progress, worn: { head: 'cap' }, mastery: {}, levels: { findLetter: 'hard', firstLetter: 'hard' }, rounds: {} },
     })
   })
 
@@ -79,8 +80,21 @@ describe('upgrading old saves', () => {
     const progress = { xp: 90, roundsCompleted: 4, completedLevels: ['findLetter:hard'], unlockedItems: ['cap', 'top-hat'], mastery: { 'findLetter:a': 3 } }
     for (const [wornItem, worn] of [['top-hat', { head: 'top-hat' }], [null, {}]] as const) {
       const version2 = { version: 2, savedAt: '2026-10-23T09:00:00.000Z', progress: { ...progress, wornItem } }
-      expect(readSave(version2)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, worn, rounds: {} } })
+      expect(readSave(version2)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, worn, levels: {}, rounds: {} } })
     }
+  })
+
+  it('upgrades a version 3 save (Task 10): stations whose easy level is done open hard, as before', () => {
+    const progress = {
+      xp: 120,
+      roundsCompleted: 6,
+      completedLevels: ['findLetter:easy', 'findLetter:hard', 'firstLetter:hard', 'wordPicture:easy'],
+      unlockedItems: ['cap'],
+      worn: { head: 'cap' },
+      mastery: {},
+    }
+    const version3 = { version: 3, savedAt: '2026-10-24T09:00:00.000Z', progress }
+    expect(readSave(version3)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, levels: { findLetter: 'hard' }, rounds: {} } })
   })
 })
 
@@ -129,6 +143,12 @@ describe('recovering from broken saves', () => {
       file.progress.worn = worn
       expect(readSave(file), JSON.stringify(worn)).toMatchObject({ kind: 'loaded', repaired: true, progress: { worn: {} } })
     }
+  })
+
+  it('drops levels a station does not have, and keeps the rest', () => {
+    const file = stored(playedProgress()) as { progress: Record<string, unknown> }
+    file.progress.levels = { findLetter: 'hard', wordPicture: 'hard', dragons: 'easy', firstLetter: 'impossible' }
+    expect(readSave(file)).toMatchObject({ kind: 'loaded', repaired: true, progress: { levels: { findLetter: 'hard' } } })
   })
 
   it('drops mastery for unknown letters, words or boxes, and keeps the rest', () => {

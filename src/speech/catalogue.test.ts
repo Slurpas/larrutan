@@ -52,7 +52,8 @@ describe('speech catalogue', () => {
   })
 
   it('contains everything said about rewards', () => {
-    for (const text of [phrases.hardLevelIntro, phrases.levelUp, phrases.myThingsHelp]) expect(catalogue).toContain(text)
+    for (const text of [phrases.levelUp, phrases.myThingsHelp, phrases.nextTimeHarder]) expect(catalogue).toContain(text)
+    for (const voice of [findAllVoice, firstLetterVoice]) expect(catalogue).toContain(voice.hardIntro)
     for (const item of items) {
       expect(catalogue).toContain(phrases.itemUnlocked(item.indefinite))
       expect(catalogue).toContain(item.hint)

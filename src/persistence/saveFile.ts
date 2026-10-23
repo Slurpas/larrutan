@@ -1,6 +1,6 @@
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { challengeDifficulties, levelKey } from '../challenges/difficulty'
+import { challengeDifficulties, levelKey, type Difficulty, type StationLevels } from '../challenges/difficulty'
 import { letters } from '../content/letters'
 import { words } from '../content/words'
 import { highestBox, lowestBox, practiceKey, type Mastery } from '../learning/mastery'
@@ -11,8 +11,9 @@ import { initialProgress, type Progress } from '../rewards/progress'
  * The saved form of one profile's progress (PRD §12). Bump the version whenever the
  * shape changes, and add an upgrade step from the old version, with a test, in `readSave`.
  * 1: Task 7. 2: mastery per letter and word (Task 11). 3: an outfit, one item per slot (Task 10).
+ * 4: the level each station opens at (Task 15).
  */
-export const saveVersion = 3
+export const saveVersion = 4
 
 export interface SaveFile {
   version: number
@@ -30,11 +31,11 @@ export type ReadResult =
   | { kind: 'newer'; progress: Progress }
 
 export function toSaveFile(progress: Progress, now: Date): SaveFile {
-  const { xp, roundsCompleted, completedLevels, unlockedItems, worn, mastery } = progress
+  const { xp, roundsCompleted, completedLevels, levels, unlockedItems, worn, mastery } = progress
   return {
     version: saveVersion,
     savedAt: now.toISOString(),
-    progress: { xp, roundsCompleted, completedLevels, unlockedItems, worn, mastery },
+    progress: { xp, roundsCompleted, completedLevels, levels, unlockedItems, worn, mastery },
   }
 }
 
@@ -47,6 +48,7 @@ export function readSave(stored: unknown): ReadResult {
   let upgraded = stored.progress
   if (stored.version <= 1) upgraded = upgradeFrom1(upgraded)
   if (stored.version <= 2) upgraded = upgradeFrom2(upgraded)
+  if (stored.version <= 3) upgraded = upgradeFrom3(upgraded)
   const { progress, repaired } = repair(upgraded)
   if (stored.version > saveVersion) return { kind: 'newer', progress }
   return { kind: 'loaded', progress, repaired }
@@ -77,6 +79,21 @@ function upgradeFrom2(progress: unknown): unknown {
   const { wornItem, ...rest } = progress
   const item = typeof wornItem === 'string' ? findItem(wornItem) : undefined
   return { ...rest, worn: item ? { [item.slot]: item.id } : {} }
+}
+
+/**
+ * Version 3 had no station levels: a station opened at the first level not completed, so
+ * a station whose easy level was done opened hard. Keep that, so nothing changes for the child.
+ */
+function upgradeFrom3(progress: unknown): unknown {
+  if (!isRecord(progress)) return progress
+  const done = Array.isArray(progress.completedLevels) ? progress.completedLevels : []
+  const levels = Object.fromEntries(
+    (Object.keys(challengeDifficulties) as ChallengeId[])
+      .filter((challenge) => challengeDifficulties[challenge].includes('hard') && done.includes(levelKey(challenge, 'easy')))
+      .map((challenge) => [challenge, 'hard']),
+  )
+  return { ...progress, levels }
 }
 
 /** Keeps every field that makes sense and resets the rest, so one bad value never loses everything. */
@@ -110,6 +127,20 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
     return Object.fromEntries(kept) as Mastery
   }
 
+  /** Only levels a station really has. */
+  const levelsFrom = (value: unknown): StationLevels => {
+    if (!isRecord(value)) {
+      repaired = true
+      return {}
+    }
+    const kept = Object.entries(value).filter(
+      ([challenge, level]) =>
+        challenge in challengeDifficulties && challengeDifficulties[challenge as ChallengeId].includes(level as Difficulty),
+    )
+    if (kept.length !== Object.keys(value).length) repaired = true
+    return Object.fromEntries(kept) as StationLevels
+  }
+
   const unlockedItems = known(saved.unlockedItems, knownItems)
   /** Only unlocked items, each in its own slot. */
   const outfitFrom = (value: unknown): Outfit => {
@@ -130,6 +161,7 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
       xp: count(saved.xp),
       roundsCompleted: count(saved.roundsCompleted),
       completedLevels: known(saved.completedLevels, knownLevels),
+      levels: levelsFrom(saved.levels),
       unlockedItems,
       worn: outfitFrom(saved.worn),
       mastery: masteryFrom(saved.mastery),

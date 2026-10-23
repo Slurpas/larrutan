@@ -2,7 +2,7 @@ import { lookAlikesOf, type ConfusableGroup, type Letter } from '../../content/l
 import { alsoCalledLetters, findWordProblems } from '../../content/validation'
 import type { Word } from '../../content/words'
 import { assertNoProblems, findChoiceProblems, type ChoiceQuestion, type ChoiceRound } from '../choiceQuestion'
-import type { Difficulty } from '../difficulty'
+import { choiceCounts, type Difficulty } from '../difficulty'
 import { findLookAlikeProblems, pickLetterChoices } from '../letterChoices'
 import { practiceOrder } from '../../learning/mastery'
 import { createRng } from '../random'
@@ -32,8 +32,8 @@ export interface FirstLetterOptions extends Omit<FirstLetterRules, 'choiceCount'
 /**
  * Första bokstaven: see a picture, hear the word, tap its first letter.
  * Each question in a round uses a different first letter, and no wrong letter
- * matches another name for the picture. Easy: no look-alike letters. Hard:
- * words starting with letters that have look-alikes, and one look-alike offered.
+ * matches another name for the picture. Easy: three letters, no look-alikes. Hard:
+ * four letters; words starting with letters that have look-alikes, and those offered.
  */
 export function createFirstLetterRound({
   seed,
@@ -42,7 +42,7 @@ export function createFirstLetterRound({
   confusables,
   difficulty = 'easy',
   questionCount = 5,
-  choiceCount = 3,
+  choiceCount = choiceCounts[difficulty],
   practiceBox = () => 1,
 }: FirstLetterOptions): ChoiceRound<FirstLetterQuestion> {
   const rng = createRng(seed)

@@ -20,8 +20,11 @@ export const phrases = {
 
   wordPictureQuestion: (definite: string) => `Var är ${definite}?`,
 
-  /** Before the first question of a hard round. */
-  hardLevelIntro: 'Nu blir det svårare. Titta noga!',
+  /** Before the first question of a hard round, saying what is harder (Task 15). */
+  lookAlikesIntro: 'Nu blir det svårare! Några bokstäver är nästan lika. Titta noga!',
+  fourTunnelsIntro: 'Nu blir det svårare! Nu finns det fyra tunnlar.',
+  /** At the end of a round after which the station opens at the hard level. */
+  nextTimeHarder: 'Nästa gång blir det svårare.',
   levelUp: 'Du har gått upp en nivå!',
   itemUnlocked: (indefinite: string) => `Du fick ${indefinite}!`,
   myThingsHelp: 'Här är dina saker. Tryck på en sak för att ta på den.',

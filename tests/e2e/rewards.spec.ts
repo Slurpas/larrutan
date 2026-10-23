@@ -72,11 +72,13 @@ test('a finished round unlocks the cap, which can be worn on the map', async ({ 
   await expect.poll(() => page.evaluate(() => window.__larrutanHub?.outfit().head)).toBe('cap')
 })
 
-test('the second visit is the hard level; items come at most every other round', async ({ page, hasTouch }) => {
+test('a round without slips makes the next one hard, and says so; items come at most every other round', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   await tapStation(page, 'findLetter', hasTouch)
   await playRoundByKeyboard(page, easyRound)
   await expect(page.getByRole('img', { name: 'Ny sak: Keps' })).toBeVisible()
+  // No slips: the station says it gets harder next time, and it does.
+  await expect(page.getByRole('img', { name: 'Nästa gång: svårare' })).toBeVisible()
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
 
   await tapStation(page, 'findLetter', hasTouch)

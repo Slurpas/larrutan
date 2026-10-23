@@ -4,7 +4,7 @@ import { choicePairs } from '../choiceQuestion'
 import { createFindLetterRound, findFindLetterProblems } from './createRound'
 
 const rules = { letters, confusables: confusableLetters, choiceCount: 3, difficulty: 'easy' as const }
-const hardRules = { ...rules, difficulty: 'hard' as const }
+const hardRules = { ...rules, choiceCount: 4, difficulty: 'hard' as const }
 const seeds = Array.from({ length: 500 }, (_, i) => i * 7919 + 1)
 const roundFor = (seed: number) => createFindLetterRound({ seed, letters, confusables: confusableLetters })
 
@@ -91,12 +91,14 @@ describe('createFindLetterRound, hard level', () => {
     }
   })
 
-  it('asks about letters with look-alikes and offers exactly one of them', () => {
+  it('offers four letters, asks about letters with look-alikes and offers them, and one letter unlike the answer', () => {
     for (const seed of seeds.slice(0, 50)) {
       for (const { target, choices } of hardRound(seed).questions) {
+        expect(choices, `seed ${seed}`).toHaveLength(4)
         expect(lookAlikesOf(target, confusableLetters).length, target).toBeGreaterThan(0)
         const lookAlikes = choices.filter((c) => c !== target && areConfusable(c, target, confusableLetters))
-        expect(lookAlikes, `seed ${seed}, ${target}`).toHaveLength(1)
+        expect(lookAlikes.length, `seed ${seed}, ${target}`).toBeGreaterThanOrEqual(1)
+        expect(lookAlikes.length, `seed ${seed}, ${target}`).toBeLessThanOrEqual(2)
       }
     }
   })

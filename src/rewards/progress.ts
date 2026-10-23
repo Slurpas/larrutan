@@ -1,6 +1,6 @@
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { levelKey, type Difficulty } from '../challenges/difficulty'
+import { levelAfterRound, levelKey, nextDifficulty, type Difficulty, type StationLevels } from '../challenges/difficulty'
 import { letters } from '../content/letters'
 import { words } from '../content/words'
 import { boxOf, practiceKey, recordPractice, type Mastery, type Practiced } from '../learning/mastery'
@@ -12,6 +12,8 @@ export interface Progress {
   roundsCompleted: number
   /** Challenge levels finished at least once, e.g. "findLetter:hard". */
   completedLevels: string[]
+  /** The level each station opens at next (src/challenges/difficulty.ts). */
+  levels: StationLevels
   unlockedItems: string[]
   /** What the character wears: one unlocked item per slot. */
   worn: Outfit
@@ -41,12 +43,15 @@ export interface RoundOutcome {
   levelAfter: number
   /** Items unlocked by this round. */
   newItems: string[]
+  /** The station opens at a different level next time: 'up' is announced, 'down' happens quietly. */
+  levelChange: 'up' | 'down' | null
 }
 
 export const initialProgress: Progress = {
   xp: 0,
   roundsCompleted: 0,
   completedLevels: [],
+  levels: {},
   unlockedItems: [],
   worn: {},
   mastery: {},
@@ -65,11 +70,14 @@ export function completeRound(
   const firstCompletion = !progress.completedLevels.includes(key)
   const xpGained = roundXp(completion.difficulty, firstCompletion)
 
+  const levelBefore = nextDifficulty(completion.challenge, progress.levels)
+  const levelNext = levelAfterRound(completion.challenge, completion.difficulty, completion.wrongTaps)
   const next: Progress = {
     ...progress,
     xp: progress.xp + xpGained,
     roundsCompleted: progress.roundsCompleted + 1,
     completedLevels: firstCompletion ? [...progress.completedLevels, key] : progress.completedLevels,
+    levels: { ...progress.levels, [completion.challenge]: levelNext },
     mastery: recordPractice(progress.mastery, completion.challenge, completion.practiced),
   }
   // Items are rare treats (user feedback 2026-10-24): at most one, and only every other round
@@ -89,6 +97,7 @@ export function completeRound(
     levelBefore: levelForXp(progress.xp),
     levelAfter: levelForXp(next.xp),
     newItems,
+    levelChange: levelNext === levelBefore ? null : levelNext === 'hard' ? 'up' : 'down',
   }
   return {
     progress: {

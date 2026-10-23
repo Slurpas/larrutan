@@ -53,15 +53,15 @@ describe('createFirstLetterRound', () => {
     )
   })
 
-  it('builds valid hard rounds that offer exactly one look-alike of the answer', () => {
+  it('builds valid hard rounds: four letters, with look-alikes of the answer', () => {
     for (const seed of seeds) {
       const round = createFirstLetterRound({ seed, words, letters, confusables: confusableLetters, difficulty: 'hard' })
       for (const question of round.questions) {
-        expect(findFirstLetterProblems(question, { ...rules, difficulty: 'hard' }), `seed ${seed}`).toEqual([])
+        expect(findFirstLetterProblems(question, { ...rules, choiceCount: 4, difficulty: 'hard' }), `seed ${seed}`).toEqual([])
         const lookAlikes = question.choices.filter(
           (c) => c !== question.target && areConfusable(c, question.target, confusableLetters),
         )
-        expect(lookAlikes, `seed ${seed}, ${question.word}`).toHaveLength(1)
+        expect(lookAlikes.length, `seed ${seed}, ${question.word}`).toBeGreaterThanOrEqual(1)
       }
     }
   })

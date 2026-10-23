@@ -16,8 +16,8 @@ interface LetterChoiceOptions {
 
 /**
  * Letter choices for a question (Hitta bokstaven, Första bokstaven).
- * Easy: no two choices look or sound alike. Hard: exactly one choice is a
- * look-alike of the answer (when it has one), so the child must look closely.
+ * Easy: no two choices look or sound alike. Hard: the answer's look-alikes are
+ * among the choices (A with Å and Ä, O with Ö), so the child must look closely.
  */
 export function pickLetterChoices({ target, pool, count, rng, confusables, difficulty }: LetterChoiceOptions): string[] {
   if (difficulty === 'easy') {
@@ -26,11 +26,12 @@ export function pickLetterChoices({ target, pool, count, rng, confusables, diffi
     )
   }
 
-  const lookAlike = shuffle(
+  // Leave room for at least one letter that looks nothing like the answer.
+  const lookAlikes = shuffle(
     lookAlikesOf(target, confusables).filter((id) => pool.includes(id)),
     rng,
-  )[0]
-  const choices = lookAlike ? [target, lookAlike] : [target]
+  ).slice(0, Math.max(1, count - 2))
+  const choices = [target, ...lookAlikes]
   for (const candidate of shuffle(pool, rng)) {
     if (choices.length === count) break
     if (choices.includes(candidate) || areConfusable(candidate, target, confusables)) continue
@@ -63,7 +64,9 @@ export function findLookAlikeProblems(
       .filter(([a, b]) => areConfusable(a, b, confusables))
       .map(([a, b]) => `"${a}" and "${b}" are easy to mix up`)
   }
-  const required = lookAlikesOf(target, confusables).length > 0 ? 1 : 0
+  const hasLookAlikes = lookAlikesOf(target, confusables).length > 0
   const found = choices.filter((id) => id !== target && areConfusable(id, target, confusables)).length
-  return found === required ? [] : [`hard level needs ${required} look-alike of "${target}", found ${found}`]
+  if (hasLookAlikes && found === 0) return [`hard level needs a look-alike of "${target}"`]
+  if (found >= choices.length - 1) return [`hard level needs a letter that looks nothing like "${target}"`]
+  return []
 }

@@ -17,6 +17,8 @@ export interface ChallengeVoice<Q extends ChoiceQuestion> {
   reveal(question: Q): string
   /** Names a wrong choice the child tapped: "Det där är S." */
   nameChoice(choice: string): string
+  /** Said before the first question of a hard round: what is harder. */
+  hardIntro?: string
 }
 
 const letterName = (id: string) => getLetter(id).spoken
@@ -32,6 +34,7 @@ export const findAllVoice: ChallengeVoice<ChoiceQuestion> = {
   ask: (q) => phrases.findAllQuestion(letterName(q.target)),
   reveal: (q) => phrases.hereIs(letterName(q.target)),
   nameChoice: (id) => phrases.thatIs(letterName(id)),
+  hardIntro: phrases.lookAlikesIntro,
 }
 
 export const firstLetterVoice: ChallengeVoice<FirstLetterQuestion> = {
@@ -39,6 +42,7 @@ export const firstLetterVoice: ChallengeVoice<FirstLetterQuestion> = {
   askAgain: (q) => phrases.firstLetterShort(getWord(q.word).base),
   reveal: (q) => phrases.firstLetterReveal(getWord(q.word).base, letterName(q.target)),
   nameChoice: (id) => phrases.thatIs(letterName(id)),
+  hardIntro: phrases.fourTunnelsIntro,
 }
 
 export const wordPictureVoice: ChallengeVoice<ChoiceQuestion> = {

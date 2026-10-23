@@ -5,8 +5,9 @@ import { XpBar } from '../rewards/XpBar'
 import { speak } from '../speech/speech'
 import { RoundButton } from '../ui/RoundButton'
 import { BagIcon, HouseIcon } from '../ui/icons'
-import { createHubGame, type HubGame } from './hubGame'
+import type { HubGame } from './hubGame'
 import { hubMap } from './hubMap'
+import { loadHubGame } from './loadHubGame'
 import styles from './HubWorld.module.css'
 
 interface HubWorldProps {
@@ -28,17 +29,29 @@ export function HubWorld({ active, xp, hat, onOpenStation, onOpenMyThings, onHom
   const containerRef = useRef<HTMLDivElement>(null)
   const hubRef = useRef<HubGame | null>(null)
   const openStation = useEffectEvent((challenge: ChallengeId) => onOpenStation(challenge))
+  // The game arrives after the first render, so it starts from whatever the props are by then.
+  const catchUp = useEffectEvent((hub: HubGame) => {
+    hub.setActive(active)
+    hub.setHat(hat)
+  })
 
   useEffect(() => {
-    if (!containerRef.current) return
-    const hub = createHubGame(containerRef.current, {
-      map: hubMap,
-      onOpenStation: (challenge) => openStation(challenge),
+    const container = containerRef.current
+    if (!container) return
+    let cancelled = false
+    void loadHubGame().then(({ createHubGame }) => {
+      if (cancelled) return
+      const hub = createHubGame(container, {
+        map: hubMap,
+        onOpenStation: (challenge) => openStation(challenge),
+      })
+      hubRef.current = hub
+      catchUp(hub)
     })
-    hubRef.current = hub
     void speak(phrases.hubWelcome)
     return () => {
-      hub.destroy()
+      cancelled = true
+      hubRef.current?.destroy()
       hubRef.current = null
     }
   }, [])

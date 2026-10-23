@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- A small version of scripts/app-icon.svg -->
   <rect width="32" height="32" rx="7" fill="#9fd8ff"/>
-  <ellipse cx="16" cy="34" rx="22" ry="12" fill="#7cc56f"/>
-  <path d="M10 6h5v14h8v5H10z" fill="#ffffff" stroke="#2b4a6b" stroke-width="2" stroke-linejoin="round"/>
+  <ellipse cx="16" cy="35" rx="22" ry="11" fill="#7cc56f"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9.5 25 L16 7.5 L22.5 25 M12 19 H20" stroke="#2b4a6b" stroke-width="6"/>
+    <path d="M9.5 25 L16 7.5 L22.5 25 M12 19 H20" stroke="#ffffff" stroke-width="3"/>
+  </g>
 </svg>

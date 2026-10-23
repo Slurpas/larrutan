@@ -251,7 +251,7 @@ Locked items are visible with their stars and a friendly spoken explanation of h
 
 Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the real catalogue.
 
-**Phase 1 implementation (Task 5):** easy XP 20, hard XP 30, replays a quarter; levels at 30, 70, 120, 180 XP. Hitta bokstaven and Första bokstaven have an easy and a hard level (hard offers exactly one look-alike of the answer); a sign opens the first level not yet completed. Five hats, one per rarity: keps (first round), rosett (level 2), hög hatt (hard Hitta bokstaven), studentmössa (all three challenges), krona (level 5). Progress lives in memory until saving arrives (Task 7).
+**Phase 1 implementation (Task 5):** easy XP 20, hard XP 30, replays a quarter; levels at 30, 70, 120, 180 XP. Hitta bokstaven and Första bokstaven have an easy and a hard level (hard offers exactly one look-alike of the answer); a sign opens the first level not yet completed. Five hats, one per rarity: keps (first round), rosett (level 2), hög hatt (hard Hitta bokstaven), studentmössa (all three challenges), krona (level 5). Progress is saved on the device since Task 7 (§12).
 
 ## 11. Accessibility
 
@@ -275,6 +275,21 @@ Later: reduced motion (respecting `prefers-reduced-motion`), separate volume set
 - **iPad storage risk:** Safari may delete a website's stored data after 7 days of browser use without visiting it, unless the site is added to the Home Screen. The game is therefore installable as a PWA (home-screen icon, offline, full screen) and requests persistent storage where supported. This needs HTTPS hosting. Save export/import is on the roadmap.
 - No accounts, no analytics, no personal information. Never ask for the child's name.
 - Before any public release: review child privacy, dependency licences, asset and font licences, and the TTS provider's terms for distributing generated audio.
+
+**Implementation (Task 7):**
+- One IndexedDB database `larrutan` with a `profiles` store keyed by profile id (only `default` for now) and a `backups` store.
+- The save is `{ version: 1, savedAt, progress }`. The round ledger is not saved; it only stops a double event within one session.
+- Every field is checked when loading. A broken field is reset on its own, and the rest is kept.
+- A save that needed repair is first copied to `backups`.
+- A save from a newer game version is played but never overwritten.
+- Nothing is written before the save has been read. If IndexedDB is slow or stuck (it can hang in Safari), the game plays without saving rather than risk overwriting real progress.
+- The first upgrade step, with its test, comes with the first change to the saved shape (`src/persistence/saveFile.ts`).
+- PWA: a manifest, icons, iPad home-screen meta tags and a hand-written service worker (`src/pwa/serviceWorker.js`). A build plugin in `vite.config.ts` fills in the list of every file in the build.
+- The whole game, voice included, is cached on the first visit and plays offline. Audio range requests are answered with 206, which Safari needs.
+- A new version takes over on the next start, never mid-round.
+- Persistent storage is requested only in the installed app, so no browser can show a question a child can't answer.
+- The site has `noindex` until the release review.
+- The start screen shows the voice credit (CC BY) and, in release builds, the build time, so it's easy to tell which version an iPad has.
 
 ## 13. Technical architecture
 

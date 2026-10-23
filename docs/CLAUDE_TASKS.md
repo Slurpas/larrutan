@@ -111,7 +111,7 @@ Goal: a child can play three real literacy challenges on an iPad and walk betwee
 **Acceptance**
 - Tests: replays give less XP than first completions; retrying answers gives nothing; duplicated completion events never grant twice; hints don't reduce rewards.
 - The character wears the equipped item on the map.
-- Progress resets on reload, by design, and this is documented.
+- Progress resets on reload, by design, and this is documented. (Saving arrived in Task 7.)
 
 **Check on the iPad:** play through and try to farm XP; with the child, see whether rewards make them want to replay.
 
@@ -132,10 +132,29 @@ Partly done early (2026-10-22), because Brave on Windows has no Swedish voice: `
 - Release builds only contain approved clips.
 
 ### Task 7 — Saving and iPad install
-- Versioned local saving (IndexedDB) with migration and recovery tests.
-- Free static HTTPS hosting (needed for installing on the iPad); the user creates the hosting account.
-- PWA: home-screen install, offline play, full screen; request persistent storage.
-- Load Phaser lazily so the start screen appears fast (the bundle is about 440 KB gzipped with Phaser).
+
+**Goal:** progress survives, and the game installs on the iPad home screen and plays offline (PRD §12).
+
+**Work**
+1. Versioned local saving in IndexedDB (`src/persistence`). The first upgrade step comes with the first change to the saved shape.
+2. Recovery from broken saves:
+   - Each field is checked and reset on its own.
+   - The broken save is kept as a backup.
+   - Nothing is written before a successful read.
+   - A newer save is never overwritten.
+3. PWA:
+   - Manifest and app icon (`npm run icons`).
+   - iPad home-screen tags.
+   - A service worker that caches every file, with range responses for Safari audio.
+   - Persistent storage, requested in the installed app only.
+4. Phaser loads lazily: the first download went from 471 KB to 113 KB gzipped, and Phaser's 360 KB loads while the start screen shows.
+5. Free static HTTPS hosting; the user creates the account. *Waiting for the user's choice of host.*
+
+**Acceptance**
+- Unit tests: save round trip, empty, junk, per-field repair, unknown items and levels, newer versions.
+- Browser tests: progress survives a reload; a broken save is repaired and backed up.
+- Offline tests against a release build (Chromium and WebKit): the manifest and icons are served; after one visit, the game starts, opens the map and speaks with the network off.
+- Release builds show the build time on the start screen.
 
 ### Task 8 — Art direction
 - Side-by-side comparison of candidate styles (tile resolutions, own vs CC0 environment) at iPad and desktop size; the user picks.

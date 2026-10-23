@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 import type { ChoiceRound } from '../../src/challenges/choiceQuestion'
 import { createFindLetterRound } from '../../src/challenges/findLetter/createRound'
 import { confusableLetters, letters } from '../../src/content/letters'
+import { backupStore, databaseName, profileStore } from '../../src/persistence/database'
 import { SEED, answerKey, enterMap, press, tapStation, waitForQuestion } from './helpers'
 
 async function playRoundByKeyboard(page: Page, round: ChoiceRound) {
@@ -50,14 +51,62 @@ test('the second visit is the hard level, which earns the top hat', async ({ pag
   await expect(page.getByRole('img', { name: 'Ny sak: Hög hatt' })).toBeVisible()
 })
 
-test('progress resets on reload (no saving until Task 7)', async ({ page, hasTouch }) => {
+test('progress is saved on the device and survives a reload', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   await tapStation(page, 'findLetter', hasTouch)
   await playRoundByKeyboard(page, easyRound)
+  await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
+  await press(page.getByRole('button', { name: 'Mina saker' }), hasTouch)
+  await press(page.getByRole('button', { name: 'Keps, Vanlig' }), hasTouch)
 
   await page.reload()
   await enterMap(page, hasTouch)
   await expect(page.getByRole('img', { name: 'Nivå 1' })).toBeVisible()
-  await press(page.getByRole('button', { name: 'Mina saker' }), hasTouch)
-  await expect(page.getByRole('button', { name: 'Keps, Vanlig, låst' })).toBeVisible()
+  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.hat())).toBe('🧢')
+  // The level is remembered too: the sign now opens the hard level.
+  await tapStation(page, 'findLetter', hasTouch)
+  await expect(page.getByRole('img', { name: 'Svår nivå' })).toBeVisible()
+})
+
+test('a broken save is repaired and kept as a backup, and the game still starts', async ({ page, hasTouch }) => {
+  await enterMap(page, hasTouch)
+  const broken = {
+    version: 1,
+    savedAt: 'yesterday',
+    progress: { xp: 'lots', roundsCompleted: 1, completedLevels: ['findLetter:easy'], unlockedItems: ['cap', 'dragon'], wornItem: 'cap' },
+  }
+  await page.evaluate(
+    ({ name, store, save }) =>
+      new Promise<void>((resolve, reject) => {
+        const open = indexedDB.open(name)
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const transaction = open.result.transaction(store, 'readwrite')
+          transaction.objectStore(store).put(save, 'default')
+          transaction.oncomplete = () => {
+            open.result.close()
+            resolve()
+          }
+        }
+      }),
+    { name: databaseName, store: profileStore, save: broken },
+  )
+
+  // enterMap opens the page again, which loads (and repairs) the broken save exactly once.
+  await enterMap(page, hasTouch)
+  await expect(page.getByRole('img', { name: 'Nivå 1' })).toBeVisible()
+  await expect.poll(() => page.evaluate(() => window.__larrutanHub?.hat())).toBe('🧢')
+  const backups = await page.evaluate(
+    ({ name, store }) =>
+      new Promise<number>((resolve, reject) => {
+        const open = indexedDB.open(name)
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const count = open.result.transaction(store).objectStore(store).count()
+          count.onsuccess = () => resolve(count.result)
+        }
+      }),
+    { name: databaseName, store: backupStore },
+  )
+  expect(backups).toBe(1)
 })

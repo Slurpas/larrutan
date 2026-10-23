@@ -2,7 +2,7 @@
 
 A free Swedish literacy adventure game for children aged 5–7. Browser first, made for iPad.
 
-Status: early prototype (Phase 1). See `docs/PRD.md` for the product and `docs/CLAUDE_TASKS.md` for the plan.
+Status: early prototype (Phase 2 started). See `docs/PRD.md` for the product and `docs/CLAUDE_TASKS.md` for the plan.
 
 ## Requirements
 
@@ -30,6 +30,7 @@ The second command downloads the browsers used by the browser tests (about 380 M
 | `npm run test:e2e` | Browser tests (Playwright, desktop Chromium + iPad WebKit) |
 | `npm run speech` | Generate missing speech clips (see below) |
 | `npm run sfx` | Re-synthesise the sound effects in `src/sound/sfx/` (needs ffmpeg) |
+| `npm run icons` | Render `scripts/app-icon.svg` to the PNG app icons in `public/icons/` |
 
 ## Generating speech
 
@@ -62,3 +63,12 @@ It generates new clips, regenerates any whose pronunciation or voice settings ch
 4. If the iPad can't connect, Windows Firewall may be blocking Node.js. Allow Node.js on **private** networks when Windows asks, and check that your network is set to Private.
 
 Hold the iPad sideways (landscape). In portrait a small picture hint asks to turn it.
+
+## Saving, offline play and installing
+
+- Progress is saved on the device (IndexedDB) after every round and when a hat is put on. Nothing leaves the device.
+- To start over, clear the site's data in the browser. On an iPad home-screen app, remove the app and add it again.
+- A release build (`npm run build`) works offline after the first visit and can be added to the iPad home screen: in Safari, tap Share, then **Add to Home Screen**. It then opens full screen with its own icon.
+- Installing needs HTTPS, so it only works from the hosted site, not from the `http://192.168.…` dev address.
+- After an update, the new version starts the second time the game is opened.
+- The build time in the bottom-right corner of the start screen shows which version is running.

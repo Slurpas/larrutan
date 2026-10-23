@@ -34,10 +34,11 @@ Changed files, commands run and their results, screenshots, known limitations, a
 - `npm run typecheck`: `tsc -b` over `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, tests)
 - `npm run lint`: ESLint
 - `npm test`: Vitest unit tests (`src/**/*.test.ts(x)`)
-- `npm run test:e2e`: Playwright (`tests/e2e`), desktop Chromium + iPad WebKit, on its own port 5199
+- `npm run test:e2e`: Playwright (`tests/e2e`), desktop Chromium + iPad WebKit, on its own port 5199. `offline.spec.ts` runs against a release build (built into `.e2e-dist`, served on 4199), because the service worker only exists there
 - `npm run build`: typecheck + Vite build
 - `npm run speech`: generate missing speech clips with Piper (setup in README). Run it after any change to letters, words, phrases, challenge wording or `src/content/pronunciation.ts`; `catalogue.test.ts` fails until you do
 - `npm run sfx`: re-synthesise the sound effects (chime, fanfare, level-up, new item) in `src/sound/sfx/`
+- `npm run icons`: render `scripts/app-icon.svg` to the PNG app icons in `public/icons/`
 
 Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 
@@ -48,7 +49,9 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - `src/content`: letters, words, phrases (typed data) and `validation.ts` with the PRD §5 content rules
 - `src/speech`: `speech.ts` is the one entry point (`speak`, `stopSpeech`, …). It plays generated clips from `audio/sv/` and falls back to the device voice (`browserVoice.ts`) only for a sentence without a clip or a clip that won't play. `catalogue.ts` lists every sentence; challenge wording lives in `src/challenges/voices.ts`
 - `src/world`: the hub map (Phaser). `hubMap.ts` is the map as a text grid; `tileMap.ts`, `pathfinding.ts` and `camera.ts` are pure, tested rules; `HubScene.ts` draws and moves; `HubWorld.tsx` mounts it in React
-- `src/rewards`: reward rules (`rules.ts`, all numbers in one place), hats (`items.ts`), pure progress logic (`progress.ts`, exactly-once by round id), an in-memory store (resets on reload until Task 7), the XP bar and "Mina saker"
+- `src/rewards`: reward rules (`rules.ts`, all numbers in one place), hats (`items.ts`), pure progress logic (`progress.ts`, exactly-once by round id), the store (`store.ts`: loads the save at startup, saves after every change), the XP bar and "Mina saker"
+- `src/persistence`: saving (PRD §12). `saveFile.ts` is the pure, tested save format (version, per-field repair); `database.ts` is the thin IndexedDB layer; `saveGame.ts` loads and saves the default profile
+- `src/pwa`: the service worker template (filled in by the plugin in `vite.config.ts`) and its registration (release builds only)
 - `src/ui`: shared buttons, icons, helpers
 
 ## Gotchas
@@ -61,6 +64,9 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - Phaser: the canvas must stay absolutely positioned (React mounts twice in dev and a dying canvas would push the new one down, breaking tap positions), and movement uses `performance.now()` because Phaser's own time/delta are smoothed and run slow on slow devices.
 - The map stays mounted while a challenge is open (overlay on top); the game loop sleeps and keyboard listeners are removed meanwhile.
 - Speech: the user plays in Brave on Windows, which has no Swedish voice at all, so never rely on the device voice. Praise and celebrations are sound effects, never words (user feedback). Piper guesses pronunciation from spelling and gets some words wrong (soft k in "keps", stress in "ananas"): print the IPA with `voice.phonemize()` and fix words in `src/content/pronunciation.ts`. espeak-ng (inside Piper) can't read data from a path containing "ä"; `scripts/piper_batch.py` copies it to the temp folder. `?debug=voices` shows the speech log.
+- The service worker only runs in release builds (`npm run build` + `npm run preview`, or the hosted site), never on the dev server. A new version takes over on the next start of the game; the start screen of a release build shows its build time.
+- Phaser loads lazily (`src/world/loadHubGame.ts`): the map appears a moment after the HUD on a slow first load.
+- Deleting files from Claude's Bash sandbox can fail silently (`rm`/Node report success, the file stays). Use PowerShell `Remove-Item` when a folder must really be emptied, e.g. `dist` before checking a build.
 - Dev builds expose `window.__larrutanHub` (player tile, station screen points) for Playwright; see `src/world/hubTestApi.ts`.
 
 ## Stack notes

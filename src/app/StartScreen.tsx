@@ -1,3 +1,5 @@
+import { credits } from '../content/credits'
+import { versionLabel } from './buildInfo'
 import styles from './StartScreen.module.css'
 
 interface StartScreenProps {
@@ -20,6 +22,11 @@ export function StartScreen({ onPlay }: StartScreenProps) {
           Spela
         </button>
       </div>
+
+      <footer className={styles.footer}>
+        <span>{credits.voice}</span>
+        {versionLabel && <span>{versionLabel}</span>}
+      </footer>
     </main>
   )
 }

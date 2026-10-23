@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- The app icon (home screen, install). Rendered to PNGs by `npm run icons`. Full bleed: iPad rounds the corners itself. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cc8ff"/>
+      <stop offset="1" stop-color="#c9ecff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#sky)"/>
+  <circle cx="404" cy="104" r="50" fill="#ffd75e"/>
+  <g fill="#ffffff">
+    <circle cx="96" cy="126" r="30"/>
+    <circle cx="132" cy="110" r="38"/>
+    <circle cx="170" cy="128" r="28"/>
+    <rect x="96" y="126" width="74" height="30"/>
+  </g>
+  <ellipse cx="420" cy="520" rx="260" ry="130" fill="#5fae5a"/>
+  <ellipse cx="150" cy="540" rx="320" ry="150" fill="#7cc56f"/>
+  <!-- LETTER: scaled down for the maskable variant so it stays inside the safe circle. -->
+  <g id="letter" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M158 396 L256 132 L354 396 M196 300 H316" stroke="#2b4a6b" stroke-width="86"/>
+    <path d="M158 396 L256 132 L354 396 M196 300 H316" stroke="#ffffff" stroke-width="50"/>
+  </g>
+</svg>

@@ -1,17 +1,29 @@
 import { useSyncExternalStore } from 'react'
+import { loadSavedProgress, saveProgress } from '../persistence/saveGame'
 import { completeRound, initialProgress, wear, type Progress, type RoundCompletion, type RoundOutcome } from './progress'
 
-/**
- * The child's progress for this play session. Phase 1 keeps it in memory only,
- * so it resets when the page reloads; saving comes with Task 7.
- */
+/** The child's progress. It is loaded from the device at startup and saved after every change. */
 let progress: Progress = initialProgress
 const listeners = new Set<() => void>()
+
+/** Off until the save has been read: a save that is slow to load or can't be read is never overwritten. */
+let saving = false
+let loading: Promise<void> | null = null
 
 function update(next: Progress) {
   if (next === progress) return
   progress = next
   listeners.forEach((listener) => listener())
+  if (saving) void saveProgress(next)
+}
+
+/** Reads the saved game once. Resolves even when there is no save or it can't be read. */
+export function loadProgress(): Promise<void> {
+  loading ??= loadSavedProgress().then((result) => {
+    if (result.kind === 'loaded' || result.kind === 'newer') update(result.progress)
+    saving = result.kind === 'loaded' || result.kind === 'empty'
+  })
+  return loading
 }
 
 export function getProgress(): Progress {

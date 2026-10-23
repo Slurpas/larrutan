@@ -1,5 +1,7 @@
 node_modules/
 dist/
+# Release build used by the offline browser tests
+.e2e-dist/
 *.local
 
 # Secrets (TTS keys etc.) never go in git

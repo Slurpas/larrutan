@@ -119,3 +119,20 @@
   right: 10%;
   transform: scale(0.75);
 }
+
+/* Small print for adults: the credits the licences require, and which build this is. */
+.footer {
+  position: absolute;
+  z-index: 1;
+  left: calc(env(safe-area-inset-left) + 1rem);
+  right: calc(env(safe-area-inset-right) + 1rem);
+  bottom: calc(env(safe-area-inset-bottom) + 0.6rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  font-size: 0.75rem;
+  color: var(--color-ink);
+  opacity: 0.75;
+  pointer-events: none;
+}

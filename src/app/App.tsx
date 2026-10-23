@@ -6,7 +6,7 @@ import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { getItem } from '../rewards/items'
 import { MyThings } from '../rewards/MyThings'
-import { getProgress, recordRound, useProgress } from '../rewards/store'
+import { getProgress, loadProgress, recordRound, useProgress } from '../rewards/store'
 import { NoVoiceWarning } from '../speech/NoVoiceWarning'
 import { unlockSpeech } from '../speech/speech'
 import { VoiceDebug, voiceDebugRequested } from '../speech/VoiceDebug'
@@ -20,7 +20,7 @@ interface OpenChallenge {
   id: ChallengeId
   seed: number
   difficulty: Difficulty
-  /** Finished before in this session, so the long instructions can be skipped. */
+  /** Finished before (progress is saved), so the long instructions can be skipped. */
   knowsChallenge: boolean
   /** Unique for this round, so its reward can never be granted twice. */
   roundId: string
@@ -45,7 +45,8 @@ export function App() {
   function handlePlay() {
     // Must run inside the tap itself, or iPad Safari stays silent.
     unlockSpeech()
-    setScreen({ name: 'world', overlay: null })
+    // The saved game has almost always loaded by now; waiting makes sure nothing is played before it.
+    void loadProgress().then(() => setScreen({ name: 'world', overlay: null }))
   }
 
   /** Opens a challenge at the first level not completed yet (or the hardest once all are done). */

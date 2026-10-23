@@ -160,7 +160,7 @@ Remaining:
    - A service worker that caches every file, with range responses for Safari audio.
    - Persistent storage, requested in the installed app only.
 4. Phaser loads lazily: the first download went from 471 KB to 113 KB gzipped, and Phaser's 360 KB loads while the start screen shows.
-5. Free static HTTPS hosting; the user creates the account. *Waiting for the user's choice of host.*
+5. Free static HTTPS hosting: GitHub Pages (chosen 2026-10-23), https://slurpas.github.io/larrutan/, deployed by GitHub Actions on every push to `main`. The repository is public; commits use the GitHub no-reply address.
 
 **Acceptance**
 - Unit tests: save round trip, empty, junk, per-field repair, unknown items and levels, newer versions.

@@ -306,6 +306,7 @@ Later: reduced motion (respecting `prefers-reduced-motion`), separate volume set
 - A new version takes over on the next start, never mid-round.
 - Persistent storage is requested only in the installed app, so no browser can show a question a child can't answer.
 - The site has `noindex` until the release review.
+- Hosting: GitHub Pages at https://slurpas.github.io/larrutan/. It deploys on every push to `main` (lint, unit tests and the build must pass), and the repository is public.
 - The start screen shows the voice credit (CC BY) and, in release builds, the build time, so it's easy to tell which version an iPad has.
 
 ## 13. Technical architecture

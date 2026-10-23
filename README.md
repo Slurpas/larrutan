@@ -73,11 +73,19 @@ Open the game on the dev server with `?review=voices`, for example `http://local
 
 Hold the iPad sideways (landscape). In portrait a small picture hint asks to turn it.
 
+## The hosted game
+
+The game is published at **https://slurpas.github.io/larrutan/** (GitHub Pages; the repository is public).
+
+- Every push to `main` deploys automatically (`.github/workflows/deploy.yml`): lint, unit tests and a release build, then publish. That takes a minute or two.
+- Watch it on the repository's **Actions** tab.
+- The site is hidden from search engines until the release review.
+
 ## Saving, offline play and installing
 
 - Progress is saved on the device (IndexedDB) after every round and when a hat is put on. Nothing leaves the device.
 - To start over, clear the site's data in the browser. On an iPad home-screen app, remove the app and add it again.
 - A release build (`npm run build`) works offline after the first visit and can be added to the iPad home screen: in Safari, tap Share, then **Add to Home Screen**. It then opens full screen with its own icon.
-- Installing needs HTTPS, so it only works from the hosted site, not from the `http://192.168.…` dev address.
+- Installing needs HTTPS, so it only works from the hosted site (https://slurpas.github.io/larrutan/), not from the `http://192.168.…` dev address.
 - After an update, the new version starts the second time the game is opened.
 - The build time in the bottom-right corner of the start screen shows which version is running.

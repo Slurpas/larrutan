@@ -7,20 +7,20 @@ You asked me to keep working while you sleep:
 
 This file is the running summary for our morning talk. When we've been through it, the agreed decisions move to `docs/REVIEW.md` and this file is deleted.
 
-Each task is committed on its own (local commits only, nothing pushed or published), so any of them can be changed or reverted.
+Each task is committed on its own, so any of them can be changed or reverted. Everything was pushed to GitHub in the morning, once you chose hosting.
 
 ## Start here
 
-**Done tonight**, all local commits, nothing pushed or published:
+**Done tonight** (hashes as they are after the email rewrite; everything was pushed in the morning, once you chose hosting):
 
 | Commit | What |
 |---|---|
-| `6318922` | Task 7: saving on the device, installable PWA, offline play, faster start |
-| `766cacf` | Task 6: voice review page; clip names tied to their audio |
-| `e1c52cb` | Task 8: three art style candidates for you to pick from |
-| `21652df` | Task 11: mastery per letter and word; rounds favour what is still being learned |
-| `886e36f` | Fix: offline cache now works with hosts that redirect `index.html` |
-| `29e500c` and after | Task 11: proposal for the next letters and words |
+| `6e1d163` | Task 7: saving on the device, installable PWA, offline play, faster start |
+| `de794c0` | Task 6: voice review page; clip names tied to their audio |
+| `9bda759` | Task 8: three art style candidates for you to pick from |
+| `3820416` | Task 11: mastery per letter and word; rounds favour what is still being learned |
+| `36e480b` | Fix: offline cache now works with hosts that redirect `index.html` |
+| `99102d5` and after | Task 11: proposal for the next letters and words |
 
 Every check passes on the final state:
 - typecheck, lint and build
@@ -45,9 +45,9 @@ Every check passes on the final state:
 
 | # | What | Why it waits |
 |---|---|---|
-| W1 | **Hosting:** Cloudflare Pages (my pick) or GitHub Pages | You create the account; GitHub Pages would make the repository public |
+| ~~W1~~ | **Hosting: decided, GitHub Pages.** Live at https://slurpas.github.io/larrutan/. The repository is public, with commit emails switched to GitHub's no-reply address first | Done |
 | W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet) | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
-| W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Needs hosting (HTTPS) first |
+| W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Ready now, see "Check on the iPad" below |
 | W4 | **Voice review:** go through the 209 clips on `?review=voices` (about 15–20 minutes) | Only your ear can approve them |
 | W5 | **Art style:** A (pixel 16), B (pixel 32) or C (soft vector, my pick), see `docs/art-direction/overview.png` | Your call; Task 9 (real graphics) and Task 10 (wardrobe) wait for it |
 | W6 | **Downloads:** OK to download the Andika font (SIL OFL)? And optionally a Kenney CC0 pack to compare? | Downloads need your OK |
@@ -175,7 +175,15 @@ Tasks 9 and 10 wait for your art pick, so I took the next independent task: Task
 
 **Fixed later in the night:** hosts such as Cloudflare Pages and Netlify redirect `/index.html` to `/`. The offline cache stored the page under `index.html`, and browsers refuse to open a page from a stored redirect, so the installed game could have failed to start. It now stores the page as `./` and strips redirects. The offline tests still pass in Chromium and WebKit.
 
+**Check on the iPad** (hosting is ready):
+1. In Safari, open https://slurpas.github.io/larrutan/. The start screen shows a build time in the bottom-right corner.
+2. Tap Share, then **Add to Home Screen**. The icon should be the white "A" on sky and hills, named Lärrutan.
+3. Open it from the home screen. It should start full screen, without Safari's address bar.
+4. Play a round, then close the app fully and reopen it. Your level and hat should still be there.
+5. Turn on flight mode, reopen the app and play. It should work, voice included.
+6. Flip the silent switch, if your iPad has one. Does the voice still play?
+
 **Left over:**
-- [ ] W1 hosting, then a `deploy` script and README steps.
+- [x] W1 hosting: GitHub Pages, deployed on every push to `main`.
 - [ ] W3 iPad checks: install, offline, silent switch, the version label after an update.
 - [ ] No reset button yet (the parent area is on the roadmap). To start over, clear the site's data.

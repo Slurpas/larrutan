@@ -39,6 +39,7 @@ Changed files, commands run and their results, screenshots, known limitations, a
 - `npm run speech`: generate missing speech clips with Piper (setup in README). Run it after any change to letters, words, phrases, challenge wording, `src/content/pronunciation.ts` or `src/speech/voiceSettings.ts`; `catalogue.test.ts` fails until you do. It also prints the review status and lists rejected clips with the user's notes
 - `npm run sfx`: re-synthesise the sound effects (chime, fanfare, level-up, new item) in `src/sound/sfx/`
 - `npm run icons`: render `scripts/app-icon.svg` to the PNG app icons in `public/icons/`
+- Deploy: push to `main`. GitHub Actions (`.github/workflows/deploy.yml`) runs lint, unit tests and the build, then publishes to https://slurpas.github.io/larrutan/. Pushing publishes, so push only when the user has asked to.
 
 Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 
@@ -56,6 +57,8 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - `src/ui`: shared buttons, icons, helpers
 
 ## Gotchas
+
+- The repository is public: never commit secrets (`.env` is ignored) or personal data. Commits use the GitHub no-reply address (repository `user.email`).
 
 - `?seed=123` in the URL replays a round; the seed shows in the corner of each challenge. Rounds also depend on the player's mastery, so a seed gives the same round only for the same practice history (always the same for a new player).
 - The dev server on Windows can miss a second quick edit to the same file and serve stale code. If behaviour doesn't match the source, restart it.

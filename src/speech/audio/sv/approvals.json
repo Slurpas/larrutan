@@ -1,5 +1,96 @@
 {
   "clips": {
+    "ananas-3b20dd43.mp3": {
+      "text": "Ananas.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:35.469Z"
+    },
+    "ananas-borjar-pa-a-85f1f667.mp3": {
+      "text": "ananas börjar på A!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:37.235Z"
+    },
+    "anka-83eef9e1.mp3": {
+      "text": "Anka.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:25.303Z"
+    },
+    "anka-borjar-pa-a-819d2541.mp3": {
+      "text": "anka börjar på A!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:26.796Z"
+    },
+    "apa-0aec9139.mp3": {
+      "text": "Apa.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:15.407Z"
+    },
+    "apa-borjar-pa-a-e34e7329.mp3": {
+      "text": "apa börjar på A!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:17.009Z"
+    },
+    "det-dar-ar-a-3063cad1.mp3": {
+      "text": "Det där är Å.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:41.523Z"
+    },
+    "det-dar-ar-a-4cb60599.mp3": {
+      "text": "Det där är A.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:59.467Z"
+    },
+    "det-dar-ar-a-59817341.mp3": {
+      "text": "Det där är Ä.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:56.340Z"
+    },
+    "det-dar-ar-en-ananas-b2e97d6f.mp3": {
+      "text": "Det där är en ananas.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:42.475Z"
+    },
+    "det-dar-ar-en-anka-ee3d0581.mp3": {
+      "text": "Det där är en anka.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:31.311Z"
+    },
+    "det-dar-ar-en-apa-67a7a279.mp3": {
+      "text": "Det där är en apa.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:21.852Z"
+    },
+    "det-dar-ar-i-5aac2009.mp3": {
+      "text": "Det där är I.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:03.421Z"
+    },
+    "det-dar-ar-l-fe633041.mp3": {
+      "text": "Det där är L.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:07.652Z"
+    },
+    "det-dar-ar-m-65eb4a51.mp3": {
+      "text": "Det där är M.",
+      "status": "rejected",
+      "note": "Det där är N",
+      "reviewedAt": "2026-10-23T20:40:30.095Z"
+    },
+    "det-dar-ar-o-adf77711.mp3": {
+      "text": "Det där är O.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:34.284Z"
+    },
+    "det-dar-ar-o-c1178bd9.mp3": {
+      "text": "Det där är Ö.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:11.673Z"
+    },
+    "det-dar-ar-s-2c467069.mp3": {
+      "text": "Det där är S.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:38.026Z"
+    },
     "du-fick-en-ballong-fece7ab4.mp3": {
       "text": "Du fick en ballong!",
       "status": "approved",
@@ -15,6 +106,11 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T18:51:59.483Z"
     },
+    "du-fick-en-guldmantel-091dde83.mp3": {
+      "text": "Du fick en guldmantel!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:33.066Z"
+    },
     "du-fick-en-hog-hatt-34593b09.mp3": {
       "text": "Du fick en hög hatt!",
       "status": "approved",
@@ -24,6 +120,11 @@
       "text": "Du fick en keps!",
       "status": "approved",
       "reviewedAt": "2026-10-23T18:50:51.291Z"
+    },
+    "du-fick-en-krona-8948a0bd.mp3": {
+      "text": "Du fick en krona!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:28.364Z"
     },
     "du-fick-en-mantel-b59ca84f.mp3": {
       "text": "Du fick en mantel!",
@@ -56,21 +157,102 @@
       "note": "Du fick en sjötröja?",
       "reviewedAt": "2026-10-23T20:38:22.592Z"
     },
+    "du-fick-en-studentmossa-2da070b5.mp3": {
+      "text": "Du fick en studentmössa!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:11.673Z"
+    },
+    "du-fick-en-trollstav-673ff908.mp3": {
+      "text": "Du fick en trollstav!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:05.758Z"
+    },
     "du-fick-grona-byxor-ffcc6c07.mp3": {
       "text": "Du fick gröna byxor!",
       "status": "rejected",
       "note": "Dou fick gröna byxor",
       "reviewedAt": "2026-10-23T20:37:58.066Z"
     },
+    "du-fick-regnbagsbyxor-441eb098.mp3": {
+      "text": "Du fick regnbågsbyxor!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:21.004Z"
+    },
+    "du-fick-vingar-506aac69.mp3": {
+      "text": "Du fick vingar!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:16.140Z"
+    },
     "du-har-gatt-upp-en-niva-60f74893.mp3": {
       "text": "Du har gått upp en nivå!",
       "status": "approved",
       "reviewedAt": "2026-10-23T18:50:42.158Z"
     },
+    "har-ar-a-33062329.mp3": {
+      "text": "Här är Ä!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:54.872Z"
+    },
+    "har-ar-a-bdfe1ca9.mp3": {
+      "text": "Här är Å!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:40.478Z"
+    },
+    "har-ar-a-eb5126b1.mp3": {
+      "text": "Här är A!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:58.201Z"
+    },
+    "har-ar-ananasen-47214b1b.mp3": {
+      "text": "Här är ananasen!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:40.594Z"
+    },
+    "har-ar-ankan-3c74c309.mp3": {
+      "text": "Här är ankan!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:29.745Z"
+    },
+    "har-ar-apan-e5e88aab.mp3": {
+      "text": "Här är apan!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:20.179Z"
+    },
     "har-ar-dina-saker-tryck-pa-en-sak-for-at-a82cba01.mp3": {
       "text": "Här är dina saker. Tryck på en sak för att ta på den.",
       "status": "approved",
       "reviewedAt": "2026-10-23T18:50:48.187Z"
+    },
+    "har-ar-i-eac7e361.mp3": {
+      "text": "Här är I!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:02.215Z"
+    },
+    "har-ar-l-6070aac9.mp3": {
+      "text": "Här är L!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:06.306Z"
+    },
+    "har-ar-m-96cd4e09.mp3": {
+      "text": "Här är M!",
+      "status": "rejected",
+      "note": "Här är N!",
+      "reviewedAt": "2026-10-23T20:40:24.497Z"
+    },
+    "har-ar-o-991fa735.mp3": {
+      "text": "Här är Ö!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:10.470Z"
+    },
+    "har-ar-o-d4f057e5.mp3": {
+      "text": "Här är O!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:33.062Z"
+    },
+    "har-ar-s-0c98d525.mp3": {
+      "text": "Här är S!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:36.886Z"
     },
     "klara-den-svara-nivan-i-forsta-bokstaven-e96e84f5.mp3": {
       "text": "Klara den svåra nivån i Första bokstaven så får du ballongen.",
@@ -102,6 +284,11 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T20:38:07.738Z"
     },
+    "klara-sextio-rundor-sa-far-du-vingarna-58a16721.mp3": {
+      "text": "Klara sextio rundor så får du vingarna.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:19.051Z"
+    },
     "klara-tio-rundor-sa-far-du-ryggsacken-adead84b.mp3": {
       "text": "Klara tio rundor så får du ryggsäcken.",
       "status": "approved",
@@ -117,6 +304,27 @@
       "status": "approved",
       "reviewedAt": "2026-10-23T18:52:08.562Z"
     },
+    "klara-trettiofem-rundor-sa-far-du-trolls-6c311ad8.mp3": {
+      "text": "Klara trettiofem rundor så får du trollstaven.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:09.520Z"
+    },
+    "lar-dig-alla-bokstaverna-i-hitta-bokstav-387ee430.mp3": {
+      "text": "Lär dig alla bokstäverna i Hitta bokstaven så får du regnbågsbyxorna.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:26.652Z"
+    },
+    "lar-dig-vilken-bokstav-alla-orden-borjar-cb161a3b.mp3": {
+      "text": "Lär dig vilken bokstav alla orden börjar på så får du guldmanteln.",
+      "status": "rejected",
+      "note": "Lär dig vilken bokstav alla oen börjar på så får du guldmanteln.",
+      "reviewedAt": "2026-10-23T20:39:54.307Z"
+    },
+    "na-niva-nio-sa-far-du-studentmossan-e229c8ae.mp3": {
+      "text": "Nå nivå nio så får du studentmössan.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:14.719Z"
+    },
     "na-niva-sex-sa-far-du-hatten-ccc52209.mp3": {
       "text": "Nå nivå sex så får du hatten.",
       "status": "approved",
@@ -127,6 +335,11 @@
       "status": "rejected",
       "note": "Nå nivå sju så får du sjötröjan?",
       "reviewedAt": "2026-10-23T20:38:39.070Z"
+    },
+    "na-niva-tio-sa-far-du-kronan-91405544.mp3": {
+      "text": "Nå nivå tio så får du kronan.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:31.048Z"
     },
     "na-niva-tre-sa-far-du-rosetten-de4f56ec.mp3": {
       "text": "Nå nivå tre så får du rosetten.",
@@ -142,6 +355,84 @@
       "text": "Tryck på en skylt för att spela!",
       "status": "approved",
       "reviewedAt": "2026-10-23T20:37:48.447Z"
+    },
+    "var-ar-a-38c4b01f.mp3": {
+      "text": "Var är A?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:39:56.931Z"
+    },
+    "var-ar-a-3f0ec9b9.mp3": {
+      "text": "Var är Ä?",
+      "status": "rejected",
+      "note": "Var är Dä?",
+      "reviewedAt": "2026-10-23T20:40:52.515Z"
+    },
+    "var-ar-a-b84bb9af.mp3": {
+      "text": "Var är Å?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:39.567Z"
+    },
+    "var-ar-ananasen-c5559293.mp3": {
+      "text": "Var är ananasen?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:39.228Z"
+    },
+    "var-ar-ankan-26c943e3.mp3": {
+      "text": "Var är ankan?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:28.619Z"
+    },
+    "var-ar-apan-fd69e4c5.mp3": {
+      "text": "Var är apan?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:18.807Z"
+    },
+    "var-ar-i-a6244d8f.mp3": {
+      "text": "Var är I?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:01.301Z"
+    },
+    "var-ar-l-18942cb9.mp3": {
+      "text": "Var är L?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:04.999Z"
+    },
+    "var-ar-m-237b00bf.mp3": {
+      "text": "Var är M?",
+      "status": "rejected",
+      "note": "Var är N?",
+      "reviewedAt": "2026-10-23T20:40:20.751Z"
+    },
+    "var-ar-o-ec15fd73.mp3": {
+      "text": "Var är O?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:31.972Z"
+    },
+    "var-ar-o-ec9c8761.mp3": {
+      "text": "Var är Ö?",
+      "status": "rejected",
+      "note": "Var är Ör?",
+      "reviewedAt": "2026-10-23T20:41:03.448Z"
+    },
+    "var-ar-s-fd758b7b.mp3": {
+      "text": "Var är S?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:40:36.091Z"
+    },
+    "vilken-bokstav-borjar-ananas-pa-b2f3d83f.mp3": {
+      "text": "Vilken bokstav börjar ananas på?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:34.407Z"
+    },
+    "vilken-bokstav-borjar-anka-pa-b5e79143.mp3": {
+      "text": "Vilken bokstav börjar anka på?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:24.493Z"
+    },
+    "vilken-bokstav-borjar-apa-pa-af2fd7a1.mp3": {
+      "text": "Vilken bokstav börjar apa på?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T20:41:14.343Z"
     }
   }
 }

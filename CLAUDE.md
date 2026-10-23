@@ -30,7 +30,7 @@ Changed files, commands run and their results, screenshots, known limitations, a
 
 ## Commands
 
-- `npm run dev`: dev server, also on the local network for iPad testing (port 5173, or the next free one)
+- `npm run dev`: dev server, also on the local network for iPad testing. Always port 5173 (`strictPort`); a second copy fails instead of moving to 5174
 - `npm run typecheck`: `tsc -b` over `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, tests)
 - `npm run lint`: ESLint
 - `npm test`: Vitest unit tests (`src/**/*.test.ts(x)`)
@@ -55,6 +55,7 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 
 - `?seed=123` in the URL replays a round; the seed shows in the corner of each challenge.
 - The dev server on Windows can miss a second quick edit to the same file and serve stale code. If behaviour doesn't match the source, restart it.
+- The user keeps their own `npm run dev` running on 5173. Don't start a second dev server: open http://localhost:5173 in the pane, and only ever give the user the 5173 address. A server Claude starts dies with the session, and a tab left on it keeps running but gets no sound (clip error code 4).
 - Playwright won't tap an element that's animating forever (the pulsing revealed answer); use `{ force: true }` there.
 - The in-app browser pane misplaces clicks when it emulates a viewport size. For iPad-sized visual checks, drive WebKit with Playwright and screenshot.
 - Phaser: the canvas must stay absolutely positioned (React mounts twice in dev and a dying canvas would push the new one down, breaking tap positions), and movement uses `performance.now()` because Phaser's own time/delta are smoothed and run slow on slow devices.

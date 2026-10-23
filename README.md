@@ -58,7 +58,7 @@ It generates new clips, regenerates any whose pronunciation or voice settings ch
 1. Make sure the iPad and this computer are on the same network.
 2. Run `npm run dev`.
 3. Vite prints two addresses. Open the **Network** one on the iPad in Safari, for example `http://192.168.1.90:5173/`.
-   - The port is 5173 unless that port is busy; then Vite picks the next free one and prints it.
+   - The port is always 5173. If `npm run dev` says the port is in use, the game is already running in another window: use that one.
 4. If the iPad can't connect, Windows Firewall may be blocking Node.js. Allow Node.js on **private** networks when Windows asks, and check that your network is set to Private.
 
 Hold the iPad sideways (landscape). In portrait a small picture hint asks to turn it.

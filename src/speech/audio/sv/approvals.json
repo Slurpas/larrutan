@@ -1,3 +1,34 @@
 {
-  "clips": {}
+  "clips": {
+    "anka-3f635c94.mp3": {
+      "text": "Anka.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T08:29:26.607Z"
+    },
+    "anka-borjar-pa-a-0c8a1d74.mp3": {
+      "text": "anka börjar på A!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T08:29:28.379Z"
+    },
+    "det-dar-ar-en-anka-f3b0b434.mp3": {
+      "text": "Det där är en anka.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T08:29:31.618Z"
+    },
+    "har-ar-ankan-b949ae1c.mp3": {
+      "text": "Här är ankan!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T08:29:17.372Z"
+    },
+    "var-ar-ankan-10e1a514.mp3": {
+      "text": "Var är ankan?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T08:29:30.207Z"
+    },
+    "vilken-bokstav-borjar-anka-pa-2f08cc06.mp3": {
+      "text": "Vilken bokstav börjar anka på?",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T08:29:25.901Z"
+    }
+  }
 }

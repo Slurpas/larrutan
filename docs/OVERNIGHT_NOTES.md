@@ -140,6 +140,8 @@ Tasks 9 and 10 wait for your art pick, so I took the next independent task: Task
 | Paths | Relative (`base: './'`), so it works on any host or subfolder | Absolute (would tie us to one host setup) |
 | App icon | White "A" with a dark outline on sky and hills, matching the start screen | Other motifs (book, the character, "Lä"); easy to redraw |
 
+**Fixed later in the night:** hosts such as Cloudflare Pages and Netlify redirect `/index.html` to `/`. The offline cache stored the page under `index.html`, and browsers refuse to open a page from a stored redirect, so the installed game could have failed to start. It now stores the page as `./` and strips redirects. The offline tests still pass in Chromium and WebKit.
+
 **Left over:**
 - [ ] W1 hosting, then a `deploy` script and README steps.
 - [ ] W3 iPad checks: install, offline, silent switch, the version label after an update.

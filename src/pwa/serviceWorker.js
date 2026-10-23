@@ -29,10 +29,12 @@ async function respond(request) {
   const cache = await caches.open(CACHE)
   // Every page address (?seed=…, ?debug=voices) is the same one-page game. ignoreVary: hosts send
   // "Vary: Origin", and the game's scripts are requested with an Origin header the cached copy lacks.
-  const cached = await cache.match(request.mode === 'navigate' ? 'index.html' : request, { ignoreVary: true })
+  const cached = await cache.match(request.mode === 'navigate' ? './' : request, { ignoreVary: true })
   if (!cached) return fetch(request)
   const range = request.headers.get('range')
-  return range ? partialResponse(cached, range) : cached
+  if (range) return partialResponse(cached, range)
+  // Browsers refuse a response that was redirected when it was stored (e.g. by a host's "pretty URLs").
+  return cached.redirected ? new Response(cached.body, { status: cached.status, statusText: cached.statusText, headers: cached.headers }) : cached
 }
 
 // Safari only plays audio that answers its range requests ("bytes=0-1") with 206 Partial Content.

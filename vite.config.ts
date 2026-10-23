@@ -20,7 +20,9 @@ function serviceWorker(): Plugin {
       const hash = createHash('sha256')
       const files: string[] = []
       for (const [name, file] of Object.entries(bundle)) {
-        files.push(name)
+        // The page is cached as "./": hosts such as Cloudflare Pages redirect /index.html to /,
+        // and a cached redirect can't be used to open the page.
+        files.push(name === 'index.html' ? './' : name)
         hash.update(name).update(file.type === 'chunk' ? file.code : file.source)
       }
       const publicFiles = readdirSync('public', { recursive: true, withFileTypes: true }).filter((entry) => entry.isFile())

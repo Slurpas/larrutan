@@ -7,37 +7,67 @@ import { items } from '../rewards/items'
 /** Played by the "Test the voice" button in the ?debug=voices panel. */
 export const voiceTestPhrase = phrases.hubWelcome
 
+/** Sentences that belong together, for the review page: the map and rewards, then each letter and each word. */
+export interface SpokenGroup {
+  title: string
+  /** The word's placeholder picture, if the group is a word. */
+  picture?: string
+  texts: string[]
+}
+
+export function spokenGroups(): SpokenGroup[] {
+  const groups: SpokenGroup[] = [
+    {
+      title: 'Map, rewards and Mina saker',
+      texts: [
+        phrases.hubWelcome,
+        phrases.hardLevelIntro,
+        phrases.levelUp,
+        phrases.myThingsHelp,
+        ...items.flatMap((item) => [phrases.itemUnlocked(item.indefinite), item.hint]),
+      ],
+    },
+  ]
+
+  for (const letter of letters) {
+    const question = { target: letter.id, choices: [letter.id] }
+    groups.push({
+      title: `Letter ${letter.id}`,
+      texts: [
+        findLetterVoice.ask(question),
+        findLetterVoice.reveal(question),
+        findLetterVoice.nameChoice(letter.id),
+        firstLetterVoice.nameChoice(letter.id),
+      ],
+    })
+  }
+
+  for (const word of words) {
+    const firstLetterQuestion = { word: word.id, target: word.firstLetter, choices: [word.firstLetter] }
+    const pictureQuestion = { target: word.id, choices: [word.id] }
+    groups.push({
+      title: `Word: ${word.base}`,
+      picture: word.picture,
+      texts: [
+        firstLetterVoice.ask(firstLetterQuestion),
+        ...(firstLetterVoice.askAgain ? [firstLetterVoice.askAgain(firstLetterQuestion)] : []),
+        firstLetterVoice.reveal(firstLetterQuestion),
+        wordPictureVoice.ask(pictureQuestion),
+        wordPictureVoice.reveal(pictureQuestion),
+        wordPictureVoice.nameChoice(word.id),
+      ],
+    })
+  }
+
+  // A sentence shared by two groups (e.g. "Det där är A." in both letter challenges) is listed once.
+  const seen = new Set<string>()
+  return groups.map((group) => ({ ...group, texts: group.texts.filter((text) => !seen.has(text) && seen.add(text)) }))
+}
+
 /**
  * Every sentence the game can say. `npm run speech` turns each into an audio
  * file; a test checks that real rounds never say anything missing from here.
  */
 export function spokenTexts(): string[] {
-  const texts = new Set<string>([phrases.hubWelcome, phrases.hardLevelIntro, phrases.levelUp, phrases.myThingsHelp])
-
-  for (const item of items) {
-    texts.add(phrases.itemUnlocked(item.indefinite))
-    texts.add(item.hint)
-  }
-
-  for (const letter of letters) {
-    const question = { target: letter.id, choices: [letter.id] }
-    texts.add(findLetterVoice.ask(question))
-    texts.add(findLetterVoice.reveal(question))
-    texts.add(findLetterVoice.nameChoice(letter.id))
-    texts.add(firstLetterVoice.nameChoice(letter.id))
-  }
-
-  for (const word of words) {
-    const firstLetterQuestion = { word: word.id, target: word.firstLetter, choices: [word.firstLetter] }
-    texts.add(firstLetterVoice.ask(firstLetterQuestion))
-    if (firstLetterVoice.askAgain) texts.add(firstLetterVoice.askAgain(firstLetterQuestion))
-    texts.add(firstLetterVoice.reveal(firstLetterQuestion))
-
-    const pictureQuestion = { target: word.id, choices: [word.id] }
-    texts.add(wordPictureVoice.ask(pictureQuestion))
-    texts.add(wordPictureVoice.reveal(pictureQuestion))
-    texts.add(wordPictureVoice.nameChoice(word.id))
-  }
-
-  return [...texts]
+  return spokenGroups().flatMap((group) => group.texts)
 }

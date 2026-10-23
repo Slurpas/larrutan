@@ -54,6 +54,15 @@ npm run speech
 
 It generates new clips, regenerates any whose pronunciation or voice settings changed, and deletes unused ones; `npm run speech -- --all` regenerates everything. Words the engine says wrong are fixed in `src/content/pronunciation.ts`. Open the game with `?debug=voices` to see what plays and why.
 
+### Reviewing the voice
+
+Open the game on the dev server with `?review=voices`, for example `http://localhost:5173/?review=voices` (or the Network address on the iPad).
+
+- Every clip is listed per letter and per word. Play each one and mark it **Good** or **Wrong**; for a wrong one, write what's wrong.
+- On a PC, the keys are faster: ↓ plays the next clip, A marks it good (and plays the next), R marks it wrong.
+- Decisions are saved in `src/speech/audio/sv/approvals.json`. `npm run speech` lists the wrong ones.
+- A fixed clip gets a new file name, so it shows up as "to review" again.
+
 ## Testing on an iPad
 
 1. Make sure the iPad and this computer are on the same network.

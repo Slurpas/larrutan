@@ -146,20 +146,28 @@ The first prototype used the browser's built-in Swedish voice (Web Speech API). 
 
 A script (`npm run speech`) generates every needed clip from the content data, once, at build time. The files are stored in the project; the game never calls a speech service while a child plays. A test fails if any sentence the game can say has no clip.
 
-Current engine: **Piper** (free, offline, no account) with the female Swedish voice "Alma" (`sv_SE-alma-medium`, CC BY 4.0, credit required), slowed slightly for young listeners. Still to do in Task 6: compare it by ear with the services below and add a review page for approving clips.
+Current engine: **Piper** (free, offline, no account) with the female Swedish voice "Alma" (`sv_SE-alma-medium`, CC BY 4.0, credit required), slowed slightly for young listeners. Still to do in Task 6: compare it by ear with other engines. Gemini TTS (free tier, no card) was sampled on 2026-10-23; Azure and Google need a card and were dropped.
 
 Long instructions are said only until the child knows the game: Första bokstaven says "Vilken bokstav börjar sol på?" for the very first picture, then just the word ("Öra."), also after a wrong tap and when the picture is tapped. The speaker button always gives the full question. Words the engine mispronounces are fixed in a pronunciation list (`src/content/pronunciation.ts`).
 
 Praise and celebrations are short sound effects rather than words: a chime for a right answer, a fanfare at the end of a round, and a sparkle before "Du har gått upp en nivå!" or "Du fick en keps!".
 
-- **Recommended: Microsoft Azure Speech.** Several Swedish neural voices, a documented Swedish phonetic alphabet for fixing pronunciations, and a free tier of 0.5 million characters per month. The whole game needs a few tens of thousands of characters, so the cost is effectively zero.
-- **Compared in the same test:** Google Cloud Text-to-Speech (Swedish Chirp 3 HD voices; its pronunciation-override feature doesn't list Swedish) and Piper (free, offline, no account; quality and the Swedish voice's licence to be checked).
-- The user creates the provider account and puts the key in a local `.env` file that is never committed. Claude never types or handles the key.
-- Before choosing, Claude generates the same sample set with each candidate (letter names A–Ö, tricky words such as *kök*, *sked*, *hjärta*, a few instructions) and the user picks by ear.
+- **Candidates without a credit card** (the user won't enter card details anywhere): Piper (current, offline, no account) and Gemini TTS (free tier with a Google account: 3 requests a minute, 10 a day; its free-tier content may be used by Google to improve its products, which is only our game's sentences). Azure and Google Cloud TTS need a card and are out.
+- The user creates any provider account and puts the key in a local `.env` file that is never committed. Claude never types or handles the key.
+- Before choosing, Claude generates the same sample sentences with each candidate and the user picks by ear.
 
 ### Approval
 
 Every generated clip has an approval status. The user listens on a simple review page and approves or rejects. Rejected clips are regenerated with a changed spelling, a phonetic override or another voice. Release builds only contain approved clips, and a check flags missing or unapproved required audio.
+
+**Implementation (Task 6):**
+- **Review page:** open the game on the dev server with `?review=voices`.
+- **Grouping:** clips are listed per letter, per word, and one group for the map and rewards.
+- **Reviewing:** each clip is marked Good or Wrong, with a note saying what's wrong. It works with keys on a PC and with large buttons on the iPad.
+- **Where decisions are saved:** `src/speech/audio/sv/approvals.json`, through a dev-server-only endpoint. The hosted game can't change anything.
+- **File names:** a clip's name hashes its text, its pronunciation fix and the voice settings (`src/speech/voiceSettings.ts`). A fixed or re-voiced clip gets a new name, so it is automatically unreviewed again, and no browser can play a cached old version.
+- **Status report:** `npm run speech` prints how many clips are approved, rejected or not yet reviewed, and lists the rejected ones with their notes.
+- **Not yet enforced:** release builds aren't limited to approved clips yet. Leaving a clip out would make the game silent there in browsers without a Swedish voice. It is enforced at the release review, when all clips are approved.
 
 ### Letter names, words and letter sounds
 

@@ -126,10 +126,22 @@ The user watches a child play for 15–30 minutes and notes where they got stuck
 Ordered by impact. Full Work and Acceptance sections are written when the phase starts, based on what the playtest shows.
 
 ### Task 6 — Generated voice
-Partly done early (2026-10-22), because Brave on Windows has no Swedish voice: `npm run speech` generates every sentence with Piper, the files are committed, the game plays them, and a test fails on missing clips. Remaining:
-- Generate the same sample set (letter names A–Ö, tricky words, instructions) with Azure and Google as well as Piper; the user picks by ear. The user creates any account and puts the key in a local `.env`.
-- A review page to play, approve or reject clips; rejected clips are regenerated with spelling or phoneme fixes.
-- Release builds only contain approved clips.
+Partly done early (2026-10-22), because Brave on Windows has no Swedish voice: `npm run speech` generates every sentence with Piper, the files are committed, the game plays them, and a test fails on missing clips.
+
+Done 2026-10-23:
+- **Review page** (`?review=voices` on the dev server): play, approve or reject each clip with a note.
+- **Saving:** decisions go to `src/speech/audio/sv/approvals.json`.
+- **File names:** a clip's name includes its pronunciation and voice, so a regenerated clip is unreviewed again and can't play from a stale cache.
+- **Status:** `npm run speech` reports the review status.
+- **Clean-up:** eight old spoken-praise clips that were still bundled were deleted.
+
+Remaining:
+- **Engine comparison:**
+  - Azure and Google need a credit card, so they are out.
+  - Gemini TTS (free tier, no card, 10 requests a day) was sampled. The user picks by ear: Alma, or a Gemini voice.
+  - The user creates any account and puts the key in a local `.env`.
+- **The review itself:** the user goes through all clips, and Claude fixes the rejected ones.
+- **Release builds contain only approved clips:** enforced at the release review, once all clips are approved.
 
 ### Task 7 — Saving and iPad install
 

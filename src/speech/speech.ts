@@ -40,6 +40,11 @@ let turn = 0
 
 const quote = (text: string) => JSON.stringify(text.length > 40 ? `${text.slice(0, 40)}…` : text)
 
+/** The generated clip for a sentence, if there is one (for the review page). */
+export function clipUrl(text: string): string | undefined {
+  return clipUrls.get(clipFileName(text))
+}
+
 /** Call once at startup. */
 export function initSpeech(): void {
   deviceVoice.init()

@@ -36,7 +36,7 @@ Changed files, commands run and their results, screenshots, known limitations, a
 - `npm test`: Vitest unit tests (`src/**/*.test.ts(x)`)
 - `npm run test:e2e`: Playwright (`tests/e2e`), desktop Chromium + iPad WebKit, on its own port 5199. `offline.spec.ts` runs against a release build (built into `.e2e-dist`, served on 4199), because the service worker only exists there
 - `npm run build`: typecheck + Vite build
-- `npm run speech`: generate missing speech clips with Piper (setup in README). Run it after any change to letters, words, phrases, challenge wording or `src/content/pronunciation.ts`; `catalogue.test.ts` fails until you do
+- `npm run speech`: generate missing speech clips with Piper (setup in README). Run it after any change to letters, words, phrases, challenge wording, `src/content/pronunciation.ts` or `src/speech/voiceSettings.ts`; `catalogue.test.ts` fails until you do. It also prints the review status and lists rejected clips with the user's notes
 - `npm run sfx`: re-synthesise the sound effects (chime, fanfare, level-up, new item) in `src/sound/sfx/`
 - `npm run icons`: render `scripts/app-icon.svg` to the PNG app icons in `public/icons/`
 
@@ -47,7 +47,7 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - `src/app`: shell, start screen, touch setup, seeds
 - `src/challenges`: `ChoiceChallenge` (the shared screen: speech, hints, praise, progress, keyboard), shared round logic, and one folder per challenge with its pure round builder and a thin wrapper. `difficulty.ts`: easy/hard levels; a sign opens the first level not yet completed. Hard = exactly one look-alike of the answer (`letterChoices.ts`)
 - `src/content`: letters, words, phrases (typed data) and `validation.ts` with the PRD §5 content rules
-- `src/speech`: `speech.ts` is the one entry point (`speak`, `stopSpeech`, …). It plays generated clips from `audio/sv/` and falls back to the device voice (`browserVoice.ts`) only for a sentence without a clip or a clip that won't play. `catalogue.ts` lists every sentence; challenge wording lives in `src/challenges/voices.ts`
+- `src/speech`: `speech.ts` is the one entry point (`speak`, `stopSpeech`, …). It plays generated clips from `audio/sv/` and falls back to the device voice (`browserVoice.ts`) only for a sentence without a clip or a clip that won't play. `catalogue.ts` lists every sentence (grouped for review); challenge wording lives in `src/challenges/voices.ts`. A clip's file name hashes its text, pronunciation fix and voice (`clipName.ts`, `voiceSettings.ts`), so changed audio always gets a new name. `review/`: the clip review page (`?review=voices`, dev server only) and approvals (`audio/sv/approvals.json`, saved by `scripts/voiceReviewPlugin.ts`)
 - `src/world`: the hub map (Phaser). `hubMap.ts` is the map as a text grid; `tileMap.ts`, `pathfinding.ts` and `camera.ts` are pure, tested rules; `HubScene.ts` draws and moves; `HubWorld.tsx` mounts it in React
 - `src/rewards`: reward rules (`rules.ts`, all numbers in one place), hats (`items.ts`), pure progress logic (`progress.ts`, exactly-once by round id), the store (`store.ts`: loads the save at startup, saves after every change), the XP bar and "Mina saker"
 - `src/persistence`: saving (PRD §12). `saveFile.ts` is the pure, tested save format (version, per-field repair); `database.ts` is the thin IndexedDB layer; `saveGame.ts` loads and saves the default profile

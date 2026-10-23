@@ -18,6 +18,7 @@ import { items } from '../rewards/items'
 import { spokenTexts } from './catalogue'
 import { clipFileName } from './clipName'
 import type { SoundId } from './speech'
+import { speechVoice } from './voiceSettings'
 
 const catalogue = new Set(spokenTexts())
 const seeds = Array.from({ length: 300 }, (_, i) => i * 104729 + 3)
@@ -78,10 +79,15 @@ describe('speech catalogue', () => {
   })
 
   it('gives every sentence its own file name', () => {
-    const names = [...catalogue].map(clipFileName)
+    const names = [...catalogue].map((text) => clipFileName(text))
     expect(new Set(names).size).toBe(names.length)
     expect(clipFileName('Var är Å?')).toMatch(/^var-ar-a-[0-9a-f]{8}\.mp3$/)
     expect(clipFileName('Var är Å?')).not.toBe(clipFileName('Var är A?'))
+  })
+
+  it('renames a clip when the voice changes, so old audio and old approvals never carry over', () => {
+    const slower = { ...speechVoice, lengthScale: speechVoice.lengthScale + 0.1 }
+    expect(clipFileName('Var är Å?', slower)).not.toBe(clipFileName('Var är Å?'))
   })
 
   it('has a sound file for every sound effect (run `npm run sfx` to make them)', () => {

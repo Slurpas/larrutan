@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { voiceReview } from './scripts/voiceReviewPlugin'
 
 /**
  * Writes sw.js from src/pwa/serviceWorker.js with the list of every file in the build,
@@ -37,7 +38,7 @@ function serviceWorker(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), serviceWorker()],
+  plugins: [react(), serviceWorker(), voiceReview()],
   // Relative paths, so the game works from any folder on any static host.
   base: './',
   define: {

@@ -1,0 +1,124 @@
+/* A plain tool page for the adult. The game blocks scrolling and text selection, so this page undoes that. */
+.page {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: calc(env(safe-area-inset-top) + 1rem) 1rem 3rem;
+  background: #f6f9fc;
+  font-family: system-ui, sans-serif;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.header {
+  max-width: 60rem;
+  margin: 0 auto 1rem;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem;
+}
+
+.counts {
+  font-weight: 700;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filters button,
+.good,
+.wrong,
+.play {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 0.9rem;
+  border: 2px solid var(--color-card-edge);
+  border-radius: 0.6rem;
+  background: var(--color-white);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.filters button[aria-pressed='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.error {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  background: #ffe1e1;
+  color: #8a1f1f;
+}
+
+.empty {
+  max-width: 60rem;
+  margin: 2rem auto;
+}
+
+.list {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.group {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  padding: 0.4rem;
+  border: 2px solid transparent;
+  border-radius: 0.7rem;
+  background: var(--color-white);
+}
+
+.row[data-selected='true'] {
+  border-color: var(--color-focus);
+}
+
+.row[data-status='approved'] {
+  background: #e8f7ea;
+}
+
+.row[data-status='rejected'] {
+  background: #fdecec;
+}
+
+.text {
+  font-size: 1.1rem;
+}
+
+.good[aria-pressed='true'] {
+  border-color: var(--color-correct-edge);
+  background: var(--color-correct);
+}
+
+.wrong[aria-pressed='true'] {
+  border-color: #c0392b;
+  background: #f5b7b1;
+}
+
+.note {
+  grid-column: 2 / -1;
+  min-height: 44px;
+  padding: 0 0.7rem;
+  border: 2px solid var(--color-card-edge);
+  border-radius: 0.5rem;
+  font: inherit;
+  user-select: text;
+  -webkit-user-select: text;
+}

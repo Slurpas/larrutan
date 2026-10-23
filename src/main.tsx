@@ -1,7 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { App } from './app/App'
+import { reviewingVoices } from './app/reviewMode'
+import { Root } from './app/Root'
 import { setupTouchBehaviour } from './app/touchBehaviour'
 import { registerServiceWorker } from './pwa/registerServiceWorker'
 import { loadProgress } from './rewards/store'
@@ -19,10 +20,12 @@ registerServiceWorker()
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <Root />
   </StrictMode>,
 )
 
-void loadProgress()
-// Fetch the map while the start screen shows, so it opens straight away on Spela.
-void loadHubGame()
+if (!reviewingVoices) {
+  void loadProgress()
+  // Fetch the map while the start screen shows, so it opens straight away on Spela.
+  void loadHubGame()
+}

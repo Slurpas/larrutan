@@ -1,9 +1,14 @@
+import { withPronunciations } from '../content/pronunciation'
+import { speechVoice, type SpeechVoice } from './voiceSettings'
+
 /**
- * The audio file for a sentence: a readable slug plus a hash of the exact
- * text, e.g. "Var är Å?" → "var-ar-a-1c2d3e4f.mp3". Changing a sentence
- * changes its file name, so a stale recording can never play.
+ * The audio file for a sentence: a readable slug plus a hash of everything that
+ * shapes the audio (the text, its pronunciation fixes and the voice), e.g.
+ * "Var är Å?" → "var-ar-a-1c2d3e4f.mp3". Whenever the audio would sound
+ * different, the file name changes too, so a stale recording can never play
+ * (not even from a browser cache) and approvals stay tied to what was heard.
  */
-export function clipFileName(text: string): string {
+export function clipFileName(text: string, voice: SpeechVoice = speechVoice): string {
   const slug = text
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '') // å ä ö → a a o
@@ -12,7 +17,8 @@ export function clipFileName(text: string): string {
     .replace(/^-+|-+$/g, '')
     .slice(0, 40)
     .replace(/-+$/, '')
-  return `${slug}-${fnv1a(text.normalize('NFC'))}.mp3`
+  const shapedBy = [text, withPronunciations(text), voice.engine, voice.voice, voice.lengthScale].join('\n')
+  return `${slug}-${fnv1a(shapedBy.normalize('NFC'))}.mp3`
 }
 
 /** 32-bit FNV-1a, as 8 hex digits. Tiny and stable; collisions are checked in tests. */

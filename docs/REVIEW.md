@@ -18,6 +18,7 @@
 - **2026-10-23: hosting is GitHub Pages.** The game is published at https://slurpas.github.io/larrutan/ and deploys on every push to `main`. The repository is public. Before the first push, all commit emails were rewritten to GitHub's no-reply address, which is also used from now on. Cloudflare Pages was the alternative; it keeps the code private but needs a new account.
 - **2026-10-23: the voice speed is length scale 1.4,** picked by ear from three samples. "Var är …?" questions pause about 0.4 s before the target.
 - **2026-10-23: the art style is 16×16 pixel art** (`docs/ART_DIRECTION.md`). The user's criterion was where Claude will practically produce the most clothes, items and options. Soft vector was Claude's first recommendation, for its match with the UI. Pixel 32×32 was the middle option.
+- **2026-10-23: downloads approved.** Kenney's Tiny Town (CC0) is used for scenery, and the Andika font (SIL OFL) for letters. Both are logged in `docs/ASSET_LICENSES.md`.
 - The other open decisions from the night of 2026-10-23 are in `docs/OVERNIGHT_NOTES.md` until they're settled.
 
 ## Verdict

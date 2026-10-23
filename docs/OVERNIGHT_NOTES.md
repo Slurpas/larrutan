@@ -50,7 +50,7 @@ Every check passes on the final state:
 | W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Ready now, see "Check on the iPad" below |
 | W4 | **Voice review:** go through the 209 clips on `?review=voices` (about 15–20 minutes) | Only your ear can approve them |
 | ~~W5~~ | **Art style: decided, 16×16 pixel art** (`docs/ART_DIRECTION.md`) | Done |
-| W6 | **Downloads:** OK to download the Andika font (SIL OFL)? And optionally a Kenney CC0 pack to compare? | Downloads need your OK |
+| ~~W6~~ | **Downloads: approved.** Kenney's Tiny Town and Andika are in the game (Task 9) | Done |
 | W7 | **Learning:** difficulty adaptation, yes or no and which option? A `?debug=mastery` page for playtests? | Changes how the game behaves for your child |
 | W8 | **New content:** approve the next letters (R, N, T, F) and 15 words in `docs/CONTENT_PROPOSAL.md`; E and U wait (sound rules) | You approve content (PRD §5) |
 

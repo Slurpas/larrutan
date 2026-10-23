@@ -21,6 +21,20 @@ describe('cameraZoom', () => {
     }
   })
 
+  it('uses a whole-number zoom in landscape, so every pixel of the art is the same size', () => {
+    for (const [width, height] of [
+      [1180, 820],
+      [1080, 810],
+      [1366, 1024],
+      [1440, 900],
+      [1920, 1080],
+      [2560, 1440],
+      [844, 390],
+    ] as const) {
+      expect(Number.isInteger(cameraZoom(width, height, mapWidth, mapHeight)), `${width}×${height}`).toBe(true)
+    }
+  })
+
   it('never shows more than the map, so there is no empty space at the edges', () => {
     const viewports = [
       [375, 812],

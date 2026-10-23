@@ -182,6 +182,13 @@ Status 2026-10-23:
 - Base character with a walk animation in three drawn directions (side mirrored).
 - A contact-sheet script that renders every sprite into PNG sheets Claude can review.
 
+Status 2026-10-23: **done.**
+- **The map:** Kenney's Tiny Town scenery (CC0), our own water, rocks, signs and character, and the Andika font for letters.
+- **Map layout:** the hub now has two houses, tall trees the child can walk behind, bushes, mushrooms and flower patches.
+- **Mina saker:** shows the pixel character.
+- **Contact sheet:** `npm run sprites`.
+- **Not done:** hats (Task 10) and challenge pictures (Task 11) are still emoji.
+
 ### Task 10 — Wardrobe and item catalogue
 - Layered items with slots and drawing order, one shared character renderer, mask-based clothing and anchor points.
 - 15–20 items across all five rarities following the time-to-earn table; locked previews.

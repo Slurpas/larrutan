@@ -31,6 +31,7 @@ The second command downloads the browsers used by the browser tests (about 380 M
 | `npm run speech` | Generate missing speech clips (see below) |
 | `npm run sfx` | Re-synthesise the sound effects in `src/sound/sfx/` (needs ffmpeg) |
 | `npm run icons` | Render `scripts/app-icon.svg` to the PNG app icons in `public/icons/` |
+| `npm run sprites` | Render every sprite into `docs/sprites/contact-sheet.png` for review |
 
 ## Generating speech
 

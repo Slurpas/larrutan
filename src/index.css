@@ -1,3 +1,18 @@
+/* Andika (SIL Open Font License, src/fonts/Andika-OFL.txt): a font made for children learning to read. Used for letters. */
+@font-face {
+  font-family: Andika;
+  src: url('./fonts/andika-400-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-display: block;
+}
+
+@font-face {
+  font-family: Andika;
+  src: url('./fonts/andika-700-latin.woff2') format('woff2');
+  font-weight: 700;
+  font-display: block;
+}
+
 :root {
   --color-sky-top: #9fd8ff;
   --color-sky-bottom: #dff3ff;
@@ -16,6 +31,8 @@
   --color-star: #ffc93c;
 
   --font-rounded: ui-rounded, 'SF Pro Rounded', 'Segoe UI', system-ui, sans-serif;
+  /* Letters and words the child learns to read (PRD §9). */
+  --font-letters: Andika, var(--font-rounded);
 
   color-scheme: light;
   font-family: var(--font-rounded);

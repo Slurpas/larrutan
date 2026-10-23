@@ -1,6 +1,18 @@
 import type { ChallengeId } from '../challenges/challengeIds'
 
-export type TileKind = 'grass' | 'flowers' | 'path' | 'tree' | 'rock' | 'water' | 'station'
+export type TileKind =
+  | 'grass'
+  | 'flowers'
+  | 'mushrooms'
+  | 'path'
+  | 'tree'
+  | 'tallTree'
+  | 'bush'
+  | 'rock'
+  | 'water'
+  | 'blueHouse'
+  | 'redHouse'
+  | 'station'
 
 export interface Tile {
   col: number
@@ -31,14 +43,19 @@ export interface TileMap {
 const legend: Record<string, TileKind> = {
   '.': 'grass',
   ',': 'flowers',
+  m: 'mushrooms',
   '=': 'path',
   '@': 'path',
   T: 'tree',
+  Y: 'tallTree',
+  B: 'bush',
   R: 'rock',
   '~': 'water',
+  H: 'blueHouse',
+  h: 'redHouse',
 }
 
-const walkable: ReadonlySet<TileKind> = new Set(['grass', 'flowers', 'path'])
+const walkable: ReadonlySet<TileKind> = new Set(['grass', 'flowers', 'mushrooms', 'path'])
 
 /** Turns a text grid into a map. Throws on anything malformed, so a broken map never loads. */
 export function parseMap(grid: readonly string[], stationDefs: readonly StationDef[]): TileMap {

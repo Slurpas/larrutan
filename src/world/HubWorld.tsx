@@ -39,7 +39,9 @@ export function HubWorld({ active, xp, hat, onOpenStation, onOpenMyThings, onHom
     const container = containerRef.current
     if (!container) return
     let cancelled = false
-    void loadHubGame().then(({ createHubGame }) => {
+    // The signs' letters are drawn in Andika, so the font must be ready before the map is.
+    const fontReady = document.fonts.load('700 96px Andika').catch(() => [])
+    void Promise.all([loadHubGame(), fontReady]).then(([{ createHubGame }]) => {
       if (cancelled) return
       const hub = createHubGame(container, {
         map: hubMap,

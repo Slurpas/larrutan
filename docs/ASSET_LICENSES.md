@@ -26,8 +26,14 @@ Before a public release, re-check the voice model's card and the terms of any TT
 | Icons (`src/ui/icons.tsx`), favicon, map shapes (`src/world/HubScene.ts`) | Drawn in code by Claude | Ours | Placeholders until Phase 2 art |
 | App icon (`scripts/app-icon.svg`, rendered to `public/icons/*.png`) | Drawn as SVG by Claude | Ours | Home screen and install icon |
 | Art direction candidates (`docs/art-direction/*.png`) | Drawn by code by Claude (`scripts/art-direction/`) | Ours | Comparison for Task 8; not in the game |
+| Scenery tiles (`src/art/kenney/tiny-town.png`): grass, path, trees, mushrooms, houses | [Kenney, "Tiny Town" 1.1](https://kenney.nl/assets/tiny-town), downloaded 2026-10-23 with the user's OK | CC0 1.0 (public domain) | Licence in `src/art/kenney/tiny-town-License.txt`; credit welcome but not required |
+| Character, station signs and their pictures, water, rock (`src/art/*.ts`) | Drawn as pixel grids by Claude, in Kenney's colours | Ours | Contact sheet: `docs/sprites/contact-sheet.png` (`npm run sprites`) |
 | Pictures (emoji) | The device's system emoji font | Not shipped | Placeholders; replaced by project pictures in Phase 2 |
 
 ## Fonts
 
-None bundled; the game uses the device's system fonts. Andika (SIL Open Font License) is planned for letters (PRD §9).
+| What | Source | Licence | Notes |
+|---|---|---|---|
+| Andika, regular and bold, Latin subset (`src/fonts/*.woff2`) | SIL International, via Google Fonts (unmodified files as served), downloaded 2026-10-23 with the user's OK | SIL Open Font License 1.1 | Licence in `src/fonts/Andika-OFL.txt`; used for letters and words |
+
+Everything else uses the device's system fonts.

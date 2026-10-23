@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "speech": "node scripts/generate-speech.mjs",
     "sfx": "node scripts/generate-sfx.mjs",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "sprites": "node scripts/contact-sheet.mjs"
   },
   "dependencies": {
     "phaser": "^4.2.1",

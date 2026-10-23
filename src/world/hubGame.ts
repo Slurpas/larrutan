@@ -15,8 +15,10 @@ export function createHubGame(parent: HTMLElement, options: HubSceneOptions): Hu
   const game = new Phaser.Game({
     type: Phaser.AUTO,
     parent,
-    backgroundColor: '#7cc56f',
+    backgroundColor: '#84c669',
     banner: false,
+    // Crisp 16×16 pixel art: no smoothing, whole pixels (docs/ART_DIRECTION.md).
+    pixelArt: true,
     // The scene listens to the DOM itself, so nothing is captured while a challenge is open.
     input: { keyboard: false },
     // All sound is speech (src/speech). Phaser's own audio context could compete with it on iPad.

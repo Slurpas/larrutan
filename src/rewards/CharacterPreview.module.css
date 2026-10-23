@@ -1,22 +1,22 @@
 .character {
-  --size: clamp(120px, 22vh, 190px);
+  --height: clamp(150px, 30vh, 260px);
   position: relative;
-  width: var(--size);
-  height: calc(var(--size) * 1.35);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
+  width: calc(var(--height) / 2);
+  height: var(--height);
 }
 
 .body {
-  width: var(--size);
-  height: var(--size);
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
+/* The hat sits on top of the head: --head-top is where the head starts, as a share of the height. */
 .hat {
   position: absolute;
-  top: calc(var(--size) * 0.02);
-  font-size: calc(var(--size) * 0.5);
+  left: 50%;
+  top: calc(var(--height) * var(--head-top));
+  transform: translate(-50%, -62%);
+  font-size: calc(var(--height) * 0.26);
   line-height: 1;
 }

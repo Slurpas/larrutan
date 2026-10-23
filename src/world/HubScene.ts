@@ -1,9 +1,23 @@
 import Phaser from 'phaser'
 import type { ChallengeId } from '../challenges/challengeIds'
+import { characterFeetRow, characterHeadTop, characterSize } from '../art/character'
+import { tinyTown } from '../art/kenney'
+import { signPanel, signSize } from '../art/signs'
 import { TILE, cameraZoom } from './camera'
+import { groundTile } from './groundTiles'
 import { findPath, nearestWalkable } from './pathfinding'
 import {
-  kindAt,
+  addArtTextures,
+  characterFrameKey,
+  iconKeys,
+  rockKey,
+  shadowKey,
+  signKey,
+  tinyTownKey,
+  waterTexture,
+  type CharacterFacing,
+} from './textures'
+import {
   sameTile,
   stationApproaches,
   stationAt,
@@ -15,35 +29,19 @@ import {
   type TileMap,
 } from './tileMap'
 
-/** Placeholder palette until Phase 2 art (PRD §9). Matches the CSS tokens. */
-const colors = {
-  ink: 0x2b4a6b,
-  grass: 0x7cc56f,
-  grassDark: 0x77c06a,
-  path: 0xe9d7a1,
-  pathEdge: 0xd8c48a,
-  water: 0x6fc3ee,
-  waterLight: 0xa6dcf7,
-  trunk: 0x8a5a3b,
-  leaves: 0x3f8f4a,
-  leavesLight: 0x5fb35f,
-  rock: 0xa7b0ba,
-  rockLight: 0xc5ccd3,
-  sign: 0xffffff,
-  signHighlight: 0xffe28a,
-  post: 0x8a5a3b,
-  player: 0xff8a5b,
-  flowers: [0xffffff, 0xffe066, 0xff9ecb],
-} as const
-
 /** Tiles per second. */
 const WALK_SPEED = 4.5
 
-const stationIcons: Record<ChallengeId, string> = {
-  findLetter: 'AÖ',
-  firstLetter: '☀️S',
-  wordPicture: '🍎🐭',
+/** What each station's sign shows: pictures (src/art/signs.ts) and letters (in Andika). */
+const stationContent: Record<ChallengeId, { pictures: (keyof typeof iconKeys)[]; letters: string }> = {
+  findLetter: { pictures: [], letters: 'AÖ' },
+  firstLetter: { pictures: ['sun'], letters: 'S' },
+  wordPicture: { pictures: ['apple', 'mouse'], letters: '' },
 }
+
+/** Walk frames per second, and where the feet are: the bottom of the tile the character stands on. */
+const WALK_FRAMES_PER_SECOND = 8
+const FEET_Y = TILE / 2
 
 const keyDirections: Record<string, Direction> = {
   ArrowUp: 'up',
@@ -63,7 +61,7 @@ export interface HubSceneOptions {
 
 interface StationMarker {
   station: Station
-  sign: Phaser.GameObjects.Graphics
+  sign: Phaser.GameObjects.Image
   container: Phaser.GameObjects.Container
 }
 
@@ -72,7 +70,8 @@ const tileCenter = (tile: Tile) => ({ x: (tile.col + 0.5) * TILE, y: (tile.row +
 /**
  * The hub area: the child taps a spot to walk there, taps a sign to walk to it
  * and open its challenge, or uses the arrow keys / WASD and Enter / Space.
- * Placeholder shapes only; real art comes in Phase 2.
+ * 16×16 pixel art (docs/ART_DIRECTION.md): Kenney's Tiny Town scenery plus our
+ * own water, rocks, signs and character (src/art).
  */
 export class HubScene extends Phaser.Scene {
   private readonly map: TileMap
@@ -80,7 +79,8 @@ export class HubScene extends Phaser.Scene {
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   private player!: Phaser.GameObjects.Container
-  private playerBody!: Phaser.GameObjects.Container
+  private playerSprite!: Phaser.GameObjects.Image
+  private facing: CharacterFacing = 'down'
   private hatText: Phaser.GameObjects.Text | null = null
   /** The worn hat (emoji); may be set before the scene has been created. */
   private hat: string | null = null
@@ -106,9 +106,13 @@ export class HubScene extends Phaser.Scene {
     this.playerTile = map.start
   }
 
+  preload() {
+    this.load.spritesheet(tinyTownKey, tinyTown.url, { frameWidth: tinyTown.tileSize, frameHeight: tinyTown.tileSize })
+  }
+
   create() {
+    addArtTextures(this)
     this.drawGround()
-    this.drawObstacles()
     this.markers = this.map.stations.map((station) => this.drawStation(station))
     this.player = this.drawPlayer()
     const start = tileCenter(this.playerTile)
@@ -160,9 +164,24 @@ export class HubScene extends Phaser.Scene {
       }
     }
 
-    // A small hop while walking.
-    const walking = this.moveTarget !== null && !this.reducedMotion
-    this.playerBody.y = walking ? -Math.abs(Math.sin(this.time.now / 70)) * 1.5 : 0
+    this.animatePlayer(now)
+  }
+
+  /** Faces the way the character walks and steps through the walk frames; stands still otherwise. */
+  private animatePlayer(now: number) {
+    let frame = 0
+    if (this.moveTarget) {
+      const target = tileCenter(this.moveTarget)
+      const dx = target.x - this.player.x
+      const dy = target.y - this.player.y
+      if (dx !== 0 || dy !== 0) {
+        this.facing = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'side' : 'left') : dy > 0 ? 'down' : 'up'
+      }
+      frame = Math.floor((now / 1000) * WALK_FRAMES_PER_SECOND) % 4
+    }
+    this.playerSprite.setTexture(characterFrameKey(this.facing, frame))
+    // Drawn in front of whatever is above it on the map, and behind what is below.
+    this.player.setDepth(this.player.y + FEET_Y)
   }
 
   // --- Input -------------------------------------------------------------
@@ -241,149 +260,98 @@ export class HubScene extends Phaser.Scene {
     this.cameras.main.setZoom(cameraZoom(width, height, this.map.cols * TILE, this.map.rows * TILE))
   }
 
-  // --- Drawing (placeholders) --------------------------------------------
+  // --- Drawing --------------------------------------------------------------
 
+  /**
+   * Every tile once (src/world/groundTiles.ts): Kenney's grass, paths, houses, trees and
+   * flowers; our water and rocks. Tall trees are sorted by depth with the character, so
+   * the child can walk behind their crowns.
+   */
   private drawGround() {
-    const g = this.add.graphics()
     for (let row = 0; row < this.map.rows; row++) {
       for (let col = 0; col < this.map.cols; col++) {
         const x = col * TILE
         const y = row * TILE
-        const kind = kindAt(this.map, { col, row })
-        g.fillStyle((col + row) % 2 === 0 ? colors.grass : colors.grassDark)
-        g.fillRect(x, y, TILE, TILE)
-
-        if (kind === 'path') {
-          g.fillStyle(colors.path)
-          g.fillRect(x, y, TILE, TILE)
-          // A darker edge wherever the path meets grass, so it reads as one continuous path.
-          g.lineStyle(1.5, colors.pathEdge)
-          const isPath = (dc: number, dr: number) => kindAt(this.map, { col: col + dc, row: row + dr }) === 'path'
-          if (!isPath(0, -1)) g.lineBetween(x, y + 0.75, x + TILE, y + 0.75)
-          if (!isPath(0, 1)) g.lineBetween(x, y + TILE - 0.75, x + TILE, y + TILE - 0.75)
-          if (!isPath(-1, 0)) g.lineBetween(x + 0.75, y, x + 0.75, y + TILE)
-          if (!isPath(1, 0)) g.lineBetween(x + TILE - 0.75, y, x + TILE - 0.75, y + TILE)
-        } else if (kind === 'water') {
-          g.fillStyle(colors.water)
-          g.fillRect(x, y, TILE, TILE)
-          g.lineStyle(1, colors.waterLight)
-          g.lineBetween(x + 3, y + 5, x + 8, y + 5)
-          g.lineBetween(x + 8, y + 11, x + 13, y + 11)
-        } else if (kind === 'flowers') {
-          colors.flowers.forEach((color, i) => {
-            g.fillStyle(color)
-            g.fillCircle(x + 4 + i * 4, y + 5 + (i % 2) * 6, 1.3)
-          })
-        }
-      }
-    }
-  }
-
-  private drawObstacles() {
-    const g = this.add.graphics()
-    for (let row = 0; row < this.map.rows; row++) {
-      for (let col = 0; col < this.map.cols; col++) {
-        const { x, y } = tileCenter({ col, row })
-        const kind = kindAt(this.map, { col, row })
-        if (kind === 'tree') {
-          g.fillStyle(colors.trunk)
-          g.fillRect(x - 1.5, y + 2, 3, 6)
-          g.fillStyle(colors.leaves)
-          g.lineStyle(1, colors.ink)
-          g.fillCircle(x, y - 1, 7)
-          g.strokeCircle(x, y - 1, 7)
-          g.fillStyle(colors.leavesLight)
-          g.fillCircle(x - 2.5, y - 3.5, 2.5)
-        } else if (kind === 'rock') {
-          g.fillStyle(colors.rock)
-          g.lineStyle(1, colors.ink)
-          g.fillEllipse(x, y + 1, 13, 10)
-          g.strokeEllipse(x, y + 1, 13, 10)
-          g.fillStyle(colors.rockLight)
-          g.fillEllipse(x - 2, y - 1, 5, 3)
+        const ground = groundTile(this.map, { col, row })
+        if (ground.kind === 'water') {
+          this.add.image(x, y, waterTexture(this, ground.edges, ground.variant)).setOrigin(0)
+        } else if (ground.kind === 'ground') {
+          this.add.image(x, y, tinyTownKey, ground.frame).setOrigin(0)
+        } else if (ground.kind === 'decor') {
+          this.add.image(x, y, tinyTownKey, ground.under).setOrigin(0)
+          if (ground.decor === 'rock') this.add.image(x, y, rockKey).setOrigin(0)
+          else this.add.image(x, y, tinyTownKey, ground.decor).setOrigin(0)
+        } else {
+          this.add.image(x, y, tinyTownKey, ground.under).setOrigin(0)
+          const depth = y + TILE
+          this.add.image(x, y, tinyTownKey, ground.trunk).setOrigin(0).setDepth(depth)
+          this.add.image(x, y - TILE, tinyTownKey, ground.crown).setOrigin(0).setDepth(depth)
         }
       }
     }
   }
 
   private drawStation(station: Station): StationMarker {
-    // Centre of the 2×2 block.
+    // The container sits at the centre of the 2×2 block (tests tap there); the sign fills the block.
     const x = (station.origin.col + 1) * TILE
     const y = (station.origin.row + 1) * TILE
+    const sign = this.add.image(0, signSize.height / 2, signKey(false)).setOrigin(0.5, 1)
 
-    // Sign and post stay inside the 2×2 block, so they never cover the child standing next to it.
-    const post = this.add.graphics()
-    post.fillStyle(colors.post)
-    post.lineStyle(1, colors.ink)
-    post.fillRect(-2, 6, 4, 9)
-    post.strokeRect(-2, 6, 4, 9)
+    // The panel's centre, relative to the container.
+    const panelX = -signSize.width / 2 + signPanel.x + signPanel.width / 2
+    const panelY = -signSize.height / 2 + signPanel.y + signPanel.height / 2
+    const { pictures, letters } = stationContent[station.challenge]
+    const items: Phaser.GameObjects.GameObject[] = [sign]
+    const slots = pictures.length + (letters ? 1 : 0)
+    const slotX = (index: number) => panelX + (slots === 1 ? 0 : index === 0 ? -6 : 6)
+    pictures.forEach((picture, index) => items.push(this.add.image(slotX(index), panelY, iconKeys[picture])))
+    if (letters) {
+      // Letters are never pixel art: Andika, rendered large and scaled down so they stay sharp.
+      const text = this.add
+        .text(slotX(pictures.length), panelY + 0.5, letters, {
+          fontFamily: 'Andika, ui-rounded, "Segoe UI", system-ui, sans-serif',
+          fontSize: '96px',
+          fontStyle: 'bold',
+          color: '#3f2631',
+        })
+        .setOrigin(0.5)
+      text.setScale((signPanel.height * 0.95) / text.height)
+      text.texture.setFilter(Phaser.Textures.FilterMode.LINEAR)
+      items.push(text)
+    }
 
-    const sign = this.add.graphics()
-    this.paintSign(sign, false)
-
-    // Text is rendered large and scaled down so it stays sharp when the camera zooms in.
-    const icon = this.add
-      .text(0, -2, stationIcons[station.challenge], {
-        fontFamily: 'ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif',
-        fontSize: '64px',
-        fontStyle: 'bold',
-        color: '#2b4a6b',
-      })
-      .setOrigin(0.5)
-      .setScale(0.22)
-
-    const board = this.add.container(0, 0, [sign, icon])
-    const container = this.add.container(x, y, [post, board])
-
+    const container = this.add.container(x, y, items).setDepth((station.origin.row + 2) * TILE)
     if (!this.reducedMotion) {
+      // A gentle one-pixel bob, so the signs look alive and invite a tap.
       this.tweens.add({
-        targets: board,
-        y: -1.5,
-        duration: 900,
+        targets: container,
+        y: y - 1,
+        duration: 700,
         yoyo: true,
         repeat: -1,
-        ease: 'Sine.easeInOut',
+        ease: 'Stepped',
         delay: station.origin.col * 37,
       })
     }
     return { station, sign, container }
   }
 
-  private paintSign(sign: Phaser.GameObjects.Graphics, highlighted: boolean) {
-    sign.clear()
-    sign.fillStyle(colors.ink)
-    sign.fillRoundedRect(-15, -13, 30, 22, 5)
-    sign.fillStyle(highlighted ? colors.signHighlight : colors.sign)
-    sign.fillRoundedRect(-13.5, -11.5, 27, 19, 4)
-  }
-
   private drawPlayer(): Phaser.GameObjects.Container {
-    const shadow = this.add.graphics()
-    shadow.fillStyle(0x000000, 0.18)
-    shadow.fillEllipse(0, 6, 11, 4)
+    const shadow = this.add.image(0, FEET_Y - 1, shadowKey).setAlpha(0.25)
+    this.playerSprite = this.add
+      .image(0, FEET_Y, characterFrameKey('down', 0))
+      .setOrigin(0.5, (characterFeetRow + 1) / characterSize.height)
 
-    const body = this.add.graphics()
-    body.fillStyle(colors.player)
-    body.lineStyle(1.2, colors.ink)
-    body.fillCircle(0, 0, 6)
-    body.strokeCircle(0, 0, 6)
-    body.fillStyle(colors.ink)
-    body.fillCircle(-2.1, -1.2, 0.9)
-    body.fillCircle(2.1, -1.2, 0.9)
-    body.lineStyle(0.9, colors.ink)
-    body.beginPath()
-    body.arc(0, 0.6, 2.4, 0.15 * Math.PI, 0.85 * Math.PI)
-    body.strokePath()
-
-    // The worn hat sits on top of the head and hops along with it.
+    // The worn hat sits on top of the head.
+    const headTop = FEET_Y - (characterFeetRow + 1 - characterHeadTop)
     this.hatText = this.add
-      .text(0, -4.5, '', { fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif', fontSize: '64px' })
+      .text(0, headTop + 7, '', { fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif', fontSize: '64px' })
       .setOrigin(0.5, 1)
-      .setScale(0.15)
+      .setScale(0.16)
+    this.hatText.texture.setFilter(Phaser.Textures.FilterMode.LINEAR)
     this.applyHat()
 
-    this.playerBody = this.add.container(0, 0, [body, this.hatText])
-    return this.add.container(0, 0, [shadow, this.playerBody]).setDepth(10)
+    return this.add.container(0, 0, [shadow, this.playerSprite, this.hatText])
   }
 
   /** Shows the worn hat (an emoji) on the character, or none. */
@@ -402,11 +370,7 @@ export class HubScene extends Phaser.Scene {
     const next = stationNextTo(this.map, this.playerTile)
     if (next === this.highlighted) return
     this.highlighted = next
-    for (const marker of this.markers) {
-      const on = marker.station === next
-      this.paintSign(marker.sign, on)
-      marker.container.setScale(on ? 1.12 : 1)
-    }
+    for (const marker of this.markers) marker.sign.setTexture(signKey(marker.station === next))
   }
 
   // --- For tests (dev builds only, see hubGame.ts) -----------------------

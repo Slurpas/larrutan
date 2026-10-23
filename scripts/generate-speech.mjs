@@ -25,7 +25,7 @@ const regenerateAll = process.argv.includes('--all')
 const server = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false } })
 const { spokenTexts } = await server.ssrLoadModule('/src/speech/catalogue.ts')
 const { clipFileName } = await server.ssrLoadModule('/src/speech/clipName.ts')
-const { pronunciations, withPronunciations } = await server.ssrLoadModule('/src/content/pronunciation.ts')
+const { pauseMark, pronunciations, speechInput } = await server.ssrLoadModule('/src/content/pronunciation.ts')
 const { speechVoice } = await server.ssrLoadModule('/src/speech/voiceSettings.ts')
 const { countReviews, noApprovals, pruneApprovals } = await server.ssrLoadModule('/src/speech/review/approvals.ts')
 await server.close()
@@ -48,8 +48,8 @@ for (const [word, ipa] of Object.entries(pronunciations)) {
   }
 }
 
-// What Piper is asked to say: the sentence, with fixed pronunciations swapped in.
-const clips = spokenTexts().map((text) => ({ text, file: clipFileName(text), input: withPronunciations(text) }))
+// What Piper is asked to say: the sentence, with pauses marked and fixed pronunciations swapped in.
+const clips = spokenTexts().map((text) => ({ text, file: clipFileName(text), input: speechInput(text) }))
 mkdirSync(audioDir, { recursive: true })
 
 // A clip whose sentence, pronunciation or voice changed has a new file name, so only missing files are generated.
@@ -60,7 +60,11 @@ const todo = clips.filter((clip) => regenerateAll || !existsSync(path.join(audio
 console.log(`${clips.length} sentences, ${todo.length} to generate`)
 
 if (todo.length > 0) {
-  const jobs = todo.map((clip, i) => ({ text: clip.input, wav: path.join(work, `${i}.wav`) }))
+  // A clip with pause marks is said in parts, joined with a short silence (Piper won't pause mid-sentence).
+  const parts = todo.map((clip, i) =>
+    clip.input.split(pauseMark).map((text, p) => ({ text: text.trim(), wav: path.join(work, `${i}-${p}.wav`) })),
+  )
+  const jobs = parts.flat()
   const jobsPath = path.join(work, 'jobs.json')
   writeFileSync(jobsPath, JSON.stringify(jobs), 'utf8')
   execFileSync(python, [path.join(root, 'scripts/piper_batch.py'), modelPath, jobsPath, String(speechVoice.lengthScale)], {
@@ -76,8 +80,18 @@ if (todo.length > 0) {
     'areverse',
     'loudnorm=I=-16:TP=-1.5:LRA=11',
   ].join(',')
+  const pause = path.join(work, 'pause.wav')
+  execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-f', 'lavfi', '-i', 'anullsrc=r=22050:cl=mono', '-t', String(speechVoice.pauseSeconds), '-c:a', 'pcm_s16le', pause])
   for (const [i, clip] of todo.entries()) {
-    execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', jobs[i].wav, '-af', filters, '-ar', '24000', '-ac', '1', '-b:a', '48k', path.join(audioDir, clip.file)])
+    let source = parts[i][0].wav
+    if (parts[i].length > 1) {
+      const list = path.join(work, `${i}.txt`)
+      const files = parts[i].flatMap((part, p) => (p === 0 ? [part.wav] : [pause, part.wav]))
+      writeFileSync(list, files.map((file) => `file '${file.replace(/\\/g, '/')}'`).join('\n'), 'utf8')
+      source = path.join(work, `${i}.wav`)
+      execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', source])
+    }
+    execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', source, '-af', filters, '-ar', '24000', '-ac', '1', '-b:a', '48k', path.join(audioDir, clip.file)])
   }
 }
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { spokenTexts } from '../speech/catalogue'
-import { pronunciations, withPronunciations } from './pronunciation'
+import { pronunciations, speechInput, withPauses, withPronunciations } from './pronunciation'
 
 describe('pronunciation fixes', () => {
   it('replaces whole words only, keeping punctuation and capitals elsewhere', () => {
@@ -9,6 +9,14 @@ describe('pronunciation fixes', () => {
     expect(withPronunciations('Orm.')).toBe('[[ ˈʊrm. ]]')
     expect(withPronunciations('Klara en runda så får du kepsen.')).toBe('Klara en runda så får du [[ kˈɛpsən. ]]')
     expect(withPronunciations('Var är A?')).toBe('Var är A?')
+  })
+
+  it('pauses before what the child must find in "Var är …?", and nowhere else', () => {
+    expect(withPauses('Var är Å?')).toBe('Var är, | Å?')
+    expect(withPauses('Var är solen?')).toBe('Var är, | solen?')
+    expect(withPauses('Det där är Å.')).toBe('Det där är Å.')
+    expect(withPauses('Vilken bokstav börjar sol på?')).toBe('Vilken bokstav börjar sol på?')
+    expect(speechInput('Var är ananasen?')).toBe('Var är, | [[ ˈananasən? ]]')
   })
 
   it('only lists words the game actually says', () => {

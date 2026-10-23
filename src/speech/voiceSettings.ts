@@ -8,11 +8,17 @@ export interface SpeechVoice {
   voice: string
   /** Above 1 speaks more slowly. */
   lengthScale: number
+  /** Silence where the speech input has a pause mark ("Var är … Å?"). */
+  pauseSeconds: number
 }
 
-/** Alma: a female Swedish voice (CC BY 4.0, NST dataset). Her natural pace is quick, so she is slowed down for young listeners. */
+/**
+ * Alma: a female Swedish voice (CC BY 4.0, NST dataset). Her natural pace is quick, so she is
+ * slowed down for young listeners: 1.4 was picked by ear on 2026-10-23 (1.2 was too fast).
+ */
 export const speechVoice: SpeechVoice = {
   engine: 'Piper (piper-tts 1.8.0)',
   voice: 'sv_SE-alma-medium',
-  lengthScale: 1.2,
+  lengthScale: 1.4,
+  pauseSeconds: 0.15,
 }

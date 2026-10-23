@@ -46,7 +46,7 @@ Every check passes on the final state:
 | # | What | Why it waits |
 |---|---|---|
 | ~~W1~~ | **Hosting: decided, GitHub Pages.** Live at https://slurpas.github.io/larrutan/. The repository is public, with commit emails switched to GitHub's no-reply address first | Done |
-| W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet) | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
+| W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet). *Speed decided 2026-10-23: 1.4, with a pause before the target in "Var är … Å?". All clips regenerated.* | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
 | W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Ready now, see "Check on the iPad" below |
 | W4 | **Voice review:** go through the 209 clips on `?review=voices` (about 15–20 minutes) | Only your ear can approve them |
 | W5 | **Art style:** A (pixel 16), B (pixel 32) or C (soft vector, my pick), see `docs/art-direction/overview.png` | Your call; Task 9 (real graphics) and Task 10 (wardrobe) wait for it |

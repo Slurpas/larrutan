@@ -43,6 +43,23 @@ export const pronunciations: Record<string, string> = {
  * syntax: "keps!" → "[[ kˈɛps! ]]". Punctuation right after the word goes
  * inside the block, or Piper drops it and loses the question/exclamation tone.
  */
+/** Where the speech generator puts a short silence: it says each part on its own and joins them. */
+export const pauseMark = '|'
+
+/**
+ * "Var är Å?" → "Var är, | Å?": a short pause before what the child must find, so it
+ * stands out (user feedback 2026-10-23). The comma keeps the question going in the voice.
+ * Piper itself makes no real pause inside a sentence, whatever the punctuation.
+ */
+export function withPauses(text: string): string {
+  return text.replace(/^(Var är) (.+\?)$/u, `$1, ${pauseMark} $2`)
+}
+
+/** What the speech engine is given for a sentence: pauses, then fixed pronunciations. */
+export function speechInput(text: string): string {
+  return withPronunciations(withPauses(text))
+}
+
 export function withPronunciations(text: string): string {
   return text.replace(/(\p{L}+)([!?.,]?)/gu, (match, word: string, punctuation: string) => {
     const ipa = pronunciations[word.toLocaleLowerCase('sv')]

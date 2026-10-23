@@ -155,7 +155,7 @@ The first prototype used the browser's built-in Swedish voice (Web Speech API). 
 
 A script (`npm run speech`) generates every needed clip from the content data, once, at build time. The files are stored in the project; the game never calls a speech service while a child plays. A test fails if any sentence the game can say has no clip.
 
-Current engine: **Piper** (free, offline, no account) with the female Swedish voice "Alma" (`sv_SE-alma-medium`, CC BY 4.0, credit required), slowed slightly for young listeners. Still to do in Task 6: compare it by ear with other engines. Gemini TTS (free tier, no card) was sampled on 2026-10-23; Azure and Google need a card and were dropped.
+Current engine: **Piper** (free, offline, no account) with the female Swedish voice "Alma" (`sv_SE-alma-medium`, CC BY 4.0, credit required), slowed for young listeners (length scale 1.4, picked by ear on 2026-10-23). "Var är …?" questions have a short pause, about 0.4 s, before what the child must find ("Var är … Å?"), so the target stands out. Still to do in Task 6: compare it by ear with other engines. Gemini TTS (free tier, no card) was sampled on 2026-10-23; Azure and Google need a card and were dropped.
 
 Long instructions are said only until the child knows the game: Första bokstaven says "Vilken bokstav börjar sol på?" for the very first picture, then just the word ("Öra."), also after a wrong tap and when the picture is tapped. The speaker button always gives the full question. Words the engine mispronounces are fixed in a pronunciation list (`src/content/pronunciation.ts`).
 

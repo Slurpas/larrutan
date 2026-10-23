@@ -34,7 +34,7 @@ Changed files, commands run and their results, screenshots, known limitations, a
 - `npm run typecheck`: `tsc -b` over `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, tests)
 - `npm run lint`: ESLint
 - `npm test`: Vitest unit tests (`src/**/*.test.ts(x)`)
-- `npm run test:e2e`: Playwright (`tests/e2e`), desktop Chromium + iPad WebKit, on its own port 5199. Silent: specs import `test` from `tests/e2e/fixtures.ts`, which mutes every page (ESLint enforces it), because test audio reached the user's speakers. `offline.spec.ts` runs against a release build (built into `.e2e-dist`, served on 4199), because the service worker only exists there
+- `npm run test:e2e`: Playwright (`tests/e2e`), desktop Chromium + iPad WebKit, on its own port 5199. Silent: specs import `test` from `tests/e2e/fixtures.ts` (ESLint enforces it), which keeps every clip away from the browser's media engine and fakes playback events, because test audio reached the user's speakers (muting alone didn't stop WebKit). `offline.spec.ts` runs against a release build (built into `.e2e-dist`, served on 4199), because the service worker only exists there
 - `npm run build`: typecheck + Vite build
 - `npm run speech`: generate missing speech clips with Piper (setup in README). Run it after any change to letters, words, phrases, challenge wording, `src/content/pronunciation.ts` or `src/speech/voiceSettings.ts`; `catalogue.test.ts` fails until you do. It also prints the review status and lists rejected clips with the user's notes
 - `npm run sfx`: re-synthesise the sound effects (chime, fanfare, level-up, new item) in `src/sound/sfx/`

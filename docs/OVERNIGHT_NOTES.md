@@ -19,6 +19,19 @@ Queue (details in `docs/CLAUDE_TASKS.md`, Tasks 14–18):
 
 Results and decisions are added below as each task is done.
 
+### 1. Items (Task 14): done
+- **What changed:**
+  - A round gives at most one item, and only every other round.
+  - The catalogue grew from 18 to 37 items (`docs/sprites/wardrobe.png` shows them all).
+  - "Mina saker" scrolls.
+- **Pacing in typical play:** commons until about round 13, then uncommon, rare from about round 35, epic from 60, the crown around round 80.
+- **Decisions I made:**
+  - "Every other round" rather than a random chance: it is predictable and never random (PRD §10).
+  - Items earned at the same time arrive in list order, commons first, so the good stuff still takes play.
+  - Options I'd have asked about: every third round instead; or no fixed rhythm, only the thresholds (that gave an item almost every round early on).
+- **To check:** do the items still feel like a treat, or too rare at the start? 38 new sentences ("Du fick en vikingahjälm!" and the hints) wait on `?review=voices`.
+- **Note:** I used `npx prettier` once to check a file. Prettier isn't part of the project, so npm downloaded it to its cache. It changed nothing, and I won't use it again.
+
 # Night 1 (2026-10-23)
 
 You asked me to keep working while you sleep:

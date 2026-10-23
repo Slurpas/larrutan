@@ -72,9 +72,14 @@ export function completeRound(
     completedLevels: firstCompletion ? [...progress.completedLevels, key] : progress.completedLevels,
     mastery: recordPractice(progress.mastery, completion.challenge, completion.practiced),
   }
-  const newItems = items
-    .filter((item) => !next.unlockedItems.includes(item.id) && isUnlocked(item.unlock, next))
-    .map((item) => item.id)
+  // Items are rare treats (user feedback 2026-10-24): at most one, and only every other round
+  // (rounds 1, 3, 5, …). It is the first one earned, in catalogue order; anything else earned
+  // waits for a later round.
+  const earned =
+    next.roundsCompleted % 2 === 1
+      ? items.find((item) => !next.unlockedItems.includes(item.id) && isUnlocked(item.unlock, next))
+      : undefined
+  const newItems = earned ? [earned.id] : []
 
   const outcome: RoundOutcome = {
     xpGained,

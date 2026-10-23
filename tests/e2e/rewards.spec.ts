@@ -60,7 +60,7 @@ test('a finished round unlocks the cap, which can be worn on the map', async ({ 
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
 
   await press(page.getByRole('button', { name: 'Mina saker' }), hasTouch)
-  const cap = page.getByRole('button', { name: 'Keps, Vanlig' })
+  const cap = page.getByRole('button', { name: 'Keps, Vanlig', exact: true })
   await expect(cap).toHaveAttribute('aria-pressed', 'false')
   // Locked items are visible, with their rarity, but can't be worn.
   await expect(page.getByRole('button', { name: 'Krona, Legendarisk, låst' })).toBeVisible()
@@ -72,16 +72,18 @@ test('a finished round unlocks the cap, which can be worn on the map', async ({ 
   await expect.poll(() => page.evaluate(() => window.__larrutanHub?.outfit().head)).toBe('cap')
 })
 
-test('the second visit is the hard level, which earns the striped sweater', async ({ page, hasTouch }) => {
+test('the second visit is the hard level; items come at most every other round', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   await tapStation(page, 'findLetter', hasTouch)
   await playRoundByKeyboard(page, easyRound)
+  await expect(page.getByRole('img', { name: 'Ny sak: Keps' })).toBeVisible()
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
 
   await tapStation(page, 'findLetter', hasTouch)
   await expect(page.getByRole('img', { name: 'Svår nivå' })).toBeVisible()
   await playRoundByKeyboard(page, hardRound)
-  await expect(page.getByRole('img', { name: 'Ny sak: Randig tröja' })).toBeVisible()
+  // The blue sweater and the striped one are earned by now, but the second round gives nothing.
+  await expect(page.getByRole('img', { name: /^Ny sak/ })).toHaveCount(0)
 })
 
 test('progress is saved on the device and survives a reload', async ({ page, hasTouch }) => {
@@ -90,7 +92,7 @@ test('progress is saved on the device and survives a reload', async ({ page, has
   await playRoundByKeyboard(page, easyRound)
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
   await press(page.getByRole('button', { name: 'Mina saker' }), hasTouch)
-  await press(page.getByRole('button', { name: 'Keps, Vanlig' }), hasTouch)
+  await press(page.getByRole('button', { name: 'Keps, Vanlig', exact: true }), hasTouch)
   // Saving takes a moment; reloading in the same instant could beat it.
   await expect.poll(() => savedWornItem(page)).toBe('cap')
 

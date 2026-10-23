@@ -70,6 +70,30 @@ export const pronunciations: Record<string, string> = {
   tio: 'tˈiːʊ',
   nio: 'nˈiːʊ',
   trettiofem: 'trˈɛtːɪʊfˌɛm',
+  // The bigger wardrobe (Task 14), fixed the same ways as above.
+  fyrtiofem: 'fˈœʈɪʊfˌɛm',
+  sextiofem: 'sˈɛkstɪʊfˌɛm',
+  hundrafemtio: 'hˈɵndrafˌɛmtɪ',
+  stjärnbyxor: 'ʂˈɛːrnbˌʏksʊr',
+  stjärnbyxorna: 'ʂˈɛːrnbˌʏksʊrna',
+  fjärilsvingarna: 'fjˈɛːrɪlsvˌɪŋarna',
+  guldvingarna: 'ɡˈɵldvˌɪŋarna',
+  // "party" as Swedes say it, not with a y.
+  partyhatt: 'pˈɑːʈɪhˌat',
+  partyhatten: 'pˈɑːʈɪhˌatːən',
+  // "sol" in solros is long (suːl), not "soll".
+  solros: 'sˈuːlrˌuːs',
+  solrosen: 'sˈuːlrˌuːsən',
+  // Stress on the first part of the compound.
+  kockmössa: 'kˈɔkmˌœsa',
+  kockmössan: 'kˈɔkmˌœsan',
+  regnbågsmantel: 'rˈɛŋnboːɡsmˌantəl',
+  regnbågsmanteln: 'rˈɛŋnboːɡsmˌantəln',
+  // "hjälm" with a clear ä.
+  vikingahjälm: 'vˈiːkɪŋaˌjɛlm',
+  vikingahjälmen: 'vˈiːkɪŋaˌjɛlmən',
+  // A long Swedish u, not "göl".
+  gul: 'ɡˈʉːl',
 }
 
 /**

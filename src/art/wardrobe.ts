@@ -138,6 +138,53 @@ const crown = [
   '..oooooooooooo..',
 ]
 
+/** A party hat: a striped cone with a pompom. */
+const partyHat = (() => {
+  const p = new Pixels(16, 14)
+  p.polygon([[8, 3], [12.6, 13], [3.4, 13]], 'r')
+  p.shade('r', 'y', (_x, y) => y % 4 === 0 || y % 4 === 1)
+  p.ellipse(8, 3, 2, 2, 'w')
+  return p.outline('o').toGrid()
+})()
+
+/** A viking helmet: a steel dome with a band and two horns. */
+const vikingHelmet = (() => {
+  const v = new Pixels(22, 11)
+  v.polygon([[3, 8], [0.5, 1.5], [2.5, 1], [5.5, 7]], 'e').polygon([[19, 8], [21.5, 1.5], [19.5, 1], [16.5, 7]], 'e')
+  v.shade('e', 'L', (x) => x <= 2 || x >= 19)
+  v.ellipse(11, 9, 7, 6.5, 'n')
+  v.rect(0, 10, 22, 1, '.')
+  v.shade('n', 'g', (x, y) => x < 9 && y < 7)
+  v.rect(4, 8, 14, 2, 'm').set(11, 4, 'm').set(11, 5, 'm').set(11, 6, 'm').set(11, 7, 'm')
+  return v.outline('o').toGrid()
+})()
+
+/** A pirate hat: a black hat with an upturned brim and a gold edge. */
+const pirateHat = (() => {
+  const h = new Pixels(20, 10)
+  h.ellipse(10, 6, 6, 4.5, 'B')
+  h.polygon([[1, 8], [5, 4], [10, 6.5], [15, 4], [19, 8], [10, 9]], 'B')
+  h.shade('B', 'm', (x, y) => x < 8 && y < 5)
+  h.rect(3, 8, 14, 1, 'y')
+  h.set(10, 4, 'w').set(9, 5, 'w').set(11, 5, 'w')
+  return h.outline('o').toGrid()
+})()
+
+/** A chef's hat: a tall white puff on a band. */
+const chefHat = (() => {
+  const c = new Pixels(16, 13)
+  c.ellipse(5, 4.5, 3.5, 3.5, 'w').ellipse(11, 4.5, 3.5, 3.5, 'w').ellipse(8, 3.5, 4, 3.5, 'w')
+  c.rect(4, 5, 8, 6, 'w')
+  c.shade('w', 'g', (x, y) => x >= 10 && y >= 4)
+  c.rect(4, 10, 8, 2, 'g')
+  return c.outline('o').toGrid()
+})()
+
+/** A recoloured cap. */
+const capIn = (colors: Record<string, string>) => ({ down: swap(capDown, colors), side: swap(capSide, colors) })
+const redCap = capIn({ u: 'r', U: 'p', m: 'R' })
+const greenCap = capIn({ u: 'G', U: 'Q', m: 'm' })
+
 // --- Back items ---------------------------------------------------------------
 
 const backpackStraps = ['.....D....D.....', '.....D....D.....', '.....D....D.....', '.....D....D.....']
@@ -162,6 +209,15 @@ const capeSide = (() => {
   return shape.outline('o').toGrid()
 })()
 const gold = { r: 'y', R: 'Y' }
+const green = { r: 'Q', R: 'G' }
+/** Repaints a cape's red, two rows at a time, in the colours of the rainbow. */
+const rainbowRows = (grid: readonly string[]): string[] => {
+  const bands = [['r', 'R'], ['Y', 'Y'], ['y', 'Y'], ['q', 'G'], ['u', 'm']] as const
+  return grid.map((row, y) => {
+    const [light, dark] = bands[Math.floor(y / 2) % bands.length]!
+    return [...row].map((c) => (c === 'r' ? light : c === 'R' ? dark : c)).join('')
+  })
+}
 
 function wing(width: number, height: number): string[] {
   return new Pixels(width + 2, height + 2)
@@ -185,6 +241,17 @@ const wingsOnBack = (() => {
 // --- Held items ---------------------------------------------------------------
 
 const flower = outlined(['.www.', 'wwyww', '.www.', '..G..', '.GG..', '..G..', '..G..'])
+
+/** A sunflower: big yellow petals round a brown middle, on a long stem. */
+const sunflower = (() => {
+  const f = new Pixels(11, 18)
+  f.rect(5, 8, 1, 10, 'G').rect(3, 12, 2, 1, 'Q')
+  f.ellipse(5.5, 5, 4.5, 4.5, 'y')
+  f.shade('y', 'Y', (x, y) => (x + y) % 3 === 0)
+  f.ellipse(5.5, 5, 2, 2, 'D')
+  return f.outline('o').toGrid()
+})()
+const blue = { r: 'u', R: 'm', p: 'U' }
 
 const balloon = (() => {
   const shape = new Pixels(9, 27)
@@ -214,6 +281,12 @@ export const wardrobe: Readonly<Record<string, ItemArt>> = {
   'top-hat': { kind: 'sprite', down: { grid: topHat, x: 0, y: -5 } },
   'graduation-cap': { kind: 'sprite', down: { grid: studentCap, x: 0, y: 0 }, side: { grid: studentCapSide, x: 0, y: 0 } },
   crown: { kind: 'sprite', down: { grid: crown, x: 0, y: -2 } },
+  'red-cap': { kind: 'sprite', down: { grid: redCap.down, x: 0, y: 1 }, side: { grid: redCap.side, x: 0, y: 1 } },
+  'green-cap': { kind: 'sprite', down: { grid: greenCap.down, x: 0, y: 1 }, side: { grid: greenCap.side, x: 0, y: 1 } },
+  'party-hat': { kind: 'sprite', down: { grid: partyHat, x: 0, y: -8 } },
+  'viking-helmet': { kind: 'sprite', down: { grid: vikingHelmet, x: -3, y: -3 } },
+  'pirate-hat': { kind: 'sprite', down: { grid: pirateHat, x: -2, y: -2 } },
+  'chef-hat': { kind: 'sprite', down: { grid: chefHat, x: 0, y: -7 } },
 
   // Clothes repaint the shirt or trousers.
   'blue-sweater': { kind: 'recolor', rows: [{ r: 'u', R: 'm', p: 'U' }] },
@@ -226,6 +299,18 @@ export const wardrobe: Readonly<Record<string, ItemArt>> = {
   },
   'star-sweater': { kind: 'recolor', rows: [{ r: 'B', R: 'B', p: 'm' }], dots: { color: 'y', every: 5 } },
   'green-trousers': { kind: 'recolor', rows: [{ b: 'Q', B: 'G' }] },
+  'yellow-sweater': { kind: 'recolor', rows: [{ r: 'y', R: 'Y', p: 'e' }] },
+  'pink-sweater': { kind: 'recolor', rows: [{ r: 'p', R: 'c', p: 'e' }] },
+  'green-striped-sweater': {
+    kind: 'recolor',
+    rows: [
+      { r: 'w', R: 'g', p: 'w' },
+      { r: 'q', R: 'G', p: 'q' },
+    ],
+  },
+  'red-trousers': { kind: 'recolor', rows: [{ b: 'r', B: 'R' }] },
+  'yellow-trousers': { kind: 'recolor', rows: [{ b: 'y', B: 'Y' }] },
+  'star-trousers': { kind: 'recolor', rows: [{ b: 'B', B: 'B' }], dots: { color: 'y', every: 4 } },
   'rainbow-trousers': {
     kind: 'recolor',
     rows: [
@@ -262,6 +347,36 @@ export const wardrobe: Readonly<Record<string, ItemArt>> = {
     up: { grid: wingsOnBack, x: -2, y: 13 },
     side: { grid: wingSmall, x: -3, y: 12, behind: true },
   },
+  'red-backpack': {
+    kind: 'sprite',
+    down: { grid: swap(backpackStraps, { D: 'R' }), x: 0, y: 17 },
+    up: { grid: swap(backpackBack, { L: 'p', d: 'r', D: 'R' }), x: 3, y: 16 },
+    side: { grid: swap(backpackSide, { L: 'p', d: 'r', D: 'R' }), x: 0, y: 16, behind: true },
+  },
+  'green-cape': {
+    kind: 'sprite',
+    down: { grid: swap(capeFront, green), x: -1, y: 16, behind: true },
+    up: { grid: swap(capeBack, green), x: -1, y: 16 },
+    side: { grid: swap(capeSide, green), x: -1, y: 16, behind: true },
+  },
+  'rainbow-cape': {
+    kind: 'sprite',
+    down: { grid: rainbowRows(capeFront), x: -1, y: 16, behind: true },
+    up: { grid: rainbowRows(capeBack), x: -1, y: 16 },
+    side: { grid: rainbowRows(capeSide), x: -1, y: 16, behind: true },
+  },
+  'butterfly-wings': {
+    kind: 'sprite',
+    down: { grid: swap(wingsBehind, { w: 'p', g: 'c' }), x: -5, y: 12, behind: true },
+    up: { grid: swap(wingsOnBack, { w: 'p', g: 'c' }), x: -2, y: 13 },
+    side: { grid: swap(wingSmall, { w: 'p', g: 'c' }), x: -3, y: 12, behind: true },
+  },
+  'gold-wings': {
+    kind: 'sprite',
+    down: { grid: swap(wingsBehind, { w: 'y', g: 'Y' }), x: -5, y: 12, behind: true },
+    up: { grid: swap(wingsOnBack, { w: 'y', g: 'Y' }), x: -2, y: 13 },
+    side: { grid: swap(wingSmall, { w: 'y', g: 'Y' }), x: -3, y: 12, behind: true },
+  },
 
   // Held items: in the hand (row 21), behind the body when seen from behind.
   flower: {
@@ -276,6 +391,18 @@ export const wardrobe: Readonly<Record<string, ItemArt>> = {
     up: { grid: balloon, x: -3, y: -5, behind: true },
     // From the side the balloon floats behind the head.
     side: { grid: balloon, x: 5, y: -5, behind: true },
+  },
+  'blue-balloon': {
+    kind: 'sprite',
+    down: { grid: swap(balloon, blue), x: 10, y: -5 },
+    up: { grid: swap(balloon, blue), x: -3, y: -5, behind: true },
+    side: { grid: swap(balloon, blue), x: 5, y: -5, behind: true },
+  },
+  sunflower: {
+    kind: 'sprite',
+    down: { grid: sunflower, x: 10, y: 9 },
+    up: { grid: sunflower, x: -1, y: 9, behind: true },
+    side: { grid: sunflower, x: 5, y: 9 },
   },
   wand: {
     kind: 'sprite',

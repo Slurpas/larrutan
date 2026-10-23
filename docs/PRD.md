@@ -272,17 +272,17 @@ Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the r
 
 **Phase 1 implementation (Task 5):** easy XP 20, hard XP 30, replays a quarter; levels at 30, 70, 120, 180 XP. Hitta bokstaven and Första bokstaven have an easy and a hard level (hard offers exactly one look-alike of the answer); a sign opens the first level not yet completed. Five emoji hats, one per rarity (replaced by the wardrobe in Task 10). Progress is saved on the device since Task 7 (§12).
 
-**Wardrobe (Task 10):** 18 pixel-art items in five slots. The hard levels can be finished in the first session, so they give uncommon items, not rare ones.
+**Wardrobe (Task 10, bigger in Task 14):** pixel-art items in five slots. A round gives **at most one item, and only every other round** (user feedback 2026-10-24); when more are earned they wait, in the order of the list below. The hard levels can be finished in the first session, so they give uncommon items, not rare ones.
 
 | Tier | Items and how they are earned |
 |---|---|
-| Vanlig | keps (first round), blå tröja, gröna byxor, mössa (the easy level of each challenge), blomma (3 rounds) |
-| Ovanlig | rosett (level 3), randig tröja and ballong (the hard levels), ryggsäck (10 rounds) |
-| Sällsynt | hög hatt (level 6), stjärntröja (level 7), mantel (25 rounds), trollstav (35 rounds) |
-| Episk | studentmössa (level 9), vingar (60 rounds), regnbågsbyxor (every letter of Hitta bokstaven in the top mastery box) |
-| Legendarisk | krona (level 10), guldmantel (every word of Första bokstaven in the top mastery box) |
+| Vanlig | keps (first round), blå tröja, gröna byxor, mössa (the easy level of each challenge), blomma (3 rounds), röd keps (5), gul tröja (7) |
+| Ovanlig | rosett (level 3), randig tröja and ballong (the hard levels), ryggsäck (10 rounds), rosa tröja (12), grön keps (level 4), partyhatt (level 5), blå ballong (15), röda byxor (18), solros (20) |
+| Sällsynt | hög hatt (level 6), mantel (25 rounds), stjärntröja (level 7), grön mantel (30), trollstav (35), vikingahjälm (level 8), grönrandig tröja (40), röd ryggsäck (45), gula byxor (50) |
+| Episk | studentmössa (level 9), vingar (60 rounds), regnbågsbyxor (every letter of Hitta bokstaven in the top mastery box), pirathatt (65), fjärilsvingar (80), kockmössa (90), stjärnbyxor (every word of Ord och bild in the top box) |
+| Legendarisk | krona (level 10), guldmantel (every word of Första bokstaven in the top box), guldvingar (level 13), regnbågsmantel (150 rounds) |
 
-Unit tests play rounds and check the timing: at most uncommon after a first session, rare by 40 rounds, nothing epic at 50, the crown between 70 and 100 rounds. The mastery items depend on how well and how often the child plays; with 12 letters, the rainbow trousers need at least 10 perfect rounds of Hitta bokstaven.
+Unit tests play rounds and check the timing: at most uncommon after a first session, rare by 40 rounds, nothing epic at 50, the crown between 70 and 100 rounds, never more than one item per round and never two rounds in a row. The mastery items depend on how well and how often the child plays; with 12 letters, the rainbow trousers need at least 10 perfect rounds of Hitta bokstaven.
 
 ## 11. Accessibility
 

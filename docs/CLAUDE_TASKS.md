@@ -269,6 +269,12 @@ Done one by one, each in its own local commit, not pushed until the user has che
 - A round gives at most one new item; anything else earned waits for a later round.
 - Many more items, so the good ones take real play.
 
+Status 2026-10-24: **done.**
+- **At most one item, and only every other round** (rounds 1, 3, 5, …). It is the first earned item in catalogue order (commons first); the rest wait.
+- **37 items instead of 18:** colour variants (caps, sweaters, trousers, capes, a backpack, a balloon, wings) and five new pieces of art (party hat, viking helmet, pirate hat, chef's hat, sunflower).
+- **Typical pacing** (unit-tested): commons up to round 13, uncommon to round 33, rare from 35, epic from about 60, the crown around round 80, the last legendary at round 150.
+- **"Mina saker" scrolls**, since the items no longer fit one screen.
+
 #### Task 15 — Difficulty that is really harder, and says how
 - The hard level is clearly harder (four choices, with look-alikes), and the voice says what changed instead of just "Nu blir det svårare".
 - A clear rule for when a station goes up a level, and back down (gentle, PRD §6).

@@ -35,9 +35,11 @@ export interface Item {
 }
 
 /**
- * The wardrobe (Task 10). Rarity follows the time it takes to earn (PRD §10):
- * common in the first session, uncommon in the first few, rare in about a week
- * of play, epic in several weeks, legendary for long-term goals. High tiers are
+ * The wardrobe (Tasks 10 and 14), in the order items are handed out: a round gives at
+ * most one new item, so when several are earned at once the first one in this list
+ * comes now and the others in the next rounds. Rarity follows the time it takes to earn
+ * (PRD §10): common in the first session, uncommon in the first few, rare in about a
+ * week of play, epic in several weeks, legendary for long-term goals. High tiers are
  * never random, bought, or dependent on error-free play: bragging items.
  */
 export const items: readonly Item[] = [
@@ -87,6 +89,24 @@ export const items: readonly Item[] = [
     unlock: { type: 'roundsCompleted', count: 3 },
     hint: 'Klara tre rundor så får du blomman.',
   },
+  {
+    id: 'red-cap',
+    name: 'Röd keps',
+    slot: 'head',
+    indefinite: 'en röd keps',
+    rarity: 1,
+    unlock: { type: 'roundsCompleted', count: 5 },
+    hint: 'Klara fem rundor så får du den röda kepsen.',
+  },
+  {
+    id: 'yellow-sweater',
+    name: 'Gul tröja',
+    slot: 'top',
+    indefinite: 'en gul tröja',
+    rarity: 1,
+    unlock: { type: 'roundsCompleted', count: 7 },
+    hint: 'Klara sju rundor så får du den gula tröjan.',
+  },
   // Ovanlig: the first few sessions.
   {
     id: 'bow',
@@ -124,6 +144,60 @@ export const items: readonly Item[] = [
     unlock: { type: 'levelCompleted', challenge: 'firstLetter', difficulty: 'hard' },
     hint: 'Klara den svåra nivån i Första bokstaven så får du ballongen.',
   },
+  {
+    id: 'pink-sweater',
+    name: 'Rosa tröja',
+    slot: 'top',
+    indefinite: 'en rosa tröja',
+    rarity: 2,
+    unlock: { type: 'roundsCompleted', count: 12 },
+    hint: 'Klara tolv rundor så får du den rosa tröjan.',
+  },
+  {
+    id: 'green-cap',
+    name: 'Grön keps',
+    slot: 'head',
+    indefinite: 'en grön keps',
+    rarity: 2,
+    unlock: { type: 'playerLevel', level: 4 },
+    hint: 'Nå nivå fyra så får du den gröna kepsen.',
+  },
+  {
+    id: 'party-hat',
+    name: 'Partyhatt',
+    slot: 'head',
+    indefinite: 'en partyhatt',
+    rarity: 2,
+    unlock: { type: 'playerLevel', level: 5 },
+    hint: 'Nå nivå fem så får du partyhatten.',
+  },
+  {
+    id: 'blue-balloon',
+    name: 'Blå ballong',
+    slot: 'held',
+    indefinite: 'en blå ballong',
+    rarity: 2,
+    unlock: { type: 'roundsCompleted', count: 15 },
+    hint: 'Klara femton rundor så får du den blå ballongen.',
+  },
+  {
+    id: 'red-trousers',
+    name: 'Röda byxor',
+    slot: 'bottoms',
+    indefinite: 'röda byxor',
+    rarity: 2,
+    unlock: { type: 'roundsCompleted', count: 18 },
+    hint: 'Klara arton rundor så får du de röda byxorna.',
+  },
+  {
+    id: 'sunflower',
+    name: 'Solros',
+    slot: 'held',
+    indefinite: 'en solros',
+    rarity: 2,
+    unlock: { type: 'roundsCompleted', count: 20 },
+    hint: 'Klara tjugo rundor så får du solrosen.',
+  },
   // Sällsynt: about a week.
   {
     id: 'top-hat',
@@ -153,6 +227,15 @@ export const items: readonly Item[] = [
     hint: 'Nå nivå sju så får du stjärntröjan.',
   },
   {
+    id: 'green-cape',
+    name: 'Grön mantel',
+    slot: 'back',
+    indefinite: 'en grön mantel',
+    rarity: 3,
+    unlock: { type: 'roundsCompleted', count: 30 },
+    hint: 'Klara trettio rundor så får du den gröna manteln.',
+  },
+  {
     id: 'wand',
     name: 'Trollstav',
     slot: 'held',
@@ -160,6 +243,42 @@ export const items: readonly Item[] = [
     rarity: 3,
     unlock: { type: 'roundsCompleted', count: 35 },
     hint: 'Klara trettiofem rundor så får du trollstaven.',
+  },
+  {
+    id: 'viking-helmet',
+    name: 'Vikingahjälm',
+    slot: 'head',
+    indefinite: 'en vikingahjälm',
+    rarity: 3,
+    unlock: { type: 'playerLevel', level: 8 },
+    hint: 'Nå nivå åtta så får du vikingahjälmen.',
+  },
+  {
+    id: 'green-striped-sweater',
+    name: 'Grönrandig tröja',
+    slot: 'top',
+    indefinite: 'en grönrandig tröja',
+    rarity: 3,
+    unlock: { type: 'roundsCompleted', count: 40 },
+    hint: 'Klara fyrtio rundor så får du den grönrandiga tröjan.',
+  },
+  {
+    id: 'red-backpack',
+    name: 'Röd ryggsäck',
+    slot: 'back',
+    indefinite: 'en röd ryggsäck',
+    rarity: 3,
+    unlock: { type: 'roundsCompleted', count: 45 },
+    hint: 'Klara fyrtiofem rundor så får du den röda ryggsäcken.',
+  },
+  {
+    id: 'yellow-trousers',
+    name: 'Gula byxor',
+    slot: 'bottoms',
+    indefinite: 'gula byxor',
+    rarity: 3,
+    unlock: { type: 'roundsCompleted', count: 50 },
+    hint: 'Klara femtio rundor så får du de gula byxorna.',
   },
   // Episk: several weeks.
   {
@@ -189,6 +308,42 @@ export const items: readonly Item[] = [
     unlock: { type: 'mastered', challenge: 'findLetter', box: 5 },
     hint: 'Lär dig alla bokstäverna i Hitta bokstaven så får du regnbågsbyxorna.',
   },
+  {
+    id: 'pirate-hat',
+    name: 'Pirathatt',
+    slot: 'head',
+    indefinite: 'en pirathatt',
+    rarity: 4,
+    unlock: { type: 'roundsCompleted', count: 65 },
+    hint: 'Klara sextiofem rundor så får du pirathatten.',
+  },
+  {
+    id: 'butterfly-wings',
+    name: 'Fjärilsvingar',
+    slot: 'back',
+    indefinite: 'fjärilsvingar',
+    rarity: 4,
+    unlock: { type: 'roundsCompleted', count: 80 },
+    hint: 'Klara åttio rundor så får du fjärilsvingarna.',
+  },
+  {
+    id: 'chef-hat',
+    name: 'Kockmössa',
+    slot: 'head',
+    indefinite: 'en kockmössa',
+    rarity: 4,
+    unlock: { type: 'roundsCompleted', count: 90 },
+    hint: 'Klara nittio rundor så får du kockmössan.',
+  },
+  {
+    id: 'star-trousers',
+    name: 'Stjärnbyxor',
+    slot: 'bottoms',
+    indefinite: 'stjärnbyxor',
+    rarity: 4,
+    unlock: { type: 'mastered', challenge: 'wordPicture', box: 5 },
+    hint: 'Lär dig alla orden i Ord och bild så får du stjärnbyxorna.',
+  },
   // Legendarisk: long-term goals.
   {
     id: 'crown',
@@ -207,6 +362,24 @@ export const items: readonly Item[] = [
     rarity: 5,
     unlock: { type: 'mastered', challenge: 'firstLetter', box: 5 },
     hint: 'Lär dig vilken bokstav alla orden börjar på så får du guldmanteln.',
+  },
+  {
+    id: 'gold-wings',
+    name: 'Guldvingar',
+    slot: 'back',
+    indefinite: 'guldvingar',
+    rarity: 5,
+    unlock: { type: 'playerLevel', level: 13 },
+    hint: 'Nå nivå tretton så får du guldvingarna.',
+  },
+  {
+    id: 'rainbow-cape',
+    name: 'Regnbågsmantel',
+    slot: 'back',
+    indefinite: 'en regnbågsmantel',
+    rarity: 5,
+    unlock: { type: 'roundsCompleted', count: 150 },
+    hint: 'Klara hundrafemtio rundor så får du regnbågsmanteln.',
   },
 ]
 

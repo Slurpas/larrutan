@@ -19,13 +19,19 @@
   align-items: center;
   justify-content: center;
   gap: clamp(1.5rem, 5vw, 4rem);
+  min-height: 0;
 }
 
-/* One row per slot (head, tops, trousers, back, in the hand). */
+/* One row per slot (head, tops, trousers, back, in the hand). With many items it scrolls. */
 .rows {
   display: flex;
   flex-direction: column;
   gap: clamp(0.4rem, 1.4vh, 0.8rem);
+  align-self: stretch;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Room for the cards' shadow and the worn outline, so scrolling never cuts them off. */
+  padding: 0.6rem 0.6rem 1rem;
 }
 
 .row {

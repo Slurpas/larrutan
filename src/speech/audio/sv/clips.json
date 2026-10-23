@@ -75,6 +75,26 @@
       "input": "Klara tre rundor så får du blomman."
     },
     {
+      "text": "Du fick en röd keps!",
+      "file": "du-fick-en-rod-keps-535be7a5.mp3",
+      "input": "Du fick en röd [[ kˈɛps! ]]"
+    },
+    {
+      "text": "Klara fem rundor så får du den röda kepsen.",
+      "file": "klara-fem-rundor-sa-far-du-den-roda-keps-2f25d9ef.mp3",
+      "input": "Klara fem rundor så får du den röda [[ kˈɛpsən. ]]"
+    },
+    {
+      "text": "Du fick en gul tröja!",
+      "file": "du-fick-en-gul-troja-95f92d21.mp3",
+      "input": "Du fick en [[ ɡˈʉːl ]] tröja!"
+    },
+    {
+      "text": "Klara sju rundor så får du den gula tröjan.",
+      "file": "klara-sju-rundor-sa-far-du-den-gula-troj-66c6bcca.mp3",
+      "input": "Klara [[ ʂˈʉː ]] rundor så får du den gula tröjan."
+    },
+    {
       "text": "Du fick en rosett!",
       "file": "du-fick-en-rosett-cabcefb5.mp3",
       "input": "Du fick en [[ rʊsˈɛt! ]]"
@@ -115,6 +135,66 @@
       "input": "Klara den svåra [[ nɪvˈoːn ]] i Första bokstaven så får du [[ balˈɔŋən. ]]"
     },
     {
+      "text": "Du fick en rosa tröja!",
+      "file": "du-fick-en-rosa-troja-354e0ed9.mp3",
+      "input": "Du fick en rosa tröja!"
+    },
+    {
+      "text": "Klara tolv rundor så får du den rosa tröjan.",
+      "file": "klara-tolv-rundor-sa-far-du-den-rosa-tro-2d2e803b.mp3",
+      "input": "Klara tolv rundor så får du den rosa tröjan."
+    },
+    {
+      "text": "Du fick en grön keps!",
+      "file": "du-fick-en-gron-keps-67e8efc3.mp3",
+      "input": "Du fick en grön [[ kˈɛps! ]]"
+    },
+    {
+      "text": "Nå nivå fyra så får du den gröna kepsen.",
+      "file": "na-niva-fyra-sa-far-du-den-grona-kepsen-5415fe7f.mp3",
+      "input": "Nå nivå fyra så får du den gröna [[ kˈɛpsən. ]]"
+    },
+    {
+      "text": "Du fick en partyhatt!",
+      "file": "du-fick-en-partyhatt-d66ae95c.mp3",
+      "input": "Du fick en [[ pˈɑːʈɪhˌat! ]]"
+    },
+    {
+      "text": "Nå nivå fem så får du partyhatten.",
+      "file": "na-niva-fem-sa-far-du-partyhatten-51c9633c.mp3",
+      "input": "Nå nivå fem så får du [[ pˈɑːʈɪhˌatːən. ]]"
+    },
+    {
+      "text": "Du fick en blå ballong!",
+      "file": "du-fick-en-bla-ballong-09544dd4.mp3",
+      "input": "Du fick en blå [[ balˈɔŋ! ]]"
+    },
+    {
+      "text": "Klara femton rundor så får du den blå ballongen.",
+      "file": "klara-femton-rundor-sa-far-du-den-bla-ba-4c3b1850.mp3",
+      "input": "Klara femton rundor så får du den blå [[ balˈɔŋən. ]]"
+    },
+    {
+      "text": "Du fick röda byxor!",
+      "file": "du-fick-roda-byxor-e6de5caa.mp3",
+      "input": "Du fick röda [[ bˈʏksʊr! ]]"
+    },
+    {
+      "text": "Klara arton rundor så får du de röda byxorna.",
+      "file": "klara-arton-rundor-sa-far-du-de-roda-byx-42efd202.mp3",
+      "input": "Klara arton rundor så får du de röda [[ bˈʏksʊrna. ]]"
+    },
+    {
+      "text": "Du fick en solros!",
+      "file": "du-fick-en-solros-292453c3.mp3",
+      "input": "Du fick en [[ sˈuːlrˌuːs! ]]"
+    },
+    {
+      "text": "Klara tjugo rundor så får du solrosen.",
+      "file": "klara-tjugo-rundor-sa-far-du-solrosen-b3b07099.mp3",
+      "input": "Klara tjugo rundor så får du [[ sˈuːlrˌuːsən. ]]"
+    },
+    {
       "text": "Du fick en hög hatt!",
       "file": "du-fick-en-hog-hatt-34593b09.mp3",
       "input": "Du fick en hög hatt!"
@@ -145,6 +225,16 @@
       "input": "Nå nivå [[ ʂˈʉː ]] så får du [[ ʂˈɛːrntrˌøːjan. ]]"
     },
     {
+      "text": "Du fick en grön mantel!",
+      "file": "du-fick-en-gron-mantel-b7ad89b9.mp3",
+      "input": "Du fick en grön mantel!"
+    },
+    {
+      "text": "Klara trettio rundor så får du den gröna manteln.",
+      "file": "klara-trettio-rundor-sa-far-du-den-grona-2af5241d.mp3",
+      "input": "Klara trettio rundor så får du den gröna manteln."
+    },
+    {
       "text": "Du fick en trollstav!",
       "file": "du-fick-en-trollstav-673ff908.mp3",
       "input": "Du fick en [[ trˈɔlstˌɑːv! ]]"
@@ -153,6 +243,46 @@
       "text": "Klara trettiofem rundor så får du trollstaven.",
       "file": "klara-trettiofem-rundor-sa-far-du-trolls-6c311ad8.mp3",
       "input": "Klara [[ trˈɛtːɪʊfˌɛm ]] rundor så får du [[ trˈɔlstˌɑːvən. ]]"
+    },
+    {
+      "text": "Du fick en vikingahjälm!",
+      "file": "du-fick-en-vikingahjalm-2791796b.mp3",
+      "input": "Du fick en [[ vˈiːkɪŋaˌjɛlm! ]]"
+    },
+    {
+      "text": "Nå nivå åtta så får du vikingahjälmen.",
+      "file": "na-niva-atta-sa-far-du-vikingahjalmen-f15d78d7.mp3",
+      "input": "Nå nivå åtta så får du [[ vˈiːkɪŋaˌjɛlmən. ]]"
+    },
+    {
+      "text": "Du fick en grönrandig tröja!",
+      "file": "du-fick-en-gronrandig-troja-028655ab.mp3",
+      "input": "Du fick en grönrandig tröja!"
+    },
+    {
+      "text": "Klara fyrtio rundor så får du den grönrandiga tröjan.",
+      "file": "klara-fyrtio-rundor-sa-far-du-den-gronra-4d4c01b1.mp3",
+      "input": "Klara fyrtio rundor så får du den grönrandiga tröjan."
+    },
+    {
+      "text": "Du fick en röd ryggsäck!",
+      "file": "du-fick-en-rod-ryggsack-b4e03f6c.mp3",
+      "input": "Du fick en röd [[ rˈʏɡsˌɛk! ]]"
+    },
+    {
+      "text": "Klara fyrtiofem rundor så får du den röda ryggsäcken.",
+      "file": "klara-fyrtiofem-rundor-sa-far-du-den-rod-fabf8dc2.mp3",
+      "input": "Klara [[ fˈœʈɪʊfˌɛm ]] rundor så får du den röda [[ rˈʏɡsˌɛkən. ]]"
+    },
+    {
+      "text": "Du fick gula byxor!",
+      "file": "du-fick-gula-byxor-76750b5a.mp3",
+      "input": "Du fick gula [[ bˈʏksʊr! ]]"
+    },
+    {
+      "text": "Klara femtio rundor så får du de gula byxorna.",
+      "file": "klara-femtio-rundor-sa-far-du-de-gula-by-d81b6886.mp3",
+      "input": "Klara femtio rundor så får du de gula [[ bˈʏksʊrna. ]]"
     },
     {
       "text": "Du fick en studentmössa!",
@@ -185,6 +315,46 @@
       "input": "Lär dig alla bokstäverna i Hitta bokstaven så får du [[ rˈɛŋnboːɡsbˌʏksʊrna. ]]"
     },
     {
+      "text": "Du fick en pirathatt!",
+      "file": "du-fick-en-pirathatt-1a3524f5.mp3",
+      "input": "Du fick en pirathatt!"
+    },
+    {
+      "text": "Klara sextiofem rundor så får du pirathatten.",
+      "file": "klara-sextiofem-rundor-sa-far-du-piratha-b2bdbceb.mp3",
+      "input": "Klara [[ sˈɛkstɪʊfˌɛm ]] rundor så får du pirathatten."
+    },
+    {
+      "text": "Du fick fjärilsvingar!",
+      "file": "du-fick-fjarilsvingar-831dc7c1.mp3",
+      "input": "Du fick fjärilsvingar!"
+    },
+    {
+      "text": "Klara åttio rundor så får du fjärilsvingarna.",
+      "file": "klara-attio-rundor-sa-far-du-fjarilsving-47134ca6.mp3",
+      "input": "Klara åttio rundor så får du [[ fjˈɛːrɪlsvˌɪŋarna. ]]"
+    },
+    {
+      "text": "Du fick en kockmössa!",
+      "file": "du-fick-en-kockmossa-6354e637.mp3",
+      "input": "Du fick en [[ kˈɔkmˌœsa! ]]"
+    },
+    {
+      "text": "Klara nittio rundor så får du kockmössan.",
+      "file": "klara-nittio-rundor-sa-far-du-kockmossan-74ba83dd.mp3",
+      "input": "Klara nittio rundor så får du [[ kˈɔkmˌœsan. ]]"
+    },
+    {
+      "text": "Du fick stjärnbyxor!",
+      "file": "du-fick-stjarnbyxor-bea258e8.mp3",
+      "input": "Du fick [[ ʂˈɛːrnbˌʏksʊr! ]]"
+    },
+    {
+      "text": "Lär dig alla orden i Ord och bild så får du stjärnbyxorna.",
+      "file": "lar-dig-alla-orden-i-ord-och-bild-sa-far-d7af0a1a.mp3",
+      "input": "Lär dig alla [[ ˈuːdən ]] i [[ ˈuːd ]] och bild så får du [[ ʂˈɛːrnbˌʏksʊrna. ]]"
+    },
+    {
       "text": "Du fick en krona!",
       "file": "du-fick-en-krona-8948a0bd.mp3",
       "input": "Du fick en krona!"
@@ -203,6 +373,26 @@
       "text": "Lär dig vilken bokstav alla orden börjar på så får du guldmanteln.",
       "file": "lar-dig-vilken-bokstav-alla-orden-borjar-b6797311.mp3",
       "input": "Lär dig vilken bokstav alla [[ ˈuːdən ]] börjar på så får du guldmanteln."
+    },
+    {
+      "text": "Du fick guldvingar!",
+      "file": "du-fick-guldvingar-c3c8d4d9.mp3",
+      "input": "Du fick guldvingar!"
+    },
+    {
+      "text": "Nå nivå tretton så får du guldvingarna.",
+      "file": "na-niva-tretton-sa-far-du-guldvingarna-d554509e.mp3",
+      "input": "Nå nivå tretton så får du [[ ɡˈɵldvˌɪŋarna. ]]"
+    },
+    {
+      "text": "Du fick en regnbågsmantel!",
+      "file": "du-fick-en-regnbagsmantel-2364d7d3.mp3",
+      "input": "Du fick en [[ rˈɛŋnboːɡsmˌantəl! ]]"
+    },
+    {
+      "text": "Klara hundrafemtio rundor så får du regnbågsmanteln.",
+      "file": "klara-hundrafemtio-rundor-sa-far-du-regn-3b03c0b3.mp3",
+      "input": "Klara [[ hˈɵndrafˌɛmtɪ ]] rundor så får du [[ rˈɛŋnboːɡsmˌantəln. ]]"
     },
     {
       "text": "Hitta alla A!",

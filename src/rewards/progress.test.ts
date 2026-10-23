@@ -88,8 +88,29 @@ function playRounds(count: number): Progress {
 const highestRarity = (progress: Progress) => Math.max(0, ...progress.unlockedItems.map((id) => getItem(id).rarity))
 
 describe('unlocks', () => {
-  it('unlocks the cap and the blue sweater after the first round of Hitta bokstaven', () => {
-    expect(play(initialProgress, 'findLetter').outcome.newItems).toEqual(['cap', 'blue-sweater'])
+  it('gives at most one item, every other round; the others earned come later, in catalogue order', () => {
+    // The first round earns the cap and the blue sweater, the second the green trousers too.
+    const first = play(initialProgress, 'findLetter')
+    expect(first.outcome.newItems).toEqual(['cap'])
+    const second = play(first.progress, 'firstLetter')
+    expect(second.outcome.newItems).toEqual([])
+    const third = play(second.progress, 'wordPicture')
+    expect(third.outcome.newItems).toEqual(['blue-sweater'])
+    expect(play(third.progress, 'findLetter').outcome.newItems).toEqual([])
+  })
+
+  it('never gives more than one item in a round, and never in two rounds in a row, in 200 rounds of play', () => {
+    let progress = initialProgress
+    let lastItemRound = -2
+    for (let i = 0; i < 200; i++) {
+      const round = play(progress, (['findLetter', 'firstLetter', 'wordPicture'] as const)[i % 3], i % 2 ? 'hard' : 'easy')
+      expect(round.outcome.newItems.length, `round ${i + 1}`).toBeLessThanOrEqual(1)
+      if (round.outcome.newItems.length > 0) {
+        expect(i - lastItemRound, `round ${i + 1}`).toBeGreaterThanOrEqual(2)
+        lastItemRound = i
+      }
+      progress = round.progress
+    }
   })
 
   it('unlocks each item exactly once', () => {
@@ -98,7 +119,7 @@ describe('unlocks', () => {
   })
 
   it('gives only common and uncommon items in the first session (PRD §10)', () => {
-    expect(highestRarity(playRounds(6))).toBe(2)
+    expect(highestRarity(playRounds(6))).toBeLessThanOrEqual(2)
   })
 
   it('keeps rare items for about a week of play, and epic ones for longer', () => {
@@ -114,9 +135,11 @@ describe('unlocks', () => {
 
   it('unlocks the rainbow trousers once every letter is mastered, however long it took', () => {
     const allLetters = Object.fromEntries(['a', 'i', 'l', 'm', 'o', 's', 'a-ring', 'a-umlaut', 'o-umlaut'].map((id) => [`findLetter:${id}`, 5]))
-    const almost = { ...initialProgress, mastery: { ...allLetters, 'findLetter:m': 4 } }
+    // Everything before the trousers in the list is already handed out, so they are next.
+    const before = items.slice(0, items.findIndex((item) => item.id === 'rainbow-trousers')).map((item) => item.id)
+    const almost = { ...initialProgress, unlockedItems: before, mastery: { ...allLetters, 'findLetter:m': 4 } }
     expect(play(almost, 'wordPicture').outcome.newItems).not.toContain('rainbow-trousers')
-    const all = { ...initialProgress, mastery: allLetters }
+    const all = { ...initialProgress, unlockedItems: before, mastery: allLetters }
     expect(play(all, 'wordPicture').outcome.newItems).toContain('rainbow-trousers')
   })
 
@@ -124,13 +147,14 @@ describe('unlocks', () => {
     const count = (rarity: number) => items.filter((item) => item.rarity === rarity).length
     for (const rarity of [1, 2, 3, 4, 5]) expect(count(rarity), `rarity ${rarity}`).toBeGreaterThan(0)
     expect(count(1)).toBeGreaterThan(count(5))
-    expect(items.length).toBeGreaterThanOrEqual(15)
+    // A big set, so the good things take real play (user feedback 2026-10-24).
+    expect(items.length).toBeGreaterThanOrEqual(35)
   })
 })
 
 describe('wearing items', () => {
   it('wears one item per slot, swaps within a slot, and takes an item off on a second tap', () => {
-    let progress = playRounds(6)
+    let progress = playRounds(10)
     progress = wear(progress, 'cap')
     progress = wear(progress, 'blue-sweater')
     expect(progress.worn).toEqual({ head: 'cap', top: 'blue-sweater' })

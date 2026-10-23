@@ -1,6 +1,7 @@
 import { areConfusable, lookAlikesOf, type ConfusableGroup } from '../content/letters'
 import { choicePairs, pickChoices } from './choiceQuestion'
 import type { Difficulty } from './difficulty'
+import { practiceOrder } from '../learning/mastery'
 import { shuffle, type Rng } from './random'
 
 interface LetterChoiceOptions {
@@ -38,11 +39,16 @@ export function pickLetterChoices({ target, pool, count, rng, confusables, diffi
   return shuffle(choices, rng)
 }
 
-/** Letters the hard level should ask about first: the ones that have look-alikes. */
-export function hardTargetsFirst(ids: readonly string[], confusables: readonly ConfusableGroup[], rng: Rng): string[] {
+/** Letters the hard level should ask about first: the ones that have look-alikes (weaker ones first within each group). */
+export function hardTargetsFirst(
+  ids: readonly string[],
+  confusables: readonly ConfusableGroup[],
+  rng: Rng,
+  box: (id: string) => number = () => 1,
+): string[] {
   const tricky = ids.filter((id) => lookAlikesOf(id, confusables).length > 0)
   const plain = ids.filter((id) => !tricky.includes(id))
-  return [...shuffle(tricky, rng), ...shuffle(plain, rng)]
+  return [...practiceOrder(tricky, box, rng), ...practiceOrder(plain, box, rng)]
 }
 
 /** The look-alike rules for each difficulty, as problems in plain words. */

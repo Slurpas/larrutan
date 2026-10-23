@@ -1,13 +1,17 @@
 import type { ChallengeId } from '../challenges/challengeIds'
 import { challengeDifficulties, levelKey } from '../challenges/difficulty'
+import { letters } from '../content/letters'
+import { words } from '../content/words'
+import { highestBox, lowestBox, practiceKey, type Mastery } from '../learning/mastery'
 import { items } from '../rewards/items'
 import { initialProgress, type Progress } from '../rewards/progress'
 
 /**
  * The saved form of one profile's progress (PRD §12). Bump the version whenever the
  * shape changes, and add an upgrade step from the old version, with a test, in `readSave`.
+ * 1: Task 7. 2: mastery per letter and word (Task 11).
  */
-export const saveVersion = 1
+export const saveVersion = 2
 
 export interface SaveFile {
   version: number
@@ -25,11 +29,11 @@ export type ReadResult =
   | { kind: 'newer'; progress: Progress }
 
 export function toSaveFile(progress: Progress, now: Date): SaveFile {
-  const { xp, roundsCompleted, completedLevels, unlockedItems, wornItem } = progress
+  const { xp, roundsCompleted, completedLevels, unlockedItems, wornItem, mastery } = progress
   return {
     version: saveVersion,
     savedAt: now.toISOString(),
-    progress: { xp, roundsCompleted, completedLevels, unlockedItems, wornItem },
+    progress: { xp, roundsCompleted, completedLevels, unlockedItems, wornItem, mastery },
   }
 }
 
@@ -39,7 +43,8 @@ export function readSave(stored: unknown): ReadResult {
   if (!isRecord(stored) || !isCount(stored.version) || stored.version < 1) {
     return { kind: 'loaded', progress: initialProgress, repaired: true }
   }
-  const { progress, repaired } = repair(stored.progress)
+  const upgraded = stored.version === 1 ? upgradeFrom1(stored.progress) : stored.progress
+  const { progress, repaired } = repair(upgraded)
   if (stored.version > saveVersion) return { kind: 'newer', progress }
   return { kind: 'loaded', progress, repaired }
 }
@@ -50,6 +55,18 @@ const knownLevels = new Set(
   ),
 )
 const knownItems = new Set(items.map((item) => item.id))
+const letterIds = letters.map((letter) => letter.id)
+const wordIds = words.map((word) => word.id)
+const knownPractice = new Set([
+  ...letterIds.map((id) => practiceKey('findLetter', id)),
+  ...wordIds.map((id) => practiceKey('firstLetter', id)),
+  ...wordIds.map((id) => practiceKey('wordPicture', id)),
+])
+
+/** Version 1 had no mastery: everything starts unpractised. */
+function upgradeFrom1(progress: unknown): unknown {
+  return isRecord(progress) ? { ...progress, mastery: {} } : progress
+}
 
 /** Keeps every field that makes sense and resets the rest, so one bad value never loses everything. */
 function repair(saved: unknown): { progress: Progress; repaired: boolean } {
@@ -70,6 +87,18 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
     return kept
   }
 
+  const masteryFrom = (value: unknown): Mastery => {
+    if (!isRecord(value)) {
+      repaired = true
+      return {}
+    }
+    const kept = Object.entries(value).filter(
+      ([key, box]) => knownPractice.has(key) && Number.isInteger(box) && (box as number) >= lowestBox && (box as number) <= highestBox,
+    )
+    if (kept.length !== Object.keys(value).length) repaired = true
+    return Object.fromEntries(kept) as Mastery
+  }
+
   const unlockedItems = known(saved.unlockedItems, knownItems)
   let wornItem: string | null = null
   if (typeof saved.wornItem === 'string' && unlockedItems.includes(saved.wornItem)) wornItem = saved.wornItem
@@ -82,6 +111,7 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
       completedLevels: known(saved.completedLevels, knownLevels),
       unlockedItems,
       wornItem,
+      mastery: masteryFrom(saved.mastery),
       rounds: {},
     },
     repaired,

@@ -4,7 +4,8 @@ import type { Word } from '../../content/words'
 import { assertNoProblems, findChoiceProblems, type ChoiceQuestion, type ChoiceRound } from '../choiceQuestion'
 import type { Difficulty } from '../difficulty'
 import { findLookAlikeProblems, pickLetterChoices } from '../letterChoices'
-import { createRng, shuffle } from '../random'
+import { practiceOrder } from '../../learning/mastery'
+import { createRng } from '../random'
 
 export interface FirstLetterQuestion extends ChoiceQuestion {
   /** Id of the word whose picture is shown and whose first letter the child finds. */
@@ -24,6 +25,8 @@ export interface FirstLetterOptions extends Omit<FirstLetterRules, 'choiceCount'
   difficulty?: Difficulty
   questionCount?: number
   choiceCount?: number
+  /** Mastery box per word id: words still being learned come up more often (src/learning). */
+  practiceBox?: (word: string) => number
 }
 
 /**
@@ -40,15 +43,20 @@ export function createFirstLetterRound({
   difficulty = 'easy',
   questionCount = 5,
   choiceCount = 3,
+  practiceBox = () => 1,
 }: FirstLetterOptions): ChoiceRound<FirstLetterQuestion> {
   const rng = createRng(seed)
   const rules = { words, letters, confusables, choiceCount, difficulty }
 
   const hasLookAlikes = (word: Word) => lookAlikesOf(word.firstLetter, confusables).length > 0
+  const box = (word: Word) => practiceBox(word.id)
   const candidates =
     difficulty === 'hard'
-      ? [...shuffle(words.filter(hasLookAlikes), rng), ...shuffle(words.filter((w) => !hasLookAlikes(w)), rng)]
-      : shuffle(words, rng)
+      ? [
+          ...practiceOrder(words.filter(hasLookAlikes), box, rng),
+          ...practiceOrder(words.filter((w) => !hasLookAlikes(w)), box, rng),
+        ]
+      : practiceOrder(words, box, rng)
 
   const picked: Word[] = []
   for (const word of candidates) {

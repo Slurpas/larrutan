@@ -7,9 +7,9 @@ import { findLetterVoice } from '../voices'
 import { createFindLetterRound } from './createRound'
 
 /** Hitta bokstaven: hear "Var är A?" and tap the letter. */
-export function FindLetter({ seed, difficulty, knowsChallenge, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
+export function FindLetter({ seed, difficulty, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
   const [round] = useState(() =>
-    createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty }),
+    createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty, practiceBox }),
   )
 
   return (
@@ -19,6 +19,7 @@ export function FindLetter({ seed, difficulty, knowsChallenge, onRoundComplete, 
       difficulty={difficulty}
       difficultyCount={challengeDifficulties.findLetter.length}
       onRoundComplete={onRoundComplete}
+      practiceItem={(q) => q.target}
       knowsChallenge={knowsChallenge}
       choiceKind="letter"
       renderChoice={(id) => getLetter(id).display}

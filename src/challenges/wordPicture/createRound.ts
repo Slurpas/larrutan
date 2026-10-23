@@ -8,7 +8,8 @@ import {
   type ChoiceQuestion,
   type ChoiceRound,
 } from '../choiceQuestion'
-import { createRng, shuffle } from '../random'
+import { practiceOrder } from '../../learning/mastery'
+import { createRng } from '../random'
 
 interface WordPictureRules {
   words: readonly Word[]
@@ -19,6 +20,8 @@ export interface WordPictureOptions extends Omit<WordPictureRules, 'choiceCount'
   seed: number
   questionCount?: number
   choiceCount?: number
+  /** Mastery box per word id: words still being learned come up more often (src/learning). */
+  practiceBox?: (word: string) => number
 }
 
 /**
@@ -30,6 +33,7 @@ export function createWordPictureRound({
   words,
   questionCount = 5,
   choiceCount = 3,
+  practiceBox = () => 1,
 }: WordPictureOptions): ChoiceRound {
   if (questionCount > words.length) {
     throw new Error(`A round of ${questionCount} needs at least that many words, got ${words.length}`)
@@ -40,7 +44,7 @@ export function createWordPictureRound({
   const byId = new Map(words.map((word) => [word.id, word]))
   const rules = { words, choiceCount }
 
-  const questions = shuffle(ids, rng)
+  const questions = practiceOrder(ids, practiceBox, rng)
     .slice(0, questionCount)
     .map((target) => {
       const choices = pickChoices(target, ids, choiceCount, rng, (candidate, chosen) =>

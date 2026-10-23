@@ -1,5 +1,6 @@
 import type { ChallengeId } from '../challenges/challengeIds'
 import { challengeDifficulties, levelKey, type Difficulty } from '../challenges/difficulty'
+import { recordPractice, type Mastery, type Practiced } from '../learning/mastery'
 import { items, type UnlockCondition } from './items'
 import { levelForXp, roundXp } from './rules'
 
@@ -10,6 +11,8 @@ export interface Progress {
   completedLevels: string[]
   unlockedItems: string[]
   wornItem: string | null
+  /** Leitner box per letter and word, per challenge (src/learning). Never shown to the child, never affects rewards. */
+  mastery: Mastery
   /** The outcome of every round already counted, by round id. A repeated event returns it again and grants nothing. */
   rounds: Record<string, RoundOutcome>
 }
@@ -19,8 +22,10 @@ export interface RoundCompletion {
   roundId: string
   challenge: ChallengeId
   difficulty: Difficulty
-  /** Kept for learning progress later (Phase 2). Never used to reduce a reward. */
+  /** Never used to reduce a reward. */
   wrongTaps: number
+  /** What each question practised, and whether the first tap was right: updates mastery. */
+  practiced: readonly Practiced[]
 }
 
 export interface RoundOutcome {
@@ -40,6 +45,7 @@ export const initialProgress: Progress = {
   completedLevels: [],
   unlockedItems: [],
   wornItem: null,
+  mastery: {},
   rounds: {},
 }
 
@@ -60,6 +66,7 @@ export function completeRound(
     xp: progress.xp + xpGained,
     roundsCompleted: progress.roundsCompleted + 1,
     completedLevels: firstCompletion ? [...progress.completedLevels, key] : progress.completedLevels,
+    mastery: recordPractice(progress.mastery, completion.challenge, completion.practiced),
   }
   const newItems = items
     .filter((item) => !next.unlockedItems.includes(item.id) && isUnlocked(item.unlock, next))

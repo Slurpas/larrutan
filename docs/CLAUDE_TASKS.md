@@ -193,6 +193,16 @@ Status 2026-10-23:
 - More content and difficulty levels.
 - Project picture cards replacing emoji.
 
+Status 2026-10-23:
+- **Done (`src/learning`):**
+  - Mastery boxes per challenge item; rounds favour what is still being learned.
+  - Save format version 2, with the first upgrade step.
+  - First-try results per question.
+- **Not started:**
+  - Difficulty adaptation (options in `docs/OVERNIGHT_NOTES.md`).
+  - More content: needs the user's approval of new words and letters.
+  - Picture cards: waits for the art style (Task 8).
+
 ---
 
 ## Roadmap — later

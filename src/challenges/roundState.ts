@@ -5,13 +5,15 @@ export interface RoundState<Q extends ChoiceQuestion = ChoiceQuestion> {
   questionIndex: number
   /** Wrong choices tapped in this question. They stay in place, greyed out, so nothing moves. */
   removed: string[]
-  /** Wrong taps in the whole round, for learning progress later. Never reduces a reward. */
+  /** Wrong taps in the whole round. Never reduces a reward. */
   wrongTaps: number
+  /** For each answered question: right on the first tap? Feeds mastery (src/learning). */
+  firstTry: boolean[]
   phase: 'asking' | 'correct' | 'finished'
 }
 
 export function startRound<Q extends ChoiceQuestion>(round: ChoiceRound<Q>): RoundState<Q> {
-  return { round, questionIndex: 0, removed: [], wrongTaps: 0, phase: 'asking' }
+  return { round, questionIndex: 0, removed: [], wrongTaps: 0, firstTry: [], phase: 'asking' }
 }
 
 export function currentQuestion<Q extends ChoiceQuestion>(state: RoundState<Q>): Q | undefined {
@@ -24,7 +26,7 @@ export function choose<Q extends ChoiceQuestion>(state: RoundState<Q>, choice: s
   if (state.phase !== 'asking' || !question) return state
   if (!question.choices.includes(choice) || state.removed.includes(choice)) return state
 
-  if (choice === question.target) return { ...state, phase: 'correct' }
+  if (choice === question.target) return { ...state, phase: 'correct', firstTry: [...state.firstTry, state.removed.length === 0] }
   return { ...state, removed: [...state.removed, choice], wrongTaps: state.wrongTaps + 1 }
 }
 

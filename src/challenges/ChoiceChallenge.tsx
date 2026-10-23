@@ -1,5 +1,6 @@
-import { useEffect, useEffectEvent, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { phrases } from '../content/phrases'
+import type { Practiced } from '../learning/mastery'
 import type { RoundOutcome } from '../rewards/progress'
 import { speak, stopSpeech } from '../speech/speech'
 import { useVoiceStatus } from '../speech/useVoiceStatus'
@@ -14,6 +15,12 @@ import { advance, choose, currentQuestion, isAnswerRevealed, startRound, type Ro
 import type { ChallengeVoice } from './voices'
 import styles from './ChoiceChallenge.module.css'
 
+/** What a finished round tells the app. */
+export interface RoundResult {
+  wrongTaps: number
+  practiced: Practiced[]
+}
+
 /** The green "correct" card stays at least this long, even when there is no voice to wait for. */
 const CORRECT_PAUSE_MS = 900
 
@@ -25,7 +32,9 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
   /** How many difficulty levels this challenge has, for the level pips. */
   difficultyCount: number
   /** Called once when the last question is answered; returns what the round earned. */
-  onRoundComplete?: (wrongTaps: number) => RoundOutcome
+  onRoundComplete?: (result: RoundResult) => RoundOutcome
+  /** What a question practises, for mastery: the letter in Hitta bokstaven, the word in the others. */
+  practiceItem: (question: Q) => string
   /** The child has finished this challenge before, so even the first question can be the short form. */
   knowsChallenge?: boolean
   choiceKind: 'letter' | 'picture'
@@ -51,6 +60,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   difficulty,
   difficultyCount,
   onRoundComplete,
+  practiceItem,
   knowsChallenge = false,
   choiceKind,
   renderChoice,
@@ -92,7 +102,9 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   useEffect(() => stopSpeech, [])
 
   const finishRound = useEffectEvent(() => {
-    if (onRoundComplete) setOutcome(onRoundComplete(state.wrongTaps))
+    if (!onRoundComplete) return
+    const practiced = state.round.questions.map((q, i) => ({ item: practiceItem(q), firstTry: state.firstTry[i] ?? false }))
+    setOutcome(onRoundComplete({ wrongTaps: state.wrongTaps, practiced }))
   })
 
   // After a correct answer: a happy chime, then the next question (or the end of the round).
@@ -147,7 +159,8 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
     }
   })
 
-  useEffect(() => {
+  // Before the screen is painted, so a key pressed the moment a question appears is never lost.
+  useLayoutEffect(() => {
     const listener = (event: KeyboardEvent) => onKeyDown(event)
     window.addEventListener('keydown', listener)
     return () => window.removeEventListener('keydown', listener)

@@ -4,6 +4,7 @@ import { nextDifficulty, type Difficulty } from '../challenges/difficulty'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
+import { boxOf, practiceKey } from '../learning/mastery'
 import { getItem } from '../rewards/items'
 import { MyThings } from '../rewards/MyThings'
 import { getProgress, loadProgress, recordRound, useProgress } from '../rewards/store'
@@ -73,7 +74,8 @@ export function App() {
         seed={seed}
         difficulty={difficulty}
         knowsChallenge={knowsChallenge}
-        onRoundComplete={(wrongTaps) => recordRound({ roundId, challenge: id, difficulty, wrongTaps })}
+        practiceBox={(item) => boxOf(getProgress().mastery, practiceKey(id, item))}
+        onRoundComplete={({ wrongTaps, practiced }) => recordRound({ roundId, challenge: id, difficulty, wrongTaps, practiced })}
         onExit={backToMap}
         onPlayAgain={() => openChallenge(id, randomSeed())}
       />

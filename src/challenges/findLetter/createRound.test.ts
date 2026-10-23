@@ -19,6 +19,23 @@ describe('createFindLetterRound', () => {
     }
   })
 
+  it('asks about letters still being learned far more often, with valid questions at both levels', () => {
+    const box = (id: string) => (id === 'm' ? 1 : 5)
+    const easyRounds = seeds.map((seed) =>
+      createFindLetterRound({ seed, letters, confusables: confusableLetters, practiceBox: box }).questions.map((q) => q.target),
+    )
+    expect(easyRounds.filter((targets) => targets.includes('m')).length / easyRounds.length).toBeGreaterThan(0.85)
+    // The hard level always asks about the look-alike letters first; practice only changes their order.
+    for (const seed of seeds) {
+      for (const difficulty of ['easy', 'hard'] as const) {
+        const round = createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty, practiceBox: box })
+        for (const question of round.questions) {
+          expect(findFindLetterProblems(question, difficulty === 'hard' ? hardRules : rules), `seed ${seed}`).toEqual([])
+        }
+      }
+    }
+  })
+
   it('never asks for the same letter twice in a round', () => {
     for (const seed of seeds) {
       const targets = roundFor(seed).questions.map((q) => q.target)

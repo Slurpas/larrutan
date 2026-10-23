@@ -134,6 +134,15 @@ Attempts, hints and successes are tracked separately from rewards.
 
 **Phase 2:** simple mastery tracking per letter and word using Leitner boxes (correct moves an item up a box, wrong moves it down, higher boxes come back less often), and gentle, reversible difficulty adaptation that changes the challenge, never the interface, and never labels the child.
 
+**Implementation (Task 11, `src/learning/mastery.ts`):**
+- **Boxes:** each challenge keeps its own boxes (1–5): letters in Hitta bokstaven, words in Första bokstaven and Ord och bild.
+- **Moving between boxes:** right on the first tap moves an item up one box; needing another try moves it down one box, never all the way back.
+- **Choosing a round:** questions are picked in a weighted random order, and each box comes up about half as often as the one below. Items still being learned dominate, but known items still come back.
+- **New players:** everything is in box 1, so they get exactly the same seeded rounds as before mastery existed.
+- **Hard level:** it still asks about the look-alike letters; mastery only changes their order.
+- **Saving and visibility:** boxes are saved with the progress (save version 2, upgraded from version 1) and never shown to the child.
+- **Not done yet:** changing difficulty (easy/hard) from performance.
+
 ## 7. Voice and audio
 
 Spoken instructions are essential because most players can't read. No human recordings are planned; all speech is generated.

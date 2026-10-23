@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 import type { ChoiceRound } from '../../src/challenges/choiceQuestion'
 import { createFindLetterRound } from '../../src/challenges/findLetter/createRound'
 import { confusableLetters, letters } from '../../src/content/letters'
+import { boxOf, practiceKey, recordPractice } from '../../src/learning/mastery'
 import { backupStore, databaseName, profileStore } from '../../src/persistence/database'
 import { SEED, answerKey, enterMap, press, tapStation, waitForQuestion } from './helpers'
 
@@ -13,8 +14,35 @@ async function playRoundByKeyboard(page: Page, round: ChoiceRound) {
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible()
 }
 
+/** The worn item in the save on the device, read straight from IndexedDB. */
+function savedWornItem(page: Page) {
+  return page.evaluate(
+    ({ name, store }) =>
+      new Promise<string | null>((resolve, reject) => {
+        const open = indexedDB.open(name)
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const read = open.result.transaction(store).objectStore(store).get('default')
+          read.onsuccess = () => {
+            open.result.close()
+            resolve((read.result as { progress?: { wornItem?: string | null } } | undefined)?.progress?.wornItem ?? null)
+          }
+        }
+      }),
+    { name: databaseName, store: profileStore },
+  )
+}
+
 const easyRound = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters, difficulty: 'easy' })
-const hardRound = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters, difficulty: 'hard' })
+// The hard round comes after the easy one, so it favours letters the easy round didn't practise (src/learning).
+const afterEasy = recordPractice({}, 'findLetter', easyRound.questions.map((q) => ({ item: q.target, firstTry: true })))
+const hardRound = createFindLetterRound({
+  seed: SEED,
+  letters,
+  confusables: confusableLetters,
+  difficulty: 'hard',
+  practiceBox: (id) => boxOf(afterEasy, practiceKey('findLetter', id)),
+})
 
 test('a finished round unlocks the cap, which can be worn on the map', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
@@ -58,6 +86,8 @@ test('progress is saved on the device and survives a reload', async ({ page, has
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
   await press(page.getByRole('button', { name: 'Mina saker' }), hasTouch)
   await press(page.getByRole('button', { name: 'Keps, Vanlig' }), hasTouch)
+  // Saving takes a moment; reloading in the same instant could beat it.
+  await expect.poll(() => savedWornItem(page)).toBe('cap')
 
   await page.reload()
   await enterMap(page, hasTouch)

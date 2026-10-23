@@ -50,13 +50,14 @@ Before reporting a task done, run typecheck, lint, test, test:e2e and build.
 - `src/speech`: `speech.ts` is the one entry point (`speak`, `stopSpeech`, …). It plays generated clips from `audio/sv/` and falls back to the device voice (`browserVoice.ts`) only for a sentence without a clip or a clip that won't play. `catalogue.ts` lists every sentence (grouped for review); challenge wording lives in `src/challenges/voices.ts`. A clip's file name hashes its text, pronunciation fix and voice (`clipName.ts`, `voiceSettings.ts`), so changed audio always gets a new name. `review/`: the clip review page (`?review=voices`, dev server only) and approvals (`audio/sv/approvals.json`, saved by `scripts/voiceReviewPlugin.ts`)
 - `src/world`: the hub map (Phaser). `hubMap.ts` is the map as a text grid; `tileMap.ts`, `pathfinding.ts` and `camera.ts` are pure, tested rules; `HubScene.ts` draws and moves; `HubWorld.tsx` mounts it in React
 - `src/rewards`: reward rules (`rules.ts`, all numbers in one place), hats (`items.ts`), pure progress logic (`progress.ts`, exactly-once by round id), the store (`store.ts`: loads the save at startup, saves after every change), the XP bar and "Mina saker"
+- `src/learning`: mastery (`mastery.ts`): Leitner boxes per challenge item, updated from first-try results, and `practiceOrder`, which round builders use to favour what is still being learned (identical to a plain shuffle for a new player)
 - `src/persistence`: saving (PRD §12). `saveFile.ts` is the pure, tested save format (version, per-field repair); `database.ts` is the thin IndexedDB layer; `saveGame.ts` loads and saves the default profile
 - `src/pwa`: the service worker template (filled in by the plugin in `vite.config.ts`) and its registration (release builds only)
 - `src/ui`: shared buttons, icons, helpers
 
 ## Gotchas
 
-- `?seed=123` in the URL replays a round; the seed shows in the corner of each challenge.
+- `?seed=123` in the URL replays a round; the seed shows in the corner of each challenge. Rounds also depend on the player's mastery, so a seed gives the same round only for the same practice history (always the same for a new player).
 - The dev server on Windows can miss a second quick edit to the same file and serve stale code. If behaviour doesn't match the source, restart it.
 - The user keeps their own `npm run dev` running on 5173. Don't start a second dev server: open http://localhost:5173 in the pane, and only ever give the user the 5173 address. A server Claude starts dies with the session, and a tab left on it keeps running but gets no sound (clip error code 4).
 - Playwright won't tap an element that's animating forever (the pulsing revealed answer); use `{ force: true }` there.

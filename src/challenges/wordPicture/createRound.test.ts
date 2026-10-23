@@ -17,6 +17,14 @@ describe('createWordPictureRound', () => {
     }
   })
 
+  it('asks about words still being learned far more often, and still mixes in known ones', () => {
+    const learning = words[0]!.id
+    const box = (id: string) => (id === learning ? 1 : 5)
+    const rounds = seeds.map((seed) => createWordPictureRound({ seed, words, practiceBox: box }).questions.map((q) => q.target))
+    expect(rounds.filter((targets) => targets.includes(learning)).length / rounds.length).toBeGreaterThan(0.9)
+    expect(new Set(rounds.flat()).size).toBe(words.length)
+  })
+
   it('never asks for the same picture twice in a round', () => {
     for (const seed of seeds) {
       const targets = roundFor(seed).questions.map((q) => q.target)

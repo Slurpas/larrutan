@@ -2,7 +2,8 @@ import type { ConfusableGroup, Letter } from '../../content/letters'
 import { assertNoProblems, findChoiceProblems, type ChoiceQuestion, type ChoiceRound } from '../choiceQuestion'
 import type { Difficulty } from '../difficulty'
 import { findLookAlikeProblems, hardTargetsFirst, pickLetterChoices } from '../letterChoices'
-import { createRng, shuffle } from '../random'
+import { practiceOrder } from '../../learning/mastery'
+import { createRng } from '../random'
 
 interface FindLetterRules {
   letters: readonly Letter[]
@@ -16,6 +17,8 @@ export interface FindLetterOptions extends Omit<FindLetterRules, 'choiceCount' |
   difficulty?: Difficulty
   questionCount?: number
   choiceCount?: number
+  /** Mastery box per letter id: letters still being learned come up more often (src/learning). */
+  practiceBox?: (letter: string) => number
 }
 
 /**
@@ -29,6 +32,7 @@ export function createFindLetterRound({
   difficulty = 'easy',
   questionCount = 5,
   choiceCount = 3,
+  practiceBox = () => 1,
 }: FindLetterOptions): ChoiceRound {
   if (questionCount > letters.length) {
     throw new Error(`A round of ${questionCount} needs at least that many letters, got ${letters.length}`)
@@ -37,7 +41,8 @@ export function createFindLetterRound({
   const rng = createRng(seed)
   const ids = letters.map((letter) => letter.id)
   const rules = { letters, confusables, choiceCount, difficulty }
-  const targets = difficulty === 'hard' ? hardTargetsFirst(ids, confusables, rng) : shuffle(ids, rng)
+  const targets =
+    difficulty === 'hard' ? hardTargetsFirst(ids, confusables, rng, practiceBox) : practiceOrder(ids, practiceBox, rng)
 
   const questions = targets.slice(0, questionCount).map((target) => {
     const choices = pickLetterChoices({ target, pool: ids, count: choiceCount, rng, confusables, difficulty })

@@ -7,7 +7,7 @@ import { levelForXp, levelProgress, xpForLevel } from './rules'
 
 let roundCounter = 0
 function play(progress: Progress, challenge: ChallengeId, difficulty: Difficulty = 'easy', wrongTaps = 0) {
-  return completeRound(progress, { roundId: `round-${++roundCounter}`, challenge, difficulty, wrongTaps })
+  return completeRound(progress, { roundId: `round-${++roundCounter}`, challenge, difficulty, wrongTaps, practiced: [] })
 }
 
 describe('XP', () => {
@@ -36,13 +36,20 @@ describe('XP', () => {
   })
 
   it('never counts the same round twice, even if the event arrives again', () => {
-    const completion = { roundId: 'same-round', challenge: 'firstLetter' as const, difficulty: 'easy' as const, wrongTaps: 0 }
+    const completion = {
+      roundId: 'same-round',
+      challenge: 'firstLetter' as const,
+      difficulty: 'easy' as const,
+      wrongTaps: 0,
+      practiced: [{ item: 'sun', firstTry: true }],
+    }
     const once = completeRound(initialProgress, completion)
     const twice = completeRound(once.progress, completion)
     expect(twice.progress).toBe(once.progress)
     expect(twice.progress.xp).toBe(20)
     expect(twice.progress.roundsCompleted).toBe(1)
     expect(twice.outcome).toEqual(once.outcome)
+    expect(twice.progress.mastery).toEqual({ 'firstLetter:sun': 2 }) // practised once, not twice
   })
 
   it('has levels at 30, 70, 120 and 180 XP', () => {

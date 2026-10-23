@@ -8,8 +8,8 @@ import { wordPictureVoice } from '../voices'
 import { createWordPictureRound } from './createRound'
 
 /** Ord och bild: hear "Var är solen?" and tap the picture. */
-export function WordPicture({ seed, difficulty, knowsChallenge, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
-  const [round] = useState(() => createWordPictureRound({ seed, words }))
+export function WordPicture({ seed, difficulty, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
+  const [round] = useState(() => createWordPictureRound({ seed, words, practiceBox }))
 
   return (
     <ChoiceChallenge
@@ -18,6 +18,7 @@ export function WordPicture({ seed, difficulty, knowsChallenge, onRoundComplete,
       difficulty={difficulty}
       difficultyCount={challengeDifficulties.wordPicture.length}
       onRoundComplete={onRoundComplete}
+      practiceItem={(q) => q.target}
       knowsChallenge={knowsChallenge}
       choiceKind="picture"
       renderChoice={(id) => <Picture emoji={getWord(id).picture} />}

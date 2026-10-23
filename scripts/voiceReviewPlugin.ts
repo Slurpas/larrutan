@@ -2,7 +2,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { join } from 'node:path'
 import type { Plugin } from 'vite'
-import { applyReview, noApprovals, voiceReviewEndpoint, type Approvals } from '../src/speech/review/approvals'
+import { applyReview, noApprovals, voiceReviewEndpoint, type Approvals } from '../src/speech/review/approvals.ts'
 
 /**
  * Lets the clip review page save approvals to src/speech/audio/sv/approvals.json

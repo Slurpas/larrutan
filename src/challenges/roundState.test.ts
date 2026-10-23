@@ -30,6 +30,12 @@ describe('round state', () => {
     expect(choose(state, 'a').phase).toBe('correct')
   })
 
+  it('records whether each question was right on the first tap', () => {
+    const first = advance(choose(startRound(round), 'a'))
+    const second = choose(choose(first, 'l'), 'o-umlaut')
+    expect(second.firstTry).toEqual([true, false])
+  })
+
   it('reveals the answer once every wrong choice is gone', () => {
     const state = choose(choose(startRound(round), 'm'), 's')
     expect(isAnswerRevealed(state)).toBe(true)

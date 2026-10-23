@@ -19,6 +19,42 @@ Each task is committed on its own (local commits only, nothing pushed or publish
 | W4 | **Voice review:** go through the 209 clips on `?review=voices` (about 15–20 minutes) | Only your ear can approve them |
 | W5 | **Art style:** A (pixel 16), B (pixel 32) or C (soft vector, my pick), see `docs/art-direction/overview.png` | Your call; Task 9 (real graphics) and Task 10 (wardrobe) wait for it |
 | W6 | **Downloads:** OK to download the Andika font (SIL OFL)? And optionally a Kenney CC0 pack to compare? | Downloads need your OK |
+| W7 | **Learning:** difficulty adaptation, yes or no and which option? A `?debug=mastery` page for playtests? | Changes how the game behaves for your child |
+
+## Task 11 — Smarter learning: mastery (core done)
+
+Tasks 9 and 10 wait for your art pick, so I took the next independent task: Task 11 (PRD §6).
+
+**Built:**
+- **Tracking:** every question now records whether the first tap was right.
+- **Boxes:** each letter (Hitta bokstaven) and word (Första bokstaven, Ord och bild) sits in a Leitner box from 1 (still learning) to 5 (known well).
+  - Right first time moves it up one box; a slip moves it down one.
+  - Each challenge has its own boxes.
+- **Choosing questions:** rounds favour what is still being learned, and each box comes up about half as often as the one below.
+  - Example: a letter still being learned shows up in more than 95% of rounds, while a known letter still comes back in about a third of them.
+- **New players:** they get exactly the same rounds as before; the change only kicks in once there is practice history.
+- **Saving:** the save format is now version 2, with the first real upgrade step. Your current saves upgrade without losing anything, and a test proves it.
+- **Invisible to the child:** no grades, no "you're bad at Ö".
+
+**Two fixes found along the way:**
+- A key pressed the instant a question appeared could be lost. The key listener is now attached before the screen is drawn.
+- A save test could reload before the save had finished writing. The test now waits for the save.
+- The full browser suite now passes 3 runs in a row (42/42).
+
+**Decisions I made:**
+
+| Decision | Chosen | Alternatives |
+|---|---|---|
+| A slip | Down one box ("gentle, reversible") | Classic Leitner: straight back to box 1 (harsh for a 5-year-old) |
+| How often known items come back | Half as often per box (weights 8/4/2/1/0.5), never zero | Only "due" items, by time between sessions (more complex, needs dates) |
+| Separate or shared boxes | Per challenge: recognising "A" ≠ knowing "apa" starts with A | One box per letter shared by all challenges |
+| Hard level | Still always the look-alike letters; mastery only changes their order | Let mastery pick the hard-level letters too |
+| Difficulty adaptation | **Not done.** Rounds already adapt their content; this changes the level shown | (a) after a hard round with three or more slips, the sign opens the easy level next time and goes back to hard after an easy success; (b) choose by the average box of the challenge; (c) never change levels automatically |
+| An adult view of mastery | Not built (the parent area is on the roadmap) | A hidden `?debug=mastery` page for your playtests (an hour's work) |
+
+**Waiting for you:**
+- Do you want difficulty adaptation (option a, b or c)?
+- Should I add a `?debug=mastery` page so you can see the boxes while your child plays?
 
 ## Task 8 — Art direction (candidates ready; the pick is yours)
 

@@ -6,8 +6,20 @@ const now = new Date('2026-10-23T12:00:00Z')
 
 /** Some real progress: two rounds played (level 2), the cap and bow unlocked, the cap worn. */
 function playedProgress(): Progress {
-  const first = completeRound(initialProgress, { roundId: 'r1', challenge: 'findLetter', difficulty: 'easy', wrongTaps: 0 })
-  const second = completeRound(first.progress, { roundId: 'r2', challenge: 'firstLetter', difficulty: 'easy', wrongTaps: 3 })
+  const first = completeRound(initialProgress, {
+    roundId: 'r1',
+    challenge: 'findLetter',
+    difficulty: 'easy',
+    wrongTaps: 0,
+    practiced: [{ item: 'a', firstTry: true }],
+  })
+  const second = completeRound(first.progress, {
+    roundId: 'r2',
+    challenge: 'firstLetter',
+    difficulty: 'easy',
+    wrongTaps: 3,
+    practiced: [{ item: 'sun', firstTry: false }],
+  })
   return wear(second.progress, 'cap')
 }
 
@@ -41,8 +53,29 @@ describe('saving and loading', () => {
   it('still rewards the first round after loading, because round ids are not saved', () => {
     const loaded = readSave(stored(playedProgress()))
     if (loaded.kind !== 'loaded') throw new Error(loaded.kind)
-    const again = completeRound(loaded.progress, { roundId: 'r1', challenge: 'wordPicture', difficulty: 'easy', wrongTaps: 0 })
+    const again = completeRound(loaded.progress, {
+      roundId: 'r1',
+      challenge: 'wordPicture',
+      difficulty: 'easy',
+      wrongTaps: 0,
+      practiced: [],
+    })
     expect(again.outcome.xpGained).toBeGreaterThan(0)
+  })
+})
+
+describe('upgrading old saves', () => {
+  it('upgrades a version 1 save (Task 7) without losing anything, starting mastery empty', () => {
+    const version1 = {
+      version: 1,
+      savedAt: '2026-10-23T02:00:00.000Z',
+      progress: { xp: 40, roundsCompleted: 2, completedLevels: ['findLetter:easy', 'firstLetter:easy'], unlockedItems: ['cap', 'bow'], wornItem: 'cap' },
+    }
+    expect(readSave(version1)).toEqual({
+      kind: 'loaded',
+      repaired: false,
+      progress: { ...version1.progress, mastery: {}, rounds: {} },
+    })
   })
 })
 
@@ -89,6 +122,17 @@ describe('recovering from broken saves', () => {
     const file = stored(playedProgress()) as { progress: Record<string, unknown> }
     file.progress.wornItem = 'crown'
     expect(readSave(file)).toMatchObject({ kind: 'loaded', repaired: true, progress: { wornItem: null } })
+  })
+
+  it('drops mastery for unknown letters, words or boxes, and keeps the rest', () => {
+    const file = stored(playedProgress()) as { progress: { mastery: Record<string, unknown> } }
+    file.progress.mastery['findLetter:q'] = 3
+    file.progress.mastery['wordPicture:sun'] = 9
+    file.progress.mastery['firstLetter:moon'] = 'lots'
+    const result = readSave(file)
+    expect(result).toMatchObject({ kind: 'loaded', repaired: true })
+    if (result.kind !== 'loaded') return
+    expect(result.progress.mastery).toEqual({ 'findLetter:a': 2, 'firstLetter:sun': 1 })
   })
 
   it('plays a save from a newer version of the game but marks it, so it is never overwritten', () => {

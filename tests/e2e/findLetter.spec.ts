@@ -2,17 +2,15 @@ import type { Page } from '@playwright/test'
 import { createFindLetterRound } from '../../src/challenges/findLetter/createRound'
 import { confusableLetters, getLetter, letters } from '../../src/content/letters'
 import { expect, test } from './fixtures'
-import { targetBubbles } from '../../src/challenges/bubbles/bubbleRules'
-import { SEED, expectRoundCompleteThenMap, popAll, press, startChallenge, waitForQuestion } from './helpers'
+import { SEED, answerKey, expectRoundCompleteThenMap, press, startChallenge, waitForQuestion } from './helpers'
 
 const round = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters })
 const total = round.questions.length
 
-// Hitta bokstaven is Bubblor: several bubbles per letter, so tests take the first one still there.
-const letterButton = (page: Page, id: string) =>
-  page.getByRole('button', { name: getLetter(id).display, exact: true }).first()
+// Hitta bokstaven is Mata draken: one letter cookie per letter.
+const letterButton = (page: Page, id: string) => page.getByRole('button', { name: getLetter(id).display, exact: true })
 
-// Bubbles are blown in and float away between questions.
+// Each cookie flies to the dragon, which chews before the next question.
 const questionTimeout = 15_000
 test.slow()
 
@@ -20,7 +18,7 @@ test('a round can be completed with the keyboard', async ({ page, hasTouch }) =>
   await startChallenge(page, hasTouch, 'findLetter')
   for (const [index, question] of round.questions.entries()) {
     await waitForQuestion(page, index, total, questionTimeout)
-    await popAll(page, question)
+    await page.keyboard.press(answerKey(question.choices, question.target))
   }
   await expectRoundCompleteThenMap(page, questionTimeout)
 })
@@ -31,21 +29,14 @@ test('a round can be completed by touch, including a wrong answer', async ({ pag
     await waitForQuestion(page, index, total, questionTimeout)
 
     if (index === 0) {
-      // A wrong bubble doesn't pop: every bubble with that letter turns grey, in place; the child can try again.
+      // The dragon says no to a wrong cookie: it comes back grey; the child can try again.
       const wrong = question.choices.find((choice) => choice !== question.target)!
       await press(letterButton(page, wrong), hasTouch)
-      const wrongBubbles = page.getByRole('button', { name: getLetter(wrong).display, exact: true })
-      await expect(wrongBubbles).toHaveCount(2)
-      for (const bubble of await wrongBubbles.all()) await expect(bubble).toBeDisabled()
+      await expect(letterButton(page, wrong)).toBeDisabled()
       await waitForQuestion(page, 0, total)
     }
 
-    // Every bubble with the right letter pops; the question is done when the last one does.
-    const right = page.getByRole('button', { name: getLetter(question.target).display, exact: true })
-    for (let popped = 0; popped < targetBubbles; popped++) {
-      await expect(right).toHaveCount(targetBubbles - popped)
-      await press(right.first(), hasTouch)
-    }
+    await press(letterButton(page, question.target), hasTouch)
   }
   await expectRoundCompleteThenMap(page, questionTimeout)
 })
@@ -59,6 +50,32 @@ test('Å, Ä and Ö show up as letters to tap', async ({ page, hasTouch }) => {
   for (const [index, question] of round.questions.entries()) {
     await waitForQuestion(page, index, total, questionTimeout)
     for (const id of question.choices) await expect(letterButton(page, id)).toBeVisible()
-    await popAll(page, question)
+    await page.keyboard.press(answerKey(question.choices, question.target))
   }
+})
+
+test('a cookie can also be dragged to the dragon; dropping it elsewhere puts it back', async ({ page, hasTouch }) => {
+  test.skip(hasTouch, 'dragged with the mouse')
+  await startChallenge(page, hasTouch, 'findLetter')
+  const first = round.questions[0]!
+  await waitForQuestion(page, 0, total, questionTimeout)
+  const cookie = letterButton(page, first.target)
+  await cookie.click({ trial: true })
+  const box = (await cookie.boundingBox())!
+  const viewport = page.viewportSize()!
+  const [x, y] = [box.x + box.width / 2, box.y + box.height / 2]
+
+  // Dropped on the grass: back on the plate, still the same question.
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  await page.mouse.move(x - 40, y + 120, { steps: 5 })
+  await page.mouse.up()
+  await expect(page.getByRole('img', { name: `Fråga 1 av ${total}` })).toBeVisible()
+
+  // Dropped on the dragon (bottom right): eaten, next question.
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  await page.mouse.move(viewport.width - 120, viewport.height - 150, { steps: 8 })
+  await page.mouse.up()
+  await waitForQuestion(page, 1, total, questionTimeout)
 })

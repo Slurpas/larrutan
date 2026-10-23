@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import { confusableLetters, getLetter, letters } from '../../content/letters'
 import type { ChallengeScreenProps } from '../challengeProps'
-import { Bubbles } from '../bubbles/Bubbles'
+import { Dragon } from '../dragon/Dragon'
 import { challengeDifficulties } from '../difficulty'
-import { findAllVoice } from '../voices'
+import { dragonVoice } from '../voices'
 import { createFindLetterRound } from './createRound'
 
-/** Hitta bokstaven, as Bubblor: hear "Hitta alla A!" and pop every bubble with an A. */
+/** Hitta bokstaven, as Mata draken: hear "Draken vill ha ett A!" and feed the dragon the A cookie. */
 export function FindLetter({ seed, difficulty, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
   const [round] = useState(() =>
     createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty, practiceBox }),
   )
 
   return (
-    <Bubbles
+    <Dragon
       round={round}
-      voice={findAllVoice}
+      voice={dragonVoice}
       difficulty={difficulty}
       difficultyCount={challengeDifficulties.findLetter.length}
       onRoundComplete={onRoundComplete}

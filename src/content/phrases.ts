@@ -10,8 +10,8 @@ export const phrases = {
   hereIs: (what: string) => `Här är ${what}!`,
 
   findLetterQuestion: (letter: string) => `Var är ${letter}?`,
-  /** Bubblor: pop every bubble with this letter. */
-  findAllQuestion: (letter: string) => `Hitta alla ${letter}!`,
+  /** Mata draken: the dragon wants a letter cookie ("ett A": letters are neuter). */
+  dragonQuestion: (letter: string) => `Draken vill ha ett ${letter}!`,
 
   firstLetterQuestion: (word: string) => `Vilken bokstav börjar ${word} på?`,
   /** Once the child knows the game, just the word ("Öra."). */

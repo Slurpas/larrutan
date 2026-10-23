@@ -1,7 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test'
-import { targetBubbles } from '../../src/challenges/bubbles/bubbleRules'
 import type { ChallengeId } from '../../src/challenges/challengeIds'
-import type { ChoiceQuestion } from '../../src/challenges/choiceQuestion'
 import type { Tile } from '../../src/world/tileMap'
 import '../../src/world/hubTestApi'
 
@@ -53,9 +51,4 @@ export async function expectRoundCompleteThenMap(page: Page, timeout?: number) {
 
 export function answerKey(choices: readonly string[], target: string): string {
   return String(choices.indexOf(target) + 1)
-}
-
-/** Bubblor (Hitta bokstaven): pops every bubble with the asked letter, one key press per bubble. */
-export async function popAll(page: Page, question: ChoiceQuestion) {
-  for (let i = 0; i < targetBubbles; i++) await page.keyboard.press(answerKey(question.choices, question.target))
 }

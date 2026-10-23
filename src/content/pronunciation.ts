@@ -107,11 +107,11 @@ export const pauseMark = '|'
 /**
  * "Var är Å?" → "Var är, | Å?": a short pause before what the child must find, so it
  * stands out (user feedback 2026-10-23). The comma keeps the question going in the voice.
- * The same for "Hitta alla, | Å!". Piper itself makes no real pause inside a sentence,
- * whatever the punctuation.
+ * The same for "Draken vill ha ett, | Å!". Piper itself makes no real pause inside a
+ * sentence, whatever the punctuation.
  */
 export function withPauses(text: string): string {
-  return text.replace(/^(Var är) (.+\?)$/u, `$1, ${pauseMark} $2`).replace(/^(Hitta alla) (.+!)$/u, `$1, ${pauseMark} $2`)
+  return text.replace(/^(Var är) (.+\?)$/u, `$1, ${pauseMark} $2`).replace(/^(Draken vill ha ett) (.+!)$/u, `$1, ${pauseMark} $2`)
 }
 
 /** What the speech engine is given for a sentence: pauses, then fixed pronunciations. */

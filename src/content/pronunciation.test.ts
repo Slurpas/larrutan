@@ -11,10 +11,10 @@ describe('pronunciation fixes', () => {
     expect(withPronunciations('Var är A?')).toBe('Var är A?')
   })
 
-  it('pauses before what the child must find in "Var är …?" and "Hitta alla …!", and nowhere else', () => {
+  it('pauses before what the child must find in "Var är …?" and "Draken vill ha ett …!", and nowhere else', () => {
     expect(withPauses('Var är Å?')).toBe('Var är, | Å?')
     expect(withPauses('Var är solen?')).toBe('Var är, | solen?')
-    expect(withPauses('Hitta alla Ö!')).toBe('Hitta alla, | Ö!')
+    expect(withPauses('Draken vill ha ett Ö!')).toBe('Draken vill ha ett, | Ö!')
     expect(withPauses('Det där är Å.')).toBe('Det där är Å.')
     expect(withPauses('Vilken bokstav börjar sol på?')).toBe('Vilken bokstav börjar sol på?')
     expect(speechInput('Var är ananasen?')).toBe('Var är, | [[ ˈananasən? ]]')

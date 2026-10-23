@@ -291,6 +291,15 @@ Status 2026-10-24: **done.**
 #### Task 16 — Mata draken (Hitta bokstaven)
 - The letter sign becomes a dragon that wants one letter cookie at a time ("bokstavskex"). One real decision per question, replacing Bubblor's three identical bubbles (user feedback).
 
+Status 2026-10-24: **done.**
+- **The game:**
+  - A friendly green dragon on the meadow says "Draken vill ha ett A!".
+  - The child taps the right letter cookie, or drags it to the dragon, and it flies into the mouth and gets munched (`src/challenges/dragon`).
+  - A wrong cookie: the dragon shakes its head, and the cookie comes back grey while the voice names it.
+- **Levels:** three cookies on easy; four with look-alikes on hard, as in Task 15.
+- **The child's own character,** dressed, stands on the left.
+- **Bubblor** is no longer used for letters; its bubbles come back in Bygg ordet (Task 17).
+
 #### Task 17 — Bygg ordet (spelling with bubbles)
 - Bubblor turned into spelling short approved words: pop the letters in order to fill the word. Easy: the word is shown faintly; hard: only the picture and the voice. A new sign on the map.
 

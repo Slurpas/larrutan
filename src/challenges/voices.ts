@@ -29,9 +29,9 @@ export const findLetterVoice: ChallengeVoice<ChoiceQuestion> = {
   nameChoice: (id) => phrases.thatIs(letterName(id)),
 }
 
-/** Bubblor (Hitta bokstaven): "Hitta alla A!" */
-export const findAllVoice: ChallengeVoice<ChoiceQuestion> = {
-  ask: (q) => phrases.findAllQuestion(letterName(q.target)),
+/** Mata draken (Hitta bokstaven): "Draken vill ha ett A!" */
+export const dragonVoice: ChallengeVoice<ChoiceQuestion> = {
+  ask: (q) => phrases.dragonQuestion(letterName(q.target)),
   reveal: (q) => phrases.hereIs(letterName(q.target)),
   nameChoice: (id) => phrases.thatIs(letterName(id)),
   hardIntro: phrases.lookAlikesIntro,

@@ -8,10 +8,6 @@ import { createRng, shuffle } from '../random'
  * tap is never the only one of its kind.
  */
 
-/** The biggest whole-number zoom at which the scene fits the screen (pixel art scales by whole numbers). */
-export function bubbleScale(screenWidth: number, screenHeight: number): number {
-  return Math.max(2, Math.min(6, Math.floor(Math.min(screenWidth / 200, screenHeight / 170))))
-}
 
 /** Bubbles with the asked letter, and with each other letter, per question. */
 export const targetBubbles = 3

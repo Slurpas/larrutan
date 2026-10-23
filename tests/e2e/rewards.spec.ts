@@ -5,13 +5,13 @@ import { confusableLetters, letters } from '../../src/content/letters'
 import { boxOf, practiceKey, recordPractice } from '../../src/learning/mastery'
 import { backupStore, databaseName, profileStore } from '../../src/persistence/database'
 import { expect, test } from './fixtures'
-import { SEED, enterMap, popAll, press, tapStation, waitForQuestion } from './helpers'
+import { SEED, answerKey, enterMap, press, tapStation, waitForQuestion } from './helpers'
 
-/** Hitta bokstaven (Bubblor): pops every right bubble of every question with the keyboard. */
+/** Hitta bokstaven (Mata draken): feeds the dragon the right cookie of every question with the keyboard. */
 async function playRoundByKeyboard(page: Page, round: ChoiceRound) {
   for (const [index, question] of round.questions.entries()) {
     await waitForQuestion(page, index, round.questions.length, 15_000)
-    await popAll(page, question)
+    await page.keyboard.press(answerKey(question.choices, question.target))
   }
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible({ timeout: 15_000 })
 }
@@ -35,7 +35,7 @@ function savedWornItem(page: Page) {
   )
 }
 
-// Bubblor rounds take a while: bubbles are blown in and float away between questions.
+// Mata draken rounds take a while: each cookie flies to the dragon, which chews.
 test.slow()
 
 const easyRound = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters, difficulty: 'easy' })

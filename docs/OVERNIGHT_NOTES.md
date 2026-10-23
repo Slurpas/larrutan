@@ -45,6 +45,18 @@ Results and decisions are added below as each task is done.
 - **Saved per station:** save version 4. Your child's current levels carry over.
 - **To check:** listen to the three new sentences. Does your child notice that hard is harder?
 
+### 3. Mata draken (Task 16): done
+- **The letter sign (AÖ)** is now a friendly green dragon that says "Draken vill ha ett A!".
+- **How to answer:** tap the right letter cookie, or drag it to the dragon. It flies into the mouth and gets munched.
+- **A wrong cookie:** the dragon shakes its head, the cookie comes back grey, and the voice says what it was.
+- **Why it's better than Bubblor:** each question is one real choice, as you pointed out.
+- **Levels:** three cookies on easy; four with look-alikes on hard.
+- **Decisions I made:**
+  - "Draken vill ha ett A!" (letters are "ett A" in Swedish).
+  - Cookies, since many of our picture words aren't things a dragon should eat.
+  - Options I'd have asked about: the dragon eating pictures instead (but monkey, lion, angel…); or feeding by dragging only (tapping is easier for 5-year-olds, so both work).
+- **To check:** is the dragon cute rather than scary? Is dragging fun, or does your child just tap? There are 9 new sentences to review.
+
 # Night 1 (2026-10-23)
 
 You asked me to keep working while you sleep:

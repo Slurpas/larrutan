@@ -25,7 +25,8 @@ import type { Difficulty } from '../difficulty'
 import { RoundComplete } from '../RoundComplete'
 import { useChoiceRound, type RoundResult } from '../useChoiceRound'
 import type { ChallengeVoice } from '../voices'
-import { bubbleLayout, bubbleScale, bubblesFor, type Bubble } from './bubbleRules'
+import { sceneScale } from '../sceneScale'
+import { bubbleLayout, bubblesFor, type Bubble } from './bubbleRules'
 import cards from '../ChoiceChallenge.module.css'
 import styles from './Bubbles.module.css'
 
@@ -113,7 +114,7 @@ export function Bubbles<Q extends ChoiceQuestion>({
   )
 
   // Layout, in screen pixels.
-  const px = bubbleScale(size.width, size.height)
+  const px = sceneScale(size.width, size.height)
   const bubblePx = bubbleSize * px
   const groundTop = size.height - GROUND * px
   const blowerLeft = Math.max(12 * px, size.width * 0.04)

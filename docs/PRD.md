@@ -96,7 +96,7 @@ Start with **upper-case letters**; lower case is a later difficulty step. Mathem
 
 | Challenge | Child hears | Child does |
 |---|---|---|
-| **Hitta bokstaven** (find the letter) | "Var är A?" | Taps the letter among 2–4 choices. *Since Task 13:* hears "Hitta alla A!" and pops every soap bubble with that letter (Bubblor) |
+| **Hitta bokstaven** (find the letter) | "Var är A?" | Taps the letter among 2–4 choices. *Since Task 16:* hears "Draken vill ha ett A!" and feeds the dragon the right letter cookie (Mata draken) |
 | **Första bokstaven** (first letter) | Sees a picture, hears "sol" | Taps the letter the word starts with. *Since Task 12:* rides a mine cart (Gruvvagnen) and steers it into the tunnel with that letter |
 | **Ord och bild** (word to picture) | "Var är katten?" | Taps the matching picture among 2–4 |
 

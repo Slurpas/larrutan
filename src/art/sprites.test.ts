@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { words } from '../content/words'
 import { characterFeetRow, characterFrames, characterHeadTop, characterSize } from './character'
 import { bubbleBlower, bubbleBurst, bubbleFill, bubbleRing, cloud, meadowFlower, meadowSoil, meadowTop } from './bubbles'
+import { cookie, crumbs, dragonFaces } from './dragon'
 import { tinyTownHouses, tinyTownTiles } from './kenney'
 import { cartSize, cartWithRider, floorTile, lantern, mineTile, planks, railTile, rockTile, tunnelMouth, tunnelSize } from './mine'
 import { palette } from './palette'
@@ -49,6 +50,9 @@ describe('sprites', () => {
       meadowSoil,
       meadowFlower,
       cloud,
+      ...Object.fromEntries(Object.entries(dragonFaces).map(([face, grid]) => [`dragon ${face}`, grid])),
+      cookie,
+      crumbs,
     }
     for (const [name, grid] of Object.entries(sprites)) expect(problems(grid), name).toEqual([])
   })

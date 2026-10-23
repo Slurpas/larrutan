@@ -18,7 +18,7 @@ Today: A I L M O S Å Ä Ö (9). Proposed next: **R, N, T, F** (13 in total).
 - **U** waits because O often sounds like U (*ost*, *sol*). Only *uggla* is a strong picture word.
 - Both need a new kind of rule first: letters that may never appear together in Första bokstaven, at any level. That's a small change, but worth doing on its own when we get there.
 
-## Words (16 new; 44 in total)
+## Words (15 new and a spare; 43 in total)
 
 Every word starts with the plain sound of its letter (PRD §5 rule 1). None start with sj-, tj- or j-sounds.
 - **Pictures:** emoji placeholders from Unicode 13 or older, so they work on older iPads.

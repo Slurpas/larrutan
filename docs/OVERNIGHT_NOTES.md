@@ -20,7 +20,7 @@ Each task is committed on its own (local commits only, nothing pushed or publish
 | W5 | **Art style:** A (pixel 16), B (pixel 32) or C (soft vector, my pick), see `docs/art-direction/overview.png` | Your call; Task 9 (real graphics) and Task 10 (wardrobe) wait for it |
 | W6 | **Downloads:** OK to download the Andika font (SIL OFL)? And optionally a Kenney CC0 pack to compare? | Downloads need your OK |
 | W7 | **Learning:** difficulty adaptation, yes or no and which option? A `?debug=mastery` page for playtests? | Changes how the game behaves for your child |
-| W8 | **New content:** approve the next letters (R, N, T, F) and 16 words in `docs/CONTENT_PROPOSAL.md`; E and U wait (sound rules) | You approve content (PRD §5) |
+| W8 | **New content:** approve the next letters (R, N, T, F) and 15 words in `docs/CONTENT_PROPOSAL.md`; E and U wait (sound rules) | You approve content (PRD §5) |
 
 ## Task 11 — Smarter learning: mastery (core done)
 

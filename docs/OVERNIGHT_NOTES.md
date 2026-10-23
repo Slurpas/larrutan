@@ -17,6 +17,33 @@ Each task is committed on its own (local commits only, nothing pushed or publish
 | W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet) | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
 | W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Needs hosting (HTTPS) first |
 | W4 | **Voice review:** go through the 209 clips on `?review=voices` (about 15–20 minutes) | Only your ear can approve them |
+| W5 | **Art style:** A (pixel 16), B (pixel 32) or C (soft vector, my pick), see `docs/art-direction/overview.png` | Your call; Task 9 (real graphics) and Task 10 (wardrobe) wait for it |
+| W6 | **Downloads:** OK to download the Andika font (SIL OFL)? And optionally a Kenney CC0 pack to compare? | Downloads need your OK |
+
+## Task 8 — Art direction (candidates ready; the pick is yours)
+
+**Built:** the same scene (paths, pond, trees, the three signs, the character, the real HUD) drawn in three styles, entirely by code. Start with `docs/art-direction/overview.png`; then compare the `*-ipad.png`, `*-desktop.png` and `*-details.png` files. The details sheets show the character close up, map parts and a challenge card. Full write-up in `docs/ART_DIRECTION.md`.
+
+| Style | In short |
+|---|---|
+| **A — Pixel 16×16** | Classic adventure look, quickest to make, but tiny: a hat is about 10×4 pixels |
+| **B — Pixel 32×32** | Pixel art with room for faces and clothes; about four times the drawing work |
+| **C — Soft vector** | Matches the buttons, cards and start screen; sharp on any screen; most room for wardrobe detail |
+
+**My recommendation: C.** It looks like one game together with the UI the child already knows, and it gives hats and clothes room for detail. If you prefer pixel art, B over A.
+
+**Decisions I made:**
+- **Three candidates, all drawn by me.**
+  - Alternative: the PRD's "own vs CC0" comparison with a Kenney pack. That means downloading files, so it waits for your OK.
+- **The vector candidate was added**, though the PRD only names pixel art and CC0 packs.
+  - Reason: it fits the existing UI and the wardrobe plans.
+  - Alternative: compare only the pixel sizes.
+- **Letters stay in a clean font in every style** (PRD rule).
+  - The Andika font isn't downloaded yet; it waits for your OK, so the candidates use the system font.
+
+**Waiting for you:**
+- The pick: A, B or C, or "show me a CC0 pack too".
+- An OK to download Andika (SIL Open Font License, about 300 KB).
 
 ## Task 6 — Voice review page (done; the review itself is yours)
 

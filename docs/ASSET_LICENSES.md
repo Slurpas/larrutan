@@ -25,6 +25,7 @@ Before a public release, re-check the voice model's card and the terms of any TT
 |---|---|---|---|
 | Icons (`src/ui/icons.tsx`), favicon, map shapes (`src/world/HubScene.ts`) | Drawn in code by Claude | Ours | Placeholders until Phase 2 art |
 | App icon (`scripts/app-icon.svg`, rendered to `public/icons/*.png`) | Drawn as SVG by Claude | Ours | Home screen and install icon |
+| Art direction candidates (`docs/art-direction/*.png`) | Drawn by code by Claude (`scripts/art-direction/`) | Ours | Comparison for Task 8; not in the game |
 | Pictures (emoji) | The device's system emoji font | Not shipped | Placeholders; replaced by project pictures in Phase 2 |
 
 ## Fonts

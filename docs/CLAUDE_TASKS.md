@@ -172,6 +172,13 @@ Remaining:
 - Side-by-side comparison of candidate styles (tile resolutions, own vs CC0 environment) at iPad and desktop size; the user picks.
 - `docs/ART_DIRECTION.md`, `docs/ASSET_LICENSES.md`, the palette, and the Andika font for letters.
 
+Status 2026-10-23:
+- **Candidates ready:** pixel 16×16, pixel 32×32 and soft vector, all drawn by code (`docs/art-direction/*.png`). Claude recommends soft vector.
+- **Waiting for the user:**
+  - The pick.
+  - An OK to download the Andika font (SIL OFL).
+  - Optionally, an OK to download a CC0 pack (Kenney) to compare as well.
+
 ### Task 9 — Real world and character graphics
 - Replace placeholders on the map with the chosen style.
 - Base character with a walk animation in three drawn directions (side mirrored).

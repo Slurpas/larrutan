@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Art direction candidates</title>
+    <style>
+      body { margin: 0; background: #1d2330; color: #eee; font-family: system-ui, sans-serif; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <!--
+      Task 8 (PRD §9): the same scene drawn in each candidate style, so the user can compare.
+      Everything is drawn by code; nothing is downloaded. render.mjs screenshots the canvases.
+      Style A: pixel art, 16×16 tiles. Style B: pixel art, 32×32 tiles. Style C: soft vector.
+    -->
+    <script type="module">
+      const TILE = 64 // CSS px per tile on screen, as in the game (src/world/camera.ts)
+
+      // ---------- The shared scene ----------
+      const MAP = [
+        'gggggggggggggggggggggggg',
+        'gggggggggggggggggggggggg',
+        'gggggggggggggggggggggggg',
+        'gggggggggggpgggggggggggg',
+        'gggggggggggpgggggggggggg',
+        'gggggggggggpgggggggggggg',
+        'gggggggggggpgggggggggggg',
+        'gpppppppppppppppppppppgg',
+        'ggggggpggggggggggggggggg',
+        'ggggggpgggggggwwwwwggggg',
+        'ggggggpggggggwwwwwwwgggg',
+        'ggggggpggggggwwwwwwwgggg',
+        'ggggggggggggggwwwwwggggg',
+        'gggggggggggggggggggggggg',
+      ]
+      const COLS = MAP[0].length
+      const ROWS = MAP.length
+      const tileAt = (c, r) => (r < 0 || r >= ROWS || c < 0 || c >= COLS ? 'g' : MAP[r][c])
+      const OBJECTS = [
+        { kind: 'tree', c: 3, r: 3 },
+        { kind: 'tree', c: 5, r: 1 },
+        { kind: 'tree', c: 16, r: 2 },
+        { kind: 'tree', c: 19, r: 4 },
+        { kind: 'tree', c: 2, r: 11 },
+        { kind: 'tree', c: 9, r: 12 },
+        { kind: 'tree', c: 22, r: 11 },
+        { kind: 'tree', c: 14, r: 4 },
+        { kind: 'bush', c: 8, r: 4 },
+        { kind: 'bush', c: 13, r: 8 },
+        { kind: 'bush', c: 20, r: 8 },
+        { kind: 'bush', c: 1, r: 6 },
+        { kind: 'rock', c: 12, r: 11 },
+        { kind: 'rock', c: 17, r: 6 },
+        { kind: 'sign', c: 11, r: 2, show: 'letters' },
+        { kind: 'sign', c: 6, r: 12, show: 'sun' },
+        { kind: 'sign', c: 22, r: 7, show: 'apple' },
+        { kind: 'player', c: 9, r: 7 },
+      ]
+      // Flowers on grass, the same spots in every style.
+      const FLOWERS = []
+      {
+        const rand = mulberry32(7)
+        for (let i = 0; i < 46; i++) {
+          const c = Math.floor(rand() * COLS)
+          const r = Math.floor(rand() * ROWS)
+          if (tileAt(c, r) !== 'g' || OBJECTS.some((o) => Math.abs(o.c - c) < 1 && Math.abs(o.r - r) < 2)) continue
+          FLOWERS.push({ c, r, x: rand(), y: rand(), color: ['#ffffff', '#ff8fb1', '#ffd34d'][i % 3] })
+        }
+      }
+
+      function mulberry32(seed) {
+        return () => {
+          seed |= 0
+          seed = (seed + 0x6d2b79f5) | 0
+          let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+        }
+      }
+
+      // ---------- Pixel art (styles A and B) ----------
+      // One fixed palette (PRD §9), shared by every sprite.
+      const PAL = {
+        grass: '#63b863', grassDark: '#4f9e53', grassLight: '#80cf74',
+        path: '#e6cc93', pathEdge: '#c9a86b', pathLight: '#f3deb0',
+        water: '#4ea8e6', waterDark: '#3b8ccc', waterLight: '#a3d9f8', sand: '#ecd9a2',
+        leaf: '#3f9449', leafDark: '#2d7139', leafLight: '#62bb5c', trunk: '#8b5a3c', trunkDark: '#6a4330',
+        stone: '#a7adb8', stoneDark: '#7f8695', stoneLight: '#c9ced7',
+        outline: '#263445', shadow: 'rgba(20, 50, 30, 0.28)',
+        skin: '#ffd5b5', skinDark: '#efb490', hair: '#7a4e2d', hairDark: '#56351e', cheek: '#ff9aa6',
+        shirt: '#ff8a4c', shirtDark: '#de6a33', pants: '#3f72bf', pantsDark: '#2f5895', shoe: '#3a3a4c',
+        eye: '#263445', white: '#ffffff', board: '#fff6e3', boardEdge: '#e8d6b4', wood: '#b07a48', woodDark: '#8a5a33',
+        sun: '#ffd23f', sunDark: '#f2a922', apple: '#ec4b4b', appleDark: '#c33232', appleLeaf: '#4caf50',
+      }
+
+      class Grid {
+        constructor(w, h) { this.w = w; this.h = h; this.px = new Array(w * h).fill(null) }
+        set(x, y, c) { x = Math.floor(x); y = Math.floor(y); if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.px[y * this.w + x] = c }
+        get(x, y) { return x >= 0 && y >= 0 && x < this.w && y < this.h ? this.px[y * this.w + x] : null }
+        rect(x, y, w, h, c) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.set(x + i, y + j, c) }
+        ellipse(cx, cy, rx, ry, c, where = () => true) {
+          for (let y = Math.floor(cy - ry); y <= cy + ry; y++)
+            for (let x = Math.floor(cx - rx); x <= cx + rx; x++) {
+              const dx = (x + 0.5 - cx) / rx, dy = (y + 0.5 - cy) / ry
+              if (dx * dx + dy * dy <= 1 && where(x, y)) this.set(x, y, c)
+            }
+        }
+        disc(cx, cy, r, c, where) { this.ellipse(cx, cy, r, r, c, where) }
+        /** Recolours filled pixels for which test(x, y) holds. */
+        shade(c, test) { for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) if (this.get(x, y) && test(x, y)) this.set(x, y, c) }
+        /** A 1-pixel outline around every shape. */
+        outline(c) {
+          const copy = this.px.slice()
+          const filled = (x, y) => x >= 0 && y >= 0 && x < this.w && y < this.h && copy[y * this.w + x]
+          for (let y = 0; y < this.h; y++)
+            for (let x = 0; x < this.w; x++)
+              if (!copy[y * this.w + x] && (filled(x - 1, y) || filled(x + 1, y) || filled(x, y - 1) || filled(x, y + 1))) this.set(x, y, c)
+          return this
+        }
+        blit(src, ox, oy) { for (let y = 0; y < src.h; y++) for (let x = 0; x < src.w; x++) { const c = src.get(x, y); if (c) this.set(ox + x, oy + y, c) } }
+        toCanvas() {
+          const canvas = document.createElement('canvas')
+          canvas.width = this.w; canvas.height = this.h
+          const ctx = canvas.getContext('2d')
+          for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const c = this.get(x, y); if (c) { ctx.fillStyle = c; ctx.fillRect(x, y, 1, 1) } }
+          return canvas
+        }
+      }
+
+      /** Sprites at k = 1 (16 px tiles) or k = 2 (32 px tiles); k = 2 adds detail rather than just doubling. */
+      function pixelSprites(k) {
+        const T = 16 * k
+        const detailed = k > 1
+
+        function tree() {
+          const g = new Grid(T + 10 * k, Math.round(30 * k))
+          const cx = g.w / 2
+          const cy = 12 * k
+          g.rect(cx - 2 * k, cy + 6 * k, 4 * k, 10 * k, PAL.trunk)
+          g.rect(cx + 1 * k, cy + 6 * k, 1 * k, 10 * k, PAL.trunkDark)
+          if (detailed) { g.rect(cx - 4 * k, cy + 15 * k, 2 * k, 1 * k, PAL.trunk); g.rect(cx + 2 * k, cy + 15 * k, 2 * k, 1 * k, PAL.trunk) }
+          const blobs = [[0, 0, 7], [-6, 2.5, 5.2], [6, 2.5, 5.2], [-3, -4, 5.2], [3.5, -4, 5], [-3.5, 5, 4.6], [3.5, 5, 4.6]]
+          for (const [dx, dy, r] of blobs) g.disc(cx + dx * k, cy + dy * k, r * k, PAL.leaf)
+          g.shade(PAL.leafDark, (x, y) => y > cy && g.get(x, y) === PAL.leaf && (x - cx) * 0.3 + (y - cy) > 4.2 * k)
+          g.shade(PAL.leafLight, (x, y) => g.get(x, y) === PAL.leaf && (x - cx) * 0.45 + (y - cy) < -5.2 * k)
+          if (detailed) {
+            const rand = mulberry32(3)
+            for (let i = 0; i < 70; i++) {
+              const x = cx + (rand() - 0.5) * 34, y = cy + (rand() - 0.5) * 30
+              if (g.get(x, y) === PAL.leaf) g.set(x, y, rand() < 0.5 ? PAL.leafDark : PAL.leafLight)
+            }
+          }
+          return g.outline(PAL.outline)
+        }
+
+        function bush() {
+          const g = new Grid(14 * k, 11 * k)
+          for (const [dx, dy, r] of [[7, 6.5, 4.6], [4, 7, 3.4], [10, 7, 3.4], [7, 4.2, 3.4]]) g.disc(dx * k, dy * k, r * k, PAL.leaf)
+          g.shade(PAL.leafDark, (x, y) => g.get(x, y) === PAL.leaf && y > 7.5 * k)
+          g.shade(PAL.leafLight, (x, y) => g.get(x, y) === PAL.leaf && y < 4.5 * k && x < 8 * k)
+          if (detailed) { g.set(5 * k, 6 * k, '#ff8fb1'); g.set(9 * k, 5 * k, '#ffffff'); g.set(11 * k, 8 * k, '#ff8fb1') }
+          return g.outline(PAL.outline)
+        }
+
+        function rock() {
+          const g = new Grid(10 * k, 8 * k)
+          g.ellipse(5 * k, 4.6 * k, 4.4 * k, 3.2 * k, PAL.stone)
+          g.shade(PAL.stoneDark, (x, y) => g.get(x, y) && y > 5.2 * k)
+          g.shade(PAL.stoneLight, (x, y) => g.get(x, y) === PAL.stone && y < 3.4 * k && x < 5 * k)
+          return g.outline(PAL.outline)
+        }
+
+        function sign(show) {
+          const g = new Grid(T + 4 * k, 22 * k)
+          const bx = 2 * k, bw = T, bh = 12 * k
+          g.rect(g.w / 2 - 1 * k, bh, 2 * k, 9 * k, PAL.wood)
+          g.rect(g.w / 2, bh, 1 * k, 9 * k, PAL.woodDark)
+          g.rect(bx, 1 * k, bw, bh, PAL.board)
+          g.rect(bx, bh, bw, 1 * k, PAL.boardEdge)
+          if (show === 'sun') {
+            const cx = bx + 5 * k, cy = 7 * k
+            for (const [dx, dy] of [[0, -4], [0, 4], [-4, 0], [4, 0], [-3, -3], [3, 3], [-3, 3], [3, -3]]) g.set(cx + dx * k, cy + dy * k, PAL.sunDark)
+            g.disc(cx, cy, 2.6 * k, PAL.sun)
+            if (detailed) g.set(cx - k, cy - k, PAL.white)
+          } else if (show === 'apple') {
+            const cx = bx + bw / 2, cy = 7.4 * k
+            g.disc(cx, cy, 3.6 * k, PAL.apple)
+            g.shade(PAL.appleDark, (x, y) => g.get(x, y) === PAL.apple && x > cx + k && y > cy)
+            g.rect(cx - 0.5 * k, cy - 5 * k, Math.max(1, k), 2 * k, PAL.trunkDark)
+            g.rect(cx + 0.5 * k, cy - 5 * k, 2 * k, Math.max(1, k), PAL.appleLeaf)
+            g.set(cx - 1.5 * k, cy - 1.5 * k, PAL.white)
+          }
+          g.outline(PAL.outline)
+          // Where the letters go: drawn afterwards in the literacy font, never as pixels (PRD §9).
+          return { grid: g, text: show === 'letters' ? 'AÖ' : show === 'sun' ? 'S' : null, textBox: show === 'sun' ? [bx + 9 * k, 1 * k, 7 * k, bh] : [bx, 1 * k, bw, bh] }
+        }
+
+        function player() {
+          const g = new Grid(T, 32 * k)
+          const cx = T / 2
+          // Legs and shoes
+          g.rect(cx - 4 * k, 26 * k, 3 * k, 3 * k, PAL.pants); g.rect(cx + 1 * k, 26 * k, 3 * k, 3 * k, PAL.pants)
+          g.rect(cx - 4 * k, 29 * k, 3 * k, 2 * k, PAL.shoe); g.rect(cx + 1 * k, 29 * k, 3 * k, 2 * k, PAL.shoe)
+          // Body
+          g.rect(cx - 4 * k, 22 * k, 8 * k, 4 * k, PAL.pants)
+          g.rect(cx - 4 * k, 16 * k, 8 * k, 7 * k, PAL.shirt)
+          g.rect(cx - 5 * k, 17 * k, 1 * k, 4 * k, PAL.shirt); g.rect(cx + 4 * k, 17 * k, 1 * k, 4 * k, PAL.shirt)
+          g.rect(cx - 5 * k, 21 * k, 1 * k, 2 * k, PAL.skin); g.rect(cx + 4 * k, 21 * k, 1 * k, 2 * k, PAL.skin)
+          if (detailed) {
+            g.rect(cx + 2 * k, 16 * k, 2 * k, 7 * k, PAL.shirtDark)
+            g.rect(cx - 3 * k, 16 * k, 6 * k, 1, PAL.shirtDark)
+            g.rect(cx + 2 * k, 22 * k, 2 * k, 4 * k, PAL.pantsDark)
+            g.rect(cx - 4 * k, 22 * k, 8 * k, 1, PAL.pantsDark)
+          }
+          // Head
+          const hy = 9.5 * k
+          g.ellipse(cx, hy, 6.6 * k, 6.4 * k, PAL.skin)
+          // Hair: a cap with a fringe
+          g.shade(PAL.hair, (x, y) => y < hy - 2.2 * k || (y < hy + 1 * k && Math.abs(x + 0.5 - cx) > 5 * k))
+          g.ellipse(cx, 3.6 * k, 6 * k, 3 * k, PAL.hair)
+          for (const fx of [-3.5, -0.5, 2.5]) g.rect(cx + fx * k, hy - 2.4 * k, 2 * k, 1 * k, PAL.hair)
+          if (detailed) {
+            g.shade(PAL.hairDark, (x, y) => g.get(x, y) === PAL.hair && (x + 0.5 - cx) > 2 * k && y > 3 * k)
+            g.set(cx - 3 * k, 2 * k, PAL.hairDark); g.set(cx - 2 * k, 3 * k, PAL.hairDark)
+          }
+          // Face
+          const ey = hy + 1 * k
+          if (detailed) {
+            for (const ex of [-3.5, 2.5]) { g.rect(cx + ex * k, ey, 2 * k, 3 * k, PAL.eye); g.set(cx + ex * k, ey, PAL.white) }
+            g.rect(cx - 5 * k, ey + 3 * k, 2 * k, 1 * k, PAL.cheek); g.rect(cx + 3 * k, ey + 3 * k, 2 * k, 1 * k, PAL.cheek)
+            g.rect(cx - 1 * k, ey + 4 * k, 2 * k, 1, PAL.skinDark)
+          } else {
+            g.rect(cx - 3 * k, ey, 1, 2, PAL.eye); g.rect(cx + 2 * k, ey, 1, 2, PAL.eye)
+            g.set(cx - 5, ey + 2, PAL.cheek); g.set(cx + 4, ey + 2, PAL.cheek)
+            g.set(cx - 1, ey + 3, PAL.skinDark); g.set(cx, ey + 3, PAL.skinDark)
+          }
+          return g.outline(PAL.outline)
+        }
+
+        return { T, tree: tree(), bush: bush(), rock: rock(), sign, player: player() }
+      }
+
+      function pixelMap(k) {
+        const s = pixelSprites(k)
+        const T = s.T
+        const g = new Grid(COLS * T, ROWS * T)
+        const rand = mulberry32(11)
+        const isPath = (c, r) => tileAt(c, r) === 'p'
+        const isWater = (c, r) => tileAt(c, r) === 'w'
+        for (let r = 0; r < ROWS; r++)
+          for (let c = 0; c < COLS; c++) {
+            const kind = tileAt(c, r)
+            const ox = c * T, oy = r * T
+            g.rect(ox, oy, T, T, PAL.grass)
+            if (kind === 'g') {
+              for (let i = 0; i < (k > 1 ? 7 : 2); i++) {
+                const x = ox + 1 + Math.floor(rand() * (T - 3)), y = oy + 2 + Math.floor(rand() * (T - 3))
+                g.set(x, y, PAL.grassDark); g.set(x + 2, y, PAL.grassDark); g.set(x + 1, y + 1, PAL.grassDark)
+                if (k > 1) g.set(x + 1, y - 1, PAL.grassLight)
+              }
+              continue
+            }
+            const same = kind === 'p' ? isPath : isWater
+            const L = !same(c - 1, r), R = !same(c + 1, r), U = !same(c, r - 1), D = !same(c, r + 1)
+            for (let y = 0; y < T; y++)
+              for (let x = 0; x < T; x++) {
+                // Distance to the nearest grass edge, with rounded outer corners.
+                const rad = kind === 'p' ? 2 * k : 4 * k
+                let d = Math.min(L ? x : 99, R ? T - 1 - x : 99, U ? y : 99, D ? T - 1 - y : 99)
+                for (const [hx, hy] of [[L, U], [R, U], [L, D], [R, D]].map((p, i) => [p[0] && p[1], i])) {
+                  if (!hx) continue
+                  const cxr = hy % 2 === 0 ? rad : T - 1 - rad, cyr = hy < 2 ? rad : T - 1 - rad
+                  const inX = hy % 2 === 0 ? x < rad : x > T - 1 - rad, inY = hy < 2 ? y < rad : y > T - 1 - rad
+                  if (inX && inY) d = Math.min(d, rad - Math.hypot(x - cxr, y - cyr))
+                }
+                let color
+                if (kind === 'p') color = d < 0 ? PAL.grass : d < k ? PAL.pathEdge : PAL.path
+                else color = d < 0 ? PAL.grass : d < k ? PAL.sand : d < 2 * k ? PAL.waterLight : PAL.water
+                g.set(ox + x, oy + y, color)
+              }
+            const dots = kind === 'p' ? [PAL.pathEdge, PAL.pathLight] : [PAL.waterLight, PAL.waterDark]
+            for (let i = 0; i < 2 * k; i++) {
+              const x = ox + 3 * k + Math.floor(rand() * (T - 6 * k)), y = oy + 3 * k + Math.floor(rand() * (T - 6 * k))
+              if (kind === 'w') { g.rect(x, y, 3 * k, 1, dots[i % 2]) } else { g.set(x, y, dots[i % 2]) }
+            }
+          }
+        for (const f of FLOWERS) {
+          const x = f.c * T + 2 + Math.floor(f.x * (T - 5)), y = f.r * T + 3 + Math.floor(f.y * (T - 5))
+          g.set(x, y + 1, PAL.grassDark)
+          g.set(x, y, f.color)
+          if (k > 1) { g.set(x - 1, y, f.color); g.set(x + 1, y, f.color); g.set(x, y - 1, f.color); g.set(x, y, '#ffd34d'); g.set(x, y + 2, PAL.grassDark) }
+        }
+        const texts = []
+        for (const o of [...OBJECTS].sort((a, b) => a.r - b.r)) {
+          const footX = o.c * T + T / 2, footY = (o.r + 1) * T - 1 * k
+          const sprite = o.kind === 'sign' ? s.sign(o.show) : null
+          const grid = sprite ? sprite.grid : s[o.kind]
+          const shadowW = o.kind === 'tree' ? 7 * k : o.kind === 'player' ? 5 * k : o.kind === 'sign' ? 4 * k : 5 * k
+          g.ellipse(footX, footY - 1 * k, shadowW, 2 * k, '#4a8f4c', (x, y) => g.get(x, y) !== PAL.path && g.get(x, y) !== PAL.pathEdge)
+          g.ellipse(footX, footY - 1 * k, shadowW, 2 * k, '#cdb07a', (x, y) => g.get(x, y) === PAL.path || g.get(x, y) === PAL.pathEdge)
+          const ox = Math.round(footX - grid.w / 2), oy = Math.round(footY - grid.h)
+          g.blit(grid, ox, oy)
+          if (sprite?.text) texts.push({ text: sprite.text, box: [ox + sprite.textBox[0], oy + sprite.textBox[1], sprite.textBox[2], sprite.textBox[3]] })
+        }
+        return { canvas: g.toCanvas(), T, texts, sprites: s }
+      }
+
+      // ---------- Soft vector (style C) ----------
+      const V = {
+        ink: '#2b4a6b', grass: '#7cc56f', grassTuft: '#68b35c', path: '#efd9a4', pathEdge: '#d9bd7f',
+        water: '#6cc3f0', waterDeep: '#58b2e3', ripple: '#d6f1ff', shore: '#f3e3b1',
+        leaf: '#4fa556', leafLight: '#7acb6e', trunk: '#9a6a45', board: '#ffffff', post: '#9a6a45',
+        skin: '#ffd8bb', hair: '#7a4e2d', cheek: '#ffa3ad', shirt: '#ff8a4c', pants: '#3f72bf', shoe: '#3a3a4c',
+        stone: '#b8bfca', stoneLight: '#d6dbe3', shadow: 'rgba(30, 70, 40, 0.22)',
+      }
+
+      function roundRectPath(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r) }
+
+      function vectorMap() {
+        const canvas = document.createElement('canvas')
+        canvas.width = COLS * TILE; canvas.height = ROWS * TILE
+        const ctx = canvas.getContext('2d')
+        ctx.fillStyle = V.grass
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        const rand = mulberry32(5)
+        ctx.strokeStyle = V.grassTuft; ctx.lineWidth = 3; ctx.lineCap = 'round'
+        for (let i = 0; i < 260; i++) {
+          const x = rand() * canvas.width, y = rand() * canvas.height
+          ctx.beginPath(); ctx.moveTo(x - 5, y - 6); ctx.lineTo(x, y); ctx.lineTo(x + 5, y - 7); ctx.stroke()
+        }
+        // Path and pond: their tiles, blurred and cut at two levels, give smooth shapes with a soft edge band.
+        for (const [kind, layers] of [['p', [[0.3, V.pathEdge], [0.62, V.path]]], ['w', [[0.22, V.shore], [0.5, V.water], [0.86, V.waterDeep]]]]) {
+          ctx.drawImage(smoothShape(kind, layers, canvas.width, canvas.height), 0, 0)
+        }
+        ctx.strokeStyle = V.ripple; ctx.lineWidth = 4
+        for (const [x, y] of [[15.2, 9.6], [17.4, 10.4], [16, 11.3], [18.6, 9.9]]) { ctx.beginPath(); ctx.arc(x * TILE, y * TILE, 12, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke() }
+        for (const f of FLOWERS) {
+          const x = (f.c + 0.15 + f.x * 0.7) * TILE, y = (f.r + 0.2 + f.y * 0.6) * TILE
+          ctx.fillStyle = f.color
+          for (let a = 0; a < 5; a++) { ctx.beginPath(); ctx.arc(x + Math.cos(a * 1.257) * 4.5, y + Math.sin(a * 1.257) * 4.5, 3.6, 0, Math.PI * 2); ctx.fill() }
+          ctx.fillStyle = '#ffd34d'; ctx.beginPath(); ctx.arc(x, y, 2.8, 0, Math.PI * 2); ctx.fill()
+        }
+        const texts = []
+        for (const o of [...OBJECTS].sort((a, b) => a.r - b.r)) {
+          const x = (o.c + 0.5) * TILE, y = (o.r + 1) * TILE - 4
+          ctx.fillStyle = V.shadow
+          ctx.beginPath(); ctx.ellipse(x, y, o.kind === 'tree' ? 30 : 20, 7, 0, 0, Math.PI * 2); ctx.fill()
+          if (o.kind === 'tree') vectorTree(ctx, x, y)
+          else if (o.kind === 'bush') vectorBlobs(ctx, x, y - 16, [[0, 0, 18], [-14, 4, 13], [14, 4, 13]])
+          else if (o.kind === 'rock') { outlined(ctx, () => { ctx.beginPath(); ctx.ellipse(x, y - 12, 18, 13, 0, 0, Math.PI * 2) }, V.stone); ctx.fillStyle = V.stoneLight; ctx.beginPath(); ctx.ellipse(x - 5, y - 17, 7, 4, -0.3, 0, Math.PI * 2); ctx.fill() }
+          else if (o.kind === 'sign') texts.push(vectorSign(ctx, x, y, o.show))
+          else if (o.kind === 'player') vectorPlayer(ctx, x, y, 1.25)
+        }
+        return { canvas, texts }
+      }
+
+      /** Tiles of one kind as a smooth shape: drawn as squares, blurred, then cut at each alpha level. */
+      function smoothShape(kind, layers, width, height) {
+        const mask = document.createElement('canvas')
+        mask.width = width; mask.height = height
+        const m = mask.getContext('2d')
+        m.fillStyle = '#000'
+        for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (tileAt(c, r) === kind) m.fillRect(c * TILE, r * TILE, TILE, TILE)
+        const blurred = document.createElement('canvas')
+        blurred.width = width; blurred.height = height
+        const b = blurred.getContext('2d')
+        b.filter = 'blur(9px)'
+        b.drawImage(mask, 0, 0)
+        const alpha = b.getImageData(0, 0, width, height).data
+        const out = document.createElement('canvas')
+        out.width = width; out.height = height
+        const o = out.getContext('2d')
+        const image = o.createImageData(width, height)
+        const rgb = layers.map(([, color]) => [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16)))
+        for (let i = 0; i < width * height; i++) {
+          const a = alpha[i * 4 + 3] / 255
+          let layer = -1
+          layers.forEach(([level], j) => { if (a >= level) layer = j })
+          if (layer < 0) continue
+          image.data.set([...rgb[layer], 255], i * 4)
+        }
+        o.putImageData(image, 0, 0)
+        return out
+      }
+
+      function outlined(ctx, shape, fill, width = 4) {
+        shape(); ctx.fillStyle = fill; ctx.fill(); ctx.lineWidth = width; ctx.strokeStyle = V.ink; ctx.lineJoin = 'round'; ctx.stroke()
+      }
+
+      function vectorBlobs(ctx, x, y, blobs, fill = V.leaf, light = V.leafLight) {
+        ctx.fillStyle = V.ink
+        for (const [dx, dy, r] of blobs) { ctx.beginPath(); ctx.arc(x + dx, y + dy, r + 3, 0, Math.PI * 2); ctx.fill() }
+        ctx.fillStyle = fill
+        for (const [dx, dy, r] of blobs) { ctx.beginPath(); ctx.arc(x + dx, y + dy, r, 0, Math.PI * 2); ctx.fill() }
+        ctx.fillStyle = light
+        const [dx, dy, r] = blobs[0]
+        ctx.beginPath(); ctx.arc(x + dx - r * 0.3, y + dy - r * 0.35, r * 0.45, 0, Math.PI * 2); ctx.fill()
+      }
+
+      function vectorTree(ctx, x, y) {
+        outlined(ctx, () => roundRectPath(ctx, x - 9, y - 52, 18, 50, 6), V.trunk)
+        vectorBlobs(ctx, x, y - 82, [[0, -4, 30], [-26, 10, 21], [26, 10, 21], [0, 20, 21], [-14, -24, 19], [15, -22, 19]])
+      }
+
+      function vectorSign(ctx, x, y, show) {
+        outlined(ctx, () => roundRectPath(ctx, x - 5, y - 40, 10, 38, 3), V.post)
+        const w = 76, h = 52, bx = x - w / 2, by = y - 40 - h + 6
+        outlined(ctx, () => roundRectPath(ctx, bx, by, w, h, 12), V.board, 5)
+        if (show === 'sun') {
+          ctx.fillStyle = '#ffb627'
+          for (let a = 0; a < 8; a++) { ctx.save(); ctx.translate(bx + 22, by + h / 2); ctx.rotate((a * Math.PI) / 4); roundRectPath(ctx, -3, -17, 6, 8, 3); ctx.fill(); ctx.restore() }
+          ctx.fillStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(bx + 22, by + h / 2, 10, 0, Math.PI * 2); ctx.fill()
+          return { text: 'S', box: [bx + 38, by, w - 40, h] }
+        }
+        if (show === 'apple') {
+          outlined(ctx, () => { ctx.beginPath(); ctx.arc(x, by + h / 2 + 3, 15, 0, Math.PI * 2) }, '#ec4b4b', 3)
+          ctx.fillStyle = '#4caf50'; ctx.beginPath(); ctx.ellipse(x + 7, by + 11, 7, 4, -0.5, 0, Math.PI * 2); ctx.fill()
+          ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(x - 6, by + h / 2 - 2, 3.5, 0, Math.PI * 2); ctx.fill()
+          return { text: null }
+        }
+        return { text: 'AÖ', box: [bx, by, w, h] }
+      }
+
+      /** The character, feet at (x, y). scale 1 = map size (about 1 × 1.5 tiles). */
+      function vectorPlayer(ctx, x, y, s) {
+        ctx.save(); ctx.translate(x, y); ctx.scale(s, s)
+        outlined(ctx, () => roundRectPath(ctx, -14, -12, 12, 10, 4), V.shoe, 3)
+        outlined(ctx, () => roundRectPath(ctx, 2, -12, 12, 10, 4), V.shoe, 3)
+        outlined(ctx, () => roundRectPath(ctx, -14, -30, 28, 22, 6), V.pants, 3)
+        outlined(ctx, () => roundRectPath(ctx, -21, -50, 10, 22, 5), V.skin, 3)
+        outlined(ctx, () => roundRectPath(ctx, 11, -50, 10, 22, 5), V.skin, 3)
+        outlined(ctx, () => roundRectPath(ctx, -17, -54, 34, 28, 10), V.shirt, 3)
+        outlined(ctx, () => { ctx.beginPath(); ctx.ellipse(0, -76, 26, 24, 0, 0, Math.PI * 2) }, V.skin, 3)
+        // Hair cap with a fringe
+        ctx.fillStyle = V.hair; ctx.strokeStyle = V.ink; ctx.lineWidth = 3
+        ctx.beginPath(); ctx.moveTo(-26, -74); ctx.bezierCurveTo(-28, -108, 28, -108, 26, -74)
+        ctx.quadraticCurveTo(18, -86, 10, -82); ctx.quadraticCurveTo(2, -90, -6, -82); ctx.quadraticCurveTo(-16, -88, -26, -74); ctx.closePath(); ctx.fill(); ctx.stroke()
+        ctx.fillStyle = V.ink
+        for (const ex of [-9, 9]) { ctx.beginPath(); ctx.ellipse(ex, -70, 3.6, 5, 0, 0, Math.PI * 2); ctx.fill() }
+        ctx.fillStyle = '#ffffff'
+        for (const ex of [-10, 8]) { ctx.beginPath(); ctx.arc(ex, -72, 1.5, 0, Math.PI * 2); ctx.fill() }
+        ctx.fillStyle = V.cheek
+        for (const ex of [-16, 16]) { ctx.beginPath(); ctx.ellipse(ex, -62, 4.5, 3, 0, 0, Math.PI * 2); ctx.fill() }
+        ctx.strokeStyle = V.ink; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, -63, 4.5, 0.2 * Math.PI, 0.8 * Math.PI); ctx.stroke()
+        ctx.restore()
+      }
+
+      // ---------- Composition ----------
+      /** Letters on signs: always the clear literacy font at screen resolution (Andika later), never pixels. */
+      function drawTexts(ctx, texts, scale, ox, oy, pixel) {
+        for (const t of texts) {
+          if (!t.text) continue
+          const [bx, by, bw, bh] = t.box
+          ctx.fillStyle = '#2b4a6b'
+          ctx.font = `800 ${Math.round(bh * scale * 0.62)}px ui-rounded, "Segoe UI", system-ui, sans-serif`
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+          ctx.fillText(t.text, ox + (bx + bw / 2) * scale, oy + (by + bh / 2) * scale + (pixel ? 1 : 2))
+        }
+      }
+
+      function drawHud(ctx, width) {
+        const button = (x, y) => { ctx.fillStyle = '#c9d6e3'; ctx.beginPath(); ctx.arc(x, y + 5, 38, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2b4a6b'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(x, y, 36, 0, Math.PI * 2); ctx.fill(); ctx.stroke() }
+        button(56, 56)
+        ctx.strokeStyle = '#2b4a6b'; ctx.lineWidth = 4; ctx.lineJoin = 'round'
+        ctx.beginPath(); ctx.moveTo(42, 56); ctx.lineTo(56, 43); ctx.lineTo(70, 56); ctx.moveTo(46, 53); ctx.lineTo(46, 70); ctx.lineTo(66, 70); ctx.lineTo(66, 53); ctx.stroke()
+        button(width - 56, 56)
+        roundRectPath(ctx, width - 72, 44, 32, 30, 6); ctx.stroke(); ctx.beginPath(); ctx.arc(width - 56, 44, 7, Math.PI, 0); ctx.stroke()
+        ctx.fillStyle = '#fff'; roundRectPath(ctx, width - 330, 44, 220, 22, 11); ctx.fill(); ctx.stroke()
+        ctx.fillStyle = '#ffc93c'; ctx.beginPath(); ctx.arc(width - 330, 55, 24, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+        ctx.fillStyle = '#2b4a6b'; ctx.font = '800 24px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('2', width - 330, 56)
+        ctx.fillStyle = '#7cc56f'; roundRectPath(ctx, width - 306, 48, 70, 14, 7); ctx.fill()
+      }
+
+      function scene(style) {
+        if (style === 'vector') { const m = vectorMap(); return { canvas: m.canvas, texts: m.texts, scale: 1, pixel: false } }
+        const k = style === 'pixel16' ? 1 : 2
+        const m = pixelMap(k)
+        return { canvas: m.canvas, texts: m.texts, scale: TILE / m.T, pixel: true, sprites: m.sprites }
+      }
+
+      /** The game's view: the map at 64 px per tile, centred on the character, with the HUD on top. */
+      function view(style, width, height) {
+        const s = scene(style)
+        const canvas = document.createElement('canvas')
+        canvas.width = width; canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx.imageSmoothingEnabled = false
+        const mapW = COLS * TILE, mapH = ROWS * TILE
+        const ox = Math.round(Math.min(0, Math.max(width - mapW, width / 2 - 9.5 * TILE)))
+        const oy = Math.round(Math.min(0, Math.max(height - mapH, height / 2 - 7.5 * TILE)))
+        ctx.drawImage(s.canvas, ox, oy, mapW, mapH)
+        drawTexts(ctx, s.texts, s.scale, ox, oy, s.pixel)
+        drawHud(ctx, width)
+        return canvas
+      }
+
+      /** Close-up sheet: the character, map parts and a challenge card in this style. */
+      function details(style) {
+        const s = scene(style)
+        const canvas = document.createElement('canvas')
+        canvas.width = 1080; canvas.height = 420
+        const ctx = canvas.getContext('2d')
+        ctx.imageSmoothingEnabled = false
+        ctx.fillStyle = '#eef4ea'; ctx.fillRect(0, 0, 1080, 420)
+        ctx.fillStyle = '#2b4a6b'; ctx.font = '600 18px system-ui'; ctx.textAlign = 'left'
+        ctx.fillText('Character, close up', 24, 34); ctx.fillText('Map parts at game size', 330, 34); ctx.fillText('A challenge in this style', 720, 34)
+        if (s.pixel) {
+          const sp = s.sprites
+          const zoom = 288 / sp.player.h
+          ctx.drawImage(sp.player.toCanvas(), 60, 64, sp.player.w * zoom, sp.player.h * zoom)
+          let x = 330
+          for (const part of [sp.tree, sp.bush, sp.rock, sp.sign('sun').grid]) {
+            const z = TILE / sp.T
+            ctx.drawImage(part.toCanvas(), x, 300 - part.h * z, part.w * z, part.h * z)
+            x += part.w * z + 16
+          }
+          // A tile strip: grass, path, water at game size.
+          ctx.drawImage(s.canvas, 1 * sp.T, 7 * sp.T, 3 * sp.T, sp.T, 330, 320, 3 * TILE, TILE)
+          ctx.drawImage(s.canvas, 13 * sp.T, 9 * sp.T, 3 * sp.T, sp.T, 330 + 3 * TILE + 8, 320, 3 * TILE, TILE)
+        } else {
+          vectorPlayer(ctx, 150, 360, 3)
+          const c = document.createElement('canvas'); c.width = 600; c.height = 300
+          const cx = c.getContext('2d')
+          vectorTree(cx, 50, 260); vectorBlobs(cx, 150, 244, [[0, 0, 18], [-14, 4, 13], [14, 4, 13]]); vectorSign(cx, 250, 260, 'sun')
+          ctx.drawImage(c, 300, 40)
+          ctx.drawImage(s.canvas, 1 * TILE, 7 * TILE, 3 * TILE, TILE, 330, 320, 3 * TILE, TILE)
+          ctx.drawImage(s.canvas, 13 * TILE, 9 * TILE, 3 * TILE, TILE, 330 + 3 * TILE + 8, 320, 3 * TILE, TILE)
+        }
+        challengeCard(ctx, 720, 60, style)
+        return canvas
+      }
+
+      /** Three letter choices, as the challenge screens show them, framed in this style. */
+      function challengeCard(ctx, x, y, style) {
+        const letters = ['A', 'Å', 'Ä']
+        letters.forEach((letter, i) => {
+          const cx = x + i * 112, cy = y + 40, w = 96, h = 120
+          if (style === 'vector') {
+            ctx.fillStyle = '#c9d6e3'; roundRectPath(ctx, cx, cy + 8, w, h, 22); ctx.fill()
+            ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2b4a6b'; ctx.lineWidth = 4; roundRectPath(ctx, cx, cy, w, h, 22); ctx.fill(); ctx.stroke()
+          } else {
+            // A pixel frame at the same pixel size as the map.
+            const p = style === 'pixel16' ? 4 : 2
+            ctx.fillStyle = '#263445'; ctx.fillRect(cx + p, cy, w - 2 * p, h); ctx.fillRect(cx, cy + p, w, h - 2 * p)
+            ctx.fillStyle = '#fff6e3'; ctx.fillRect(cx + p, cy + p, w - 2 * p, h - 2 * p)
+            ctx.fillStyle = '#e8d6b4'; ctx.fillRect(cx + p, cy + h - 3 * p, w - 2 * p, 2 * p)
+          }
+          ctx.fillStyle = '#2b4a6b'; ctx.font = '800 64px ui-rounded, "Segoe UI", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+          ctx.fillText(letter, cx + w / 2, cy + h / 2 + 4)
+        })
+        ctx.font = '400 14px system-ui'; ctx.textAlign = 'left'; ctx.fillStyle = '#4a5d70'
+        ctx.fillText('Letters stay in a clear font in every style (Andika later).', x, y + 200)
+      }
+
+      window.candidates = { view, details, styles: ['pixel16', 'pixel32', 'vector'] }
+      window.ready = true
+    </script>
+  </body>
+</html>

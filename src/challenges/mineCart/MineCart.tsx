@@ -39,8 +39,8 @@ const times = {
   steer: rideTimes.steer * motionFactor,
   bump: rideTimes.bump * motionFactor,
 }
-/** How dark it gets inside a tunnel: just a hint (0.75 felt too dark, user feedback 2026-10-23). */
-const tunnelDark = 0.25
+/** How dark it gets inside a tunnel (user feedback 2026-10-23: 0.75 was too dark, 0.25 a bit too light). */
+const tunnelDark = 0.4
 /** A swipe must move this far (screen pixels); less is a tap. */
 const swipeDistance = 40
 

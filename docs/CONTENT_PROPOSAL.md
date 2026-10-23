@@ -33,7 +33,6 @@ Every word starts with the plain sound of its letter (PRD §5 rule 1). None star
 | näsa | 👃 | N | | |
 | nyckel | 🔑 | N | | |
 | nalle | 🧸 | N | björn, gosedjur | |
-| nål | 🪡? | N | | **Dropped**: the sewing needle emoji is Unicode 13.0, too new for some iPads. *Nalle* is enough |
 | tåg | 🚂 | T | lok | L never a wrong choice |
 | tand | 🦷 | T | | |
 | tomat | 🍅 | T | | Stress on the second syllable |
@@ -44,7 +43,7 @@ Every word starts with the plain sound of its letter (PRD §5 rule 1). None star
 | får | 🐑 | F | lamm | L is never a wrong choice |
 | tält | ⛺ | T | | Spare, if a T word is rejected |
 
-(*Nål* is listed only to show why it was dropped. *Tält* is a spare.)
+N has three words (a needle is too hard to recognise as a small picture). *Tält* is a spare.
 
 ## What happens on approval
 

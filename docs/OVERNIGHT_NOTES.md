@@ -9,6 +9,38 @@ This file is the running summary for our morning talk. When we've been through i
 
 Each task is committed on its own (local commits only, nothing pushed or published), so any of them can be changed or reverted.
 
+## Start here
+
+**Done tonight**, all local commits, nothing pushed or published:
+
+| Commit | What |
+|---|---|
+| `6318922` | Task 7: saving on the device, installable PWA, offline play, faster start |
+| `766cacf` | Task 6: voice review page; clip names tied to their audio |
+| `e1c52cb` | Task 8: three art style candidates for you to pick from |
+| `21652df` | Task 11: mastery per letter and word; rounds favour what is still being learned |
+| `886e36f` | Fix: offline cache now works with hosts that redirect `index.html` |
+| `29e500c` and after | Task 11: proposal for the next letters and words |
+
+Every check passes on the final state:
+- typecheck, lint and build
+- 135 unit tests
+- 42 browser tests in Chromium and iPad WebKit, including offline play
+
+**You can try now**, with no hosting needed and your dev server on 5173:
+- **The game:** `http://localhost:5173`. Progress now survives a reload, and rounds start adapting after a few rounds.
+- **The voice review page:** `http://localhost:5173/?review=voices`.
+- **The art candidates:** open `docs/art-direction/overview.png`.
+
+**Suggested order for our talk:**
+1. **W1 hosting**, so you can install on the iPad.
+2. **W5 art style**, which unblocks Tasks 9 and 10.
+3. **W8 new content.**
+4. **W7 learning options.**
+5. **W2 voice.**
+6. **W6 downloads.**
+7. **W4 voice review**, whenever you have 15–20 minutes.
+
 ## Waiting for you
 
 | # | What | Why it waits |
@@ -37,7 +69,7 @@ Tasks 9 and 10 wait for your art pick, so I took the next independent task: Task
 - **Saving:** the save format is now version 2, with the first real upgrade step. Your current saves upgrade without losing anything, and a test proves it.
 - **Invisible to the child:** no grades, no "you're bad at Ö".
 
-**Two fixes found along the way:**
+**Fixes found along the way:**
 - A key pressed the instant a question appeared could be lost. The key listener is now attached before the screen is drawn.
 - A save test could reload before the save had finished writing. The test now waits for the save.
 - The full browser suite now passes 3 runs in a row (42/42).

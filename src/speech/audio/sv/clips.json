@@ -6,8 +6,8 @@
   "clips": [
     {
       "text": "Tryck på en skylt för att spela!",
-      "file": "tryck-pa-en-skylt-for-att-spela-05e5d437.mp3",
-      "input": "Tryck på en skylt för att spela!"
+      "file": "tryck-pa-en-skylt-for-att-spela-83655cb3.mp3",
+      "input": "Tryck på en [[ ʂˈʏlt ]] för att spela!"
     },
     {
       "text": "Nu blir det svårare. Titta noga!",
@@ -46,13 +46,13 @@
     },
     {
       "text": "Du fick gröna byxor!",
-      "file": "du-fick-grona-byxor-12c98e60.mp3",
+      "file": "du-fick-grona-byxor-ffcc6c07.mp3",
       "input": "Du fick gröna [[ bˈʏksʊr! ]]"
     },
     {
       "text": "Klara Första bokstaven så får du de gröna byxorna.",
-      "file": "klara-forsta-bokstaven-sa-far-du-de-gron-ab367a55.mp3",
-      "input": "Klara Första bokstaven så får du de gröna [[ bˈʏksʊɳa. ]]"
+      "file": "klara-forsta-bokstaven-sa-far-du-de-gron-236fc3de.mp3",
+      "input": "Klara Första bokstaven så får du de gröna [[ bˈʏksʊrna. ]]"
     },
     {
       "text": "Du fick en mössa!",
@@ -61,8 +61,8 @@
     },
     {
       "text": "Klara Ord och bild så får du mössan.",
-      "file": "klara-ord-och-bild-sa-far-du-mossan-f48f645b.mp3",
-      "input": "Klara Ord och bild så får du mössan."
+      "file": "klara-ord-och-bild-sa-far-du-mossan-62c11d43.mp3",
+      "input": "Klara [[ ˈuːd ]] och bild så får du mössan."
     },
     {
       "text": "Du fick en blomma!",
@@ -76,7 +76,7 @@
     },
     {
       "text": "Du fick en rosett!",
-      "file": "du-fick-en-rosett-d5d5c7a6.mp3",
+      "file": "du-fick-en-rosett-cabcefb5.mp3",
       "input": "Du fick en [[ rʊsˈɛt! ]]"
     },
     {
@@ -101,8 +101,8 @@
     },
     {
       "text": "Klara tio rundor så får du ryggsäcken.",
-      "file": "klara-tio-rundor-sa-far-du-ryggsacken-ece587a8.mp3",
-      "input": "Klara tio rundor så får du [[ rˈʏɡsˌɛkən. ]]"
+      "file": "klara-tio-rundor-sa-far-du-ryggsacken-adead84b.mp3",
+      "input": "Klara [[ tˈiːʊ ]] rundor så får du [[ rˈʏɡsˌɛkən. ]]"
     },
     {
       "text": "Du fick en ballong!",
@@ -136,13 +136,13 @@
     },
     {
       "text": "Du fick en stjärntröja!",
-      "file": "du-fick-en-stjarntroja-84ccf829.mp3",
-      "input": "Du fick en stjärntröja!"
+      "file": "du-fick-en-stjarntroja-c51aac35.mp3",
+      "input": "Du fick en [[ ʂˈæːɳtrˌøːja! ]]"
     },
     {
       "text": "Nå nivå sju så får du stjärntröjan.",
-      "file": "na-niva-sju-sa-far-du-stjarntrojan-1efedd99.mp3",
-      "input": "Nå nivå sju så får du stjärntröjan."
+      "file": "na-niva-sju-sa-far-du-stjarntrojan-f3446bba.mp3",
+      "input": "Nå nivå [[ ʂˈʉː ]] så får du [[ ʂˈæːɳtrˌøːjan. ]]"
     },
     {
       "text": "Du fick en trollstav!",
@@ -151,8 +151,8 @@
     },
     {
       "text": "Klara trettiofem rundor så får du trollstaven.",
-      "file": "klara-trettiofem-rundor-sa-far-du-trolls-ecab48f0.mp3",
-      "input": "Klara trettiofem rundor så får du [[ trˈɔlstˌɑːvən. ]]"
+      "file": "klara-trettiofem-rundor-sa-far-du-trolls-6c311ad8.mp3",
+      "input": "Klara [[ trˈɛtːɪʊfˌɛm ]] rundor så får du [[ trˈɔlstˌɑːvən. ]]"
     },
     {
       "text": "Du fick en studentmössa!",
@@ -161,8 +161,8 @@
     },
     {
       "text": "Nå nivå nio så får du studentmössan.",
-      "file": "na-niva-nio-sa-far-du-studentmossan-862bcefb.mp3",
-      "input": "Nå nivå nio så får du [[ stʉdˈɛntmˌœsan. ]]"
+      "file": "na-niva-nio-sa-far-du-studentmossan-e229c8ae.mp3",
+      "input": "Nå nivå [[ nˈiːʊ ]] så får du [[ stʉdˈɛntmˌœsan. ]]"
     },
     {
       "text": "Du fick vingar!",
@@ -181,8 +181,8 @@
     },
     {
       "text": "Lär dig alla bokstäverna i Hitta bokstaven så får du regnbågsbyxorna.",
-      "file": "lar-dig-alla-bokstaverna-i-hitta-bokstav-4702887f.mp3",
-      "input": "Lär dig alla bokstäverna i Hitta bokstaven så får du [[ rˈɛŋnboːɡsbˌʏksʊɳa. ]]"
+      "file": "lar-dig-alla-bokstaverna-i-hitta-bokstav-387ee430.mp3",
+      "input": "Lär dig alla bokstäverna i Hitta bokstaven så får du [[ rˈɛŋnboːɡsbˌʏksʊrna. ]]"
     },
     {
       "text": "Du fick en krona!",
@@ -191,8 +191,8 @@
     },
     {
       "text": "Nå nivå tio så får du kronan.",
-      "file": "na-niva-tio-sa-far-du-kronan-8faf58ed.mp3",
-      "input": "Nå nivå tio så får du kronan."
+      "file": "na-niva-tio-sa-far-du-kronan-91405544.mp3",
+      "input": "Nå nivå [[ tˈiːʊ ]] så får du kronan."
     },
     {
       "text": "Du fick en guldmantel!",

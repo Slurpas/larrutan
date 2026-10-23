@@ -17,6 +17,7 @@ import { words } from '../content/words'
 import { items } from '../rewards/items'
 import { spokenTexts } from './catalogue'
 import { clipFileName } from './clipName'
+import { retakes } from './retakes'
 import type { SoundId } from './speech'
 import { speechVoice } from './voiceSettings'
 
@@ -88,6 +89,13 @@ describe('speech catalogue', () => {
   it('renames a clip when the voice changes, so old audio and old approvals never carry over', () => {
     const slower = { ...speechVoice, lengthScale: speechVoice.lengthScale + 0.1 }
     expect(clipFileName('Var är Å?', slower)).not.toBe(clipFileName('Var är Å?'))
+  })
+
+  it('only retakes sentences the game says, from take 2 on', () => {
+    for (const [text, take] of Object.entries(retakes)) {
+      expect(catalogue, text).toContain(text)
+      expect(Number.isInteger(take) && take >= 2, `${text}: take ${take}`).toBe(true)
+    }
   })
 
   it('has a sound file for every sound effect (run `npm run sfx` to make them)', () => {

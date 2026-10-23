@@ -1,3 +1,104 @@
 {
-  "clips": {}
+  "clips": {
+    "du-fick-en-ballong-fece7ab4.mp3": {
+      "text": "Du fick en ballong!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T19:57:58.739Z"
+    },
+    "du-fick-en-bla-troja-f3b84069.mp3": {
+      "text": "Du fick en blå tröja!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:50:56.341Z"
+    },
+    "du-fick-en-blomma-d59d021d.mp3": {
+      "text": "Du fick en blomma!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:51:59.483Z"
+    },
+    "du-fick-en-hog-hatt-34593b09.mp3": {
+      "text": "Du fick en hög hatt!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T19:58:11.054Z"
+    },
+    "du-fick-en-keps-121d5471.mp3": {
+      "text": "Du fick en keps!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:50:51.291Z"
+    },
+    "du-fick-en-mantel-b59ca84f.mp3": {
+      "text": "Du fick en mantel!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T19:58:15.378Z"
+    },
+    "du-fick-en-mossa-5cb3492d.mp3": {
+      "text": "Du fick en mössa!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:51:47.722Z"
+    },
+    "du-fick-en-randig-troja-1d742869.mp3": {
+      "text": "Du fick en randig tröja!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:52:21.961Z"
+    },
+    "du-fick-en-ryggsack-71edd20c.mp3": {
+      "text": "Du fick en ryggsäck!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:52:45.086Z"
+    },
+    "du-har-gatt-upp-en-niva-60f74893.mp3": {
+      "text": "Du har gått upp en nivå!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:50:42.158Z"
+    },
+    "har-ar-dina-saker-tryck-pa-en-sak-for-at-a82cba01.mp3": {
+      "text": "Här är dina saker. Tryck på en sak för att ta på den.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:50:48.187Z"
+    },
+    "klara-den-svara-nivan-i-forsta-bokstaven-e96e84f5.mp3": {
+      "text": "Klara den svåra nivån i Första bokstaven så får du ballongen.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T19:58:04.165Z"
+    },
+    "klara-den-svara-nivan-i-hitta-bokstaven-2b68ee82.mp3": {
+      "text": "Klara den svåra nivån i Hitta bokstaven så får du den randiga tröjan.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:53:03.932Z"
+    },
+    "klara-en-runda-sa-far-du-kepsen-53c53e1f.mp3": {
+      "text": "Klara en runda så får du kepsen.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:50:54.252Z"
+    },
+    "klara-hitta-bokstaven-sa-far-du-den-bla-8a352d81.mp3": {
+      "text": "Klara Hitta bokstaven så får du den blå tröjan.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:51:02.888Z"
+    },
+    "klara-tjugofem-rundor-sa-far-du-manteln-6056dd7f.mp3": {
+      "text": "Klara tjugofem rundor så får du manteln.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T19:58:18.811Z"
+    },
+    "klara-tre-rundor-sa-far-du-blomman-cbc616c9.mp3": {
+      "text": "Klara tre rundor så får du blomman.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:52:08.562Z"
+    },
+    "na-niva-sex-sa-far-du-hatten-ccc52209.mp3": {
+      "text": "Nå nivå sex så får du hatten.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T19:58:13.665Z"
+    },
+    "na-niva-tre-sa-far-du-rosetten-de4f56ec.mp3": {
+      "text": "Nå nivå tre så får du rosetten.",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:52:19.668Z"
+    },
+    "nu-blir-det-svarare-titta-noga-2e61058f.mp3": {
+      "text": "Nu blir det svårare. Titta noga!",
+      "status": "approved",
+      "reviewedAt": "2026-10-23T18:50:39.955Z"
+    }
+  }
 }

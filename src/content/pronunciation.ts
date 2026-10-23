@@ -42,9 +42,10 @@ export const pronunciations: Record<string, string> = {
   ballongen: 'balˈɔŋən',
   // Short y and short o, not "byy-xoor".
   byxor: 'bˈʏksʊr',
-  byxorna: 'bˈʏksʊɳa',
+  // An explicit r before n: with the retroflex ɳ it came out as "byxåa" (review 2026-10-23).
+  byxorna: 'bˈʏksʊrna',
   regnbågsbyxor: 'rˈɛŋnboːɡsbˌʏksʊr',
-  regnbågsbyxorna: 'rˈɛŋnboːɡsbˌʏksʊɳa',
+  regnbågsbyxorna: 'rˈɛŋnboːɡsbˌʏksʊrna',
   // Short y and a clear ä.
   ryggsäck: 'rˈʏɡsˌɛk',
   ryggsäcken: 'rˈʏɡsˌɛkən',
@@ -53,6 +54,19 @@ export const pronunciations: Record<string, string> = {
   trollstaven: 'trˈɔlstˌɑːvən',
   // "ord" has an o that sounds like u.
   orden: 'ˈuːɖən',
+  // The final retroflex d got lost ("or och bild"); a plain d is heard (review 2026-10-23).
+  ord: 'ˈuːd',
+  // The voice drops the sj-sound (ɧ) entirely: "sju" came out as "lu", "skylt" as "vilt",
+  // "stjärntröja" as "ä-tröja" (review 2026-10-23; no hiss at all in any take). The
+  // sh-like ʂ (as in "första") is clearly heard, and many Swedes say sj that way.
+  sju: 'ʂˈʉː',
+  skylt: 'ʂˈʏlt',
+  stjärntröja: 'ʂˈæːɳtrˌøːja',
+  stjärntröjan: 'ʂˈæːɳtrˌøːjan',
+  // No j-glide between i and o: "tio" sounded like "tiko" (review 2026-10-23).
+  tio: 'tˈiːʊ',
+  nio: 'nˈiːʊ',
+  trettiofem: 'trˈɛtːɪʊfˌɛm',
 }
 
 /**

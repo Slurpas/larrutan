@@ -1,9 +1,11 @@
 import { speechInput } from '../content/pronunciation'
+import { retakes } from './retakes'
 import { speechVoice, type SpeechVoice } from './voiceSettings'
 
 /**
  * The audio file for a sentence: a readable slug plus a hash of everything that
- * shapes the audio (the text, its pauses and pronunciation fixes, and the voice), e.g.
+ * shapes the audio (the text, its pauses and pronunciation fixes, the voice, and a
+ * retake if there is one), e.g.
  * "Var är Å?" → "var-ar-a-1c2d3e4f.mp3". Whenever the audio would sound
  * different, the file name changes too, so a stale recording can never play
  * (not even from a browser cache) and approvals stay tied to what was heard.
@@ -17,7 +19,9 @@ export function clipFileName(text: string, voice: SpeechVoice = speechVoice): st
     .replace(/^-+|-+$/g, '')
     .slice(0, 40)
     .replace(/-+$/, '')
-  const shapedBy = [text, speechInput(text), JSON.stringify(voice)].join('\n')
+  const take = retakes[text]
+  // Only retaken sentences add their take, so every other clip keeps its name (and its review).
+  const shapedBy = [text, speechInput(text), JSON.stringify(voice), ...(take ? [`take ${take}`] : [])].join('\n')
   return `${slug}-${fnv1a(shapedBy.normalize('NFC'))}.mp3`
 }
 

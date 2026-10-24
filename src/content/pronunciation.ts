@@ -51,6 +51,9 @@ export const pronunciations: Record<string, string> = {
   ryggsäcken: 'rˈʏɡsˌɛkən',
   // Short y, as in "rygg" ("Bygg ordet sol!").
   bygg: 'bˈʏɡ',
+  // Memory: long a in "paren" (not "parren"), and the stress on "-hop" in "ihop".
+  paren: 'pˈɑːrən',
+  ihop: 'ɪhˈuːp',
   // Long a in "stav".
   trollstav: 'trˈɔlstˌɑːv',
   trollstaven: 'trˈɔlstˌɑːvən',

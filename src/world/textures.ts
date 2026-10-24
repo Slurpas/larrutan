@@ -3,14 +3,14 @@ import { composeCharacter, outfitKey, type CharacterFacing, type Outfit } from '
 import { palette } from '../art/palette'
 import { Pixels } from '../art/pixels'
 import { rock, waterTile, type WaterEdges } from '../art/scenery'
-import { apple, mouse, stationSign, sun } from '../art/signs'
+import { apple, cards, mouse, stationSign, sun } from '../art/signs'
 import { waterKey } from './groundTiles'
 
 /** The Kenney sheet, loaded as 16×16 frames (see src/art/kenney.ts). */
 export const tinyTownKey = 'tiny-town'
 
 export const signKey = (highlighted: boolean) => (highlighted ? 'sign-highlighted' : 'sign')
-export const iconKeys = { sun: 'icon-sun', apple: 'icon-apple', mouse: 'icon-mouse' } as const
+export const iconKeys = { sun: 'icon-sun', apple: 'icon-apple', mouse: 'icon-mouse', cards: 'icon-cards' } as const
 export const rockKey = 'rock'
 export const shadowKey = 'shadow'
 
@@ -40,6 +40,7 @@ export function addArtTextures(scene: Phaser.Scene): void {
   addGridTexture(scene, iconKeys.sun, sun)
   addGridTexture(scene, iconKeys.apple, apple)
   addGridTexture(scene, iconKeys.mouse, mouse)
+  addGridTexture(scene, iconKeys.cards, cards)
   addGridTexture(scene, rockKey, rock)
   addGridTexture(scene, shadowKey, new Pixels(12, 4).ellipse(6, 2, 6, 2, 'o').toGrid())
 }

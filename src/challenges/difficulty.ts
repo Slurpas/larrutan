@@ -12,6 +12,7 @@ export const challengeDifficulties: Record<ChallengeId, readonly Difficulty[]> =
   firstLetter: ['easy', 'hard'],
   wordPicture: ['easy'],
   spelling: ['easy', 'hard'],
+  memory: ['easy', 'hard'],
 }
 
 /** How many choices a question offers at each level. */

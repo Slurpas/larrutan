@@ -5,7 +5,8 @@ import { parseMap, type StationDef } from './tileMap'
  *   .  grass       ,  flowers     m  mushrooms   =  path      @  start (on a path)
  *   T  tree        Y  tall tree   B  bush        R  rock      ~  water
  *   H  blue house  h  red house  (3×3 each)
- *   a  Hitta bokstaven   b  Första bokstaven   c  Ord och bild   d  Bygg ordet  (2×2 each)
+ *   a  Hitta bokstaven   b  Första bokstaven   c  Ord och bild   d  Bygg ordet   e  Memory
+ *   (2×2 each)
  * Only grass, flowers, mushrooms and paths can be walked on; the border is all trees.
  * A tall tree's crown hangs over the tile above it, which stays walkable.
  * All the signs sit close to the start so they are on screen straight away
@@ -24,9 +25,9 @@ const grid = [
   'T..m..,,.=.........=..Y......T',
   'T........=.........=....,,...T',
   'T..T.....=====@=====.....T...T',
-  'T.Y......=,,..=...B..........T',
-  'T.....,.dd.m..=....Y....R....T',
-  'T.......dd....cc...........B.T',
+  'T.Y......=,,..=...B=.........T',
+  'T.....,.dd.m..=....ee..YR....T',
+  'T.......dd....cc...ee......B.T',
   'T...R.........cc.....~~~~....T',
   'T.,,..Y.....,....,..~~~~~~.m.T',
   'T..,.......T....Y....~~~~..B.T',
@@ -40,6 +41,7 @@ const stations: StationDef[] = [
   { key: 'b', challenge: 'firstLetter' },
   { key: 'c', challenge: 'wordPicture' },
   { key: 'd', challenge: 'spelling' },
+  { key: 'e', challenge: 'memory' },
 ]
 
 export const hubMap = parseMap(grid, stations)

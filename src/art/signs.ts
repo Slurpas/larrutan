@@ -27,7 +27,7 @@ export function stationSign(highlighted: boolean): string[] {
   return sign.outline('o').toGrid()
 }
 
-/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse). */
+/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse; Memory: two cards). */
 export const sun: readonly string[] = (() => {
   const icon = new Pixels(13, 13)
   // Rays: straight up, down and sideways, and four diagonals.
@@ -57,5 +57,16 @@ export const mouse: readonly string[] = (() => {
   icon.set(3, 3, 'c').set(9, 3, 'c')
   icon.shade('n', 'm', (_x, y) => y >= 9)
   icon.set(4, 7, 'o').set(8, 7, 'o').set(6, 8, 'c')
+  return icon.outline('o').toGrid()
+})()
+
+export const cards: readonly string[] = (() => {
+  const icon = new Pixels(12, 11)
+  // A card face down (blue, with a star) behind one face up (a little apple).
+  icon.rect(1, 1, 6, 9, 'u')
+  icon.set(3, 4, 'y').rect(2, 5, 3, 1, 'y').set(3, 6, 'y')
+  // The front card's edge over the back one; the outline draws the rest.
+  icon.rect(5, 2, 1, 9, 'o').set(6, 2, 'o').rect(6, 3, 5, 7, 'w')
+  icon.rect(7, 6, 2, 2, 'r').set(8, 5, 'G')
   return icon.outline('o').toGrid()
 })()

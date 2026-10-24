@@ -116,6 +116,7 @@ const practisedIn: Record<ChallengeId, readonly string[]> = {
   firstLetter: words.map((word) => word.id),
   wordPicture: words.map((word) => word.id),
   spelling: spellingWords(words).map((word) => word.id),
+  memory: words.map((word) => word.id),
 }
 
 export function isUnlocked(condition: UnlockCondition, progress: Progress): boolean {

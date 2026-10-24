@@ -28,6 +28,7 @@ const stationContent: Record<ChallengeId, { pictures: (keyof typeof iconKeys)[];
   firstLetter: { pictures: ['sun'], letters: 'S' },
   wordPicture: { pictures: ['apple', 'mouse'], letters: '' },
   spelling: { pictures: [], letters: 'ABC' },
+  memory: { pictures: ['cards'], letters: '' },
 }
 
 /** Walk frames per second, and where the feet are: the bottom of the tile the character stands on. */

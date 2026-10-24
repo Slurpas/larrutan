@@ -319,6 +319,19 @@ Status 2026-10-24: **done.**
 #### Task 18 — Memory
 - Turn over cards and match a letter with a picture that starts with it. A new sign on the map.
 
+Status 2026-10-24: **done.**
+- **The game:**
+  - Cards lie face down; each pair is a picture and the letter its word starts with (`src/challenges/memory`).
+  - The child turns two at a time and hears each card ("A.", "Anka.").
+  - A pair stays face up and turns green, with a chime and "anka börjar på A!". Two that don't match turn back after a moment, or as soon as the next card is turned, so a tap is never lost.
+  - The first time it says "Vänd på två kort. Hitta en bild och en bokstav som hör ihop!", later just "Hitta paren!".
+- **Levels:**
+  - Easy: three pairs, no letters that are easy to mix up.
+  - Hard: four pairs, two of them with look-alike letters (A and Ä, O and Ö). It starts with "Nu blir det svårare! Fler kort, och några bokstäver är nästan lika."
+- **Slips, not mistakes:** turning an unknown card is exploring. A slip is a wrong second card when the first card's partner had already been seen. Slips decide the level (the Task 15 rule) and mastery, never a reward.
+- **On the map:** a sign with two cards, right of Ord och bild, with a path to it.
+- **Cards turn without 3D:** only the side that shows is drawn, and it squeezes in. Playwright's WebKit can't hide the back of a 3D-turned card, so every face showed.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.
@@ -335,7 +348,7 @@ Not scheduled. Pull an item in when it becomes the most valuable next step.
 - **Ordbygget:** pick up letter boxes and carry them to build a short word ("Bygg ordet sol"). Spelling; needs letter sounds first (see Learning). Bygg ordet (Task 17) already spells with bubbles.
 - **Mata draken:** a hungry dragon wants something that starts with a sound; drag the right picture into its mouth.
 - ~~**Bubblor**~~: built as Task 13.
-- **Memory:** turn over cards and match a letter with a picture.
+- ~~**Memory**~~: built as Task 18.
 - **Bron:** each right answer lays a plank; a finished bridge opens a new part of the map.
 - Not wanted (the user, 2026-10-23): a post delivery game, a fishing pond, a letter hunt on the map.
 

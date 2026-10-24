@@ -77,6 +77,13 @@ More colours are only added from the same 33.
 - **Bubbles:** a pixel rim (white, light blue at the bottom right, a shine) over a see-through fill; the letter is UI text in Andika. A pop leaves droplets.
 - **The word's slots** are UI, not pixel art: dashed tiles under the top bar, solid white when filled, green when the word is built. The letters in them are Andika.
 
+## Memory (Task 18)
+
+- **The scene:** the same meadow and sky as Bygg ordet, with the child's own character standing on the left.
+- **The card back** (`src/art/memory.ts`) is pixel art: blue with a light frame and a yellow star, the same on every card.
+- **The faces are UI:** a letter in Andika or the word's picture, on a white card; a found pair turns green.
+- **The map sign** shows two cards (`cards` in `src/art/signs.ts`): one face down, one with a little apple.
+
 ## Challenge pictures (Task 11)
 
 - **32×32 pixels**, not 16×16. On a challenge card each art pixel is then about 4–5 screen pixels, close to the map's 4×, so the pictures match the world. At 16×16 a hedgehog, an angel or an ear would not be recognisable.

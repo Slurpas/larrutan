@@ -8,7 +8,8 @@ import { cartSize, cartWithRider, floorTile, lantern, mineTile, planks, railTile
 import { palette } from './palette'
 import { pictures, pictureSize } from './pictures'
 import { rock, waterTile } from './scenery'
-import { apple, mouse, signSize, stationSign, sun } from './signs'
+import { cardBack } from './memory'
+import { apple, cards, mouse, signSize, stationSign, sun } from './signs'
 
 /** Every row the same width, and only palette colours (or "." for transparent). */
 function problems(grid: readonly string[]): string[] {
@@ -32,6 +33,7 @@ describe('sprites', () => {
       sun,
       apple,
       mouse,
+      cards,
       rock,
       water: waterTile(allSides, 0),
       ...pictures,
@@ -53,6 +55,7 @@ describe('sprites', () => {
       ...Object.fromEntries(Object.entries(dragonFaces).map(([face, grid]) => [`dragon ${face}`, grid])),
       cookie,
       crumbs,
+      cardBack,
     }
     for (const [name, grid] of Object.entries(sprites)) expect(problems(grid), name).toEqual([])
   })

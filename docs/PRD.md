@@ -100,6 +100,7 @@ Start with **upper-case letters**; lower case is a later difficulty step. Mathem
 | **Första bokstaven** (first letter) | Sees a picture, hears "sol" | Taps the letter the word starts with. *Since Task 12:* rides a mine cart (Gruvvagnen) and steers it into the tunnel with that letter |
 | **Ord och bild** (word to picture) | "Var är katten?" | Taps the matching picture among 2–4 |
 | **Bygg ordet** (build the word) | "Bygg ordet sol!", and sees the picture | Pops the word's letters in order from soap bubbles (Task 17). Easy shows the word faintly; hard shows only empty slots |
+| **Memory** | "Hitta paren!", then each turned card ("A.", "Anka.") | Turns two cards at a time to find each picture and the letter its word starts with (Task 18). Easy: 3 pairs; hard: 4, with look-alike letters |
 
 Each challenge is a small engine fed by content data. A round is about 5 questions. Add a new challenge type only when the existing ones work well with a child.
 
@@ -138,7 +139,7 @@ Attempts, hints and successes are tracked separately from rewards.
 **Phase 2:** simple mastery tracking per letter and word using Leitner boxes (correct moves an item up a box, wrong moves it down, higher boxes come back less often), and gentle, reversible difficulty adaptation that changes the challenge, never the interface, and never labels the child.
 
 **Implementation (Task 11, `src/learning/mastery.ts`):**
-- **Boxes:** each challenge keeps its own boxes (1–5): letters in Hitta bokstaven, words in Första bokstaven, Ord och bild and Bygg ordet.
+- **Boxes:** each challenge keeps its own boxes (1–5): letters in Hitta bokstaven, words in Första bokstaven, Ord och bild, Bygg ordet and Memory.
 - **Moving between boxes:** right on the first tap moves an item up one box; needing another try moves it down one box, never all the way back.
 - **Choosing a round:** questions are picked in a weighted random order, and each box comes up about half as often as the one below. Items still being learned dominate, but known items still come back.
 - **New players:** everything is in box 1, so they get exactly the same seeded rounds as before mastery existed.

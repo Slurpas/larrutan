@@ -1,0 +1,152 @@
+/*
+ * Memory. --px is one art pixel in screen pixels (a whole number), --card a card's size.
+ * A card shows one side at a time; a newly shown side squeezes in, like a card turning.
+ */
+.scene {
+  position: relative;
+  height: 100%;
+  /* Never scrolls, not even when a focused card is scrolled into view. */
+  overflow: hidden;
+  overflow: clip;
+  background: linear-gradient(var(--color-sky-top), var(--color-sky-bottom));
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sprite {
+  position: absolute;
+  display: block;
+}
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.grass,
+.soil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-size: calc(var(--px) * 16) calc(var(--px) * 16);
+  background-repeat: repeat-x;
+}
+
+.grass {
+  top: 0;
+  height: calc(var(--px) * 16);
+}
+
+.soil {
+  top: calc(var(--px) * 16);
+  bottom: 0;
+  background-repeat: repeat;
+}
+
+.board {
+  position: absolute;
+  display: grid;
+  gap: var(--gap);
+}
+
+.card {
+  position: relative;
+  width: var(--card);
+  height: var(--card);
+  padding: 0;
+  border: 0;
+  border-radius: 1.5rem;
+  background: none;
+  cursor: pointer;
+}
+
+.card:focus-visible {
+  outline: 6px solid var(--color-focus);
+  outline-offset: 6px;
+}
+
+.side {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 5px solid var(--color-ink);
+  border-radius: 1.5rem;
+  animation: turn 220ms ease-out;
+}
+
+.back {
+  background: var(--color-white);
+}
+
+.backArt {
+  width: 100%;
+  height: 100%;
+}
+
+.front {
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: calc(var(--card) * 0.62);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pictureFront {
+  font-size: calc(var(--card) * 0.56);
+}
+
+/* A found pair: green, with a little hop, and it stays face up. */
+.matched {
+  cursor: default;
+}
+
+.matched .front {
+  border-color: var(--color-correct-edge);
+  background: var(--color-correct);
+  animation:
+    turn 220ms ease-out,
+    hop 500ms ease-out 220ms;
+}
+
+.top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1.25rem) 0
+    calc(env(safe-area-inset-left) + 1.25rem);
+}
+
+.seed {
+  position: absolute;
+  right: calc(env(safe-area-inset-right) + 1.25rem);
+  bottom: calc(env(safe-area-inset-bottom) + 0.25rem);
+  margin: 0;
+  color: var(--color-white);
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+@keyframes turn {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes hop {
+  50% {
+    translate: 0 calc(var(--card) * -0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side,
+  .matched .front {
+    animation: none;
+  }
+}

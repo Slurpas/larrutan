@@ -11,7 +11,7 @@ const server = await createServer({ appType: 'custom', logLevel: 'error', server
 const load = (path) => server.ssrLoadModule(path)
 const { palette } = await load('/src/art/palette.ts')
 const { characterFrames } = await load('/src/art/character.ts')
-const { stationSign, signPanel, sun, apple, mouse } = await load('/src/art/signs.ts')
+const { stationSign, signPanel, sun, apple, mouse, cards: cardsIcon } = await load('/src/art/signs.ts')
 const { rock, waterTile } = await load('/src/art/scenery.ts')
 const { tinyTownHouses, tinyTownTiles } = await load('/src/art/kenney.ts')
 const { composeCharacter, outfitSize } = await load('/src/art/outfit.ts')
@@ -48,7 +48,7 @@ const data = {
   characterFrames,
   signs: [stationSign(false), stationSign(true)],
   signPanel,
-  icons: { sun, apple, mouse },
+  icons: { sun, apple, mouse, cards: cardsIcon },
   rock,
   pondTiles,
   kenneyTiles: tinyTownTiles,
@@ -113,10 +113,10 @@ const png = await page.evaluate(async (d) => {
 
   // Signs with sample content, at 4×.
   label('Station signs (normal, and next to the child), with letters in Andika', 24, 560)
-  const contents = [['AÖ'], ['sun', 'S'], ['apple', 'mouse']]
+  const contents = [['AÖ'], ['sun', 'S'], ['apple', 'mouse'], ['ABC'], ['cards']]
   contents.forEach((content, i) => {
     d.signs.forEach((sign, h) => {
-      const x = 24 + i * 300 + h * 140
+      const x = 24 + i * 272 + h * 132
       const y = 576
       grass(x - 4, y - 4, 136, 136)
       drawGrid(sign, x, y, 4)
@@ -125,7 +125,8 @@ const png = await page.evaluate(async (d) => {
       const py = y + p.y * 4
       const pictures = content.filter((c) => d.icons[c])
       const text = content.filter((c) => !d.icons[c]).join('')
-      let cursor = px + (pictures.length && text ? 6 : pictures.length === 2 ? 4 : 0)
+      const alone = pictures.length === 1 && !text ? (p.width - d.icons[pictures[0]][0].length) * 2 : 0
+      let cursor = px + (pictures.length && text ? 6 : pictures.length === 2 ? 4 : alone)
       for (const name of pictures) {
         const icon = d.icons[name]
         drawGrid(icon, cursor, py + (p.height * 4 - icon.length * 4) / 2, 4)

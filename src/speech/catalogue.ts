@@ -25,6 +25,9 @@ export function spokenGroups(): SpokenGroup[] {
         phrases.lookAlikesIntro,
         phrases.fourTunnelsIntro,
         phrases.hiddenWordIntro,
+        phrases.moreCardsIntro,
+        phrases.memoryIntro,
+        phrases.memoryShort,
         phrases.nextTimeHarder,
         phrases.levelUp,
         phrases.myThingsHelp,
@@ -42,6 +45,7 @@ export function spokenGroups(): SpokenGroup[] {
         dragonVoice.reveal(question),
         dragonVoice.nameChoice(letter.id),
         firstLetterVoice.nameChoice(letter.id),
+        phrases.letterShort(letter.spoken),
       ],
     })
   }

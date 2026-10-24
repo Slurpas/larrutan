@@ -7,6 +7,7 @@ import { createFirstLetterRound } from '../challenges/firstLetter/createRound'
 import { dragonVoice, firstLetterVoice, wordPictureVoice, type ChallengeVoice } from '../challenges/voices'
 import { createWordPictureRound } from '../challenges/wordPicture/createRound'
 import { createSpellingRound } from '../challenges/spelling/createRound'
+import { createMemoryRound } from '../challenges/memory/createRound'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
@@ -70,6 +71,19 @@ describe('speech catalogue', () => {
       }
     }
     expect(catalogue).toContain(phrases.hiddenWordIntro)
+  })
+
+  it('contains everything Memory can say', () => {
+    for (const seed of seeds) {
+      const board = createMemoryRound({ seed, words, letters, confusables: confusableLetters, difficulty: seed % 2 ? 'hard' : 'easy' })
+      for (const card of board.cards) {
+        const word = words.find((w) => w.id === card.pair)!
+        const letter = letters.find((l) => l.id === card.letter)!
+        expect(catalogue).toContain(card.kind === 'letter' ? phrases.letterShort(letter.spoken) : phrases.firstLetterShort(word.base))
+        expect(catalogue).toContain(phrases.firstLetterReveal(word.base, letter.spoken))
+      }
+    }
+    for (const text of [phrases.memoryIntro, phrases.memoryShort, phrases.moreCardsIntro]) expect(catalogue).toContain(text)
   })
 
   it('contains everything the hard levels can say', () => {

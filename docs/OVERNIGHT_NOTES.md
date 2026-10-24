@@ -8,7 +8,7 @@ You asked me to:
 - give at most one item per round from a bigger set;
 - sort out "Nu blir det svårare".
 
-Each task below is its own local commit, **not pushed**: try them at http://localhost:5173 (on the iPad: your dev server's network address), then tell me what to change and when to publish.
+Each task below is its own commit. **Tasks 14–17 were published on 2026-10-24** at your request; Task 18 (Memory) is a local commit, not pushed yet. Try them at http://localhost:5173 (on the iPad: your dev server's network address), then tell me what to change.
 
 Queue (details in `docs/CLAUDE_TASKS.md`, Tasks 14–18):
 1. Items: at most one per round, bigger catalogue.
@@ -67,6 +67,18 @@ Results and decisions are added below as each task is done.
   - A letter that comes later in the word (the L of "sol" tapped first) stays, since it will be needed; only letters that aren't in the word turn grey.
   - Options I'd have asked about: filling the slots in any order; longer words (5 letters) on hard.
 - **To check:** is building a word fun, or too hard at 5? Is the faint word on easy too much of a giveaway? 18 new sentences to review ("Bygg ordet sol!" and the others).
+
+### 5. Memory (Task 18): done, not pushed
+- **A new sign (two cards)**, right of Ord och bild, with a path to it.
+- **The game:** cards lie face down; each pair is a picture and the letter its word starts with. Turn two at a time; each card is said as it turns ("A.", "Anka.").
+- **A pair** stays face up and turns green, with a chime and "anka börjar på A!". Two that don't match turn back after a moment, or at once when the next card is turned.
+- **Levels:** easy has three pairs and no letters that are easy to mix up. Hard has four pairs, including two look-alike letters (A and Ä, O and Ö), and says so first.
+- **Fair counting:** turning a card the child has never seen is exploring, not a mistake. Only a wrong second card when its partner was already seen counts, for the level and mastery (never for rewards).
+- **Decisions I made:**
+  - The name "Memory", which Swedish children know.
+  - Matching a picture to its first letter, rather than two identical cards, so each pair practises a letter.
+  - Options I'd have asked about: more pairs on hard (5–6); matching upper and lower case once lower case is taught.
+- **To check:** is three pairs too easy, or four too hard at 5? Does the "anka börjar på A!" after each pair help, or is it too much talk? 11 new sentences to review ("Hitta paren!", the letters on their own: "A." …).
 
 ### Voice: ElevenLabs (later)
 You asked about ElevenLabs on 2026-10-24 and decided to try it later. The facts: the free plan gives 10,000 credits a month and the game has about 6,100 characters; it is for non-commercial use, with credit to elevenlabs.io; Swedish is supported. When you want to try it: make a free account and an API key, put it in `.env` as `ELEVENLABS_API_KEY`, and I'll make about 10 test sentences in 2–3 voices to compare with Alma.

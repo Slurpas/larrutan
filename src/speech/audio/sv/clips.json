@@ -25,6 +25,21 @@
       "input": "Nu blir det svårare! Nu syns inte [[ ˈuːdət. ]]"
     },
     {
+      "text": "Nu blir det svårare! Fler kort, och några bokstäver är nästan lika.",
+      "file": "nu-blir-det-svarare-fler-kort-och-nagra-66ad6d99.mp3",
+      "input": "Nu blir det svårare! Fler kort, och några bokstäver är nästan lika."
+    },
+    {
+      "text": "Vänd på två kort. Hitta en bild och en bokstav som hör ihop!",
+      "file": "vand-pa-tva-kort-hitta-en-bild-och-en-bo-7ce44a84.mp3",
+      "input": "Vänd på två kort. Hitta en bild och en bokstav som hör [[ ɪhˈuːp! ]]"
+    },
+    {
+      "text": "Hitta paren!",
+      "file": "hitta-paren-fb275063.mp3",
+      "input": "Hitta [[ pˈɑːrən! ]]"
+    },
+    {
       "text": "Nästa gång blir det svårare.",
       "file": "nasta-gang-blir-det-svarare-cc72491f.mp3",
       "input": "Nästa gång blir det svårare."
@@ -425,6 +440,11 @@
       "input": "Det där är A."
     },
     {
+      "text": "A.",
+      "file": "a-213047bf.mp3",
+      "input": "A."
+    },
+    {
       "text": "Draken vill ha ett I!",
       "file": "draken-vill-ha-ett-i-d550bf6f.mp3",
       "input": "Draken vill ha ett, | I!"
@@ -438,6 +458,11 @@
       "text": "Det där är I.",
       "file": "det-dar-ar-i-5aac2009.mp3",
       "input": "Det där är I."
+    },
+    {
+      "text": "I.",
+      "file": "i-3820604f.mp3",
+      "input": "I."
     },
     {
       "text": "Draken vill ha ett L!",
@@ -455,6 +480,11 @@
       "input": "Det där är L."
     },
     {
+      "text": "L.",
+      "file": "l-e2496ef1.mp3",
+      "input": "L."
+    },
+    {
       "text": "Draken vill ha ett M!",
       "file": "draken-vill-ha-ett-m-30ecdbd4.mp3",
       "input": "Draken vill ha ett, | [[ ˈɛmː! ]]"
@@ -468,6 +498,11 @@
       "text": "Det där är M.",
       "file": "det-dar-ar-m-3fc2763e.mp3",
       "input": "Det där är [[ ˈɛmː. ]]"
+    },
+    {
+      "text": "M.",
+      "file": "m-54ff2454.mp3",
+      "input": "[[ ˈɛmː. ]]"
     },
     {
       "text": "Draken vill ha ett O!",
@@ -485,6 +520,11 @@
       "input": "Det där är O."
     },
     {
+      "text": "O.",
+      "file": "o-36ae636b.mp3",
+      "input": "O."
+    },
+    {
       "text": "Draken vill ha ett S!",
       "file": "draken-vill-ha-ett-s-0a22374f.mp3",
       "input": "Draken vill ha ett, | S!"
@@ -498,6 +538,11 @@
       "text": "Det där är S.",
       "file": "det-dar-ar-s-2c467069.mp3",
       "input": "Det där är S."
+    },
+    {
+      "text": "S.",
+      "file": "s-c2ffefb3.mp3",
+      "input": "S."
     },
     {
       "text": "Draken vill ha ett Å!",
@@ -515,6 +560,11 @@
       "input": "Det där är Å."
     },
     {
+      "text": "Å.",
+      "file": "a-eeebeb3f.mp3",
+      "input": "Å."
+    },
+    {
       "text": "Draken vill ha ett Ä!",
       "file": "draken-vill-ha-ett-a-03d6de25.mp3",
       "input": "Draken vill ha ett, | Ä!"
@@ -530,6 +580,11 @@
       "input": "Det där är Ä."
     },
     {
+      "text": "Ä.",
+      "file": "a-ba5be701.mp3",
+      "input": "Ä."
+    },
+    {
       "text": "Draken vill ha ett Ö!",
       "file": "draken-vill-ha-ett-o-fb64dbf9.mp3",
       "input": "Draken vill ha ett, | Ö!"
@@ -543,6 +598,11 @@
       "text": "Det där är Ö.",
       "file": "det-dar-ar-o-c1178bd9.mp3",
       "input": "Det där är Ö."
+    },
+    {
+      "text": "Ö.",
+      "file": "o-2dee5fe9.mp3",
+      "input": "Ö."
     },
     {
       "text": "Vilken bokstav börjar apa på?",
@@ -1443,11 +1503,6 @@
       "text": "Vilken bokstav börjar ö på?",
       "file": "vilken-bokstav-borjar-o-pa-0cda777d.mp3",
       "input": "Vilken bokstav börjar ö på?"
-    },
-    {
-      "text": "Ö.",
-      "file": "o-2dee5fe9.mp3",
-      "input": "Ö."
     },
     {
       "text": "ö börjar på Ö!",

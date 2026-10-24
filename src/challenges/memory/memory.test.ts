@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { areConfusable, confusableLetters, letters } from '../../content/letters'
+import { alsoCalledLetters } from '../../content/validation'
 import { getWord, words } from '../../content/words'
 import { createMemoryRound, pairCounts } from './createRound'
 import { closeCards, isFinished, startMemory, turnCard } from './memoryState'
@@ -34,6 +35,15 @@ describe('a Memory board', () => {
       const hard = round(seed, 'hard').pairs.map((pair) => getWord(pair).firstLetter)
       expect(hard.some((a) => hard.some((b) => a !== b && areConfusable(a, b, looks))), `${seed}`).toBe(true)
     }
+  })
+
+  it("never puts a picture with the letter of another name for it (the train, \"lok\", and an L)", () => {
+    for (const seed of seeds)
+      for (const difficulty of ['easy', 'hard'] as const) {
+        const pairs = round(seed, difficulty).pairs.map(getWord)
+        for (const word of pairs)
+          for (const other of pairs) expect(alsoCalledLetters(word, letters).has(other.firstLetter), `${seed}: ${word.base} ${other.base}`).toBe(false)
+      }
   })
 
   it('is the same for the same seed and different for others', () => {

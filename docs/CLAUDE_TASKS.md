@@ -351,6 +351,24 @@ Status 2026-10-24: **done.**
   - Putting something on or taking it off pops.
 - **Saving:** save version 5 remembers how many items the child has seen. Older saves count every item as new, so the star leads the child to "Mina saker" once.
 
+#### Task 20 — The next letters and words
+- The user approved the content proposal (`docs/CONTENT_PROPOSAL.md`) on 2026-10-25: the letters R, N, T and F, and 15 words.
+
+Status 2026-10-25: **done.**
+- **Letters:** 13 instead of 9 (A F I L M N O R S T Å Ä Ö). M and N look alike: never together on the easy level; the hard level offers one on purpose. E and U still wait.
+- **Words:** 43 instead of 28:
+  - F: fisk, fjäril, fot, får.
+  - N: näsa, nyckel, nalle.
+  - R: robot, räv, raket, ros.
+  - T: tåg, tand, tomat, tiger.
+  - Each has its own 32×32 picture (`docs/sprites/pictures.png`). Tiger and lejon never appear together in Ord och bild.
+- **Everywhere at once:**
+  - All five stations use the new content.
+  - Bygg ordet gets 8 more short words (räv, ros, näsa, tåg, tand, fisk, fot, får).
+  - Memory never puts a picture with the letter of another name for it (the train, "lok", and an L card).
+- **Speech:** 114 new sentences, with pronunciation fixes for robot, raket and tomaten (stress), tiger (said "tijer"), nyckel (a short y), and N said "enn" like M's "emm".
+- **Rewards:** the mastery items take a little longer (13 letters and 43 words to master).
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

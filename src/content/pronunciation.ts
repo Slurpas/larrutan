@@ -72,6 +72,20 @@ export const pronunciations: Record<string, string> = {
   stjärntröjan: 'ʂˈɛːrntrˌøːjan',
   // The letter M, said "emm": with a short m it was heard as N (review 2026-10-23).
   m: 'ˈɛmː',
+  // N said "enn" the same way, so M and N (both in the game since 2026-10-25) stay apart.
+  n: 'ˈɛnː',
+  // The F, N, R and T words (2026-10-25): the voice stressed robot, raket and tomaten on the
+  // first syllable, said tiger as "tijer", and gave nyckel a long y.
+  robot: 'rʊbˈuːt',
+  roboten: 'rʊbˈuːtən',
+  raket: 'rakˈeːt',
+  raketen: 'rakˈeːtən',
+  tomaten: 'tʊmˈɑːtən',
+  tiger: 'tˈiːɡər',
+  // An explicit r: the retroflex ɳ gets lost (as in byxorna).
+  tigern: 'tˈiːɡərn',
+  nyckel: 'nˈʏkəl',
+  nyckeln: 'nˈʏkəln',
   // No j-glide between i and o: "tio" sounded like "tiko" (review 2026-10-23).
   tio: 'tˈiːʊ',
   nio: 'nˈiːʊ',

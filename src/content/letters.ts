@@ -15,14 +15,21 @@ export interface Letter {
   status: ContentStatus
 }
 
-/** Upper-case letters, in Swedish alphabetical order. Approved by the user 2026-10-22. */
+/**
+ * Upper-case letters, in Swedish alphabetical order. Approved by the user 2026-10-22;
+ * F, N, R and T on 2026-10-25 (docs/CONTENT_PROPOSAL.md). E and U wait for a sound rule.
+ */
 export const letters: readonly Letter[] = [
   { id: 'a', display: 'A', spoken: 'A', sound: 'a', status: 'approved' },
+  { id: 'f', display: 'F', spoken: 'F', sound: 'f', status: 'approved' },
   { id: 'i', display: 'I', spoken: 'I', sound: 'i', status: 'approved' },
   { id: 'l', display: 'L', spoken: 'L', sound: 'l', status: 'approved' },
   { id: 'm', display: 'M', spoken: 'M', sound: 'm', status: 'approved' },
+  { id: 'n', display: 'N', spoken: 'N', sound: 'n', status: 'approved' },
   { id: 'o', display: 'O', spoken: 'O', sound: 'o', status: 'approved' },
+  { id: 'r', display: 'R', spoken: 'R', sound: 'r', status: 'approved' },
   { id: 's', display: 'S', spoken: 'S', sound: 's', status: 'approved' },
+  { id: 't', display: 'T', spoken: 'T', sound: 't', status: 'approved' },
   { id: 'a-ring', display: 'Å', spoken: 'Å', sound: 'å', status: 'approved' },
   { id: 'a-umlaut', display: 'Ä', spoken: 'Ä', sound: 'ä', status: 'approved' },
   { id: 'o-umlaut', display: 'Ö', spoken: 'Ö', sound: 'ö', status: 'approved' },
@@ -41,6 +48,8 @@ export interface ConfusableGroup {
 export const confusableLetters: readonly ConfusableGroup[] = [
   { ids: ['a', 'a-ring', 'a-umlaut'], reason: 'looks' },
   { ids: ['o', 'o-umlaut'], reason: 'looks' },
+  // M and N: one hump more or less.
+  { ids: ['m', 'n'], reason: 'looks' },
   // The letter names "o" and "å" sound close, and O is often pronounced like Å.
   { ids: ['o', 'a-ring'], reason: 'sounds' },
 ]

@@ -1,6 +1,6 @@
 # Content proposal: next letters and words (Task 11)
 
-**Status: draft for the user's approval (2026-10-23).** Nothing here is in the game yet. PRD §5: the user approves letter and word lists before they are used.
+**Status: approved by the user on 2026-10-25 and added to the game (Task 20).** R, N, T, F and the 15 words are in; *tält* stays a spare; E and U wait, as proposed. PRD §5: the user approves letter and word lists before they are used.
 
 ## Letters
 

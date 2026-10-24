@@ -21,7 +21,8 @@ describe('createWordPictureRound', () => {
     const learning = words[0]!.id
     const box = (id: string) => (id === learning ? 1 : 5)
     const rounds = seeds.map((seed) => createWordPictureRound({ seed, words, practiceBox: box }).questions.map((q) => q.target))
-    expect(rounds.filter((targets) => targets.includes(learning)).length / rounds.length).toBeGreaterThan(0.9)
+    // A new player would see any one word in about 5 of 43 rounds (12%).
+    expect(rounds.filter((targets) => targets.includes(learning)).length / rounds.length).toBeGreaterThan(0.75)
     expect(new Set(rounds.flat()).size).toBe(words.length)
   })
 

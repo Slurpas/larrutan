@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { ChallengeId } from '../challenges/challengeIds'
 import type { Difficulty } from '../challenges/difficulty'
+import { letters } from '../content/letters'
 import { getItem, items } from './items'
 import { completeRound, initialProgress, newItems, seeItems, wear, type Progress } from './progress'
 import { levelForXp, levelProgress, xpForLevel } from './rules'
@@ -134,7 +135,7 @@ describe('unlocks', () => {
   })
 
   it('unlocks the rainbow trousers once every letter is mastered, however long it took', () => {
-    const allLetters = Object.fromEntries(['a', 'i', 'l', 'm', 'o', 's', 'a-ring', 'a-umlaut', 'o-umlaut'].map((id) => [`findLetter:${id}`, 5]))
+    const allLetters = Object.fromEntries(letters.map((letter) => [`findLetter:${letter.id}`, 5]))
     // Everything before the trousers in the list is already handed out, so they are next.
     const before = items.slice(0, items.findIndex((item) => item.id === 'rainbow-trousers')).map((item) => item.id)
     const almost = { ...initialProgress, unlockedItems: before, mastery: { ...allLetters, 'findLetter:m': 4 } }

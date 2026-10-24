@@ -19,9 +19,9 @@ describe('word list', () => {
     expect(findWordListProblems(words, letters)).toEqual([])
   })
 
-  it('has 20–30 words and covers every letter, including Å, Ä and Ö', () => {
-    expect(words.length).toBeGreaterThanOrEqual(20)
-    expect(words.length).toBeLessThanOrEqual(30)
+  it('has 40–50 words and covers every letter, including Å, Ä and Ö', () => {
+    expect(words.length).toBeGreaterThanOrEqual(40)
+    expect(words.length).toBeLessThanOrEqual(50)
     for (const letter of letters) {
       expect(
         words.some((w) => w.firstLetter === letter.id),
@@ -79,7 +79,8 @@ describe('content validation catches broken entries', () => {
 
 describe('ambiguous pictures', () => {
   it('knows which letters another name for the picture would start with', () => {
-    expect(alsoCalledLetters(getWord('thunder'), letters)).toEqual(new Set(['m'])) // "moln"
+    expect(alsoCalledLetters(getWord('thunder'), letters)).toEqual(new Set(['m', 'r'])) // "moln", "regn"
+    expect(alsoCalledLetters(getWord('train'), letters)).toEqual(new Set(['l'])) // "lok"
     expect(alsoCalledLetters(getWord('island'), letters)).toEqual(new Set(['s'])) // "strand"
     expect(alsoCalledLetters(getWord('sun'), letters)).toEqual(new Set())
   })

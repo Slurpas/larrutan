@@ -37,7 +37,7 @@ describe('letter content', () => {
 
   it('sorts in Swedish alphabetical order, with Å Ä Ö after the other letters', () => {
     const sorted = [...letters].sort((a, b) => a.display.localeCompare(b.display, 'sv'))
-    expect(sorted.map((l) => l.display).join('')).toBe('AILMOSÅÄÖ')
+    expect(sorted.map((l) => l.display).join('')).toBe('AFILMNORSTÅÄÖ')
   })
 
   it('only refers to existing letters in look-alike groups', () => {

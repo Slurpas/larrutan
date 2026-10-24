@@ -72,6 +72,57 @@ export const pictures: Readonly<Record<string, readonly string[]>> = {
     p.polygon([[17, 5], [24, 1.5], [23.5, 6]], 'Q')
     p.outline('o')
   }),
+  // F
+  fish: picture((p) => {
+    // A blue fish swimming left: tail, fins, a lighter belly and a few scales.
+    p.polygon([[21, 16], [30, 8.5], [27.5, 16], [30, 23.5]], 'u')
+    p.polygon([[9, 10], [15, 4.5], [19, 10]], 'U')
+    p.polygon([[12, 22], [16, 27], [18, 22]], 'U')
+    p.ellipse(14, 16, 11, 7.5, 'u')
+    p.shade('u', 'U', (x, y) => y >= 19 && x <= 22)
+    for (const [x, y] of [[13, 13], [16, 15], [19, 13], [16, 11], [19, 17]] as const) p.set(x, y, 'U')
+    p.outline('o')
+    p.set(3, 17, 'o')
+    eye(p, 7, 13)
+  }),
+  butterfly: picture((p) => {
+    // Seen from above: two big wings, two small ones, a dark body and feelers.
+    p.stroke([[15, 8], [11, 2.5]], 0.5, 'B')
+    p.stroke([[17, 8], [21, 2.5]], 0.5, 'B')
+    p.ellipse(9, 12, 7, 7.5, 'Y').ellipse(23, 12, 7, 7.5, 'Y')
+    p.ellipse(10.5, 23, 5.5, 5.5, 'y').ellipse(21.5, 23, 5.5, 5.5, 'y')
+    p.ellipse(8.5, 11.5, 3, 3.2, 'y').ellipse(23.5, 11.5, 3, 3.2, 'y')
+    p.ellipse(10.5, 23.5, 2, 2, 'w').ellipse(21.5, 23.5, 2, 2, 'w')
+    p.shade('Y', 'a', (x, y) => y <= 6 || x <= 3 || x >= 28)
+    p.stroke([[16, 8], [16, 27]], 1.4, 'B')
+    p.outline('o')
+    p.set(11, 2, 'o').set(21, 2, 'o')
+  }),
+  foot: picture((p) => {
+    // A bare foot from above, toes up: five toes, a wide front, an arch on the inside, a round heel.
+    p.ellipse(17.5, 14.5, 9.5, 5.5, 's')
+    p.ellipse(15.5, 25.5, 5.5, 4.5, 's')
+    p.polygon([[8.5, 14], [27, 14], [21, 26], [10, 26]], 's')
+    p.ellipse(7.5, 21, 3, 5.5, '.')
+    // A pixel apart, so the outline draws a line between the toes.
+    for (const [x, y, r] of [[10, 7.5, 2.6], [15.4, 6.2, 1.8], [19.8, 6.8, 1.6], [23.8, 8.3, 1.4], [27.4, 10.5, 1.2]] as const)
+      p.ellipse(x, y, r, r * 1.15, 's')
+    p.shade('s', 'z', (x, y) => y >= 13 && x >= 21.5 - (y - 13) * 0.3)
+    p.outline('o')
+    p.rect(9, 6, 2, 2, 'e').set(15, 5, 'e')
+  }),
+  sheep: picture((p) => {
+    // A woolly white body, a dark face and legs.
+    p.rect(10, 22, 3, 7, 'm').rect(21, 22, 3, 7, 'm')
+    for (const [x, y] of [[11, 14], [17, 12], [23, 14], [25, 19], [19, 21], [12, 20]] as const) p.ellipse(x, y, 5, 5, 'w')
+    p.ellipse(17, 17, 8, 5.5, 'w')
+    p.shade('w', 'g', (x, y) => y >= 22 || (x >= 27 && y >= 17))
+    p.ellipse(6.5, 15, 4, 5, 'm')
+    p.polygon([[7, 10], [11.5, 9], [10, 12.5]], 'm')
+    p.shade('m', 'n', (x, y) => x <= 5 && y <= 14)
+    p.outline('o')
+    p.rect(4, 13, 2, 2, 'w').set(4, 13, 'o')
+  }),
   // I
   hedgehog: picture((p) => {
     // A back of spikes around the body, then the light face and snout.
@@ -197,6 +248,42 @@ export const pictures: Readonly<Record<string, readonly string[]>> = {
     p.outline('o')
     p.set(5, 14, 'w')
   }),
+  // N
+  nose: picture((p) => {
+    // A nose from the front: the bridge, the round tip and the two nostrils.
+    p.polygon([[13.5, 3], [18.5, 3], [22, 19], [10, 19]], 's')
+    p.ellipse(9.5, 22.5, 4.5, 4, 's').ellipse(22.5, 22.5, 4.5, 4, 's')
+    p.ellipse(16, 20.5, 6, 5.5, 's')
+    p.shade('s', 'z', (x, y) => x >= 19 || y >= 25)
+    p.outline('o')
+    p.ellipse(11.5, 24.5, 1.6, 1.1, 'o').ellipse(20.5, 24.5, 1.6, 1.1, 'o')
+    p.rect(14, 17, 2, 2, 'e')
+  }),
+  key: picture((p) => {
+    // A golden key: the ring to hold, the shaft and its teeth.
+    p.fill(ring(9.5, 15.5, 7, 7, 3), 'y')
+    p.rect(15, 14, 15, 4, 'y')
+    p.rect(22, 18, 2, 4, 'y').rect(26, 18, 3, 6, 'y')
+    p.shade('y', 'Y', (x, y) => y >= 17 && !(x < 16 && y < 19) || (x < 16 && Math.hypot(x + 0.5 - 9.5, y + 0.5 - 15.5) > 5 && x + y > 26))
+    p.outline('o')
+    p.set(5, 12, 'w').set(6, 11, 'w')
+  }),
+  teddy: picture((p) => {
+    // A sitting teddy bear: round ears, a light muzzle and tummy.
+    p.ellipse(9, 5.5, 3.5, 3.5, 'a').ellipse(23, 5.5, 3.5, 3.5, 'a')
+    p.ellipse(7.5, 21, 3, 4.5, 'a').ellipse(24.5, 21, 3, 4.5, 'a')
+    p.ellipse(10.5, 28, 4, 3, 'a').ellipse(21.5, 28, 4, 3, 'a')
+    p.ellipse(16, 22.5, 8, 7, 'a')
+    p.ellipse(16, 11.5, 8.5, 7.5, 'a')
+    p.shade('a', 'j', (x, y) => x + y >= 42 || (y >= 29 && x >= 18))
+    p.ellipse(9, 5.5, 1.6, 1.6, 'L').ellipse(23, 5.5, 1.6, 1.6, 'L')
+    p.ellipse(16, 23.5, 4.5, 4.5, 'L').ellipse(16, 14.5, 3.8, 2.8, 'L')
+    p.ellipse(10.5, 28.5, 2, 1.5, 'L').ellipse(21.5, 28.5, 2, 1.5, 'L')
+    p.outline('o')
+    eye(p, 12, 10)
+    eye(p, 18, 10)
+    p.rect(15, 13, 2, 1, 'h').set(16, 15, 'h')
+  }),
   // O
   snake: picture((p) => {
     p.stroke([[29, 28], [24, 28]], 1.3, 'q')
@@ -214,6 +301,78 @@ export const pictures: Readonly<Record<string, readonly string[]>> = {
     p.ellipse(9, 23, 2.2, 2.2, 'Y').ellipse(18.5, 20, 2.6, 2.4, 'Y').ellipse(25.5, 20.5, 1.6, 1.6, 'Y')
     p.ellipse(19, 12.5, 1.6, 1, 'L')
     p.outline('o')
+  }),
+  // R
+  robot: picture((p) => {
+    // A friendly grey robot: antenna, square eyes, a panel with buttons.
+    p.stroke([[16, 3], [16, 6]], 0.6, 'n')
+    p.rect(4, 19, 3, 8, 'n').rect(25, 19, 3, 8, 'n')
+    p.rect(9, 6, 14, 10, 'g').rect(14, 16, 4, 2, 'n')
+    p.rect(8, 18, 16, 11, 'g')
+    p.rect(10, 29, 4, 2, 'n').rect(18, 29, 4, 2, 'n')
+    p.shade('g', 'n', (x, y) => (x >= 21 && y <= 15) || (x >= 22 && y >= 18))
+    for (const [x, y] of [[9, 6], [22, 6], [8, 18], [23, 18]] as const) p.set(x, y, '.')
+    p.rect(11, 20, 10, 5, 'm')
+    p.ellipse(16, 2.5, 1.6, 1.6, 'r')
+    p.outline('o')
+    p.rect(11, 9, 3, 3, 'u').rect(18, 9, 3, 3, 'u').set(11, 9, 'U').set(18, 9, 'U')
+    p.rect(12, 13, 8, 1, 'm')
+    p.set(13, 22, 'r').set(16, 22, 'y').set(19, 22, 'q')
+  }),
+  fox: picture((p) => {
+    // A sitting fox seen from the side: pointed ears and snout, white chest, bushy tail with a white tip.
+    p.stroke([[18, 26], [24.5, 24], [27, 18], [26, 11.5]], 3.4, 'Y')
+    p.ellipse(25.5, 9.5, 3, 3, 'w')
+    p.ellipse(16, 20.5, 7.5, 8.5, 'Y')
+    p.rect(10, 25, 3, 5, 'Y').rect(15, 26, 3, 4, 'Y')
+    p.polygon([[6, 7.5], [7.5, 1.5], [11, 6]], 'Y').polygon([[11, 6], [14.5, 1.5], [15.5, 8]], 'Y')
+    p.ellipse(11, 11, 5.5, 5, 'Y')
+    p.polygon([[7, 10], [1.5, 14], [8.5, 15.5]], 'Y')
+    p.shade('Y', 'a', (x, y) => (x >= 20 && y >= 22) || (y >= 28 && x >= 15))
+    p.ellipse(11.5, 20, 3.5, 5, 'w')
+    p.polygon([[2.5, 14], [8.5, 15.5], [11, 13.5], [12, 16]], 'w')
+    p.rect(10, 28, 3, 2, 'h').rect(15, 28, 3, 2, 'h')
+    p.set(8, 4, 'h').set(13, 4, 'h')
+    p.outline('o')
+    p.rect(1, 13, 2, 2, 'o')
+    eye(p, 9, 9)
+  }),
+  rocket: picture((p) => {
+    // A white rocket with a red nose and fins, a round window and a flame.
+    p.polygon([[13, 25], [16, 31], [19, 25]], 'Y')
+    p.polygon([[14.5, 25], [16, 28.5], [17.5, 25]], 'y')
+    p.polygon([[11, 15], [5.5, 24.5], [11, 22.5]], 'r').polygon([[21, 15], [26.5, 24.5], [21, 22.5]], 'r')
+    p.fill((x, y) => y >= 3 && y <= 24 && Math.abs(x - 16) <= Math.min(5.5, 1.2 + (y - 3) * 0.9), 'w')
+    p.shade('w', 'r', (_x, y) => y <= 8)
+    p.shade('w', 'g', (x) => x >= 19)
+    p.shade('r', 'R', (x) => x >= 19)
+    p.rect(13, 24, 6, 2, 'n')
+    p.outline('o')
+    p.fill(ring(16, 14, 3.2, 3.2, 1), 'n')
+    p.ellipse(16, 14, 2.2, 2.2, 'u')
+    p.set(15, 13, 'U')
+  }),
+  rose: picture((p) => {
+    // A red rose: the curled bloom, green sepals, a stem with two leaves.
+    p.stroke([[16, 14], [16, 30]], 1, 'Q')
+    /** A leaf: an ellipse along `angle`, centred at (cx, cy). */
+    const leaf = (cx: number, cy: number, angle: number) => (x: number, y: number) => {
+      const [dx, dy] = [x - cx, y - cy]
+      const along = dx * Math.cos(angle) + dy * Math.sin(angle)
+      const across = -dx * Math.sin(angle) + dy * Math.cos(angle)
+      return (along / 5) ** 2 + (across / 2.2) ** 2 <= 1
+    }
+    p.fill(leaf(12, 21.5, 0.56), 'Q')
+    p.fill(leaf(20.5, 24, -0.46), 'Q')
+    p.shade('Q', 'G', (x, y) => (x <= 13 && y >= 22) || (x >= 20 && y >= 25))
+    p.polygon([[10, 14], [16, 12], [22, 14], [16, 17]], 'G')
+    p.ellipse(16, 9, 7.5, 6.5, 'r')
+    p.shade('r', 'R', (x, y) => x + y >= 30 || y >= 13)
+    const spiral: [number, number][] = []
+    for (let t = 0; t <= 1.6; t += 0.05) spiral.push([16 + Math.cos(t * 2 * Math.PI) * (4.5 - t * 2.4), 8.5 + Math.sin(t * 2 * Math.PI) * (3.6 - t * 1.9)])
+    p.stroke(spiral, 0.45, 'R')
+    p.outline('o')
+    p.set(11, 6, 'p').set(12, 5, 'p')
   }),
   // S
   sun: picture((p) => {
@@ -260,6 +419,68 @@ export const pictures: Readonly<Record<string, readonly string[]>> = {
     p.rect(8, 20, 14, 1, 'U')
     p.outline('o')
     for (const [x, y] of [[14, 16], [17, 17], [20, 18]] as const) p.rect(x, y, 2, 1, 'w')
+  }),
+  // T
+  train: picture((p) => {
+    // A steam engine: cab, boiler, chimney with a puff of smoke, red and dark wheels.
+    p.ellipse(25, 4, 3, 2.5, 'g').ellipse(29, 2.5, 2, 1.8, 'g')
+    p.rect(22, 7, 5, 6, 'm').rect(21, 6, 7, 2, 'm')
+    p.rect(3, 6, 10, 2, 'R')
+    p.rect(4, 8, 8, 14, 'r')
+    p.rect(12, 12, 17, 10, 'r')
+    p.shade('r', 'R', (_x, y) => y >= 20)
+    p.rect(6, 10, 4, 4, 'U')
+    p.rect(2, 22, 28, 3, 'm')
+    p.polygon([[29, 18], [31, 25], [29, 25]], 'm')
+    p.ellipse(8, 25.5, 4.5, 4.5, 'B').ellipse(8, 25.5, 1.8, 1.8, 'g')
+    p.ellipse(18, 26.5, 3.3, 3.3, 'B').ellipse(18, 26.5, 1.2, 1.2, 'g')
+    p.ellipse(25, 26.5, 3.3, 3.3, 'B').ellipse(25, 26.5, 1.2, 1.2, 'g')
+    p.rect(14, 14, 13, 1, 'p')
+    p.outline('o')
+  }),
+  tooth: picture((p) => {
+    // A white back tooth: a crown with two bumps, and two roots.
+    p.ellipse(11.5, 9.5, 6, 6, 'w').ellipse(20.5, 9.5, 6, 6, 'w')
+    p.rect(6, 9, 20, 10, 'w')
+    p.polygon([[6, 17], [15, 17], [13, 29], [9.5, 29]], 'w')
+    p.polygon([[17, 17], [26, 17], [22.5, 29], [19, 29]], 'w')
+    p.shade('w', 'g', (x, y) => x >= 22 || (y >= 20 && x >= 13 && x <= 18) || y >= 27)
+    p.set(15, 4, '.').set(16, 4, '.').set(16, 5, '.')
+    p.outline('o')
+    p.rect(9, 7, 2, 4, 'U')
+  }),
+  tomato: picture((p) => {
+    // A red tomato, a bit wider than tall, with a green star of leaves on top.
+    p.ellipse(16, 18.5, 13, 10.5, 'r')
+    p.shade('r', 'R', (x, y) => ((x + 0.5 - 14) / 12.5) ** 2 + ((y + 0.5 - 16.5) / 10) ** 2 > 1)
+    p.ellipse(9.5, 14.5, 2.5, 1.8, 'p')
+    for (const [x, y] of [[8.5, 9], [12, 6.5], [20, 6.5], [23.5, 9]] as const) p.stroke([[16, 9], [x, y]], 1, 'Q')
+    p.ellipse(16, 9, 2.5, 1.8, 'Q')
+    p.stroke([[16, 8], [17, 3]], 0.8, 'G')
+    p.outline('o')
+  }),
+  tiger: picture((p) => {
+    // A tiger's face: orange with dark stripes, white cheeks, round ears.
+    p.ellipse(7, 8, 4, 4, 'Y').ellipse(25, 8, 4, 4, 'Y')
+    p.ellipse(16, 17.5, 12.5, 11.5, 'Y')
+    p.shade('Y', 'a', (x, y) => x + y >= 41)
+    p.ellipse(7, 8, 1.8, 1.8, 'e').ellipse(25, 8, 1.8, 1.8, 'e')
+    p.ellipse(11.5, 23, 5, 4, 'w').ellipse(20.5, 23, 5, 4, 'w').ellipse(16, 26.5, 4, 2.5, 'w')
+    for (const stripe of [
+      [[16, 7], [16, 11]],
+      [[12.5, 7.5], [13.5, 10.5]],
+      [[19.5, 7.5], [18.5, 10.5]],
+      [[4, 16], [8, 17]],
+      [[4, 20], [7.5, 20]],
+      [[28, 16], [24, 17]],
+      [[28, 20], [24.5, 20]],
+    ] as const)
+      p.stroke(stripe, 0.6, 'o')
+    p.polygon([[13.5, 19.5], [18.5, 19.5], [16, 22]], 'c')
+    p.outline('o')
+    p.rect(16, 22, 1, 2, 'o').rect(14, 24, 2, 1, 'o').rect(17, 24, 2, 1, 'o')
+    eye(p, 9, 14)
+    eye(p, 21, 14)
   }),
   // Å
   eight: picture((p) => {

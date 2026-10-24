@@ -293,7 +293,7 @@ Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the r
 | Episk | studentmössa (level 9), vingar (60 rounds), regnbågsbyxor (every letter of Hitta bokstaven in the top mastery box), pirathatt (65), fjärilsvingar (80), kockmössa (90), stjärnbyxor (every word of Ord och bild in the top box) |
 | Legendarisk | krona (level 10), guldmantel (every word of Första bokstaven in the top box), guldvingar (level 13), regnbågsmantel (150 rounds) |
 
-Unit tests play rounds and check the timing: at most uncommon after a first session, rare by 40 rounds, nothing epic at 50, the crown between 70 and 100 rounds, never more than one item per round and never two rounds in a row. The mastery items depend on how well and how often the child plays; with 12 letters, the rainbow trousers need at least 10 perfect rounds of Hitta bokstaven.
+Unit tests play rounds and check the timing: at most uncommon after a first session, rare by 40 rounds, nothing epic at 50, the crown between 70 and 100 rounds, never more than one item per round and never two rounds in a row. The mastery items depend on how well and how often the child plays; with 13 letters, the rainbow trousers need at least 11 perfect rounds of Hitta bokstaven.
 
 ## 11. Accessibility
 

@@ -450,6 +450,26 @@
       "input": "A."
     },
     {
+      "text": "Draken vill ha ett F!",
+      "file": "draken-vill-ha-ett-f-44851fd9.mp3",
+      "input": "Draken vill ha ett, | F!"
+    },
+    {
+      "text": "Här är F!",
+      "file": "har-ar-f-ae52ed55.mp3",
+      "input": "Här är F!"
+    },
+    {
+      "text": "Det där är F.",
+      "file": "det-dar-ar-f-9c319979.mp3",
+      "input": "Det där är F."
+    },
+    {
+      "text": "F.",
+      "file": "f-5e100cc9.mp3",
+      "input": "F."
+    },
+    {
       "text": "Draken vill ha ett I!",
       "file": "draken-vill-ha-ett-i-d550bf6f.mp3",
       "input": "Draken vill ha ett, | I!"
@@ -510,6 +530,26 @@
       "input": "[[ ˈɛmː. ]]"
     },
     {
+      "text": "Draken vill ha ett N!",
+      "file": "draken-vill-ha-ett-n-66a4ffec.mp3",
+      "input": "Draken vill ha ett, | [[ ˈɛnː! ]]"
+    },
+    {
+      "text": "Här är N!",
+      "file": "har-ar-n-73aeb870.mp3",
+      "input": "Här är [[ ˈɛnː! ]]"
+    },
+    {
+      "text": "Det där är N.",
+      "file": "det-dar-ar-n-33dc79c8.mp3",
+      "input": "Det där är [[ ˈɛnː. ]]"
+    },
+    {
+      "text": "N.",
+      "file": "n-18797028.mp3",
+      "input": "[[ ˈɛnː. ]]"
+    },
+    {
       "text": "Draken vill ha ett O!",
       "file": "draken-vill-ha-ett-o-a0545547.mp3",
       "input": "Draken vill ha ett, | O!"
@@ -530,6 +570,26 @@
       "input": "O."
     },
     {
+      "text": "Draken vill ha ett R!",
+      "file": "draken-vill-ha-ett-r-f15f9531.mp3",
+      "input": "Draken vill ha ett, | R!"
+    },
+    {
+      "text": "Här är R!",
+      "file": "har-ar-r-f40a0b75.mp3",
+      "input": "Här är R!"
+    },
+    {
+      "text": "Det där är R.",
+      "file": "det-dar-ar-r-44e5f481.mp3",
+      "input": "Det där är R."
+    },
+    {
+      "text": "R.",
+      "file": "r-fcb18671.mp3",
+      "input": "R."
+    },
+    {
       "text": "Draken vill ha ett S!",
       "file": "draken-vill-ha-ett-s-0a22374f.mp3",
       "input": "Draken vill ha ett, | S!"
@@ -548,6 +608,26 @@
       "text": "S.",
       "file": "s-c2ffefb3.mp3",
       "input": "S."
+    },
+    {
+      "text": "Draken vill ha ett T!",
+      "file": "draken-vill-ha-ett-t-ad357d85.mp3",
+      "input": "Draken vill ha ett, | T!"
+    },
+    {
+      "text": "Här är T!",
+      "file": "har-ar-t-134ab7c9.mp3",
+      "input": "Här är T!"
+    },
+    {
+      "text": "Det där är T.",
+      "file": "det-dar-ar-t-a35e18a1.mp3",
+      "input": "Det där är T."
+    },
+    {
+      "text": "T.",
+      "file": "t-bd3e22c1.mp3",
+      "input": "T."
     },
     {
       "text": "Draken vill ha ett Å!",
@@ -738,6 +818,141 @@
       "text": "Det där är en apelsin.",
       "file": "det-dar-ar-en-apelsin-c32c82fd.mp3",
       "input": "Det där är en apelsin."
+    },
+    {
+      "text": "Vilken bokstav börjar fisk på?",
+      "file": "vilken-bokstav-borjar-fisk-pa-73c51c0b.mp3",
+      "input": "Vilken bokstav börjar fisk på?"
+    },
+    {
+      "text": "Fisk.",
+      "file": "fisk-9bd74b71.mp3",
+      "input": "Fisk."
+    },
+    {
+      "text": "fisk börjar på F!",
+      "file": "fisk-borjar-pa-f-45cbafc1.mp3",
+      "input": "fisk börjar på F!"
+    },
+    {
+      "text": "Var är fisken?",
+      "file": "var-ar-fisken-10eb0ae9.mp3",
+      "input": "Var är, | fisken?"
+    },
+    {
+      "text": "Här är fisken!",
+      "file": "har-ar-fisken-2e3ea703.mp3",
+      "input": "Här är fisken!"
+    },
+    {
+      "text": "Det där är en fisk.",
+      "file": "det-dar-ar-en-fisk-34794055.mp3",
+      "input": "Det där är en fisk."
+    },
+    {
+      "text": "Bygg ordet fisk!",
+      "file": "bygg-ordet-fisk-191307a0.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | fisk!"
+    },
+    {
+      "text": "Vilken bokstav börjar fjäril på?",
+      "file": "vilken-bokstav-borjar-fjaril-pa-c864e3ff.mp3",
+      "input": "Vilken bokstav börjar fjäril på?"
+    },
+    {
+      "text": "Fjäril.",
+      "file": "fjaril-861f2695.mp3",
+      "input": "Fjäril."
+    },
+    {
+      "text": "fjäril börjar på F!",
+      "file": "fjaril-borjar-pa-f-114e7b09.mp3",
+      "input": "fjäril börjar på F!"
+    },
+    {
+      "text": "Var är fjärilen?",
+      "file": "var-ar-fjarilen-67ab9fc9.mp3",
+      "input": "Var är, | fjärilen?"
+    },
+    {
+      "text": "Här är fjärilen!",
+      "file": "har-ar-fjarilen-b797e66f.mp3",
+      "input": "Här är fjärilen!"
+    },
+    {
+      "text": "Det där är en fjäril.",
+      "file": "det-dar-ar-en-fjaril-6619df81.mp3",
+      "input": "Det där är en fjäril."
+    },
+    {
+      "text": "Vilken bokstav börjar fot på?",
+      "file": "vilken-bokstav-borjar-fot-pa-a1f52fd5.mp3",
+      "input": "Vilken bokstav börjar fot på?"
+    },
+    {
+      "text": "Fot.",
+      "file": "fot-2f56095f.mp3",
+      "input": "Fot."
+    },
+    {
+      "text": "fot börjar på F!",
+      "file": "fot-borjar-pa-f-1639e4b9.mp3",
+      "input": "fot börjar på F!"
+    },
+    {
+      "text": "Var är foten?",
+      "file": "var-ar-foten-f2500a01.mp3",
+      "input": "Var är, | foten?"
+    },
+    {
+      "text": "Här är foten!",
+      "file": "har-ar-foten-aba220e1.mp3",
+      "input": "Här är foten!"
+    },
+    {
+      "text": "Det där är en fot.",
+      "file": "det-dar-ar-en-fot-03f08393.mp3",
+      "input": "Det där är en fot."
+    },
+    {
+      "text": "Bygg ordet fot!",
+      "file": "bygg-ordet-fot-671520f8.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | fot!"
+    },
+    {
+      "text": "Vilken bokstav börjar får på?",
+      "file": "vilken-bokstav-borjar-far-pa-cb689e01.mp3",
+      "input": "Vilken bokstav börjar får på?"
+    },
+    {
+      "text": "Får.",
+      "file": "far-8783bd1b.mp3",
+      "input": "Får."
+    },
+    {
+      "text": "får börjar på F!",
+      "file": "far-borjar-pa-f-8d1dbaa9.mp3",
+      "input": "får börjar på F!"
+    },
+    {
+      "text": "Var är fåret?",
+      "file": "var-ar-faret-9927ac41.mp3",
+      "input": "Var är, | fåret?"
+    },
+    {
+      "text": "Här är fåret!",
+      "file": "har-ar-faret-4bed6b01.mp3",
+      "input": "Här är fåret!"
+    },
+    {
+      "text": "Det där är ett får.",
+      "file": "det-dar-ar-ett-far-f7e58289.mp3",
+      "input": "Det där är ett får."
+    },
+    {
+      "text": "Bygg ordet får!",
+      "file": "bygg-ordet-far-906f9c88.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | får!"
     },
     {
       "text": "Vilken bokstav börjar igelkott på?",
@@ -1065,6 +1280,101 @@
       "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | myra!"
     },
     {
+      "text": "Vilken bokstav börjar näsa på?",
+      "file": "vilken-bokstav-borjar-nasa-pa-61ef77c9.mp3",
+      "input": "Vilken bokstav börjar näsa på?"
+    },
+    {
+      "text": "Näsa.",
+      "file": "nasa-08067b55.mp3",
+      "input": "Näsa."
+    },
+    {
+      "text": "näsa börjar på N!",
+      "file": "nasa-borjar-pa-n-c63317c0.mp3",
+      "input": "näsa börjar på [[ ˈɛnː! ]]"
+    },
+    {
+      "text": "Var är näsan?",
+      "file": "var-ar-nasan-e859b669.mp3",
+      "input": "Var är, | näsan?"
+    },
+    {
+      "text": "Här är näsan!",
+      "file": "har-ar-nasan-2d786745.mp3",
+      "input": "Här är näsan!"
+    },
+    {
+      "text": "Det där är en näsa.",
+      "file": "det-dar-ar-en-nasa-8b3ba479.mp3",
+      "input": "Det där är en näsa."
+    },
+    {
+      "text": "Bygg ordet näsa!",
+      "file": "bygg-ordet-nasa-60f310fe.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | näsa!"
+    },
+    {
+      "text": "Vilken bokstav börjar nyckel på?",
+      "file": "vilken-bokstav-borjar-nyckel-pa-acbfa0e2.mp3",
+      "input": "Vilken bokstav börjar [[ nˈʏkəl ]] på?"
+    },
+    {
+      "text": "Nyckel.",
+      "file": "nyckel-8d6b1dfc.mp3",
+      "input": "[[ nˈʏkəl. ]]"
+    },
+    {
+      "text": "nyckel börjar på N!",
+      "file": "nyckel-borjar-pa-n-1e7a3d1b.mp3",
+      "input": "[[ nˈʏkəl ]] börjar på [[ ˈɛnː! ]]"
+    },
+    {
+      "text": "Var är nyckeln?",
+      "file": "var-ar-nyckeln-1fbf1dd0.mp3",
+      "input": "Var är, | [[ nˈʏkəln? ]]"
+    },
+    {
+      "text": "Här är nyckeln!",
+      "file": "har-ar-nyckeln-082f931c.mp3",
+      "input": "Här är [[ nˈʏkəln! ]]"
+    },
+    {
+      "text": "Det där är en nyckel.",
+      "file": "det-dar-ar-en-nyckel-ef4f1c44.mp3",
+      "input": "Det där är en [[ nˈʏkəl. ]]"
+    },
+    {
+      "text": "Vilken bokstav börjar nalle på?",
+      "file": "vilken-bokstav-borjar-nalle-pa-0f336849.mp3",
+      "input": "Vilken bokstav börjar nalle på?"
+    },
+    {
+      "text": "Nalle.",
+      "file": "nalle-baf12e45.mp3",
+      "input": "Nalle."
+    },
+    {
+      "text": "nalle börjar på N!",
+      "file": "nalle-borjar-pa-n-beb12c22.mp3",
+      "input": "nalle börjar på [[ ˈɛnː! ]]"
+    },
+    {
+      "text": "Var är nallen?",
+      "file": "var-ar-nallen-f81f4da1.mp3",
+      "input": "Var är, | nallen?"
+    },
+    {
+      "text": "Här är nallen!",
+      "file": "har-ar-nallen-16f36677.mp3",
+      "input": "Här är nallen!"
+    },
+    {
+      "text": "Det där är en nalle.",
+      "file": "det-dar-ar-en-nalle-730ad541.mp3",
+      "input": "Det där är en nalle."
+    },
+    {
       "text": "Vilken bokstav börjar orm på?",
       "file": "vilken-bokstav-borjar-orm-pa-24bd8548.mp3",
       "input": "Vilken bokstav börjar [[ ˈʊrm ]] på?"
@@ -1133,6 +1443,136 @@
       "text": "Bygg ordet ost!",
       "file": "bygg-ordet-ost-d14bef84.mp3",
       "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | ost!"
+    },
+    {
+      "text": "Vilken bokstav börjar robot på?",
+      "file": "vilken-bokstav-borjar-robot-pa-a200c8b8.mp3",
+      "input": "Vilken bokstav börjar [[ rʊbˈuːt ]] på?"
+    },
+    {
+      "text": "Robot.",
+      "file": "robot-460279c6.mp3",
+      "input": "[[ rʊbˈuːt. ]]"
+    },
+    {
+      "text": "robot börjar på R!",
+      "file": "robot-borjar-pa-r-483bc95c.mp3",
+      "input": "[[ rʊbˈuːt ]] börjar på R!"
+    },
+    {
+      "text": "Var är roboten?",
+      "file": "var-ar-roboten-a1cdbc70.mp3",
+      "input": "Var är, | [[ rʊbˈuːtən? ]]"
+    },
+    {
+      "text": "Här är roboten!",
+      "file": "har-ar-roboten-b8d9bbde.mp3",
+      "input": "Här är [[ rʊbˈuːtən! ]]"
+    },
+    {
+      "text": "Det där är en robot.",
+      "file": "det-dar-ar-en-robot-1c7bb886.mp3",
+      "input": "Det där är en [[ rʊbˈuːt. ]]"
+    },
+    {
+      "text": "Vilken bokstav börjar räv på?",
+      "file": "vilken-bokstav-borjar-rav-pa-6842e191.mp3",
+      "input": "Vilken bokstav börjar räv på?"
+    },
+    {
+      "text": "Räv.",
+      "file": "rav-b3e3a689.mp3",
+      "input": "Räv."
+    },
+    {
+      "text": "räv börjar på R!",
+      "file": "rav-borjar-pa-r-0c269743.mp3",
+      "input": "räv börjar på R!"
+    },
+    {
+      "text": "Var är räven?",
+      "file": "var-ar-raven-918ca447.mp3",
+      "input": "Var är, | räven?"
+    },
+    {
+      "text": "Här är räven!",
+      "file": "har-ar-raven-81c78021.mp3",
+      "input": "Här är räven!"
+    },
+    {
+      "text": "Det där är en räv.",
+      "file": "det-dar-ar-en-rav-31329eb9.mp3",
+      "input": "Det där är en räv."
+    },
+    {
+      "text": "Bygg ordet räv!",
+      "file": "bygg-ordet-rav-b1ce9c6c.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | räv!"
+    },
+    {
+      "text": "Vilken bokstav börjar raket på?",
+      "file": "vilken-bokstav-borjar-raket-pa-4bd559a5.mp3",
+      "input": "Vilken bokstav börjar [[ rakˈeːt ]] på?"
+    },
+    {
+      "text": "Raket.",
+      "file": "raket-4378cfc7.mp3",
+      "input": "[[ rakˈeːt. ]]"
+    },
+    {
+      "text": "raket börjar på R!",
+      "file": "raket-borjar-pa-r-b3f17ed1.mp3",
+      "input": "[[ rakˈeːt ]] börjar på R!"
+    },
+    {
+      "text": "Var är raketen?",
+      "file": "var-ar-raketen-444050a9.mp3",
+      "input": "Var är, | [[ rakˈeːtən? ]]"
+    },
+    {
+      "text": "Här är raketen!",
+      "file": "har-ar-raketen-856e2949.mp3",
+      "input": "Här är [[ rakˈeːtən! ]]"
+    },
+    {
+      "text": "Det där är en raket.",
+      "file": "det-dar-ar-en-raket-b946aa97.mp3",
+      "input": "Det där är en [[ rakˈeːt. ]]"
+    },
+    {
+      "text": "Vilken bokstav börjar ros på?",
+      "file": "vilken-bokstav-borjar-ros-pa-ef8d1c49.mp3",
+      "input": "Vilken bokstav börjar ros på?"
+    },
+    {
+      "text": "Ros.",
+      "file": "ros-26b985b5.mp3",
+      "input": "Ros."
+    },
+    {
+      "text": "ros börjar på R!",
+      "file": "ros-borjar-pa-r-3d5e7c7b.mp3",
+      "input": "ros börjar på R!"
+    },
+    {
+      "text": "Var är rosen?",
+      "file": "var-ar-rosen-303a91d3.mp3",
+      "input": "Var är, | rosen?"
+    },
+    {
+      "text": "Här är rosen!",
+      "file": "har-ar-rosen-0fe6b079.mp3",
+      "input": "Här är rosen!"
+    },
+    {
+      "text": "Det där är en ros.",
+      "file": "det-dar-ar-en-ros-a4b41c99.mp3",
+      "input": "Det där är en ros."
+    },
+    {
+      "text": "Bygg ordet ros!",
+      "file": "bygg-ordet-ros-4e2ed404.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | ros!"
     },
     {
       "text": "Vilken bokstav börjar sol på?",
@@ -1268,6 +1708,136 @@
       "text": "Bygg ordet sko!",
       "file": "bygg-ordet-sko-9e5ccea0.mp3",
       "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | sko!"
+    },
+    {
+      "text": "Vilken bokstav börjar tåg på?",
+      "file": "vilken-bokstav-borjar-tag-pa-bc8ecec9.mp3",
+      "input": "Vilken bokstav börjar tåg på?"
+    },
+    {
+      "text": "Tåg.",
+      "file": "tag-84d7684d.mp3",
+      "input": "Tåg."
+    },
+    {
+      "text": "tåg börjar på T!",
+      "file": "tag-borjar-pa-t-6854ba0b.mp3",
+      "input": "tåg börjar på T!"
+    },
+    {
+      "text": "Var är tåget?",
+      "file": "var-ar-taget-5243e98b.mp3",
+      "input": "Var är, | tåget?"
+    },
+    {
+      "text": "Här är tåget!",
+      "file": "har-ar-taget-45d4ca4d.mp3",
+      "input": "Här är tåget!"
+    },
+    {
+      "text": "Det där är ett tåg.",
+      "file": "det-dar-ar-ett-tag-ebe13ea9.mp3",
+      "input": "Det där är ett tåg."
+    },
+    {
+      "text": "Bygg ordet tåg!",
+      "file": "bygg-ordet-tag-e9c28ee0.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | tåg!"
+    },
+    {
+      "text": "Vilken bokstav börjar tand på?",
+      "file": "vilken-bokstav-borjar-tand-pa-bfd31f6b.mp3",
+      "input": "Vilken bokstav börjar tand på?"
+    },
+    {
+      "text": "Tand.",
+      "file": "tand-27d4efd9.mp3",
+      "input": "Tand."
+    },
+    {
+      "text": "tand börjar på T!",
+      "file": "tand-borjar-pa-t-be1396c9.mp3",
+      "input": "tand börjar på T!"
+    },
+    {
+      "text": "Var är tanden?",
+      "file": "var-ar-tanden-7ecde6a1.mp3",
+      "input": "Var är, | tanden?"
+    },
+    {
+      "text": "Här är tanden!",
+      "file": "har-ar-tanden-727de5bf.mp3",
+      "input": "Här är tanden!"
+    },
+    {
+      "text": "Det där är en tand.",
+      "file": "det-dar-ar-en-tand-cb1f5f81.mp3",
+      "input": "Det där är en tand."
+    },
+    {
+      "text": "Bygg ordet tand!",
+      "file": "bygg-ordet-tand-3c86a818.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | tand!"
+    },
+    {
+      "text": "Vilken bokstav börjar tomat på?",
+      "file": "vilken-bokstav-borjar-tomat-pa-811fd28d.mp3",
+      "input": "Vilken bokstav börjar tomat på?"
+    },
+    {
+      "text": "Tomat.",
+      "file": "tomat-f9d0ebaf.mp3",
+      "input": "Tomat."
+    },
+    {
+      "text": "tomat börjar på T!",
+      "file": "tomat-borjar-pa-t-9480c78d.mp3",
+      "input": "tomat börjar på T!"
+    },
+    {
+      "text": "Var är tomaten?",
+      "file": "var-ar-tomaten-122f838e.mp3",
+      "input": "Var är, | [[ tʊmˈɑːtən? ]]"
+    },
+    {
+      "text": "Här är tomaten!",
+      "file": "har-ar-tomaten-b7a8d7de.mp3",
+      "input": "Här är [[ tʊmˈɑːtən! ]]"
+    },
+    {
+      "text": "Det där är en tomat.",
+      "file": "det-dar-ar-en-tomat-5dc1680f.mp3",
+      "input": "Det där är en tomat."
+    },
+    {
+      "text": "Vilken bokstav börjar tiger på?",
+      "file": "vilken-bokstav-borjar-tiger-pa-ac422d93.mp3",
+      "input": "Vilken bokstav börjar [[ tˈiːɡər ]] på?"
+    },
+    {
+      "text": "Tiger.",
+      "file": "tiger-bd22614d.mp3",
+      "input": "[[ tˈiːɡər. ]]"
+    },
+    {
+      "text": "tiger börjar på T!",
+      "file": "tiger-borjar-pa-t-66a5c71f.mp3",
+      "input": "[[ tˈiːɡər ]] börjar på T!"
+    },
+    {
+      "text": "Var är tigern?",
+      "file": "var-ar-tigern-cd2f4839.mp3",
+      "input": "Var är, | [[ tˈiːɡərn? ]]"
+    },
+    {
+      "text": "Här är tigern!",
+      "file": "har-ar-tigern-1b17377d.mp3",
+      "input": "Här är [[ tˈiːɡərn! ]]"
+    },
+    {
+      "text": "Det där är en tiger.",
+      "file": "det-dar-ar-en-tiger-21ce68fd.mp3",
+      "input": "Det där är en [[ tˈiːɡər. ]]"
     },
     {
       "text": "Vilken bokstav börjar åtta på?",

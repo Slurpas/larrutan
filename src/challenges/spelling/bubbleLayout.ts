@@ -1,30 +1,13 @@
-import type { ChoiceQuestion } from '../choiceQuestion'
-import { createRng, shuffle } from '../random'
+import { createRng } from '../random'
 
 /**
- * The pure rules of Bubblor (Hitta bokstaven): which bubbles a question blows and where
- * they float. The child pops every bubble with the asked letter; several of them per
- * question means more practice per round. Wrong letters come twice each, so a wrong
- * tap is never the only one of its kind.
+ * Where Bygg ordet's bubbles float. Pure, so it is tested for the screens the game is played on.
  */
-
-
-/** Bubbles with the asked letter, and with each other letter, per question. */
-export const targetBubbles = 3
-export const otherBubbles = 2
 
 export interface Bubble {
   /** Unique within the question, e.g. "a-2". */
   id: string
   letter: string
-}
-
-/** The bubbles for one question, in a shuffled order (the same for the same round and question). */
-export function bubblesFor(question: ChoiceQuestion, seed: number, questionIndex: number): Bubble[] {
-  const bubbles = question.choices.flatMap((letter) =>
-    Array.from({ length: letter === question.target ? targetBubbles : otherBubbles }, (_, i) => ({ id: `${letter}-${i}`, letter })),
-  )
-  return shuffle(bubbles, createRng(seed * 31 + questionIndex + 1))
 }
 
 export interface Point {

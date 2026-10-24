@@ -6,6 +6,7 @@ import { createFindLetterRound } from '../challenges/findLetter/createRound'
 import { createFirstLetterRound } from '../challenges/firstLetter/createRound'
 import { dragonVoice, firstLetterVoice, wordPictureVoice, type ChallengeVoice } from '../challenges/voices'
 import { createWordPictureRound } from '../challenges/wordPicture/createRound'
+import { createSpellingRound } from '../challenges/spelling/createRound'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
@@ -58,6 +59,17 @@ describe('speech catalogue', () => {
       expect(catalogue).toContain(phrases.itemUnlocked(item.indefinite))
       expect(catalogue).toContain(item.hint)
     }
+  })
+
+  it('contains everything Bygg ordet can say', () => {
+    for (const seed of seeds) {
+      for (const question of createSpellingRound({ seed, words, difficulty: seed % 2 ? 'hard' : 'easy' }).questions) {
+        const word = words.find((w) => w.id === question.word)!
+        expect(catalogue).toContain(phrases.spellingQuestion(word.base))
+        expect(catalogue).toContain(phrases.firstLetterShort(word.base))
+      }
+    }
+    expect(catalogue).toContain(phrases.hiddenWordIntro)
   })
 
   it('contains everything the hard levels can say', () => {

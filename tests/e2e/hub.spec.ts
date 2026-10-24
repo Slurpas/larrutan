@@ -20,7 +20,7 @@ async function stepTo(page: Page, key: string, expected: Tile) {
   await expect.poll(() => playerTile(page)).toEqual(expected)
 }
 
-for (const challenge of ['findLetter', 'firstLetter', 'wordPicture'] as const) {
+for (const challenge of ['findLetter', 'firstLetter', 'wordPicture', 'spelling'] as const) {
   test(`tapping the ${challengeNames[challenge]} sign walks there, opens it, and closing returns to the same spot`, async ({
     page,
     hasTouch,

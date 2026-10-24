@@ -3,6 +3,7 @@ import type { ChallengeId } from '../challenges/challengeIds'
 import { challengeDifficulties, levelKey, type Difficulty, type StationLevels } from '../challenges/difficulty'
 import { letters } from '../content/letters'
 import { words } from '../content/words'
+import { spellingWords } from '../challenges/spelling/createRound'
 import { highestBox, lowestBox, practiceKey, type Mastery } from '../learning/mastery'
 import { findItem, items } from '../rewards/items'
 import { initialProgress, type Progress } from '../rewards/progress'
@@ -66,6 +67,7 @@ const knownPractice = new Set([
   ...letterIds.map((id) => practiceKey('findLetter', id)),
   ...wordIds.map((id) => practiceKey('firstLetter', id)),
   ...wordIds.map((id) => practiceKey('wordPicture', id)),
+  ...spellingWords(words).map((word) => practiceKey('spelling', word.id)),
 ])
 
 /** Version 1 had no mastery: everything starts unpractised. */

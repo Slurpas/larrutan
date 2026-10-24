@@ -3,6 +3,7 @@ import type { ChallengeId } from '../challenges/challengeIds'
 import { levelAfterRound, levelKey, nextDifficulty, type Difficulty, type StationLevels } from '../challenges/difficulty'
 import { letters } from '../content/letters'
 import { words } from '../content/words'
+import { spellingWords } from '../challenges/spelling/createRound'
 import { boxOf, practiceKey, recordPractice, type Mastery, type Practiced } from '../learning/mastery'
 import { findItem, items, type UnlockCondition } from './items'
 import { levelForXp, roundXp } from './rules'
@@ -114,6 +115,7 @@ const practisedIn: Record<ChallengeId, readonly string[]> = {
   findLetter: letters.map((letter) => letter.id),
   firstLetter: words.map((word) => word.id),
   wordPicture: words.map((word) => word.id),
+  spelling: spellingWords(words).map((word) => word.id),
 }
 
 export function isUnlocked(condition: UnlockCondition, progress: Progress): boolean {

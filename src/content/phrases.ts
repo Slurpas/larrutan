@@ -20,9 +20,13 @@ export const phrases = {
 
   wordPictureQuestion: (definite: string) => `Var är ${definite}?`,
 
+  /** Bygg ordet: build this word from the bubbles. */
+  spellingQuestion: (word: string) => `Bygg ordet ${word}!`,
+
   /** Before the first question of a hard round, saying what is harder (Task 15). */
   lookAlikesIntro: 'Nu blir det svårare! Några bokstäver är nästan lika. Titta noga!',
   fourTunnelsIntro: 'Nu blir det svårare! Nu finns det fyra tunnlar.',
+  hiddenWordIntro: 'Nu blir det svårare! Nu syns inte ordet.',
   /** At the end of a round after which the station opens at the hard level. */
   nextTimeHarder: 'Nästa gång blir det svårare.',
   levelUp: 'Du har gått upp en nivå!',

@@ -27,6 +27,7 @@ const stationContent: Record<ChallengeId, { pictures: (keyof typeof iconKeys)[];
   findLetter: { pictures: [], letters: 'AÖ' },
   firstLetter: { pictures: ['sun'], letters: 'S' },
   wordPicture: { pictures: ['apple', 'mouse'], letters: '' },
+  spelling: { pictures: [], letters: 'ABC' },
 }
 
 /** Walk frames per second, and where the feet are: the bottom of the tile the character stands on. */
@@ -306,7 +307,8 @@ export class HubScene extends Phaser.Scene {
           color: '#3f2631',
         })
         .setOrigin(0.5)
-      text.setScale((signPanel.height * 0.95) / text.height)
+      // As tall as the panel, but never wider than it (three letters).
+      text.setScale(Math.min((signPanel.height * 0.95) / text.height, (signPanel.width * 0.9) / text.width))
       text.texture.setFilter(Phaser.Textures.FilterMode.LINEAR)
       items.push(text)
     }

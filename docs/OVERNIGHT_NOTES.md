@@ -56,6 +56,20 @@ Results and decisions are added below as each task is done.
   - Cookies, since many of our picture words aren't things a dragon should eat.
   - Options I'd have asked about: the dragon eating pictures instead (but monkey, lion, angel…); or feeding by dragging only (tapping is easier for 5-year-olds, so both work).
 - **To check:** is the dragon cute rather than scary? Is dragging fun, or does your child just tap? There are 9 new sentences to review.
+### 4. Bygg ordet (Task 17): done
+- **A new sign (ABC)**, left of Ord och bild, with a path to it.
+- **The game:** the voice says "Bygg ordet sol!", the picture is next to the speaker, and the child pops the bubbles with the word's letters in order. Each letter lands in a slot; a built word turns green and hops.
+- **Help:** a letter that isn't in the word turns grey. After a wrong tap the voice says the word again and the next slot lights up; after two, the right bubble pulses.
+- **Levels:** easy shows the word faintly in the slots; hard shows only empty slots and adds a look-alike letter (Ö next to O). The first hard word says "Nu blir det svårare! Nu syns inte ordet."
+- **Words:** the 17 approved words with 2–4 letters (apa, anka, lås, löv, mus, måne, myra, orm, ost, sol, sax, sko, åtta, åska, ägg, öga, öra), five per round.
+- **Decisions I made:**
+  - Capital letters, like the rest of the game.
+  - A letter that comes later in the word (the L of "sol" tapped first) stays, since it will be needed; only letters that aren't in the word turn grey.
+  - Options I'd have asked about: filling the slots in any order; longer words (5 letters) on hard.
+- **To check:** is building a word fun, or too hard at 5? Is the faint word on easy too much of a giveaway? 18 new sentences to review ("Bygg ordet sol!" and the others).
+
+### Voice: ElevenLabs (later)
+You asked about ElevenLabs on 2026-10-24 and decided to try it later. The facts: the free plan gives 10,000 credits a month and the game has about 6,100 characters; it is for non-commercial use, with credit to elevenlabs.io; Swedish is supported. When you want to try it: make a free account and an API key, put it in `.env` as `ELEVENLABS_API_KEY`, and I'll make about 10 test sentences in 2–3 voices to compare with Alma.
 
 # Night 1 (2026-10-23)
 
@@ -105,7 +119,7 @@ Every check passes on the final state:
 | # | What | Why it waits |
 |---|---|---|
 | ~~W1~~ | **Hosting: decided, GitHub Pages.** Live at https://slurpas.github.io/larrutan/. The repository is public, with commit emails switched to GitHub's no-reply address first | Done |
-| W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet). *Speed decided 2026-10-23: 1.4, with a pause before the target in "Var är … Å?". All clips regenerated.* | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
+| W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet). *Speed decided 2026-10-23: 1.4, with a pause before the target in "Var är … Å?". All clips regenerated. 2026-10-24: ElevenLabs is a third candidate, to try later (see Night 2).* | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
 | W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Ready now, see "Check on the iPad" below |
 | W4 | **Voice review:** 76 approved so far. The second round of 9 rejected clips is redone (2026-10-23): M is now said "emm" (it sounded like N), stjärntröja has an explicit r, "orden" a plain d, and "Var är Ä?", "Var är Ö?" and "Du fick gröna byxor!" have fresh takes. Please listen to those 13 again (they're at the top of "To review"), then the other 146 | Only your ear can approve them |
 | ~~W5~~ | **Art style: decided, 16×16 pixel art** (`docs/ART_DIRECTION.md`) | Done |

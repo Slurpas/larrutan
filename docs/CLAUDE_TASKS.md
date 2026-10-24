@@ -303,6 +303,19 @@ Status 2026-10-24: **done.**
 #### Task 17 — Bygg ordet (spelling with bubbles)
 - Bubblor turned into spelling short approved words: pop the letters in order to fill the word. Easy: the word is shown faintly; hard: only the picture and the voice. A new sign on the map.
 
+Status 2026-10-24: **done.**
+- **The game:**
+  - The voice says "Bygg ordet sol!", and the word's picture is next to the speaker (tapping it says the word).
+  - The child pops the bubbles with the word's letters in order; each one lands in a slot (`src/challenges/spelling`). A built word turns green and hops.
+  - The words: the 17 approved words with 2–4 letters (apa, sol, ägg, öra …), five per round.
+- **Help:** a letter that isn't in the word turns grey; a letter that comes later in the word stays, since it will be needed. After a wrong tap the voice says the word again and the next slot lights up; after two, the right bubble pulses. Nothing is timed.
+- **Levels:**
+  - Easy: the word is shown faintly in the slots, plus three extra letters, none that look like the word's letters.
+  - Hard: empty slots, plus four extra letters including a look-alike (Ö next to the O in "sol"). The first word says "Nu blir det svårare! Nu syns inte ordet."
+  - The same up/down rule as the other stations (Task 15).
+- **On the map:** the ABC sign, left of Ord och bild, with a path to it.
+- **Bubblor** is removed; its art (bubbles, meadow, the character with a wand) and layout are reused here.
+
 #### Task 18 — Memory
 - Turn over cards and match a letter with a picture that starts with it. A new sign on the map.
 
@@ -319,7 +332,7 @@ Not scheduled. Pull an item in when it becomes the most valuable next step.
 - Mathematics region.
 
 **Games** (ways to answer by playing, on the same rounds; the user's picks 2026-10-23)
-- **Ordbygget:** pick up letter boxes and carry them to build a short word ("Bygg ordet sol"). Spelling; needs letter sounds first (see Learning).
+- **Ordbygget:** pick up letter boxes and carry them to build a short word ("Bygg ordet sol"). Spelling; needs letter sounds first (see Learning). Bygg ordet (Task 17) already spells with bubbles.
 - **Mata draken:** a hungry dragon wants something that starts with a sound; drag the right picture into its mouth.
 - ~~**Bubblor**~~: built as Task 13.
 - **Memory:** turn over cards and match a letter with a picture.
@@ -339,6 +352,7 @@ Not scheduled. Pull an item in when it becomes the most valuable next step.
 - More slots (outerwear, glasses, face details) as the art allows.
 
 **Sound**
+- Try ElevenLabs voices (free plan: 10,000 credits a month, the game has about 6,100 characters; non-commercial use with credit to elevenlabs.io): about 10 test sentences once the user has put an API key in `.env` (the user, 2026-10-24: later).
 - Generated sound effects, quiet optional music, separate volume settings.
 
 **Adults**

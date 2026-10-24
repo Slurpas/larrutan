@@ -49,6 +49,8 @@ export const pronunciations: Record<string, string> = {
   // Short y and a clear ä.
   ryggsäck: 'rˈʏɡsˌɛk',
   ryggsäcken: 'rˈʏɡsˌɛkən',
+  // Short y, as in "rygg" ("Bygg ordet sol!").
+  bygg: 'bˈʏɡ',
   // Long a in "stav".
   trollstav: 'trˈɔlstˌɑːv',
   trollstaven: 'trˈɔlstˌɑːvən',
@@ -56,6 +58,7 @@ export const pronunciations: Record<string, string> = {
   // a plain d is heard (reviews 2026-10-23).
   ord: 'ˈuːd',
   orden: 'ˈuːdən',
+  ordet: 'ˈuːdət',
   // The voice drops the sj-sound (ɧ) entirely: "sju" came out as "lu", "skylt" as "vilt",
   // "stjärntröja" as "ä-tröja" (review 2026-10-23; no hiss at all in any take). The
   // sh-like ʂ (as in "första") is clearly heard, and many Swedes say sj that way.
@@ -111,7 +114,9 @@ export const pauseMark = '|'
  * sentence, whatever the punctuation.
  */
 export function withPauses(text: string): string {
-  return text.replace(/^(Var är) (.+\?)$/u, `$1, ${pauseMark} $2`).replace(/^(Draken vill ha ett) (.+!)$/u, `$1, ${pauseMark} $2`)
+  return text
+    .replace(/^(Var är) (.+\?)$/u, `$1, ${pauseMark} $2`)
+    .replace(/^(Draken vill ha ett|Bygg ordet) (.+!)$/u, `$1, ${pauseMark} $2`)
 }
 
 /** What the speech engine is given for a sentence: pauses, then fixed pronunciations. */

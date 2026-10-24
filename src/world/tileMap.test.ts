@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { challengeNames } from '../challenges/challengeIds'
 import { hubMap } from './hubMap'
 import { findPath } from './pathfinding'
 import { isWalkable, kindAt, parseMap, stationApproaches, stationNextTo, tryStep, type StationDef } from './tileMap'
@@ -36,8 +37,8 @@ describe('hub map', () => {
     }
   })
 
-  it('has all three challenges, each reachable from the start', () => {
-    expect(hubMap.stations.map((s) => s.challenge).sort()).toEqual(['findLetter', 'firstLetter', 'wordPicture'])
+  it('has a sign for every challenge, each reachable from the start', () => {
+    expect(hubMap.stations.map((s) => s.challenge).sort()).toEqual(Object.keys(challengeNames).sort())
     for (const s of hubMap.stations) {
       expect(findPath(hubMap, hubMap.start, stationApproaches(hubMap, s)), s.challenge).not.toBeNull()
     }

@@ -20,6 +20,11 @@
       "input": "Nu blir det svårare! Nu finns det fyra tunnlar."
     },
     {
+      "text": "Nu blir det svårare! Nu syns inte ordet.",
+      "file": "nu-blir-det-svarare-nu-syns-inte-ordet-8124b2a3.mp3",
+      "input": "Nu blir det svårare! Nu syns inte [[ ˈuːdət. ]]"
+    },
+    {
       "text": "Nästa gång blir det svårare.",
       "file": "nasta-gang-blir-det-svarare-cc72491f.mp3",
       "input": "Nästa gång blir det svårare."
@@ -570,6 +575,11 @@
       "input": "Det där är en apa."
     },
     {
+      "text": "Bygg ordet apa!",
+      "file": "bygg-ordet-apa-357aefb4.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | apa!"
+    },
+    {
       "text": "Vilken bokstav börjar anka på?",
       "file": "vilken-bokstav-borjar-anka-pa-b5e79143.mp3",
       "input": "Vilken bokstav börjar anka på?"
@@ -598,6 +608,11 @@
       "text": "Det där är en anka.",
       "file": "det-dar-ar-en-anka-ee3d0581.mp3",
       "input": "Det där är en anka."
+    },
+    {
+      "text": "Bygg ordet anka!",
+      "file": "bygg-ordet-anka-5b6a0f30.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | anka!"
     },
     {
       "text": "Vilken bokstav börjar ananas på?",
@@ -810,6 +825,11 @@
       "input": "Det där är ett lås."
     },
     {
+      "text": "Bygg ordet lås!",
+      "file": "bygg-ordet-las-f1a3b438.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | lås!"
+    },
+    {
       "text": "Vilken bokstav börjar löv på?",
       "file": "vilken-bokstav-borjar-lov-pa-8544b089.mp3",
       "input": "Vilken bokstav börjar löv på?"
@@ -838,6 +858,11 @@
       "text": "Det där är ett löv.",
       "file": "det-dar-ar-ett-lov-964987c9.mp3",
       "input": "Det där är ett löv."
+    },
+    {
+      "text": "Bygg ordet löv!",
+      "file": "bygg-ordet-lov-67f87a38.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | löv!"
     },
     {
       "text": "Vilken bokstav börjar mus på?",
@@ -870,6 +895,11 @@
       "input": "Det där är en mus."
     },
     {
+      "text": "Bygg ordet mus!",
+      "file": "bygg-ordet-mus-90c9e790.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | mus!"
+    },
+    {
       "text": "Vilken bokstav börjar måne på?",
       "file": "vilken-bokstav-borjar-mane-pa-e85d2d2f.mp3",
       "input": "Vilken bokstav börjar måne på?"
@@ -898,6 +928,11 @@
       "text": "Det där är en måne.",
       "file": "det-dar-ar-en-mane-ba7a9239.mp3",
       "input": "Det där är en måne."
+    },
+    {
+      "text": "Bygg ordet måne!",
+      "file": "bygg-ordet-mane-58fecfd0.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | måne!"
     },
     {
       "text": "Vilken bokstav börjar morot på?",
@@ -960,6 +995,11 @@
       "input": "Det där är en myra."
     },
     {
+      "text": "Bygg ordet myra!",
+      "file": "bygg-ordet-myra-43731698.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | myra!"
+    },
+    {
       "text": "Vilken bokstav börjar orm på?",
       "file": "vilken-bokstav-borjar-orm-pa-24bd8548.mp3",
       "input": "Vilken bokstav börjar [[ ˈʊrm ]] på?"
@@ -988,6 +1028,11 @@
       "text": "Det där är en orm.",
       "file": "det-dar-ar-en-orm-427239f6.mp3",
       "input": "Det där är en [[ ˈʊrm. ]]"
+    },
+    {
+      "text": "Bygg ordet orm!",
+      "file": "bygg-ordet-orm-c48f9541.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | [[ ˈʊrm! ]]"
     },
     {
       "text": "Vilken bokstav börjar ost på?",
@@ -1020,6 +1065,11 @@
       "input": "Det där är en ost."
     },
     {
+      "text": "Bygg ordet ost!",
+      "file": "bygg-ordet-ost-d14bef84.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | ost!"
+    },
+    {
       "text": "Vilken bokstav börjar sol på?",
       "file": "vilken-bokstav-borjar-sol-pa-01be67d1.mp3",
       "input": "Vilken bokstav börjar sol på?"
@@ -1050,6 +1100,11 @@
       "input": "Det där är en sol."
     },
     {
+      "text": "Bygg ordet sol!",
+      "file": "bygg-ordet-sol-beae7534.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | sol!"
+    },
+    {
       "text": "Vilken bokstav börjar sax på?",
       "file": "vilken-bokstav-borjar-sax-pa-24fd3001.mp3",
       "input": "Vilken bokstav börjar sax på?"
@@ -1078,6 +1133,11 @@
       "text": "Det där är en sax.",
       "file": "det-dar-ar-en-sax-70b0e4c9.mp3",
       "input": "Det där är en sax."
+    },
+    {
+      "text": "Bygg ordet sax!",
+      "file": "bygg-ordet-sax-d192b890.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | sax!"
     },
     {
       "text": "Vilken bokstav börjar snigel på?",
@@ -1140,6 +1200,11 @@
       "input": "Det där är en sko."
     },
     {
+      "text": "Bygg ordet sko!",
+      "file": "bygg-ordet-sko-9e5ccea0.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | sko!"
+    },
+    {
       "text": "Vilken bokstav börjar åtta på?",
       "file": "vilken-bokstav-borjar-atta-pa-02658fa1.mp3",
       "input": "Vilken bokstav börjar åtta på?"
@@ -1170,6 +1235,11 @@
       "input": "Det där är en åtta."
     },
     {
+      "text": "Bygg ordet åtta!",
+      "file": "bygg-ordet-atta-e63d341e.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | åtta!"
+    },
+    {
       "text": "Vilken bokstav börjar åska på?",
       "file": "vilken-bokstav-borjar-aska-pa-15b2c72e.mp3",
       "input": "Vilken bokstav börjar [[ ˈɔska ]] på?"
@@ -1198,6 +1268,11 @@
       "text": "Det där är åska.",
       "file": "det-dar-ar-aska-9a59bcba.mp3",
       "input": "Det där är [[ ˈɔska. ]]"
+    },
+    {
+      "text": "Bygg ordet åska!",
+      "file": "bygg-ordet-aska-3ddd19d1.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | [[ ˈɔska! ]]"
     },
     {
       "text": "Vilken bokstav börjar äpple på?",
@@ -1260,6 +1335,11 @@
       "input": "Det där är ett ägg."
     },
     {
+      "text": "Bygg ordet ägg!",
+      "file": "bygg-ordet-agg-bdd13aac.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | ägg!"
+    },
+    {
       "text": "Vilken bokstav börjar ängel på?",
       "file": "vilken-bokstav-borjar-angel-pa-b7209e59.mp3",
       "input": "Vilken bokstav börjar ängel på?"
@@ -1320,6 +1400,11 @@
       "input": "Det där är ett öga."
     },
     {
+      "text": "Bygg ordet öga!",
+      "file": "bygg-ordet-oga-82bf5a5c.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | öga!"
+    },
+    {
       "text": "Vilken bokstav börjar öra på?",
       "file": "vilken-bokstav-borjar-ora-pa-53674189.mp3",
       "input": "Vilken bokstav börjar öra på?"
@@ -1348,6 +1433,11 @@
       "text": "Det där är ett öra.",
       "file": "det-dar-ar-ett-ora-37366425.mp3",
       "input": "Det där är ett öra."
+    },
+    {
+      "text": "Bygg ordet öra!",
+      "file": "bygg-ordet-ora-0eaab250.mp3",
+      "input": "[[ bˈʏɡ ]] [[ ˈuːdət, ]] | öra!"
     },
     {
       "text": "Vilken bokstav börjar ö på?",

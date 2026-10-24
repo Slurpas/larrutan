@@ -71,10 +71,11 @@ More colours are only added from the same 33.
 - **The cart** carries the child's own character, dressed, seen from behind (`composeCharacter`).
 - **The letters stay UI:** the choices are the usual white cards, hanging on the rock above each tunnel.
 
-## Bubblor (Task 13)
+## Bubbles (Task 13, Bygg ordet since Task 17)
 
 - **The scene** (`src/art/bubbles.ts`): a meadow seen from the side (grass and soil tiles), clouds, and the child's own character holding up a bubble wand, at the biggest whole-number zoom that fits (4× on an iPad).
 - **Bubbles:** a pixel rim (white, light blue at the bottom right, a shine) over a see-through fill; the letter is UI text in Andika. A pop leaves droplets.
+- **The word's slots** are UI, not pixel art: dashed tiles under the top bar, solid white when filled, green when the word is built. The letters in them are Andika.
 
 ## Challenge pictures (Task 11)
 

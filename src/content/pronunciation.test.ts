@@ -15,6 +15,7 @@ describe('pronunciation fixes', () => {
     expect(withPauses('Var är Å?')).toBe('Var är, | Å?')
     expect(withPauses('Var är solen?')).toBe('Var är, | solen?')
     expect(withPauses('Draken vill ha ett Ö!')).toBe('Draken vill ha ett, | Ö!')
+    expect(withPauses('Bygg ordet sol!')).toBe('Bygg ordet, | sol!')
     expect(withPauses('Det där är Å.')).toBe('Det där är Å.')
     expect(withPauses('Vilken bokstav börjar sol på?')).toBe('Vilken bokstav börjar sol på?')
     expect(speechInput('Var är ananasen?')).toBe('Var är, | [[ ˈananasən? ]]')

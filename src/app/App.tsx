@@ -3,6 +3,7 @@ import type { ChallengeId } from '../challenges/challengeIds'
 import { nextDifficulty, type Difficulty } from '../challenges/difficulty'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
+import { Spelling } from '../challenges/spelling/Spelling'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { boxOf, practiceKey } from '../learning/mastery'
 import { MyThings } from '../rewards/MyThings'
@@ -35,6 +36,7 @@ const challengeComponents = {
   findLetter: FindLetter,
   firstLetter: FirstLetter,
   wordPicture: WordPicture,
+  spelling: Spelling,
 } satisfies Record<ChallengeId, unknown>
 
 export function App() {

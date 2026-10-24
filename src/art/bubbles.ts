@@ -2,7 +2,7 @@ import { composeCharacter, outfitSize, type Outfit } from './outfit'
 import { Pixels } from './pixels'
 
 /**
- * Bubblor (Hitta bokstaven): soap bubbles over a meadow, seen from the side, and the
+ * Bygg ordet: soap bubbles over a meadow, seen from the side, and the
  * child's own character blowing them. The letters in the bubbles are UI text (Andika),
  * never pixels.
  */

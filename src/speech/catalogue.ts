@@ -2,6 +2,7 @@ import { dragonVoice, firstLetterVoice, wordPictureVoice } from '../challenges/v
 import { letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
+import { spellingWords } from '../challenges/spelling/createRound'
 import { items } from '../rewards/items'
 
 /** Played by the "Test the voice" button in the ?debug=voices panel. */
@@ -23,6 +24,7 @@ export function spokenGroups(): SpokenGroup[] {
         phrases.hubWelcome,
         phrases.lookAlikesIntro,
         phrases.fourTunnelsIntro,
+        phrases.hiddenWordIntro,
         phrases.nextTimeHarder,
         phrases.levelUp,
         phrases.myThingsHelp,
@@ -44,6 +46,7 @@ export function spokenGroups(): SpokenGroup[] {
     })
   }
 
+  const spelled = new Set(spellingWords(words).map((word) => word.id))
   for (const word of words) {
     const firstLetterQuestion = { word: word.id, target: word.firstLetter, choices: [word.firstLetter] }
     const pictureQuestion = { target: word.id, choices: [word.id] }
@@ -57,6 +60,7 @@ export function spokenGroups(): SpokenGroup[] {
         wordPictureVoice.ask(pictureQuestion),
         wordPictureVoice.reveal(pictureQuestion),
         wordPictureVoice.nameChoice(word.id),
+        ...(spelled.has(word.id) ? [phrases.spellingQuestion(word.base)] : []),
       ],
     })
   }

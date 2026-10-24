@@ -55,6 +55,11 @@
       "input": "Här är dina saker. Tryck på en sak för att ta på den."
     },
     {
+      "text": "Tryck på den för att ta på den!",
+      "file": "tryck-pa-den-for-att-ta-pa-den-b0cafc09.mp3",
+      "input": "Tryck på den för att ta på den!"
+    },
+    {
       "text": "Du fick en keps!",
       "file": "du-fick-en-keps-121d5471.mp3",
       "input": "Du fick en [[ kˈɛps! ]]"

@@ -332,6 +332,25 @@ Status 2026-10-24: **done.**
 - **On the map:** a sign with two cards, right of Ord och bild, with a path to it.
 - **Cards turn without 3D:** only the side that shows is drawn, and it squeezes in. Playwright's WebKit can't hide the back of a 3D-turned card, so every face showed.
 
+#### Task 19 — Make changing clothes easy to find
+- The user's children couldn't find how to change their items (2026-10-24), and asked whether the wardrobe follows good practice.
+- **What was wrong:**
+  - The reward screen showed a new item as a picture that couldn't be tapped.
+  - The way in was a small bag icon in the map's corner.
+  - "Mina saker" was a wall of locked grey cards (36 of 37 at the start) with the child's own things hidden among them.
+
+Status 2026-10-24: **done.**
+- **Put it on where it is earned:** the new item on the reward screen is a card that pings. One tap puts it on: the card turns green with a tick and shows the child wearing it. Until the child has worn anything, the voice adds "Tryck på den för att ta på den!".
+- **A concrete way in:**
+  - The map's button shows the child's own face (head and shoulders, hat included) instead of a bag.
+  - While something new hasn't been seen, a star twinkles on it and the button nods now and then.
+  - Tapping the character on the map also opens "Mina saker".
+- **"Mina saker" shows the child's things:**
+  - Each row shows what the child owns, then only the next item to earn, which still says how to earn it when tapped.
+  - Things new since the last visit have a star.
+  - Putting something on or taking it off pops.
+- **Saving:** save version 5 remembers how many items the child has seen. Older saves count every item as new, so the star leads the child to "Mina saker" once.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

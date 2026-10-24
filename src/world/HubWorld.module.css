@@ -42,6 +42,68 @@
   pointer-events: auto;
 }
 
+/* "Mina saker": the child's portrait in the round button, cut off at the shoulders. */
+.myThings {
+  position: relative;
+  display: inline-flex;
+}
+
+.myThings button {
+  overflow: hidden;
+  place-items: end center;
+}
+
+.myThings .portrait {
+  width: 84%;
+  height: auto;
+}
+
+/* Something new: a star on the button, and the button nods now and then. */
+.newBadge {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 40px;
+  height: 40px;
+  color: var(--color-star);
+  pointer-events: none;
+  animation: twinkle 1.4s ease-in-out infinite;
+}
+
+.hasNew button {
+  animation: nod 2.8s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    transform: scale(1.18) rotate(12deg);
+  }
+}
+
+@keyframes nod {
+  0%,
+  70%,
+  100% {
+    rotate: 0deg;
+  }
+  77% {
+    rotate: -10deg;
+  }
+  84% {
+    rotate: 8deg;
+  }
+  91% {
+    rotate: -4deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newBadge,
+  .hasNew button {
+    animation: none;
+  }
+}
+
 .topRight {
   display: flex;
   align-items: center;

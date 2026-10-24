@@ -53,6 +53,7 @@ export function createHubGame(parent: HTMLElement, options: HubSceneOptions): Hu
   if (import.meta.env.DEV) {
     window.__larrutanHub = {
       playerTile: () => scene.getPlayerTile(),
+      playerPoint: () => scene.playerScreenPoint(),
       isMoving: () => scene.isMoving(),
       outfit: () => scene.getOutfit(),
       stationPoint: (challenge) => scene.stationScreenPoint(challenge),

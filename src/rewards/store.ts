@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import { loadSavedProgress, saveProgress } from '../persistence/saveGame'
-import { completeRound, initialProgress, wear, type Progress, type RoundCompletion, type RoundOutcome } from './progress'
+import { completeRound, initialProgress, seeItems, wear, type Progress, type RoundCompletion, type RoundOutcome } from './progress'
 
 /** The child's progress. It is loaded from the device at startup and saved after every change. */
 let progress: Progress = initialProgress
@@ -47,6 +47,11 @@ export function recordRound(completion: RoundCompletion): RoundOutcome {
 /** Puts on an unlocked item, or takes it off if it is already worn. */
 export function wearItem(itemId: string): void {
   update(wear(progress, itemId))
+}
+
+/** The child has seen every item earned so far: nothing is new any more. */
+export function markItemsSeen(): void {
+  update(seeItems(progress))
 }
 
 export function useProgress(): Progress {

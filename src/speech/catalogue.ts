@@ -31,6 +31,7 @@ export function spokenGroups(): SpokenGroup[] {
         phrases.nextTimeHarder,
         phrases.levelUp,
         phrases.myThingsHelp,
+        phrases.tapToWear,
         ...items.flatMap((item) => [phrases.itemUnlocked(item.indefinite), item.hint]),
       ],
     },

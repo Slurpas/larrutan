@@ -12,9 +12,9 @@ import { initialProgress, type Progress } from '../rewards/progress'
  * The saved form of one profile's progress (PRD §12). Bump the version whenever the
  * shape changes, and add an upgrade step from the old version, with a test, in `readSave`.
  * 1: Task 7. 2: mastery per letter and word (Task 11). 3: an outfit, one item per slot (Task 10).
- * 4: the level each station opens at (Task 15).
+ * 4: the level each station opens at (Task 15). 5: how many items the child has seen (Task 19).
  */
-export const saveVersion = 4
+export const saveVersion = 5
 
 export interface SaveFile {
   version: number
@@ -32,11 +32,11 @@ export type ReadResult =
   | { kind: 'newer'; progress: Progress }
 
 export function toSaveFile(progress: Progress, now: Date): SaveFile {
-  const { xp, roundsCompleted, completedLevels, levels, unlockedItems, worn, mastery } = progress
+  const { xp, roundsCompleted, completedLevels, levels, unlockedItems, itemsSeen, worn, mastery } = progress
   return {
     version: saveVersion,
     savedAt: now.toISOString(),
-    progress: { xp, roundsCompleted, completedLevels, levels, unlockedItems, worn, mastery },
+    progress: { xp, roundsCompleted, completedLevels, levels, unlockedItems, itemsSeen, worn, mastery },
   }
 }
 
@@ -50,6 +50,7 @@ export function readSave(stored: unknown): ReadResult {
   if (stored.version <= 1) upgraded = upgradeFrom1(upgraded)
   if (stored.version <= 2) upgraded = upgradeFrom2(upgraded)
   if (stored.version <= 3) upgraded = upgradeFrom3(upgraded)
+  if (stored.version <= 4) upgraded = upgradeFrom4(upgraded)
   const { progress, repaired } = repair(upgraded)
   if (stored.version > saveVersion) return { kind: 'newer', progress }
   return { kind: 'loaded', progress, repaired }
@@ -97,6 +98,14 @@ function upgradeFrom3(progress: unknown): unknown {
       .map((challenge) => [challenge, 'hard']),
   )
   return { ...progress, levels }
+}
+
+/**
+ * Version 4 didn't know what the child had seen. Everything counts as new, so the map's
+ * button points the child to "Mina saker" once (children had trouble finding it, 2026-10-24).
+ */
+function upgradeFrom4(progress: unknown): unknown {
+  return isRecord(progress) ? { ...progress, itemsSeen: 0 } : progress
 }
 
 /** Keeps every field that makes sense and resets the rest, so one bad value never loses everything. */
@@ -166,6 +175,7 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
       completedLevels: known(saved.completedLevels, knownLevels),
       levels: levelsFrom(saved.levels),
       unlockedItems,
+      itemsSeen: Math.min(count(saved.itemsSeen), unlockedItems.length),
       worn: outfitFrom(saved.worn),
       mastery: masteryFrom(saved.mastery),
       rounds: {},

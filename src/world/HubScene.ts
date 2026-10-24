@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { outfitFeetRow, outfitSize, type CharacterFacing, type Outfit } from '../art/outfit'
+import { outfitFeetRow, outfitHeadTop, outfitSize, type CharacterFacing, type Outfit } from '../art/outfit'
 import { tinyTown } from '../art/kenney'
 import { signPanel, signSize } from '../art/signs'
 import { TILE, cameraZoom } from './camera'
@@ -49,6 +49,8 @@ const keyDirections: Record<string, Direction> = {
 export interface HubSceneOptions {
   map: TileMap
   onOpenStation: (challenge: ChallengeId) => void
+  /** The child tapped their own character. */
+  onOpenMyThings: () => void
 }
 
 interface StationMarker {
@@ -68,6 +70,7 @@ const tileCenter = (tile: Tile) => ({ x: (tile.col + 0.5) * TILE, y: (tile.row +
 export class HubScene extends Phaser.Scene {
   private readonly map: TileMap
   private readonly onOpenStation: (challenge: ChallengeId) => void
+  private readonly onOpenMyThings: () => void
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   private player!: Phaser.GameObjects.Container
@@ -92,10 +95,11 @@ export class HubScene extends Phaser.Scene {
   private frames = 0
   private lastTime: number | null = null
 
-  constructor({ map, onOpenStation }: HubSceneOptions) {
+  constructor({ map, onOpenStation, onOpenMyThings }: HubSceneOptions) {
     super('hub')
     this.map = map
     this.onOpenStation = onOpenStation
+    this.onOpenMyThings = onOpenMyThings
     this.playerTile = map.start
   }
 
@@ -220,12 +224,29 @@ export class HubScene extends Phaser.Scene {
     const tapped = { col: Math.floor(world.x / TILE), row: Math.floor(world.y / TILE) }
     const station = stationAt(this.map, tapped)
 
-    if (station) {
+    if (this.isOnPlayer(world)) {
+      // Children tap their own character to dress it up: that opens "Mina saker".
+      this.path = []
+      this.pendingStation = null
+      this.releaseKeys()
+      this.onOpenMyThings()
+    } else if (station) {
       this.walkTo(stationApproaches(this.map, station), station)
     } else {
       const goal = nearestWalkable(this.map, tapped)
       if (goal) this.walkTo([goal], null)
     }
+  }
+
+  /** The character's body, head to feet (its head reaches into the tile above). */
+  private playerBody() {
+    const feet = this.player.y + FEET_Y
+    return { left: this.player.x - TILE / 2, right: this.player.x + TILE / 2, top: feet - (outfitFeetRow + 1 - outfitHeadTop), bottom: feet }
+  }
+
+  private isOnPlayer(point: { x: number; y: number }): boolean {
+    const body = this.playerBody()
+    return point.x >= body.left && point.x <= body.right && point.y >= body.top && point.y <= body.bottom
   }
 
   private walkTo(goals: Tile[], station: Station | null) {
@@ -366,6 +387,17 @@ export class HubScene extends Phaser.Scene {
 
   isMoving(): boolean {
     return this.moveTarget !== null || this.path.length > 0
+  }
+
+  /** The middle of the character's body on screen, in CSS pixels relative to the canvas. */
+  playerScreenPoint(): { x: number; y: number } | null {
+    if (this.frames < 2) return null
+    const camera = this.cameras.main
+    const body = this.playerBody()
+    return {
+      x: ((body.left + body.right) / 2 - camera.worldView.x) * camera.zoom,
+      y: ((body.top + body.bottom) / 2 - camera.worldView.y) * camera.zoom,
+    }
   }
 
   /** Where a station is on screen, in CSS pixels relative to the canvas. */

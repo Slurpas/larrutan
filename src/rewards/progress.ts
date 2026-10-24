@@ -15,7 +15,10 @@ export interface Progress {
   completedLevels: string[]
   /** The level each station opens at next (src/challenges/difficulty.ts). */
   levels: StationLevels
+  /** In the order they were earned. */
   unlockedItems: string[]
+  /** How many of `unlockedItems` the child has looked at in "Mina saker" or put on; the rest are new. */
+  itemsSeen: number
   /** What the character wears: one unlocked item per slot. */
   worn: Outfit
   /** Leitner box per letter and word, per challenge (src/learning). Never shown to the child, never affects rewards. */
@@ -54,6 +57,7 @@ export const initialProgress: Progress = {
   completedLevels: [],
   levels: {},
   unlockedItems: [],
+  itemsSeen: 0,
   worn: {},
   mastery: {},
   rounds: {},
@@ -135,6 +139,15 @@ export function isUnlocked(condition: UnlockCondition, progress: Progress): bool
 }
 
 /** Puts on an unlocked item in its slot (replacing what was there), or takes it off if it is already worn. */
+/** Items earned since the child last looked in "Mina saker" (or put one on): the map's button shows them. */
+export function newItems(progress: Progress): string[] {
+  return progress.unlockedItems.slice(progress.itemsSeen)
+}
+
+export function seeItems(progress: Progress): Progress {
+  return progress.itemsSeen === progress.unlockedItems.length ? progress : { ...progress, itemsSeen: progress.unlockedItems.length }
+}
+
 export function wear(progress: Progress, itemId: string): Progress {
   const item = findItem(itemId)
   if (!item || !progress.unlockedItems.includes(itemId)) return progress

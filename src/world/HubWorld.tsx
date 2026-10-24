@@ -1,11 +1,13 @@
 import { useEffect, useEffectEvent, useRef } from 'react'
-import { outfitKey, type Outfit } from '../art/outfit'
+import { characterPortrait, outfitKey, type Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { phrases } from '../content/phrases'
 import { XpBar } from '../rewards/XpBar'
 import { speak } from '../speech/speech'
+import { cx } from '../ui/cx'
+import { PixelSprite } from '../ui/PixelSprite'
 import { RoundButton } from '../ui/RoundButton'
-import { BagIcon, HouseIcon } from '../ui/icons'
+import { HouseIcon, StarIcon } from '../ui/icons'
 import type { HubGame } from './hubGame'
 import { hubMap } from './hubMap'
 import { loadHubGame } from './loadHubGame'
@@ -17,6 +19,8 @@ interface HubWorldProps {
   xp: number
   /** What the character wears. */
   outfit: Outfit
+  /** Items earned since the child last looked in "Mina saker": its button calls for attention. */
+  hasNewItems: boolean
   onOpenStation: (challenge: ChallengeId) => void
   onOpenMyThings: () => void
   onHome: () => void
@@ -26,10 +30,11 @@ interface HubWorldProps {
  * The map the child walks around (Phaser), with React buttons on top. It stays
  * mounted while a challenge is open, so the child comes back to the same spot.
  */
-export function HubWorld({ active, xp, outfit, onOpenStation, onOpenMyThings, onHome }: HubWorldProps) {
+export function HubWorld({ active, xp, outfit, hasNewItems, onOpenStation, onOpenMyThings, onHome }: HubWorldProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const hubRef = useRef<HubGame | null>(null)
   const openStation = useEffectEvent((challenge: ChallengeId) => onOpenStation(challenge))
+  const openMyThings = useEffectEvent(() => onOpenMyThings())
   // The game arrives after the first render, so it starts from whatever the props are by then.
   const catchUp = useEffectEvent((hub: HubGame) => {
     hub.setActive(active)
@@ -47,6 +52,7 @@ export function HubWorld({ active, xp, outfit, onOpenStation, onOpenMyThings, on
       const hub = createHubGame(container, {
         map: hubMap,
         onOpenStation: (challenge) => openStation(challenge),
+        onOpenMyThings: () => openMyThings(),
       })
       hubRef.current = hub
       catchUp(hub)
@@ -79,9 +85,13 @@ export function HubWorld({ active, xp, outfit, onOpenStation, onOpenMyThings, on
         </RoundButton>
         <div className={styles.topRight}>
           <XpBar xp={xp} />
-          <RoundButton label="Mina saker" onClick={onOpenMyThings}>
-            <BagIcon />
-          </RoundButton>
+          {/* The child's own face, not an abstract bag: children didn't find their things (2026-10-24). */}
+          <span className={cx(styles.myThings, hasNewItems && styles.hasNew)}>
+            <RoundButton label={hasNewItems ? 'Mina saker, nya saker' : 'Mina saker'} onClick={onOpenMyThings}>
+              <PixelSprite grid={characterPortrait(outfit)} className={styles.portrait} />
+            </RoundButton>
+            {hasNewItems && <StarIcon className={styles.newBadge} />}
+          </span>
         </div>
       </div>
     </div>

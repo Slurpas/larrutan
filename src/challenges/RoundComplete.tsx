@@ -1,14 +1,16 @@
 import { useEffect } from 'react'
+import { composeCharacter } from '../art/outfit'
 import { phrases } from '../content/phrases'
-import { getItem } from '../rewards/items'
-import { ItemPreview } from '../rewards/ItemPreview'
+import { getItem, type Item } from '../rewards/items'
 import type { RoundOutcome } from '../rewards/progress'
 import { Stars } from '../rewards/Stars'
+import { getProgress, markItemsSeen, useProgress, wearItem } from '../rewards/store'
 import { XpBar } from '../rewards/XpBar'
-import { speak } from '../speech/speech'
+import { playEffect, speak } from '../speech/speech'
+import { PixelSprite } from '../ui/PixelSprite'
 import { RoundButton } from '../ui/RoundButton'
 import { cx } from '../ui/cx'
-import { HouseIcon, ReplayIcon, StarIcon } from '../ui/icons'
+import { CheckIcon, HouseIcon, ReplayIcon, StarIcon } from '../ui/icons'
 import styles from './RoundComplete.module.css'
 
 interface RoundCompleteProps {
@@ -19,21 +21,33 @@ interface RoundCompleteProps {
 }
 
 export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompleteProps) {
+  const { worn } = useProgress()
   const levelUp = outcome !== null && outcome.levelAfter > outcome.levelBefore
   const newItems = outcome?.newItems.map(getItem) ?? []
   const harderNextTime = outcome?.levelChange === 'up'
 
   // A fanfare, then a sound and a few words for each new level or item, and whether the station gets harder.
+  // Until the child has worn something, a new item also says that a tap puts it on.
   useEffect(() => {
     const leveledUp = outcome !== null && outcome.levelAfter > outcome.levelBefore
     const unlocked = outcome?.newItems.map(getItem) ?? []
+    const wearsNothing = Object.keys(getProgress().worn).length === 0
     void speak([
       { sound: 'fanfare' },
       ...(leveledUp ? [{ sound: 'levelUp' } as const, phrases.levelUp] : []),
       ...unlocked.flatMap((item) => [{ sound: 'newItem' } as const, phrases.itemUnlocked(item.indefinite)]),
+      ...(unlocked.length > 0 && wearsNothing ? [phrases.tapToWear] : []),
       ...(outcome?.levelChange === 'up' ? [phrases.nextTimeHarder] : []),
     ])
   }, [outcome])
+
+  /** Right where it was earned: one tap puts it on, and the card shows the child wearing it. */
+  function putOn(item: Item) {
+    if (worn[item.slot] === item.id) return
+    wearItem(item.id)
+    markItemsSeen()
+    playEffect('pop')
+  }
 
   return (
     <main className={styles.screen}>
@@ -51,12 +65,27 @@ export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompletePro
               <span className={cx(styles.pip, styles.pipNew)} />
             </p>
           )}
-          {newItems.map((item) => (
-            <div key={item.id} className={styles.newItem} aria-label={`Ny sak: ${item.name}`} role="img">
-              <ItemPreview itemId={item.id} className={styles.newItemPicture} />
-              <Stars rarity={item.rarity} />
-            </div>
-          ))}
+          {newItems.map((item) => {
+            const isWorn = worn[item.slot] === item.id
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={cx(styles.newItem, isWorn ? styles.newItemWorn : styles.tryOn)}
+                aria-label={`Ny sak: ${item.name}, ${isWorn ? 'på' : 'ta på'}`}
+                disabled={isWorn}
+                onClick={() => putOn(item)}
+              >
+                {/* Before: the item alone. After the tap: the child in everything they wear. Back items from behind. */}
+                <PixelSprite
+                  grid={composeCharacter(item.slot === 'back' ? 'up' : 'down', 0, isWorn ? worn : { [item.slot]: item.id })}
+                  className={styles.newItemPicture}
+                />
+                <Stars rarity={item.rarity} />
+                {isWorn && <CheckIcon className={styles.wornBadge} />}
+              </button>
+            )
+          })}
         </div>
       )}
 

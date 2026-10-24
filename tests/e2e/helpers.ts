@@ -26,6 +26,14 @@ export async function tapStation(page: Page, challenge: ChallengeId, hasTouch: b
   else await page.mouse.click(point.x, point.y)
 }
 
+/** A real tap (or click) on the character on the map, which opens "Mina saker". */
+export async function tapPlayer(page: Page, hasTouch: boolean) {
+  const point = await page.evaluate(() => window.__larrutanHub!.playerPoint())
+  if (!point) throw new Error('The character is not on screen yet')
+  if (hasTouch) await page.touchscreen.tap(point.x, point.y)
+  else await page.mouse.click(point.x, point.y)
+}
+
 export function playerTile(page: Page): Promise<Tile> {
   return page.evaluate(() => window.__larrutanHub!.playerTile())
 }

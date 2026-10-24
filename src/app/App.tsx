@@ -8,6 +8,7 @@ import { Spelling } from '../challenges/spelling/Spelling'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { boxOf, practiceKey } from '../learning/mastery'
 import { MyThings } from '../rewards/MyThings'
+import { newItems } from '../rewards/progress'
 import { getProgress, loadProgress, recordRound, useProgress } from '../rewards/store'
 import { NoVoiceWarning } from '../speech/NoVoiceWarning'
 import { unlockSpeech } from '../speech/speech'
@@ -96,6 +97,7 @@ export function App() {
           active={screen.overlay === null}
           xp={progress.xp}
           outfit={progress.worn}
+          hasNewItems={newItems(progress).length > 0}
           onOpenStation={(id) => openChallenge(id, readSeedFromUrl(window.location.search) ?? randomSeed())}
           onOpenMyThings={() => setScreen({ name: 'world', overlay: { name: 'myThings' } })}
           onHome={() => setScreen({ name: 'start' })}

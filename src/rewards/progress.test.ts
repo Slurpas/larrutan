@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { ChallengeId } from '../challenges/challengeIds'
 import type { Difficulty } from '../challenges/difficulty'
 import { getItem, items } from './items'
-import { completeRound, initialProgress, wear, type Progress } from './progress'
+import { completeRound, initialProgress, newItems, seeItems, wear, type Progress } from './progress'
 import { levelForXp, levelProgress, xpForLevel } from './rules'
 
 let roundCounter = 0
@@ -185,5 +185,18 @@ describe('wearing items', () => {
   it('only lets unlocked items be worn', () => {
     expect(wear(initialProgress, 'crown').worn).toEqual({})
     expect(wear(initialProgress, 'no-such-item').worn).toEqual({})
+  })
+})
+
+describe('new items', () => {
+  it('are the items earned since the child last looked, in the order they came', () => {
+    let progress = playRounds(3)
+    expect(newItems(progress)).toEqual(progress.unlockedItems)
+    progress = seeItems(progress)
+    expect(newItems(progress)).toEqual([])
+    // Two more rounds: an item comes every other round.
+    progress = play(play(progress, 'wordPicture').progress, 'wordPicture').progress
+    expect(newItems(progress)).toEqual(progress.unlockedItems.slice(-1))
+    expect(seeItems(seeItems(progress))).toEqual(seeItems(progress))
   })
 })

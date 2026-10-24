@@ -38,5 +38,7 @@ export const phrases = {
   nextTimeHarder: 'Nästa gång blir det svårare.',
   levelUp: 'Du har gått upp en nivå!',
   itemUnlocked: (indefinite: string) => `Du fick ${indefinite}!`,
+  /** After a new item, until the child has worn something: the item on the reward screen is a button. */
+  tapToWear: 'Tryck på den för att ta på den!',
   myThingsHelp: 'Här är dina saker. Tryck på en sak för att ta på den.',
 } as const

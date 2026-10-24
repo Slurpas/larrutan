@@ -272,7 +272,12 @@ Five tiers, cosmetic only, shown as **1–5 stars plus colour** (never colour al
 
 Golden hats and dragon pets are **bragging items** and must never appear in the first minutes. High tiers are earned through effort over time and real progress. They are never random, never bought, and never require error-free play: a child who needs more hints gets there later, not never.
 
-Locked items are visible with their stars and a friendly spoken explanation of how to earn them. No countdowns, scarcity pressure or manipulative prompts.
+Locked items are visible with their stars and a friendly spoken explanation of how to earn them. In "Mina saker" each row shows the child's own things and the next item to earn; the rest appear as they come closer (Task 19, 2026-10-24: a wall of locked cards hid the child's own things). No countdowns, scarcity pressure or manipulative prompts.
+
+**Changing clothes (Task 19):** children must find it without reading.
+- **On the reward screen,** a new item is put on with one tap. Until the child has worn anything, the voice says that a tap does it.
+- **On the map,** the button to "Mina saker" shows the child's own face. A star marks items the child hasn't seen yet, and tapping the character also opens "Mina saker".
+- **In "Mina saker",** new items have a star.
 
 Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the real catalogue.
 

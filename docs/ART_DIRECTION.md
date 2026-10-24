@@ -63,6 +63,7 @@ More colours are only added from the same 33.
 - **One renderer:** `composeCharacter` (`src/art/outfit.ts`) draws the character on a 26×40 canvas: the 16×32 body plus room for tall hats, wings and balloons. The map, "Mina saker" and the reward screen all use it.
 - **Clothes that cover the body** (tops, trousers) are recolours: the body's shirt colours (`r`, `R`, `p`) or trouser colours (`b`, `B`) are repainted, row by row for stripes, with optional dots for stars. Every pixel is judged on the bare body, so a sweater's new colour is never repainted by the trousers.
 - **Things put on or held** (hats, capes, backpacks, wings, the flower, balloon and wand) are small grids with a position per facing (down, up, side; left is mirrored). Each can be drawn behind the body (a cape from the front) or in front of it (a backpack from behind).
+- **The map's button to "Mina saker"** shows the character's head and shoulders, hat included (`characterPortrait` in `src/art/outfit.ts`), cut off by the round button.
 - **Adding an item:** a data entry in `src/rewards/items.ts` plus its art in `src/art/wardrobe.ts`. `src/art/outfit.test.ts` fails if either is missing, if art uses a colour outside the palette, or if it reaches outside the canvas.
 
 ## Gruvvagnen (Task 12)

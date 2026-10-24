@@ -43,6 +43,15 @@ export function composeCharacter(facing: CharacterFacing, frame: number, outfit:
   return facing === 'left' ? grid.map((row) => [...row].reverse().join('')) : grid
 }
 
+/** Head and shoulders, hat included, facing the child: the map's button to "Mina saker". */
+export function characterPortrait(outfit: Outfit): string[] {
+  const top = outfitHeadTop - 7
+  const left = margin.x - 2
+  return composeCharacter('down', 0, outfit)
+    .slice(top, outfitHeadTop + 17)
+    .map((row) => row.slice(left, left + 20))
+}
+
 /** Repaints the shirt and trousers for the worn top and bottoms (mask-based, so every frame fits). */
 function dress(frame: readonly string[], outfit: Outfit): readonly string[] {
   const garments = (['top', 'bottoms'] as const).flatMap((slot) => {

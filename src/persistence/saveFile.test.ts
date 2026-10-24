@@ -72,7 +72,7 @@ describe('upgrading old saves', () => {
       kind: 'loaded',
       repaired: false,
       // Easy done at both stations: they opened hard, and still do.
-      progress: { ...progress, worn: { head: 'cap' }, mastery: {}, levels: { findLetter: 'hard', firstLetter: 'hard' }, rounds: {} },
+      progress: { ...progress, worn: { head: 'cap' }, mastery: {}, levels: { findLetter: 'hard', firstLetter: 'hard' }, itemsSeen: 0, rounds: {} },
     })
   })
 
@@ -80,7 +80,7 @@ describe('upgrading old saves', () => {
     const progress = { xp: 90, roundsCompleted: 4, completedLevels: ['findLetter:hard'], unlockedItems: ['cap', 'top-hat'], mastery: { 'findLetter:a': 3 } }
     for (const [wornItem, worn] of [['top-hat', { head: 'top-hat' }], [null, {}]] as const) {
       const version2 = { version: 2, savedAt: '2026-10-23T09:00:00.000Z', progress: { ...progress, wornItem } }
-      expect(readSave(version2)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, worn, levels: {}, rounds: {} } })
+      expect(readSave(version2)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, worn, levels: {}, itemsSeen: 0, rounds: {} } })
     }
   })
 
@@ -94,7 +94,17 @@ describe('upgrading old saves', () => {
       mastery: {},
     }
     const version3 = { version: 3, savedAt: '2026-10-24T09:00:00.000Z', progress }
-    expect(readSave(version3)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, levels: { findLetter: 'hard' }, rounds: {} } })
+    expect(readSave(version3)).toEqual({
+      kind: 'loaded',
+      repaired: false,
+      progress: { ...progress, levels: { findLetter: 'hard' }, itemsSeen: 0, rounds: {} },
+    })
+  })
+
+  it('upgrades a version 4 save (Task 15): every item counts as new, so the map points to "Mina saker" once', () => {
+    const progress = { xp: 60, roundsCompleted: 3, completedLevels: [], levels: {}, unlockedItems: ['cap', 'beanie'], worn: {}, mastery: {} }
+    const version4 = { version: 4, savedAt: '2026-10-24T09:00:00.000Z', progress }
+    expect(readSave(version4)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, itemsSeen: 0, rounds: {} } })
   })
 })
 
@@ -123,6 +133,13 @@ describe('recovering from broken saves', () => {
       file.progress.xp = xp
       expect(readSave(file)).toMatchObject({ kind: 'loaded', repaired: true, progress: { xp: 0 } })
     }
+  })
+
+  it('never counts more items as seen than there are', () => {
+    const saved = stored({ ...playedProgress(), itemsSeen: 99 })
+    const loaded = readSave(saved)
+    if (loaded.kind !== 'loaded') throw new Error(loaded.kind)
+    expect(loaded.progress.itemsSeen).toBe(loaded.progress.unlockedItems.length)
   })
 
   it('drops unknown items and levels, and duplicates', () => {

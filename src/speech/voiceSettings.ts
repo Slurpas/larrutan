@@ -52,6 +52,8 @@ export interface TrialVoice {
   label: string
   name: string
   model: ElevenLabsModel
+  /** For a voice a speech-only key can't look up by name, e.g. one made with Voice Design. */
+  voiceId?: string
 }
 
 /**
@@ -68,5 +70,14 @@ export const trialVoices: readonly TrialVoice[] = [
   { label: 'Matilda, Flash (sv)', name: 'Matilda', model: 'eleven_flash_v2_5' },
 ]
 
-/** Every trial voice speaks a little slower than normal, for young listeners. */
+/**
+ * Piper's other female Swedish voice, free and offline like Alma, at Alma's pace (at Alma's
+ * 1.4 she was 10% slower). It was fine-tuned from a Norwegian voice and its training data
+ * isn't named: check its licence before the game uses it.
+ */
+export const trialPiperVoices: readonly (PiperVoice & { label: string })[] = [
+  { label: 'Lisa (Piper)', engine: 'Piper (piper-tts 1.8.0)', voice: 'sv_SE-lisa-medium', lengthScale: 1.25, pauseSeconds: 0.15 },
+]
+
+/** Every ElevenLabs trial voice speaks a little slower than normal, for young listeners. */
 export const trialSettings = { speed: 0.85, stability: 0.5, similarity: 0.75, pauseSeconds: 0.4 } as const

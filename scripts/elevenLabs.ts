@@ -156,12 +156,17 @@ export function slug(label: string): string {
 }
 
 /**
- * A trial clip's file name: a hash of everything that shapes it, so the same voice saying
- * the same thing is made once and then reused, like the game's clips (nothing is paid for twice).
+ * A trial clip's file name: a hash of everything that shapes it (the voice, its settings and
+ * what it is asked to say), so the same voice saying the same thing is made once and then
+ * reused, like the game's clips: nothing is paid for twice.
  */
-export function sampleName(voice: SynthesisVoice, input: string): string {
-  const shapedBy = JSON.stringify([voice.voiceId, voice.model, voice.speed, voice.stability, voice.similarity, input])
-  return `${createHash('sha1').update(shapedBy).digest('hex').slice(0, 10)}.mp3`
+export function sampleName(shapedBy: readonly unknown[]): string {
+  return `${createHash('sha1').update(JSON.stringify(shapedBy)).digest('hex').slice(0, 10)}.mp3`
+}
+
+/** What shapes an ElevenLabs trial clip. */
+export function elevenLabsSampleName(voice: SynthesisVoice, input: string): string {
+  return sampleName([voice.voiceId, voice.model, voice.speed, voice.stability, voice.similarity, input])
 }
 
 /** The free plan turns away requests that come too fast (429): wait a little longer each time, then try again. */

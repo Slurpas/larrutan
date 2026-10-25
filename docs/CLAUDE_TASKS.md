@@ -382,6 +382,10 @@ Status 2026-10-25: **done; the trial ran with the user's go-ahead.** Listening i
   - The user's key may only do text-to-speech: it can't list voices or read the credits left. That's fine, and the safest kind of key; the trial uses ElevenLabs' own voices by their published IDs, within `--max-credits`.
   - Charlotte (a Swedish accent) is a library voice: free accounts can't use those through the API (402, nothing charged).
   - About 805 of the 10,000 free credits were spent.
+- **The user's verdict:** ElevenLabs' free voices sound like an American saying Swedish words; Lily a bit better; Alma second best despite some wrong words.
+- **Next candidates, both free:**
+  - Piper's Lisa, now on the trial page at Alma's pace (`trialPiperVoices`; licence to check before any use).
+  - A native Swedish voice the user designs with ElevenLabs' Voice Design; it goes in `trialVoices` with its `voiceId`.
 
 ## Roadmap — later
 

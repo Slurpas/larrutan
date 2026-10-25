@@ -8,6 +8,7 @@ import {
   creditsFor,
   creditsLeft,
   findVoice,
+  elevenLabsSampleName,
   sampleName,
   slug,
   readApiKey,
@@ -135,11 +136,13 @@ describe('the trial', () => {
   const voice = { voiceId: 'v1', model: 'eleven_multilingual_v2', speed: 0.85, stability: 0.5, similarity: 0.75 }
 
   it('keeps each clip under a name made from everything that shapes it, so it is made only once', () => {
-    expect(sampleName(voice, 'Apa.')).toBe(sampleName({ ...voice }, 'Apa.'))
-    expect(sampleName(voice, 'Apa.')).toMatch(/^[0-9a-f]{10}\.mp3$/)
-    expect(sampleName(voice, 'Öra.')).not.toBe(sampleName(voice, 'Apa.'))
-    expect(sampleName({ ...voice, model: 'eleven_flash_v2_5' }, 'Apa.')).not.toBe(sampleName(voice, 'Apa.'))
-    expect(sampleName({ ...voice, speed: 0.9 }, 'Apa.')).not.toBe(sampleName(voice, 'Apa.'))
+    expect(elevenLabsSampleName(voice, 'Apa.')).toBe(elevenLabsSampleName({ ...voice }, 'Apa.'))
+    expect(elevenLabsSampleName(voice, 'Apa.')).toMatch(/^[0-9a-f]{10}\.mp3$/)
+    expect(elevenLabsSampleName(voice, 'Öra.')).not.toBe(elevenLabsSampleName(voice, 'Apa.'))
+    expect(elevenLabsSampleName({ ...voice, model: 'eleven_flash_v2_5' }, 'Apa.')).not.toBe(elevenLabsSampleName(voice, 'Apa.'))
+    expect(elevenLabsSampleName({ ...voice, speed: 0.9 }, 'Apa.')).not.toBe(elevenLabsSampleName(voice, 'Apa.'))
+    // The names of clips made before stay the same (the Matilda and Sarah clips were moved, not remade).
+    expect(elevenLabsSampleName(voice, 'Apa.')).toBe(sampleName(['v1', 'eleven_multilingual_v2', 0.85, 0.5, 0.75, 'Apa.']))
     expect(slug('Matilda, Flash (sv)')).toBe('matilda-flash-sv')
   })
 

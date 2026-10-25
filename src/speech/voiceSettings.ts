@@ -71,13 +71,10 @@ export const trialVoices: readonly TrialVoice[] = [
 ]
 
 /**
- * Piper's other female Swedish voice, free and offline like Alma, at Alma's pace (at Alma's
- * 1.4 she was 10% slower). It was fine-tuned from a Norwegian voice and its training data
- * isn't named: check its licence before the game uses it.
+ * Other Piper voices to compare, free and offline like Alma. Lisa (`sv_SE-lisa-medium`,
+ * lengthScale 1.25 to match Alma's pace) was tried on 2026-10-25: the user prefers Alma.
  */
-export const trialPiperVoices: readonly (PiperVoice & { label: string })[] = [
-  { label: 'Lisa (Piper)', engine: 'Piper (piper-tts 1.8.0)', voice: 'sv_SE-lisa-medium', lengthScale: 1.25, pauseSeconds: 0.15 },
-]
+export const trialPiperVoices: readonly (PiperVoice & { label: string })[] = []
 
 /** Every ElevenLabs trial voice speaks a little slower than normal, for young listeners. */
 export const trialSettings = { speed: 0.85, stability: 0.5, similarity: 0.75, pauseSeconds: 0.4 } as const

@@ -142,13 +142,20 @@ export function speechInput(text: string): string {
 }
 
 /**
+ * Words ElevenLabs says wrong, and how to write them for it. Eleven v3 stresses a word
+ * in capitals: "ta på den" (put it on) came out as "TApå den", run together with the
+ * stress on "ta" (the user, 2026-10-25).
+ */
+export const elevenLabsFixes: readonly (readonly [RegExp, string])[] = [[/\bta på den\b/g, 'ta PÅ den']]
+
+/**
  * What ElevenLabs is given: the pause as a break inside the sentence (ElevenLabs pauses
- * where it is told to, unlike Piper), and none of the fixes above, which are for Piper's
- * espeak. Eleven v3 reads no break tags, so it gets the pause as punctuation.
+ * where it is told to, unlike Piper), its own fixes, and none of the ones above, which are
+ * for Piper's espeak. Eleven v3 reads no break tags, so it gets the pause as punctuation.
  */
 export function elevenLabsInput(text: string, pauseSeconds: number, model: string): string {
   const pause = model === 'eleven_v3' ? '…' : `<break time="${pauseSeconds}s" />`
-  return withPauses(text).replace(` ${pauseMark} `, ` ${pause} `)
+  return elevenLabsFixes.reduce((input, [word, fix]) => input.replace(word, fix), withPauses(text).replace(` ${pauseMark} `, ` ${pause} `))
 }
 
 export function withPronunciations(text: string): string {

@@ -23,6 +23,8 @@ describe('pronunciation fixes', () => {
     expect(elevenLabsInput('Var är ananasen?', 0.4, 'eleven_multilingual_v2')).toBe('Var är, <break time="0.4s" /> ananasen?')
     expect(elevenLabsInput('Bygg ordet sol!', 0.4, 'eleven_v3')).toBe('Bygg ordet, … sol!')
     expect(elevenLabsInput('Robot.', 0.4, 'eleven_multilingual_v2')).toBe('Robot.')
+    // Its own fixes: the stress on "på" in "ta på den", and nowhere else.
+    expect(elevenLabsInput('Tryck på den för att ta på den!', 0.4, 'eleven_v3')).toBe('Tryck på den för att ta PÅ den!')
   })
 
   it('only lists words the game actually says', () => {

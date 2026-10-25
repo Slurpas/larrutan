@@ -14,8 +14,8 @@
 // never spends more than --max-credits (the trial: 1000 unless told otherwise; making the game's clips:
 // required) or than the month has left. Both need ffmpeg on PATH (or FFMPEG=path).
 
-import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { execFileSync, spawnSync } from 'node:child_process'
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -26,6 +26,8 @@ const audioDir = path.join(root, 'src/speech/audio/sv')
 const silencePath = path.join(root, 'src/speech/audio/silence.mp3')
 const approvalsPath = path.join(audioDir, 'approvals.json')
 const samplesDir = path.join(root, 'voice-samples')
+/** What ElevenLabs sent back, kept outside git: each request is paid for once, even if a clip's finishing changes later. */
+const elevenLabsCache = path.join(root, '.tools/elevenlabs-cache')
 const python = path.join(root, process.platform === 'win32' ? '.tools/piper-venv/Scripts/python.exe' : '.tools/piper-venv/bin/python')
 const ffmpeg = process.env.FFMPEG ?? 'ffmpeg'
 const args = process.argv.slice(2)
@@ -38,9 +40,10 @@ const maxCredits = option('--max-credits') === undefined ? undefined : Number(op
 const server = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false } })
 const { spokenTexts } = await server.ssrLoadModule('/src/speech/catalogue.ts')
 const { clipFileName } = await server.ssrLoadModule('/src/speech/clipName.ts')
-const { elevenLabsInput, pauseMark, pronunciations, speechInput } = await server.ssrLoadModule('/src/content/pronunciation.ts')
+const { elevenLabsInput, pauseMark, pronunciations, speechInput, withPauses } = await server.ssrLoadModule('/src/content/pronunciation.ts')
 const { speechVoice, trialPiperVoices, trialSettings, trialVoices } = await server.ssrLoadModule('/src/speech/voiceSettings.ts')
 const { countReviews, noApprovals, pruneApprovals } = await server.ssrLoadModule('/src/speech/review/approvals.ts')
+const { retakes } = await server.ssrLoadModule('/src/speech/retakes.ts')
 const elevenLabs = await server.ssrLoadModule('/scripts/elevenLabs.ts')
 await server.close()
 
@@ -52,8 +55,15 @@ const filters = [
   'areverse',
   'loudnorm=I=-16:TP=-1.5:LRA=11',
 ].join(',')
-const finish = (source, target) =>
-  execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', source, '-af', filters, '-ar', '24000', '-ac', '1', '-b:a', '48k', target])
+const finish = (source, target) => {
+  // In two runs: this ffmpeg build fails an assertion on some clips when loudnorm and the 24 kHz output share one.
+  const normalised = path.join(work, 'normalised.wav')
+  const finished = path.join(work, 'finished.mp3')
+  execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', source, '-af', filters, normalised])
+  execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', normalised, '-ar', '24000', '-ac', '1', '-b:a', '48k', finished])
+  // Only a finished clip reaches its place: a failed run never leaves half a file that the next run would skip.
+  copyFileSync(finished, target)
+}
 
 const work = path.join(tmpdir(), `larrutan-speech-${Date.now()}`)
 mkdirSync(work, { recursive: true })
@@ -178,22 +188,70 @@ function sayWithPiper(items, voice) {
 
 async function generateWithElevenLabs(todo) {
   const key = elevenLabsKey()
-  const needed = elevenLabs.creditsFor(
-    todo.map((clip) => clip.input),
-    speechVoice.model,
-  )
-  const credits = await readCredits(key)
-  const problem = elevenLabs.budgetProblem(needed, credits?.left ?? null, maxCredits)
-  if (problem) stop(problem)
   const { voiceId, model, speed, stability, similarity } = speechVoice
+  const voice = { voiceId, model, speed, stability, similarity }
+  // A retake (src/speech/retakes.ts) is a new recording, so it has its own place in the cache.
+  const cached = (clip) =>
+    path.join(
+      elevenLabsCache,
+      retakes[clip.text]
+        ? elevenLabs.sampleName([voiceId, model, speed, stability, similarity, clip.input, `take ${retakes[clip.text]}`])
+        : elevenLabs.elevenLabsSampleName(voice, clip.input),
+    )
+  const toMake = todo.filter((clip) => !existsSync(cached(clip)))
+  const needed = elevenLabs.creditsFor(
+    toMake.map((clip) => clip.input),
+    model,
+  )
+  if (toMake.length > 0) {
+    const credits = await readCredits(key)
+    const problem = elevenLabs.budgetProblem(needed, credits?.left ?? null, maxCredits)
+    if (problem) stop(problem)
+  }
+  console.log(`${todo.length - toMake.length} already made, ${toMake.length} to make: about ${needed} credits.`)
+  mkdirSync(elevenLabsCache, { recursive: true })
   for (const [i, clip] of todo.entries()) {
-    // Each clip is kept as soon as it is made: if the run stops, the next one makes only the rest.
-    const raw = path.join(work, `${i}.mp3`)
-    writeFileSync(raw, await elevenLabs.withRetries(() => elevenLabs.synthesize(key, { voiceId, model, speed, stability, similarity }, clip.input, seedOf(clip.file))))
-    finish(raw, path.join(audioDir, clip.file))
+    // Each answer is kept as soon as it comes: if the run stops, the next one makes only the rest.
+    const raw = cached(clip)
+    if (!existsSync(raw)) {
+      try {
+        writeFileSync(raw, await elevenLabs.withRetries(() => elevenLabs.synthesize(key, voice, clip.input, seedOf(clip.file))))
+      } catch (error) {
+        if (!(error instanceof elevenLabs.ElevenLabsError)) throw error
+        stop(`Stopped at ${i + 1} of ${todo.length}: ${error.message}\nWhat was made is kept: run npm run speech again (when there are credits) to make the rest.`)
+      }
+    }
+    // Eleven v3 pauses for about a second at a pause mark ("Var är … tigern?"): that pause is shortened to pauseSeconds.
+    const hasPause = withPauses(clip.text) !== clip.text
+    finish(tidyElevenLabs(raw, model === 'eleven_v3' && hasPause ? speechVoice.pauseSeconds : undefined), path.join(audioDir, clip.file))
     console.log(`  ${i + 1}/${todo.length} ${clip.text}`)
   }
-  await readCredits(key)
+  if (toMake.length > 0) await readCredits(key)
+}
+
+/**
+ * Tidies a clip from ElevenLabs before `finish`. Some end with a long silence and then a click,
+ * which keeps the trim from working ("Sax." lasted 2.7 s): the clip ends shortly after the last
+ * word instead. With `cap`, every pause inside the clip longer than `cap` seconds is shortened to
+ * `cap` by cutting out its middle (Eleven v3 pauses about a second at a pause mark).
+ */
+function tidyElevenLabs(source, cap) {
+  const log = spawnSync(ffmpeg, ['-hide_banner', '-nostats', '-i', source, '-af', 'silencedetect=noise=-40dB:d=0.25', '-f', 'null', '-'], {
+    encoding: 'utf8',
+  }).stderr
+  const [h, m, s] = (/Duration: (\d+):(\d+):([\d.]+)/.exec(log) ?? [0, 0, 0, 0]).slice(1).map(Number)
+  const length = h * 3600 + m * 60 + s
+  const ends = [...log.matchAll(/silence_end: ([\d.]+)/g)].map((match) => Number(match[1]))
+  const silences = [...log.matchAll(/silence_start: ([\d.]+)/g)].map((match, i) => [Number(match[1]), ends[i] ?? length])
+  const tail = silences.find(([start, end]) => start > 0.05 && end >= length - 0.15)
+  const endAt = tail ? tail[0] + 0.12 : length
+  // Only pauses inside the sentence: silence at either end is trimmed by `finish`.
+  const cuts = cap === undefined ? [] : silences.filter(([start, end]) => start > 0.05 && end < endAt && end - start > cap).map(([start, end]) => [start + cap / 2, end - cap / 2])
+  if (!tail && cuts.length === 0) return source
+  const keep = cuts.length === 0 ? '1' : `not(${cuts.map(([from, to]) => `between(t,${from.toFixed(3)},${to.toFixed(3)})`).join('+')})`
+  const tidied = path.join(work, 'tidied.wav')
+  execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', source, '-af', `atrim=end=${endAt.toFixed(3)},aselect='${keep}',asetpts=N/SR/TB`, tidied])
+  return tidied
 }
 
 /** The hash in a clip's file name, as a number: the same clip asks ElevenLabs for the same take. */
@@ -324,8 +382,10 @@ async function elevenLabsSamples(key, sentences) {
         const target = path.join(samplesDir, column.files[i])
         if (!existsSync(target)) {
           mkdirSync(path.dirname(target), { recursive: true })
-          const raw = path.join(work, 'sample.mp3')
-          writeFileSync(raw, await elevenLabs.withRetries(() => elevenLabs.synthesize(key, column.voice, input, i + 1)))
+          // Kept in the cache too, so the game can reuse it if this voice wins.
+          const raw = path.join(elevenLabsCache, path.basename(column.files[i]))
+          mkdirSync(elevenLabsCache, { recursive: true })
+          if (!existsSync(raw)) writeFileSync(raw, await elevenLabs.withRetries(() => elevenLabs.synthesize(key, column.voice, input, i + 1)))
           finish(raw, target)
         }
         if (i === 0) done.push(column)

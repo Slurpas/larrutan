@@ -387,6 +387,17 @@ Status 2026-10-25: **done; the trial ran with the user's go-ahead.** Listening i
   - Piper's Lisa, tried at Alma's pace: the user prefers Alma.
   - A native Swedish voice the user designs with ElevenLabs' Voice Design; it goes in `trialVoices` with its `voiceId`. The first prompt was blocked by ElevenLabs' Prohibited Use Policy (not charged), most likely for mentioning young children. The second, an adult narrator only, worked: the voice (`Dy9y1y6OKBLEiB4Ojgz7`) is on the trial page in Multilingual v2 and v3, for about 400 more credits (about 1,200 in all).
 
+#### Task 22 — The game speaks with the designed Swedish voice
+- The user's verdict (2026-10-25): "Designed Swedish, v3 is the absolute winner and good enough for our game", with a shorter pause before a lone letter ("Det där är ett ⎵⎵⎵⎵ N": a little pause, but less).
+
+Status 2026-10-25: **done.**
+- **The voice:** `speechVoice` is the designed voice on Eleven v3 (speed 0.85); Alma stays as `almaVoice`.
+- **The pause before the target** was about 1.05–1.13 s with v3; the generator cuts its middle so it lasts 0.7 s (about three "spaces" instead of four).
+- **Made once:** what ElevenLabs sends back is cached in `.tools/elevenlabs-cache`, and the 10 trial sentences were reused. All 419 clips were made for about 8,200 credits, nearly all of this month's free allowance.
+- **Tidying:** some clips ended in a long silence and a click, which kept the trim from working ("Sax." lasted 2.7 s); they now end shortly after the last word. About 10 of the 81 "Var är …?", "Draken vill ha ett …!" and "Bygg ordet …!" sentences have little or no pause, because v3 didn't pause there; a retake (`src/speech/retakes.ts`) can ask for a new take.
+- **Credit:** the start screen says "Röst: skapad med ElevenLabs (elevenlabs.io)", as the free plan requires.
+- **Review:** every clip has a new name, so all of them are "to review" on `?review=voices`. Alma's fixes don't apply; a word the new voice says wrong needs a new kind of fix (a respelling), still to build.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

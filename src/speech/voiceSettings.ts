@@ -32,15 +32,36 @@ export interface ElevenLabsVoice {
   speed: number
   stability: number
   similarity: number
-  /** The pause where the speech input has a pause mark, as a break inside the sentence. */
+  /**
+   * The pause where the speech input has a pause mark ("Var är … Å?"): a break of this length
+   * for the v2 models; Eleven v3 pauses longer by itself, and that pause is shortened to this.
+   */
   pauseSeconds: number
 }
 
 /**
- * Alma: a female Swedish voice (CC BY 4.0, NST dataset). Her natural pace is quick, so she is
- * slowed down for young listeners: 1.4 was picked by ear on 2026-10-23 (1.2 was too fast).
+ * "Designed Swedish": a voice the user made with ElevenLabs' Voice Design on 2026-10-25, from a
+ * description of an adult native Swedish narrator, read by Eleven v3. It clearly won the voice
+ * trial against Alma and ElevenLabs' own voices (which sounded American). A little slow for young
+ * listeners. v3 paused about a second before the target ("Draken vill ha ett … Ö!"); the user
+ * wanted a little pause but less, so it is shortened to 0.7 s.
  */
 export const speechVoice: SpeechVoice = {
+  engine: 'ElevenLabs',
+  voice: 'Designed Swedish',
+  voiceId: 'Dy9y1y6OKBLEiB4Ojgz7',
+  model: 'eleven_v3',
+  speed: 0.85,
+  stability: 0.5,
+  similarity: 0.75,
+  pauseSeconds: 0.7,
+}
+
+/**
+ * Alma (Piper), the game's voice until 2026-10-25: a female Swedish voice (CC BY 4.0, NST
+ * dataset), slowed to 1.4 by ear. Free and offline; set `speechVoice` to it to switch back.
+ */
+export const almaVoice: PiperVoice = {
   engine: 'Piper (piper-tts 1.8.0)',
   voice: 'sv_SE-alma-medium',
   lengthScale: 1.4,

@@ -35,9 +35,9 @@ The second command downloads the browsers used by the browser tests (about 380 M
 
 ## Generating speech
 
-Everything the game says plays from MP3 files in `src/speech/audio/sv/`, generated from the content with the free, offline Piper text-to-speech engine. The files are committed, so this is only needed after changing letters, words or phrases. A unit test fails if any sentence is missing its file.
+Everything the game says plays from MP3 files in `src/speech/audio/sv/`, generated from the content by ElevenLabs (Eleven v3, a voice the user designed; see "Trying ElevenLabs" below for the key) since 2026-10-25, and before that by the free, offline Piper engine (Alma, still available as `almaVoice`). The files are committed, so this is only needed after changing letters, words or phrases. A unit test fails if any sentence is missing its file. With ElevenLabs each new sentence costs credits; a full remake must be given `--max-credits`.
 
-One-time setup (Python 3 and ffmpeg on PATH needed; everything installs into `.tools/`, which git ignores):
+One-time setup for Piper, only needed to switch back to Alma (Python 3 and ffmpeg on PATH needed; everything installs into `.tools/`, which git ignores):
 
 ```bash
 python -m venv .tools/piper-venv

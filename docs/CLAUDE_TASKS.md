@@ -372,13 +372,16 @@ Status 2026-10-25: **done.**
 #### Task 21 — Prepare the ElevenLabs trial
 - The user asked whether ElevenLabs can be used for free, without asking for the same audio over and over (2026-10-25).
 
-Status 2026-10-25: **prepared; the trial itself waits for the user's go-ahead** (it spends real credits).
+Status 2026-10-25: **done; the trial ran with the user's go-ahead.** Listening is the user's part.
 - **ElevenLabs is a second engine in `npm run speech`** (`scripts/elevenLabs.ts`, tested without network):
   - Like Piper, each clip is made once and kept; only new or changed sentences are made.
   - A clip's name includes what ElevenLabs is sent, so a Piper pronunciation fix never makes an ElevenLabs clip again.
 - **Credit check:** a run never spends more than `--max-credits` or than the month has left. A full run must be given its limit; the trial allows 1000 unless told otherwise.
-- **The trial:** `npm run speech -- --samples` says 10 game sentences in Charlotte, Matilda and Sarah (Multilingual v2), and in Charlotte with Flash told the text is Swedish. Each sits next to Alma's clip on `voice-samples/index.html` (git ignores it). That's about 800 of the 10,000 free credits.
-- **Not done:** no request has been sent to ElevenLabs yet, so the voice names and the account's voices are unchecked; `--list-voices` shows them.
+- **The trial:** `npm run speech -- --samples` says 10 game sentences in Matilda, Sarah and Lily (Multilingual v2), and in Matilda with Flash told the text is Swedish. Each sits next to Alma's clip on `voice-samples/index.html` (git ignores it). Trial clips are kept too, so a voice tried before costs nothing again.
+- **What the run found:**
+  - The user's key may only do text-to-speech: it can't list voices or read the credits left. That's fine, and the safest kind of key; the trial uses ElevenLabs' own voices by their published IDs, within `--max-credits`.
+  - Charlotte (a Swedish accent) is a library voice: free accounts can't use those through the API (402, nothing charged).
+  - About 805 of the 10,000 free credits were spent.
 
 ## Roadmap — later
 

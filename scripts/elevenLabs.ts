@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { getLetter } from '../src/content/letters'
 import { phrases } from '../src/content/phrases'
 import { getWord } from '../src/content/words'
@@ -94,6 +95,18 @@ export async function accountVoices(key: string, fetchFn: typeof fetch = fetch):
   return body.voices.map((voice) => ({ id: voice.voice_id, name: voice.name, category: voice.category, accent: voice.labels?.accent }))
 }
 
+/**
+ * ElevenLabs' own voices by their published IDs, for a key that may not list the account's
+ * voices: one limited to text-to-speech, which is the safest kind (2026-10-25).
+ */
+export const defaultVoices: readonly AccountVoice[] = [
+  { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte', category: 'premade' },
+  { id: 'XrExE9yKIg1WjnnlVkGX', name: 'Matilda', category: 'premade' },
+  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', category: 'premade' },
+  { id: 'Xb7hH8MSUJpSbSDYk0k2', name: 'Alice', category: 'premade' },
+  { id: 'pFZP5JQG7iQjIQuC4Bku', name: 'Lily', category: 'premade' },
+]
+
 /** By name; names may carry a description after the first word ("Charlotte - …"). */
 export function findVoice(voices: readonly AccountVoice[], name: string): AccountVoice | undefined {
   const wanted = name.toLocaleLowerCase('sv')
@@ -132,6 +145,23 @@ export async function synthesize(
     fetchFn,
   )
   return new Uint8Array(await response.arrayBuffer())
+}
+
+/** A folder name for a voice in the trial: "Matilda, Flash (sv)" → "matilda-flash-sv". */
+export function slug(label: string): string {
+  return label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/**
+ * A trial clip's file name: a hash of everything that shapes it, so the same voice saying
+ * the same thing is made once and then reused, like the game's clips (nothing is paid for twice).
+ */
+export function sampleName(voice: SynthesisVoice, input: string): string {
+  const shapedBy = JSON.stringify([voice.voiceId, voice.model, voice.speed, voice.stability, voice.similarity, input])
+  return `${createHash('sha1').update(shapedBy).digest('hex').slice(0, 10)}.mp3`
 }
 
 /** The free plan turns away requests that come too fast (429): wait a little longer each time, then try again. */

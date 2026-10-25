@@ -15,7 +15,7 @@
 // required) or than the month has left. Both need ffmpeg on PATH (or FFMPEG=path).
 
 import { execFileSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -60,8 +60,13 @@ mkdirSync(work, { recursive: true })
 
 if (args.includes('--list-voices') || args.includes('--samples')) {
   const key = elevenLabsKey()
-  if (args.includes('--list-voices')) await listVoices(key)
-  else await makeSamples(key)
+  try {
+    if (args.includes('--list-voices')) await listVoices(key)
+    else await makeSamples(key)
+  } catch (error) {
+    if (error instanceof elevenLabs.ElevenLabsError) stop(error.message)
+    throw error
+  }
   rmSync(work, { recursive: true, force: true })
   process.exit(0)
 }
@@ -194,6 +199,17 @@ function elevenLabsKey() {
   return key
 }
 
+/** The account's voices, or ElevenLabs' own by ID when the key may only make speech (which is fine). */
+async function accountVoicesOrDefaults(key) {
+  try {
+    return await elevenLabs.accountVoices(key)
+  } catch (error) {
+    if (!(error instanceof elevenLabs.ElevenLabsError) || (error.status !== 401 && error.status !== 403)) throw error
+    console.warn(`The key may not list this account's voices (${error.message}). Using ElevenLabs' own voices by ID.`)
+    return elevenLabs.defaultVoices
+  }
+}
+
 /** Credits left, or null if the key may not read them (then only --max-credits limits the run). */
 async function readCredits(key) {
   try {
@@ -209,7 +225,7 @@ async function readCredits(key) {
 }
 
 async function listVoices(key) {
-  const voices = await elevenLabs.accountVoices(key)
+  const voices = await accountVoicesOrDefaults(key)
   console.log(`${voices.length} voices this account can use:`)
   for (const voice of voices) {
     console.log(`  ${voice.name}  (${voice.category}${voice.accent ? `, ${voice.accent} accent` : ''})  ${voice.id}`)
@@ -224,7 +240,7 @@ async function makeSamples(key) {
   const missing = sentences.filter((text) => !said.has(text))
   if (missing.length > 0) stop(`Not game sentences, so there is nothing to compare them with: ${missing.join(' | ')}`)
 
-  const voices = await elevenLabs.accountVoices(key)
+  const voices = await accountVoicesOrDefaults(key)
   const wanted = option('--voices')
     ? option('--voices')
         .split(',')
@@ -238,37 +254,66 @@ async function makeSamples(key) {
   }
   if (columns.length === 0) stop('None of the voices to try is on this account.')
 
-  const inputs = (model) => sentences.map((text) => elevenLabsInput(text, trialSettings.pauseSeconds, model))
-  const needed = columns.reduce((sum, column) => sum + elevenLabs.creditsFor(inputs(column.model), column.model), 0)
-  const credits = await readCredits(key)
-  const problem = elevenLabs.budgetProblem(needed, credits?.left ?? null, maxCredits ?? 1000)
-  if (problem) stop(problem)
-  console.log(`Trying ${columns.length} voices with ${sentences.length} sentences each: about ${needed} credits.`)
-
-  const folders = ['current', ...columns.map((_, c) => `voice-${c + 1}`)]
-  for (const folder of folders) mkdirSync(path.join(samplesDir, folder), { recursive: true })
-  for (const [i, text] of sentences.entries()) copyFileSync(path.join(audioDir, clipFileName(text)), path.join(samplesDir, 'current', `${i + 1}.mp3`))
-  for (const [c, column] of columns.entries()) {
-    const { speed, stability, similarity } = trialSettings
-    for (const [i, input] of inputs(column.model).entries()) {
-      const raw = path.join(work, `${c}-${i}.mp3`)
-      writeFileSync(raw, await elevenLabs.withRetries(() => elevenLabs.synthesize(key, { voiceId: column.voiceId, model: column.model, speed, stability, similarity }, input, i + 1)))
-      finish(raw, path.join(samplesDir, `voice-${c + 1}`, `${i + 1}.mp3`))
-    }
-    console.log(`  ${column.label}: done`)
+  // Each trial clip is kept under a name made from what shapes it: a voice tried before costs nothing again.
+  const { speed, stability, similarity } = trialSettings
+  const planned = columns.map((column) => {
+    const voice = { voiceId: column.voiceId, model: column.model, speed, stability, similarity }
+    const inputs = sentences.map((text) => elevenLabsInput(text, trialSettings.pauseSeconds, column.model))
+    const files = inputs.map((input) => `${elevenLabs.slug(column.label)}/${elevenLabs.sampleName(voice, input)}`)
+    return { ...column, voice, inputs, files }
+  })
+  const needed = planned.reduce(
+    (sum, column) => sum + elevenLabs.creditsFor(column.inputs.filter((_, i) => !existsSync(path.join(samplesDir, column.files[i]))), column.model),
+    0,
+  )
+  if (needed > 0) {
+    const credits = await readCredits(key)
+    const problem = elevenLabs.budgetProblem(needed, credits?.left ?? null, maxCredits ?? 1000)
+    if (problem) stop(problem)
   }
-  const labels = [`${speechVoice.voice} (now)`, ...columns.map((column) => column.label)]
-  writeFileSync(path.join(samplesDir, 'index.html'), samplesPage(sentences, folders, labels), 'utf8')
+  console.log(`${columns.length} voices with ${sentences.length} sentences each: ${needed > 0 ? `about ${needed} credits for the clips not made before` : 'all made before, nothing to pay'}.`)
+
+  const done = []
+  for (const column of planned) {
+    try {
+      for (const [i, input] of column.inputs.entries()) {
+        const target = path.join(samplesDir, column.files[i])
+        if (!existsSync(target)) {
+          mkdirSync(path.dirname(target), { recursive: true })
+          const raw = path.join(work, 'sample.mp3')
+          writeFileSync(raw, await elevenLabs.withRetries(() => elevenLabs.synthesize(key, column.voice, input, i + 1)))
+          finish(raw, target)
+        }
+        if (i === 0) done.push(column)
+      }
+      console.log(`  ${column.label}: done`)
+    } catch (error) {
+      // A voice refused on its first sentence can't be used by this account (nothing was spent on it): try the next.
+      if (!(error instanceof elevenLabs.ElevenLabsError) || done.includes(column)) throw error
+      console.warn(`  ${column.label}: skipped (${error.message})`)
+    }
+  }
+  if (done.length === 0) stop('No voice could be used.')
+  // The current voice plays straight from the game's clips.
+  const current = { label: `${readableName(speechVoice)} (now)`, files: sentences.map((text) => `../src/speech/audio/sv/${clipFileName(text)}`) }
+  writeFileSync(path.join(samplesDir, 'index.html'), samplesPage(sentences, [current, ...done]), 'utf8')
   await readCredits(key)
   console.log(`Listen at http://localhost:5173/voice-samples/index.html (or open voice-samples/index.html).`)
 }
 
-function samplesPage(sentences, folders, labels) {
+/** "sv_SE-alma-medium" → "Alma"; an ElevenLabs voice already has a name. */
+function readableName(voice) {
+  if (voice.engine === 'ElevenLabs') return voice.voice
+  const name = voice.voice.replace(/^[a-z]{2}_[A-Z]{2}-/, '').replace(/-(x_low|low|medium|high)$/, '')
+  return name.charAt(0).toUpperCase() + name.slice(1)
+}
+
+function samplesPage(sentences, columns) {
   const escape = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  const header = labels.map((label) => `<th>${escape(label)}</th>`).join('')
+  const header = columns.map((column) => `<th>${escape(column.label)}</th>`).join('')
   const rows = sentences
     .map((text, i) => {
-      const cells = folders.map((folder) => `<td><audio controls preload="none" src="${folder}/${i + 1}.mp3"></audio></td>`).join('')
+      const cells = columns.map((column) => `<td><audio controls preload="none" src="${column.files[i]}"></audio></td>`).join('')
       return `<tr><td>${escape(text)}</td>${cells}</tr>`
     })
     .join('\n')

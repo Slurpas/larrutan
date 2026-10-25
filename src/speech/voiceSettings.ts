@@ -57,14 +57,15 @@ export interface TrialVoice {
 /**
  * The ElevenLabs trial (`npm run speech -- --samples`, the user's request 2026-10-25): a few
  * sentences in each of these voices, next to Alma's. Free accounts can only use ElevenLabs'
- * own voices through the API, or one made with its Voice Design; Charlotte is listed with a
- * Swedish accent. Flash takes a language, so it is told the text is Swedish. Not used by the game.
+ * own voices through the API, or one made with its Voice Design: Charlotte, listed with a
+ * Swedish accent, is a library voice and was refused (402). Flash takes a language, so it is
+ * told the text is Swedish. Not used by the game.
  */
 export const trialVoices: readonly TrialVoice[] = [
-  { label: 'Charlotte', name: 'Charlotte', model: 'eleven_multilingual_v2' },
   { label: 'Matilda', name: 'Matilda', model: 'eleven_multilingual_v2' },
   { label: 'Sarah', name: 'Sarah', model: 'eleven_multilingual_v2' },
-  { label: 'Charlotte, Flash (sv)', name: 'Charlotte', model: 'eleven_flash_v2_5' },
+  { label: 'Lily', name: 'Lily', model: 'eleven_multilingual_v2' },
+  { label: 'Matilda, Flash (sv)', name: 'Matilda', model: 'eleven_flash_v2_5' },
 ]
 
 /** Every trial voice speaks a little slower than normal, for young listeners. */

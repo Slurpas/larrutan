@@ -102,6 +102,8 @@ describe('speech catalogue', () => {
         const word = words.find((w) => w.id === question.word)!
         expect(catalogue).toContain(phrases.spellingQuestion(word.base))
         expect(catalogue).toContain(phrases.firstLetterShort(word.base))
+        // Every bubble, right or wrong, is named when it is popped.
+        for (const bubble of question.bubbles) expect(catalogue).toContain(phrases.letterShort(bubble.letter))
       }
     }
   })

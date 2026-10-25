@@ -28,6 +28,7 @@ import { lookAlikeRule } from '../difficulty'
 import { levelIntro, levelParams } from '../levels'
 import { RoundComplete } from '../RoundComplete'
 import { sceneScale } from '../sceneScale'
+import { WRONG_PAUSE_MS } from '../useChoiceRound'
 import { createSpellingRound } from './createRound'
 import { bubbleLayout } from './bubbleLayout'
 import { currentWord, hintBubble, nextWord, spellingScore, startSpelling, tapBubble } from './spellingState'
@@ -36,8 +37,8 @@ import styles from './Spelling.module.css'
 
 const backgrounds = { meadowTop: pixelBackground(meadowTop), meadowSoil: pixelBackground(meadowSoil) }
 
-/** The built word is celebrated (a happy sound, the word said) before the next one. */
-const BUILT_MS = 1700
+/** The built word is celebrated (its last letter, a happy sound, the word) before the next one. */
+const BUILT_MS = 2400
 /** On the levels that show the word for a moment: how long it stays after the voice has said it. */
 const HINT_MS = 2500
 /** Room for the top bar above the word's slots. */
@@ -50,8 +51,10 @@ const GROUND = 32
  * speaker, and the child pops the bubbles with its letters in order to fill the slots.
  * The first level shows the word faintly in the slots; then it shows for a moment only, then
  * only every other letter for a moment, then not at all (src/challenges/levels.ts).
- * A letter that isn't in the word turns grey; after a wrong tap the voice says the word
- * again and the next slot lights up, after two the right bubble does too. Nothing is timed.
+ * Each letter is named as it lands ("S. O. L. Sol!"), and tapping a slot names the letter
+ * in it (or shown faintly in it). A wrong bubble is named, and the voice says the word
+ * again; a letter that isn't in the word turns grey; the next slot lights up, after two
+ * wrong taps the right bubble does too. Nothing is timed.
  */
 export function Spelling({ seed, level, announceLevel, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
   const params = levelParams('spelling', level)
@@ -73,6 +76,10 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
   const question = currentWord(state)
   const word = question ? getWord(question.word) : undefined
 
+  // What of the word the slots show faintly (src/challenges/levels.ts), and whether a brief hint has faded.
+  const wordHint = params.hint
+  const hinted = (i: number) => wordHint !== 'none' && (wordHint !== 'every other letter briefly' || i % 2 === 0)
+
   const sceneRef = useRef<HTMLElement>(null)
   const [size, setSize] = useState(() => ({ width: window.innerWidth, height: window.innerHeight }))
   useLayoutEffect(() => {
@@ -92,6 +99,7 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
   const isFirst = questionIndex === 0
   const intro = announceLevel ? levelIntro('spelling', level) : undefined
   const [hintGoneFor, setHintGoneFor] = useState<number | null>(null)
+  const hintGone = wordHint !== 'word' && hintGoneFor === questionIndex
   useEffect(() => {
     if (!ask) return
     let cancelled = false
@@ -106,30 +114,44 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
   }, [ask, isFirst, intro, questionIndex])
   useEffect(() => stopSpeech, [])
 
-  // The word is built: a happy sound and the word, then the next one (or the end of the round).
+  // The word is built: its last letter, a happy sound and the word, then the next one (or the end of the round).
   const finishRound = useEffectEvent(() => {
     const practiced = round.questions.map((q, i) => ({ item: q.word, firstTry: state.firstTry[i] ?? false }))
     setOutcome(onRoundComplete({ score: spellingScore(state), practiced }))
   })
   useEffect(() => {
     if (state.phase !== 'built' || !word) return
-    void speak([{ sound: 'correct' }, phrases.firstLetterShort(word.base)])
+    const last = question?.letters.at(-1)
+    void speak([...(last ? [phrases.letterShort(last)] : []), { sound: 'correct' }, phrases.firstLetterShort(word.base)])
     const isLast = state.questionIndex === round.questions.length - 1
     const timer = setTimeout(() => {
       if (isLast) finishRound()
       setState(nextWord)
     }, BUILT_MS)
     return () => clearTimeout(timer)
-  }, [state.phase, state.questionIndex, round.questions.length, word])
+  }, [state.phase, state.questionIndex, round.questions.length, word, question])
 
   function tap(bubbleId: string) {
-    if (!word) return
+    const letter = question?.bubbles.find((b) => b.id === bubbleId)?.letter
+    if (!word || !letter) return
     const { state: next, result } = tapBubble(state, bubbleId)
     if (result === 'ignored') return
     setState(next)
-    if (result === 'right') playEffect('pop')
-    // Wrong: the word once more, short, so the child can listen for the sound they need.
-    else if (next.phase === 'building') void speak(phrases.firstLetterShort(word.base))
+    if (result === 'right') {
+      playEffect('pop')
+      // Its name as it lands; the last letter is said with the whole word.
+      if (next.phase === 'building') void speak(phrases.letterShort(letter))
+    }
+    // Wrong: its name, a breath, and the word once more, short, so the child can listen for the sound they need.
+    else if (next.phase === 'building') void speak([phrases.letterShort(letter), { pause: WRONG_PAUSE_MS }, phrases.firstLetterShort(word.base)])
+  }
+
+  /** A tap on a slot: the letter in it, or shown faintly in it; otherwise the word again. */
+  function sayAt(i: number) {
+    const letter = question?.letters[i]
+    if (!word || !letter) return
+    const visible = i < state.built || (hinted(i) && !hintGone)
+    void speak(visible ? phrases.letterShort(letter) : phrases.firstLetterShort(word.base))
   }
 
   function handleExit() {
@@ -167,9 +189,6 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
   const area = { left: areaLeft, top: areaTop, width: size.width - areaLeft - 8 * px, height: groundTop - 6 * px - areaTop }
   const homes = bubbleLayout(question.bubbles.length, area, bubblePx, round.seed + state.questionIndex)
   const hint = hintBubble(state)
-  const wordHint = params.hint
-  const hintGone = wordHint !== 'word' && hintGoneFor === questionIndex
-  const hinted = (i: number) => wordHint !== 'none' && (wordHint !== 'every other letter briefly' || i % 2 === 0)
 
   const sprite = (grid: readonly string[], left: number, top: number) => (
     <PixelSprite
@@ -241,20 +260,23 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
         })}
       </div>
 
-      {/* The word being built: one slot per letter, in front of the bubbles floating away. */}
-      <div className={styles.slots} style={{ top: slotsTop }} role="img" aria-label={`Ordet: ${question.letters.slice(0, state.built).join('')}`}>
+      {/* The word being built: one slot per letter, in front of the bubbles floating away. Tapping a slot names its letter. */}
+      <div className={styles.slots} style={{ top: slotsTop }} role="group" aria-label={`Ordet: ${question.letters.slice(0, state.built).join('')}`}>
         {question.letters.map((letter, i) => (
-          <span
+          <button
             key={i}
+            type="button"
             className={cx(
               styles.slot,
               i < state.built && styles.filled,
               i === state.built && state.wrongInStep > 0 && styles.next,
               state.phase === 'built' && styles.done,
             )}
+            aria-label={i < state.built ? letter : `Ruta ${i + 1}`}
+            onClick={() => sayAt(i)}
           >
             {i < state.built ? letter : hinted(i) ? <span className={cx(styles.faint, hintGone && styles.faded)}>{letter}</span> : null}
-          </span>
+          </button>
         ))}
       </div>
 

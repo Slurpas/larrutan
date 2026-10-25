@@ -72,8 +72,9 @@ export function createSpellingRound({
   const rng = createRng(seed)
   const candidates = spellingWords(words, lengths)
   if (candidates.length < questionCount) throw new Error(`A round of ${questionCount} needs that many words of ${lengths.join('–')} letters`)
-  // Extra letters come from the short words at every level, so the longer words bring no new ones.
-  const pool = [...new Set(spellingWords(words).flatMap(lettersOf))]
+  // Extra letters: the short words' letters that the game teaches, so a wrong bubble is a letter the
+  // child has met (the longer words bring no new ones).
+  const pool = [...new Set(spellingWords(words).flatMap(lettersOf))].filter((letter) => idOfDisplay.has(letter))
   const picked = practiceOrder(candidates, (word) => practiceBox(word.id), rng).slice(0, questionCount)
 
   const questions = picked.map((word) => {

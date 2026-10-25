@@ -7,6 +7,9 @@ import { firstTryScore } from './levels'
 import { advance, choose as chooseIn, currentQuestion, isAnswerRevealed, startRound, type RoundState } from './roundState'
 import type { ChallengeVoice } from './voices'
 
+/** After the voice names a wrong choice, a breath before the question comes again (user feedback 2026-10-25). */
+export const WRONG_PAUSE_MS = 500
+
 /** What a finished round tells the app. */
 export interface RoundResult {
   /** How well it went, from 0 (no better than guessing) to 1 (flawless): moves the station's level. */
@@ -105,7 +108,7 @@ export function useChoiceRound<Q extends ChoiceQuestion>({
     const next = chooseIn(state, choice)
     if (next === state) return
     setState(next)
-    if (next.phase === 'asking') void speak([voice.nameChoice(choice), promptFor(next)])
+    if (next.phase === 'asking') void speak([voice.nameChoice(choice), { pause: WRONG_PAUSE_MS }, promptFor(next)])
   }
 
   /** The speaker button: the full question, for a child who needs to hear what to do. */

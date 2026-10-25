@@ -2,17 +2,21 @@ import type { Page } from '@playwright/test'
 import { lookAlikeRule } from '../../src/challenges/difficulty'
 import { levelParams } from '../../src/challenges/levels'
 import { createSpellingRound } from '../../src/challenges/spelling/createRound'
-import { words } from '../../src/content/words'
+import { phrases } from '../../src/content/phrases'
+import { getWord, words } from '../../src/content/words'
 import { expect, test } from './fixtures'
-import { SEED, expectRoundCompleteThenMap, press, startChallenge, startChallengeAt, waitForQuestion } from './helpers'
+import { SEED, expectRoundCompleteThenMap, hasSaid, press, startChallenge, startChallengeAt, waitForQuestion } from './helpers'
 
 const round = createSpellingRound({ seed: SEED, words })
 const total = round.questions.length
 
+// Each built word is celebrated (its last letter, a chime, the word) for 2.4 s before the next.
+test.slow()
+
 /** The first bubble with this letter that is still in the game (popped ones are hidden). */
 const bubble = (page: Page, letter: string) => page.getByRole('button', { name: letter, exact: true }).first()
 /** The slots, showing the letters built so far. */
-const built = (page: Page, letters: readonly string[]) => page.getByRole('img', { name: `Ordet: ${letters.join('')}`.trim(), exact: true })
+const built = (page: Page, letters: readonly string[]) => page.getByRole('group', { name: `Ordet: ${letters.join('')}`.trim(), exact: true })
 
 /** A letter key. Playwright's keyboard has no Å, Ä or Ö, so those are sent as the key event a Swedish keyboard makes. */
 async function pressLetter(page: Page, letter: string) {
@@ -62,4 +66,23 @@ test('the top level hides the word and asks for words of up to five letters', as
     await expect(built(page, question.letters)).toBeVisible()
   }
   await expectRoundCompleteThenMap(page)
+})
+
+test('letters are named: a popped bubble, a wrong one, and a tapped slot', async ({ page, hasTouch }) => {
+  const [question] = round.questions
+  const [first, second] = question!.letters
+  await startChallenge(page, hasTouch, 'spelling')
+  await waitForQuestion(page, 0, total)
+  // A slot shows its letter faintly on the first level: tapping it names that letter.
+  await press(page.getByRole('button', { name: 'Ruta 2' }), hasTouch)
+  await expect.poll(() => hasSaid(page, phrases.letterShort(second!))).toBe(true)
+  // A wrong bubble is named, then the word is said again.
+  const stranger = question!.bubbles.find((b) => !question!.letters.includes(b.letter))!
+  await press(bubble(page, stranger.letter), hasTouch)
+  await expect.poll(() => hasSaid(page, phrases.letterShort(stranger.letter))).toBe(true)
+  await expect.poll(() => hasSaid(page, phrases.firstLetterShort(getWord(question!.word).base))).toBe(true)
+  // The right one is named as it lands.
+  await press(bubble(page, first!), hasTouch)
+  await expect(built(page, [first!])).toBeVisible()
+  await expect.poll(() => hasSaid(page, phrases.letterShort(first!))).toBe(true)
 })

@@ -474,6 +474,18 @@ Status 2026-10-25: **done; a local commit, not pushed.**
   - **Fix:** the last slot of a 5-letter word now hops in turn when the word is built.
 - **Credits:** about 88 this time. The account can't report how many are left; by my count very few remain this month.
 
+#### Task 25 — A breath after a wrong answer, and Bygg ordet says the letters
+- The user (2026-10-25): in Mata draken the pause between "Det där är ett Å" and "Draken vill ha ett O" is very short; maybe half a second longer. In Bygg ordet, let the child tap a slot to hear its letter. Should a popped bubble say its letter, for right answers, wrong ones, both or neither?
+
+Status 2026-10-25: **done; a local commit, not pushed.**
+- **A breath after a wrong answer:** after naming a wrong choice, the voice waits half a second before asking again (`WRONG_PAUSE_MS`). This applies in Mata draken, Gruvvagnen and Ord och bild; `speak()` can now wait (`{ pause: ms }`).
+- **Bygg ordet names the letters** (my recommendation: both right and wrong). It is information, not praise, so it fits "less talk, more sound".
+  - A right bubble is named as it lands, and the last one comes with the chime and the word: "S. O. L. Sol!". The pause before the next word is 2.4 s instead of 1.7.
+  - A wrong bubble is named, then the word is said again after a breath: "R. … Sol.".
+  - Tapping a slot names its letter, if the slot shows it (built, or shown faintly). An empty slot says the word again, so it never gives the answer away.
+- **Only taught letters as extra bubbles:** the extra letters are now among the 13 the game teaches. Before, K, P, G, D, V and others appeared as wrong bubbles.
+- **New clips:** the words themselves use 11 letters the game doesn't teach yet, B D E G J K P U V X Y. Each got a clip ("K."), about 22 credits. "J." is shorter than the others (0.32 s), so it's worth a listen.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

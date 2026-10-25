@@ -16,8 +16,8 @@ export type { VoiceStatus } from './browserVoice'
  */
 
 export type SoundId = 'correct' | 'fanfare' | 'levelUp' | 'newItem' | 'pop'
-/** Something to say (a sentence) or play (a sound effect). */
-export type Utterance = string | { sound: SoundId }
+/** Something to say (a sentence), play (a sound effect) or wait for (a pause, in milliseconds). */
+export type Utterance = string | { sound: SoundId } | { pause: number }
 
 const byFileName = (urls: Record<string, string>) =>
   new Map(Object.entries(urls).map(([path, url]) => [path.slice(path.lastIndexOf('/') + 1), url]))
@@ -74,6 +74,10 @@ export async function speak(items: Utterance | readonly Utterance[]): Promise<vo
   const list: readonly Utterance[] = typeof items === 'string' || !Array.isArray(items) ? [items as Utterance] : items
   for (const item of list) {
     if (myTurn !== turn) return
+    if (typeof item !== 'string' && 'pause' in item) {
+      await new Promise((resolve) => setTimeout(resolve, item.pause))
+      continue
+    }
     if (typeof item !== 'string') {
       const soundUrl = soundUrls.get(`${item.sound}.mp3`)
       if (soundUrl) await clips.play(soundUrl, `sound ${item.sound}`)

@@ -57,6 +57,19 @@ describe('a Bygg ordet round', () => {
       }
   })
 
+  it('offers only extra letters the game teaches, at every level', () => {
+    const taught = new Set(letters.map((letter) => letter.display))
+    for (const seed of seeds)
+      for (const level of [1, 2, 3, 4] as const) {
+        const p = levelParams('spelling', level)
+        const round = createSpellingRound({ seed, words, difficulty: lookAlikeRule(p.lookAlike), extras: p.extraLetters, lengths: p.lengths })
+        for (const q of round.questions) {
+          const extras = q.bubbles.map((b) => b.letter).filter((letter) => !q.letters.includes(letter))
+          for (const extra of extras) expect(taught.has(extra), `${seed} ${q.word}: ${extra}`).toBe(true)
+        }
+      }
+  })
+
   it('never offers an extra letter that looks like one in the word on the easy level', () => {
     for (const seed of seeds)
       for (const q of createSpellingRound({ seed, words }).questions) {

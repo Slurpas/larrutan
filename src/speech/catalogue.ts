@@ -2,7 +2,7 @@ import { dragonVoice, firstLetterVoice, wordPictureVoice } from '../challenges/v
 import { letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
-import { spelledLengths, spellingWords } from '../challenges/spelling/createRound'
+import { lettersOf, spelledLengths, spellingWords } from '../challenges/spelling/createRound'
 import { stationLevels } from '../challenges/levels'
 import { items } from '../rewards/items'
 
@@ -50,6 +50,14 @@ export function spokenGroups(): SpokenGroup[] {
       ],
     })
   }
+
+  // Bygg ordet names every letter it pops, also those no challenge teaches yet (the K in "raket").
+  groups.push({
+    title: 'Letters in Bygg ordet',
+    texts: [...new Set(spellingWords(words, spelledLengths).flatMap(lettersOf))]
+      .sort((a, b) => a.localeCompare(b, 'sv'))
+      .map((letter) => phrases.letterShort(letter)),
+  })
 
   const spelled = new Set(spellingWords(words, spelledLengths).map((word) => word.id))
   for (const word of words) {

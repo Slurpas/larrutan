@@ -152,6 +152,9 @@
   place-items: center;
   width: var(--slot);
   height: var(--slot);
+  padding: 0;
+  pointer-events: auto;
+  cursor: pointer;
   border: 5px dashed var(--color-ink);
   border-radius: 1rem;
   background: rgb(255 255 255 / 0.55);

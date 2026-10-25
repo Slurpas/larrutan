@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { spokenTexts } from '../speech/catalogue'
-import { pronunciations, speechInput, withPauses, withPronunciations } from './pronunciation'
+import { elevenLabsInput, pronunciations, speechInput, withPauses, withPronunciations } from './pronunciation'
 
 describe('pronunciation fixes', () => {
   it('replaces whole words only, keeping punctuation and capitals elsewhere', () => {
@@ -19,6 +19,10 @@ describe('pronunciation fixes', () => {
     expect(withPauses('Det där är Å.')).toBe('Det där är Å.')
     expect(withPauses('Vilken bokstav börjar sol på?')).toBe('Vilken bokstav börjar sol på?')
     expect(speechInput('Var är ananasen?')).toBe('Var är, | [[ ˈananasən? ]]')
+    // ElevenLabs pauses where told to, and gets none of Piper's sound notation.
+    expect(elevenLabsInput('Var är ananasen?', 0.4, 'eleven_multilingual_v2')).toBe('Var är, <break time="0.4s" /> ananasen?')
+    expect(elevenLabsInput('Bygg ordet sol!', 0.4, 'eleven_v3')).toBe('Bygg ordet, … sol!')
+    expect(elevenLabsInput('Robot.', 0.4, 'eleven_multilingual_v2')).toBe('Robot.')
   })
 
   it('only lists words the game actually says', () => {

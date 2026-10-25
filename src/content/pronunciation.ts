@@ -136,9 +136,19 @@ export function withPauses(text: string): string {
     .replace(/^(Draken vill ha ett|Bygg ordet) (.+!)$/u, `$1, ${pauseMark} $2`)
 }
 
-/** What the speech engine is given for a sentence: pauses, then fixed pronunciations. */
+/** What Piper is given for a sentence: pauses, then fixed pronunciations. */
 export function speechInput(text: string): string {
   return withPronunciations(withPauses(text))
+}
+
+/**
+ * What ElevenLabs is given: the pause as a break inside the sentence (ElevenLabs pauses
+ * where it is told to, unlike Piper), and none of the fixes above, which are for Piper's
+ * espeak. Eleven v3 reads no break tags, so it gets the pause as punctuation.
+ */
+export function elevenLabsInput(text: string, pauseSeconds: number, model: string): string {
+  const pause = model === 'eleven_v3' ? '…' : `<break time="${pauseSeconds}s" />`
+  return withPauses(text).replace(` ${pauseMark} `, ` ${pause} `)
 }
 
 export function withPronunciations(text: string): string {

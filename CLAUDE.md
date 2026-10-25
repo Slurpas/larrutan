@@ -33,10 +33,10 @@ Changed files, commands run and their results, screenshots, known limitations, a
 - `npm run dev`: dev server, also on the local network for iPad testing. Always port 5173 (`strictPort`); a second copy fails instead of moving to 5174
 - `npm run typecheck`: `tsc -b` over `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, tests)
 - `npm run lint`: ESLint
-- `npm test`: Vitest unit tests (`src/**/*.test.ts(x)`)
+- `npm test`: Vitest unit tests (`src/**/*.test.ts(x)` and `scripts/**/*.test.ts`)
 - `npm run test:e2e`: Playwright (`tests/e2e`), desktop Chromium + iPad WebKit, on its own port 5199. Silent: specs import `test` from `tests/e2e/fixtures.ts` (ESLint enforces it), which keeps every clip away from the browser's media engine and fakes playback events, because test audio reached the user's speakers (muting alone didn't stop WebKit). `offline.spec.ts` runs against a release build (built into `.e2e-dist`, served on 4199), because the service worker only exists there
 - `npm run build`: typecheck + Vite build
-- `npm run speech`: generate missing speech clips with Piper (setup in README). Run it after any change to letters, words, phrases, challenge wording, `src/content/pronunciation.ts` or `src/speech/voiceSettings.ts`; `catalogue.test.ts` fails until you do. It also prints the review status and lists rejected clips with the user's notes
+- `npm run speech`: generate missing speech clips with the engine of `speechVoice` (`src/speech/voiceSettings.ts`; Piper now, setup in README). `npm run speech -- --samples` is the ElevenLabs trial (key in `.env`; spends real credits, at most `--max-credits`, so run it only when the user says so), `-- --list-voices` lists the account's voices. Run it after any change to letters, words, phrases, challenge wording, `src/content/pronunciation.ts` or `src/speech/voiceSettings.ts`; `catalogue.test.ts` fails until you do. It also prints the review status and lists rejected clips with the user's notes
 - `npm run sfx`: re-synthesise the sound effects (chime, fanfare, level-up, new item, pop) in `src/sound/sfx/`. `playEffect` plays one alongside speech; `speak({ sound })` plays it in the speech queue
 - `npm run icons`: render `scripts/app-icon.svg` to the PNG app icons in `public/icons/`
 - `npm run sprites`: render every sprite into `docs/sprites/contact-sheet.png`, every wardrobe item into `docs/sprites/wardrobe.png` and every challenge picture into `docs/sprites/pictures.png` for review (run after changing `src/art`)

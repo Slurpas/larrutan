@@ -109,8 +109,20 @@ describe('speech catalogue', () => {
   })
 
   it('renames a clip when the voice changes, so old audio and old approvals never carry over', () => {
-    const slower = { ...speechVoice, lengthScale: speechVoice.lengthScale + 0.1 }
-    expect(clipFileName('Var är Å?', slower)).not.toBe(clipFileName('Var är Å?'))
+    const longerPause = { ...speechVoice, pauseSeconds: speechVoice.pauseSeconds + 0.1 }
+    expect(clipFileName('Var är Å?', longerPause)).not.toBe(clipFileName('Var är Å?'))
+    const charlotte = {
+      engine: 'ElevenLabs',
+      voice: 'Charlotte',
+      voiceId: 'some-voice-id',
+      model: 'eleven_multilingual_v2',
+      speed: 0.85,
+      stability: 0.5,
+      similarity: 0.75,
+      pauseSeconds: 0.4,
+    } as const
+    expect(clipFileName('Var är Å?', charlotte)).not.toBe(clipFileName('Var är Å?'))
+    expect(clipFileName('Var är Å?', charlotte)).toMatch(/^var-ar-a-[0-9a-f]{8}\.mp3$/)
   })
 
   it('only retakes sentences the game says, from take 2 on', () => {

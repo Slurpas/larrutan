@@ -55,7 +55,7 @@ export default defineConfig({
   // Phaser alone is about 1.4 MB; it is loaded separately, after the start screen (src/world/loadHubGame.ts).
   build: { chunkSizeWarningLimit: 1500 },
   test: {
-    // Playwright specs live in tests/e2e and must not be picked up by Vitest.
-    include: ['src/**/*.test.{ts,tsx}'],
+    // Playwright specs live in tests/e2e and must not be picked up by Vitest. Build scripts have tests too.
+    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
   },
 })

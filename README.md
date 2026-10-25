@@ -55,6 +55,22 @@ npm run speech
 
 It generates new clips, regenerates any whose pronunciation or voice settings changed, and deletes unused ones; `npm run speech -- --all` regenerates everything. Words the engine says wrong are fixed in `src/content/pronunciation.ts`. Open the game with `?debug=voices` to see what plays and why.
 
+### Trying ElevenLabs
+
+ElevenLabs is a second engine, tried against Alma on 2026-10-25 and not used by the game yet. Its free plan gives 10,000 characters a month, for non-commercial use, and published clips must credit "elevenlabs.io". Like every engine here, it is only called when clips are made: each sentence is made once and kept as an MP3, and the game never calls it.
+
+1. Make a free account at elevenlabs.io (no card) and create an API key. If the dialog allows it, give the key only Text to Speech, Voices (read) and User (read).
+2. Add `ELEVENLABS_API_KEY=your-key` to `.env` (git ignores it).
+3. Try it:
+
+```bash
+npm run speech -- --samples
+```
+
+It says 10 game sentences in each voice of `trialVoices` (`src/speech/voiceSettings.ts`), next to Alma's clips, on `http://localhost:5173/voice-samples/index.html`. That costs about 800 credits; a run never spends more than `--max-credits` (1000 for the trial unless you give another number) or than the month has left. `npm run speech -- --list-voices` shows the voices the account can use. `--voices "Name,Other"` tries others, for example one made with ElevenLabs' Voice Design, and `--model` picks another model.
+
+To switch the game to an ElevenLabs voice, set `speechVoice` to it in `src/speech/voiceSettings.ts`. Then run `npm run speech -- --max-credits N`. Every clip gets a new name, so all of them are made again, and a full run must be given its credit limit. The pronunciation fixes in `src/content/pronunciation.ts` are for Piper and are not sent to ElevenLabs.
+
 ### Reviewing the voice
 
 Open the game on the dev server with `?review=voices`, for example `http://localhost:5173/?review=voices` (or the Network address on the iPad).

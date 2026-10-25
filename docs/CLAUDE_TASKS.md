@@ -369,6 +369,17 @@ Status 2026-10-25: **done.**
 - **Speech:** 114 new sentences, with pronunciation fixes for robot, raket and tomaten (stress), tiger (said "tijer"), nyckel (a short y), and N said "enn" like M's "emm".
 - **Rewards:** the mastery items take a little longer (13 letters and 43 words to master).
 
+#### Task 21 — Prepare the ElevenLabs trial
+- The user asked whether ElevenLabs can be used for free, without asking for the same audio over and over (2026-10-25).
+
+Status 2026-10-25: **prepared; the trial itself waits for the user's go-ahead** (it spends real credits).
+- **ElevenLabs is a second engine in `npm run speech`** (`scripts/elevenLabs.ts`, tested without network):
+  - Like Piper, each clip is made once and kept; only new or changed sentences are made.
+  - A clip's name includes what ElevenLabs is sent, so a Piper pronunciation fix never makes an ElevenLabs clip again.
+- **Credit check:** a run never spends more than `--max-credits` or than the month has left. A full run must be given its limit; the trial allows 1000 unless told otherwise.
+- **The trial:** `npm run speech -- --samples` says 10 game sentences in Charlotte, Matilda and Sarah (Multilingual v2), and in Charlotte with Flash told the text is Swedish. Each sits next to Alma's clip on `voice-samples/index.html` (git ignores it). That's about 800 of the 10,000 free credits.
+- **Not done:** no request has been sent to ElevenLabs yet, so the voice names and the account's voices are unchecked; `--list-voices` shows them.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.
@@ -402,7 +413,7 @@ Not scheduled. Pull an item in when it becomes the most valuable next step.
 - More slots (outerwear, glasses, face details) as the art allows.
 
 **Sound**
-- Try ElevenLabs voices (free plan: 10,000 credits a month, the game has about 6,100 characters; non-commercial use with credit to elevenlabs.io): about 10 test sentences once the user has put an API key in `.env` (the user, 2026-10-24: later).
+- Try ElevenLabs voices: prepared as Task 21 (the game is now about 8,100 characters); run the trial when the user says so.
 - Generated sound effects, quiet optional music, separate volume settings.
 
 **Adults**

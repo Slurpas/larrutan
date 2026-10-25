@@ -24,3 +24,6 @@ Thumbs.db
 
 # Local build tools (Piper text-to-speech and its voice model)
 .tools/
+
+# The ElevenLabs voice trial (npm run speech -- --samples): only for listening, never published
+voice-samples/

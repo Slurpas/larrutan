@@ -1,4 +1,4 @@
-import { speechInput } from '../content/pronunciation'
+import { elevenLabsInput, speechInput } from '../content/pronunciation'
 import { retakes } from './retakes'
 import { speechVoice, type SpeechVoice } from './voiceSettings'
 
@@ -21,7 +21,9 @@ export function clipFileName(text: string, voice: SpeechVoice = speechVoice): st
     .replace(/-+$/, '')
   const take = retakes[text]
   // Only retaken sentences add their take, so every other clip keeps its name (and its review).
-  const shapedBy = [text, speechInput(text), JSON.stringify(voice), ...(take ? [`take ${take}`] : [])].join('\n')
+  // What the engine is really given: a Piper pronunciation fix never renames an ElevenLabs clip (that would cost credits).
+  const input = voice.engine === 'ElevenLabs' ? elevenLabsInput(text, voice.pauseSeconds, voice.model) : speechInput(text)
+  const shapedBy = [text, input, JSON.stringify(voice), ...(take ? [`take ${take}`] : [])].join('\n')
   return `${slug}-${fnv1a(shapedBy.normalize('NFC'))}.mp3`
 }
 

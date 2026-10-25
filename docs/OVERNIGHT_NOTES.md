@@ -131,7 +131,7 @@ Every check passes on the final state:
 | # | What | Why it waits |
 |---|---|---|
 | ~~W1~~ | **Hosting: decided, GitHub Pages.** Live at https://slurpas.github.io/larrutan/. The repository is public, with commit emails switched to GitHub's no-reply address first | Done |
-| W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet). *Speed decided 2026-10-23: 1.4, with a pause before the target in "Var är … Å?". All clips regenerated. 2026-10-24: ElevenLabs is a third candidate, to try later (see Night 2).* | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
+| W2 | **Voice:** stay with Alma (Piper) or switch to a Gemini voice (Vindemiatrix, Sulafat; Achernar and Erinome not sampled yet). *Speed decided 2026-10-23: 1.4, with a pause before the target in "Var är … Å?". All clips regenerated. 2026-10-24: ElevenLabs is a third candidate; its trial is prepared (Task 21, `npm run speech -- --samples`).* | Your ear decides. Gemini's free tier is 10 requests/day, resetting about 09:00 |
 | W3 | **iPad checks** for Task 7: install from Safari, play in flight mode, check the voice with the silent switch on | Ready now, see "Check on the iPad" below |
 | W4 | **Voice review:** 76 approved so far. The second round of 9 rejected clips is redone (2026-10-23): M is now said "emm" (it sounded like N), stjärntröja has an explicit r, "orden" a plain d, and "Var är Ä?", "Var är Ö?" and "Du fick gröna byxor!" have fresh takes. Please listen to those 13 again (they're at the top of "To review"), then the other 146 | Only your ear can approve them |
 | ~~W5~~ | **Art style: decided, 16×16 pixel art** (`docs/ART_DIRECTION.md`) | Done |

@@ -4,7 +4,7 @@ import type { Level } from '../challenges/levels'
 import { letters } from '../content/letters'
 import { getItem, items } from './items'
 import { completeRound, initialProgress, newItems, seeItems, wear, type Progress } from './progress'
-import { levelForXp, levelProgress, xpForLevel } from './rules'
+import { isItemRound, levelForXp, levelProgress, xpForLevel } from './rules'
 
 let roundCounter = 0
 function play(progress: Progress, challenge: ChallengeId, level: Level = 1, score = 1) {
@@ -99,25 +99,30 @@ function playRounds(count: number): Progress {
 const highestRarity = (progress: Progress) => Math.max(0, ...progress.unlockedItems.map((id) => getItem(id).rarity))
 
 describe('unlocks', () => {
-  it('gives at most one item, every other round; the others earned come later, in catalogue order', () => {
-    // The first round earns the cap and the blue sweater, the second the green trousers too.
+  it('gives an item every round at first, then every other round, and later every third', () => {
+    expect([1, 2, 3, 4, 5, 6].every(isItemRound)).toBe(true)
+    expect([7, 8, 9, 10, 31, 32].map(isItemRound)).toEqual([false, true, false, true, false, true])
+    expect([33, 34, 35, 36, 37].map(isItemRound)).toEqual([false, true, false, false, true])
+  })
+
+  it('gives the first item earned, in catalogue order; the others wait their turn', () => {
+    // The cap for the first round; then the blue sweater (Hitta bokstaven done), though the green trousers are earned too.
     const first = play(initialProgress, 'findLetter')
     expect(first.outcome.newItems).toEqual(['cap'])
     const second = play(first.progress, 'firstLetter')
-    expect(second.outcome.newItems).toEqual([])
+    expect(second.outcome.newItems).toEqual(['blue-sweater'])
     const third = play(second.progress, 'wordPicture')
-    expect(third.outcome.newItems).toEqual(['blue-sweater'])
-    expect(play(third.progress, 'findLetter').outcome.newItems).toEqual([])
+    expect(third.outcome.newItems).toEqual(['green-trousers'])
   })
 
-  it('never gives more than one item in a round, and never in two rounds in a row, in 200 rounds of play', () => {
+  it('never gives more than one item in a round, nor in two rounds in a row after the first six, in 200 rounds of play', () => {
     let progress = initialProgress
     let lastItemRound = -2
     for (let i = 0; i < 200; i++) {
       const round = play(progress, (['findLetter', 'firstLetter', 'wordPicture', 'spelling', 'memory'] as const)[i % 5], ((i % 4) + 1) as Level)
       expect(round.outcome.newItems.length, `round ${i + 1}`).toBeLessThanOrEqual(1)
       if (round.outcome.newItems.length > 0) {
-        expect(i - lastItemRound, `round ${i + 1}`).toBeGreaterThanOrEqual(2)
+        if (i >= 6) expect(i - lastItemRound, `round ${i + 1}`).toBeGreaterThanOrEqual(2)
         lastItemRound = i
       }
       progress = round.progress
@@ -209,9 +214,9 @@ describe('new items', () => {
     expect(newItems(progress)).toEqual(progress.unlockedItems)
     progress = seeItems(progress)
     expect(newItems(progress)).toEqual([])
-    // Two more rounds: an item comes every other round.
+    // Two more rounds, both with an item for a new player.
     progress = play(play(progress, 'wordPicture').progress, 'wordPicture').progress
-    expect(newItems(progress)).toEqual(progress.unlockedItems.slice(-1))
+    expect(newItems(progress)).toEqual(progress.unlockedItems.slice(-2))
     expect(seeItems(seeItems(progress))).toEqual(seeItems(progress))
   })
 })

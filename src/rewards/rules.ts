@@ -18,6 +18,16 @@ export const rewardRules = {
     3: { first: 8, replay: 8 },
     4: { first: 8, replay: 8 },
   } satisfies Record<Level, { first: number; replay: number }>,
+  /**
+   * Which rounds may give an item (never more than one): every round for a new player
+   * (1–6), then every other round (8, 10, … 32), then every third (34, 37, …): more at first,
+   * then a bit harder (user feedback 2026-10-25). Rounds 7 and 33 keep a gap where the pace changes.
+   */
+  itemRhythm: [
+    { from: 1, to: 6, every: 1 },
+    { from: 8, to: 32, every: 2 },
+    { from: 34, to: Infinity, every: 3 },
+  ],
   /** XP needed to go from level n to n + 1 is `levelStepXp + levelStepGrowth * n`. */
   levelStepXp: 20,
   levelStepGrowth: 10,
@@ -26,6 +36,11 @@ export const rewardRules = {
 export function roundXp(level: Level, firstCompletion: boolean): number {
   const xp = rewardRules.levelXp[level]
   return firstCompletion ? xp.first : xp.replay
+}
+
+/** May the round with this number (the first is 1) give an item? */
+export function isItemRound(round: number): boolean {
+  return rewardRules.itemRhythm.some(({ from, to, every }) => round >= from && round <= to && (round - from) % every === 0)
 }
 
 /** Total XP needed to reach a player level (level 1 needs none): 0, 30, 70, 120, 180, … */

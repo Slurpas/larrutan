@@ -486,6 +486,28 @@ Status 2026-10-25: **done; a local commit, not pushed.**
 - **Only taught letters as extra bubbles:** the extra letters are now among the 13 the game teaches. Before, K, P, G, D, V and others appeared as wrong bubbles.
 - **New clips:** the words themselves use 11 letters the game doesn't teach yet, B D E G J K P U V X Y. Each got a clip ("K."), about 22 credits. "J." is shorter than the others (0.32 s), so it's worth a listen.
 
+#### Task 26 — More items early, "Visa alla", and ideas for new items
+- The user (2026-10-25): give a few more items early on, then make it a bit harder. How many items are there? A button to show them all. More items, rare ones, fun ones (clown things), pets, and a page to pick from.
+
+Status 2026-10-25: **done; a local commit, not pushed.**
+- **A new rhythm** (`itemRhythm` in `src/rewards/rules.ts`). Still at most one item a round, the first one earned in catalogue order:
+  - every round for a new player (rounds 1–6);
+  - then every other round (8, 10, … 32);
+  - then every third round (34, 37, …).
+  - Rounds 7 and 33 leave a gap where the pace changes.
+  - The pacing tests still pass: only common and uncommon items in the first session, rare ones after about a week of play, and the crown between round 70 and 100.
+- **No item thresholds changed:** the hints say them out loud ("Klara tjugofem rundor …"), so changing one would need new recordings.
+- **"Visa alla" in "Mina saker"**, with a count ("7/37"). It shows every item; locked ones say how to earn them when tapped. "Visa mina" goes back to the child's own things and the next one in each row. The default is unchanged.
+- **The count:** 37 items: 12 hats, 6 sweaters, 5 trousers, 9 on the back, 5 in the hand.
+- **Ideas to pick from:** `docs/sprites/candidates.png` (made by `npm run sprites`) shows 17 numbered items and 4 pets (`src/art/itemCandidates.ts`, front view only, not in the game):
+  - **Hats:** clown wig with a red nose, propeller cap, bunny ears, wizard hat, space helmet, flower crown, cowboy hat.
+  - **Clothes:** a dotted clown shirt, a tiger shirt, dotted clown trousers.
+  - **On the back:** a jetpack, dragon wings.
+  - **In the hand:** an ice cream, a lollipop, a kite, a teddy, a magnifying glass.
+  - **Pets:** a kitten, a puppy, a rabbit, a baby dragon.
+  - **Cost:** each picked item needs two spoken sentences (about 50–80 ElevenLabs credits). Pets need their own feature: a pet that follows the character.
+- **Code:** `composeCharacter` takes the item art to look in, so the sheet can dress the character in ideas.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

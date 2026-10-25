@@ -1,6 +1,6 @@
 import { characterFeetRow, characterFrames, characterHeadTop, type Facing } from './character'
 import { Pixels } from './pixels'
-import { clothingMask, wardrobe, type ArtFacing, type PlacedSprite, type Slot } from './wardrobe'
+import { clothingMask, wardrobe, type ArtFacing, type ItemArt, type PlacedSprite, type Slot } from './wardrobe'
 
 /** What the character wears: at most one item per slot (src/rewards/items.ts). */
 export type Outfit = Readonly<Partial<Record<Slot, string>>>
@@ -21,15 +21,21 @@ const slotOrder: readonly Slot[] = ['back', 'head', 'held']
 /**
  * The one character renderer (PRD §9): the character in one walk frame, facing one
  * way, wearing an outfit. Used on the map, in "Mina saker" and on the reward screen.
+ * `catalogue` is the item art to look in: the game's wardrobe, or ideas still to be picked.
  */
-export function composeCharacter(facing: CharacterFacing, frame: number, outfit: Outfit): string[] {
+export function composeCharacter(
+  facing: CharacterFacing,
+  frame: number,
+  outfit: Outfit,
+  catalogue: Readonly<Record<string, ItemArt>> = wardrobe,
+): string[] {
   const art: ArtFacing = facing === 'left' ? 'side' : facing
   const frames = characterFrames[art]
-  const body = dress(frames[frame % frames.length] ?? [], outfit)
+  const body = dress(frames[frame % frames.length] ?? [], outfit, catalogue)
 
   const placed: { slot: Slot; sprite: PlacedSprite }[] = []
   for (const slot of slotOrder) {
-    const item = outfit[slot] ? wardrobe[outfit[slot]] : undefined
+    const item = outfit[slot] ? catalogue[outfit[slot]] : undefined
     if (item?.kind === 'sprite') placed.push({ slot, sprite: item[art] ?? item.down })
   }
 
@@ -53,9 +59,9 @@ export function characterPortrait(outfit: Outfit): string[] {
 }
 
 /** Repaints the shirt and trousers for the worn top and bottoms (mask-based, so every frame fits). */
-function dress(frame: readonly string[], outfit: Outfit): readonly string[] {
+function dress(frame: readonly string[], outfit: Outfit, catalogue: Readonly<Record<string, ItemArt>>): readonly string[] {
   const garments = (['top', 'bottoms'] as const).flatMap((slot) => {
-    const item = outfit[slot] ? wardrobe[outfit[slot]] : undefined
+    const item = outfit[slot] ? catalogue[outfit[slot]] : undefined
     const mask = clothingMask[slot]
     if (item?.kind !== 'recolor' || !mask) return []
     // Stripes are counted from the top of the garment, so they line up in every frame.

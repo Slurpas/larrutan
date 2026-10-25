@@ -3,6 +3,7 @@
 //   signs with their letters and pictures, our own scenery, and the Kenney tiles in use (Task 9).
 // - docs/sprites/wardrobe.png: every item, worn, seen from the front, the back and both sides (Task 10).
 // - docs/sprites/pictures.png: every challenge picture on a card, with its word (Task 11).
+// - docs/sprites/candidates.png: numbered ideas for new things to earn, and pets, for the user to pick from (Task 26).
 import { mkdirSync, readFileSync } from 'node:fs'
 import { chromium } from '@playwright/test'
 import { createServer } from 'vite'
@@ -17,6 +18,7 @@ const { tinyTownHouses, tinyTownTiles } = await load('/src/art/kenney.ts')
 const { composeCharacter, outfitSize } = await load('/src/art/outfit.ts')
 const { items, rarityNames } = await load('/src/rewards/items.ts')
 const { pictures } = await load('/src/art/pictures.ts')
+const { itemCandidates, petCandidates } = await load('/src/art/itemCandidates.ts')
 const { words } = await load('/src/content/words.ts')
 await server.close()
 
@@ -290,4 +292,54 @@ const picturesPng = await page.evaluate(
 )
 writeFileSync('docs/sprites/pictures.png', Buffer.from(picturesPng.split(',')[1], 'base64'))
 console.log('docs/sprites/pictures.png')
+
+// Ideas for new things to earn, numbered so the user can answer with numbers; the pets come last.
+const catalogue = Object.fromEntries(itemCandidates.map((candidate) => [candidate.id, candidate.art]))
+const slotNames = { head: 'huvudet', top: 'tröja', bottoms: 'byxor', back: 'ryggen', held: 'i handen' }
+const candidates = [
+  ...itemCandidates.map((c) => ({ name: c.name, where: slotNames[c.slot], grid: composeCharacter('down', 0, { [c.slot]: c.id }, catalogue) })),
+  ...petCandidates.map((p) => ({ name: p.name, where: 'husdjur', grid: composeCharacter('down', 0, {}), pet: p.grid })),
+]
+const candidatesPng = await page.evaluate(
+  ({ palette, candidates, size }) => {
+    const scale = 5
+    const perRow = 6
+    const cellW = size.width * scale + 120
+    const cellH = size.height * scale + 70
+    const canvas = document.createElement('canvas')
+    canvas.width = perRow * cellW + 24
+    canvas.height = Math.ceil(candidates.length / perRow) * cellH + 70
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = '#cfe8fb'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = '#3f2631'
+    ctx.font = '600 26px system-ui'
+    ctx.fillText('Ideas for new things to earn: answer with the numbers you want (not in the game yet)', 24, 42)
+    const draw = (grid, x, y) =>
+      grid.forEach((row, r) =>
+        [...row].forEach((c, col) => {
+          if (c === '.') return
+          ctx.fillStyle = palette[c]
+          ctx.fillRect(x + col * scale, y + r * scale, scale, scale)
+        }),
+      )
+    candidates.forEach(({ name, where, grid, pet }, i) => {
+      const x = 24 + (i % perRow) * cellW
+      const y = 64 + Math.floor(i / perRow) * cellH
+      ctx.fillStyle = '#84c669'
+      ctx.fillRect(x, y, cellW - 16, cellH - 50)
+      draw(grid, x + 10, y + 6)
+      if (pet) draw(pet, x + 10 + size.width * scale, y + 6 + (size.height - 4 - pet.length) * scale)
+      ctx.fillStyle = '#3f2631'
+      ctx.font = '700 20px system-ui'
+      ctx.fillText(`${i + 1}. ${name}`, x, y + cellH - 26)
+      ctx.font = '500 15px system-ui'
+      ctx.fillText(where, x, y + cellH - 8)
+    })
+    return canvas.toDataURL()
+  },
+  { palette, candidates, size: outfitSize },
+)
+writeFileSync('docs/sprites/candidates.png', Buffer.from(candidatesPng.split(',')[1], 'base64'))
+console.log('docs/sprites/candidates.png')
 await browser.close()

@@ -31,13 +31,15 @@ interface MyThingsProps {
  * "Mina saker": the wardrobe. Tap an item to put it on (it replaces what was worn in the
  * same place), tap it again to take it off. Each row shows the child's own things, then
  * only the next one to earn, which says out loud how to earn it: a wall of locked cards
- * hid the child's few things (2026-10-24). Things new since the last visit are marked.
+ * hid the child's few things (2026-10-24). "Visa alla" shows every item, for a grown-up
+ * who wants to see what there is (2026-10-25). Things new since the last visit are marked.
  * No countdowns, no pressure (PRD §10).
  */
 export function MyThings({ onClose }: MyThingsProps) {
   const progress = useProgress()
   // Marked for this whole visit; from now on they aren't new any more (the map's button stops pointing here).
   const [fresh] = useState(() => newItems(getProgress()))
+  const [showAll, setShowAll] = useState(false)
 
   useEffect(() => {
     markItemsSeen()
@@ -55,9 +57,10 @@ export function MyThings({ onClose }: MyThingsProps) {
     }
   }
 
-  /** The child's own things in this row, then the next one to earn. */
+  /** The child's own things in this row, then the next one to earn (or every item, with "Visa alla"). */
   function shownIn(slot: Slot): Item[] {
     const row = items.filter((item) => item.slot === slot)
+    if (showAll) return row
     const owned = row.filter((item) => progress.unlockedItems.includes(item.id))
     const next = row.find((item) => !progress.unlockedItems.includes(item.id))
     return next ? [...owned, next] : owned
@@ -69,6 +72,12 @@ export function MyThings({ onClose }: MyThingsProps) {
         <RoundButton label="Till kartan" onClick={onClose}>
           <HouseIcon />
         </RoundButton>
+        <button type="button" className={styles.showAll} aria-pressed={showAll} onClick={() => setShowAll((all) => !all)}>
+          {showAll ? 'Visa mina' : 'Visa alla'}
+          <span className={styles.count}>
+            {progress.unlockedItems.length}/{items.length}
+          </span>
+        </button>
         <XpBar xp={progress.xp} />
       </div>
 

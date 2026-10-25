@@ -288,7 +288,7 @@ Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the r
 
 **Four station levels (Task 23):** levels 1 and 2 give what easy and hard gave (20 and 30 the first time, then 5 and 8). Levels 3 and 4 give 8 every round, with no first-time bonus, so a child who climbs doesn't reach the rare and legendary items sooner.
 
-**Wardrobe (Task 10, bigger in Task 14):** pixel-art items in five slots. A round gives **at most one item, and only every other round** (user feedback 2026-10-24); when more are earned they wait, in the order of the list below. Level 2 can be finished in the first session, so it gives uncommon items, not rare ones.
+**Wardrobe (Task 10, bigger in Task 14):** pixel-art items in five slots. A round gives **at most one item**: in every round for a new player (rounds 1–6), then every other round (8–32), then every third (from 34) (user feedback 2026-10-24 and 2026-10-25: more at first, then a bit harder). When more are earned they wait, in the order of the list below. Level 2 can be finished in the first session, so it gives uncommon items, not rare ones.
 
 | Tier | Items and how they are earned |
 |---|---|

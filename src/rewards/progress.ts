@@ -6,7 +6,7 @@ import { words } from '../content/words'
 import { spelledLengths, spellingWords } from '../challenges/spelling/createRound'
 import { boxOf, practiceKey, recordPractice, type Mastery, type Practiced } from '../learning/mastery'
 import { findItem, items, type UnlockCondition } from './items'
-import { levelForXp, roundXp } from './rules'
+import { isItemRound, levelForXp, roundXp } from './rules'
 
 export interface Progress {
   xp: number
@@ -86,13 +86,12 @@ export function completeRound(
     stations: { ...progress.stations, [completion.challenge]: station.state },
     mastery: recordPractice(progress.mastery, completion.challenge, completion.practiced),
   }
-  // Items are rare treats (user feedback 2026-10-24): at most one, and only every other round
-  // (rounds 1, 3, 5, …). It is the first one earned, in catalogue order; anything else earned
-  // waits for a later round.
-  const earned =
-    next.roundsCompleted % 2 === 1
-      ? items.find((item) => !next.unlockedItems.includes(item.id) && isUnlocked(item.unlock, next))
-      : undefined
+  // Items are treats: at most one a round, every round at first, then less often (`itemRhythm`,
+  // user feedback 2026-10-24 and 2026-10-25). It is the first one earned, in catalogue order;
+  // anything else earned waits for a later round.
+  const earned = isItemRound(next.roundsCompleted)
+    ? items.find((item) => !next.unlockedItems.includes(item.id) && isUnlocked(item.unlock, next))
+    : undefined
   const newItems = earned ? [earned.id] : []
 
   const outcome: RoundOutcome = {

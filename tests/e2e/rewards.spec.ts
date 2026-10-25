@@ -67,6 +67,11 @@ test('a new item is marked on the map; tapping the character opens Mina saker, w
   // Each row shows the child's own things, then only the next one to earn (it says how), not every locked item.
   await expect(page.getByRole('button', { name: 'Mössa, Vanlig, låst' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Krona, Legendarisk, låst' })).toHaveCount(0)
+  // A grown-up can see everything there is, and go back.
+  await press(page.getByRole('button', { name: /^Visa alla/ }), hasTouch)
+  await expect(page.getByRole('button', { name: 'Krona, Legendarisk, låst' })).toBeVisible()
+  await press(page.getByRole('button', { name: /^Visa mina/ }), hasTouch)
+  await expect(page.getByRole('button', { name: 'Krona, Legendarisk, låst' })).toHaveCount(0)
 
   await press(cap, hasTouch)
   await expect(cap).toHaveAttribute('aria-pressed', 'true')
@@ -75,7 +80,7 @@ test('a new item is marked on the map; tapping the character opens Mina saker, w
   await expect(page.getByRole('button', { name: 'Mina saker', exact: true })).toBeVisible()
 })
 
-test('two rounds without slips make the next one harder, and say so; items come at most every other round', async ({ page, hasTouch }) => {
+test('two rounds without slips make the next one harder, and say so; a new player gets an item every round', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   await tapStation(page, 'findLetter', hasTouch)
   await playRoundByKeyboard(page, firstRound)
@@ -92,8 +97,8 @@ test('two rounds without slips make the next one harder, and say so; items come 
   await tapStation(page, 'findLetter', hasTouch)
   await expect(page.getByRole('img', { name: 'Nivå 1 av 4' })).toBeVisible()
   await playRoundByKeyboard(page, secondRound)
-  // The blue sweater is earned by now, but the second round gives nothing.
-  await expect(page.getByRole('button', { name: /^Ny sak/ })).toHaveCount(0)
+  // Hitta bokstaven's first level is done, so the second round gives the blue sweater.
+  await expect(page.getByRole('button', { name: 'Ny sak: Blå tröja, ta på' })).toBeVisible()
   // Two good rounds: the station says it gets harder next time, and it does.
   await expect(page.getByRole('img', { name: 'Nästa gång: svårare, nivå 2 av 4' })).toBeVisible()
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)

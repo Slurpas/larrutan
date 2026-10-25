@@ -168,9 +168,14 @@
   animation: land 260ms ease-out;
 }
 
-/* Easy level: the word is shown faintly, to be filled in. */
+/* The word shown faintly, to be filled in; on some levels it fades away after a moment. */
 .faint {
   opacity: 0.25;
+  transition: opacity 800ms ease-in;
+}
+
+.faded {
+  opacity: 0;
 }
 
 /* After a wrong tap: this is the slot to fill. */
@@ -197,6 +202,10 @@
 
 .done:nth-child(4) {
   animation-delay: 240ms;
+}
+
+.done:nth-child(5) {
+  animation-delay: 320ms;
 }
 
 /* The word's picture, next to the speaker. Tapping it says the word again. */
@@ -308,6 +317,9 @@
   .next,
   .done {
     animation: none;
+  }
+  .faint {
+    transition: none;
   }
   .leaving {
     animation: none;

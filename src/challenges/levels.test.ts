@@ -131,7 +131,9 @@ describe('the levels of every station', () => {
       }
       expect(levelParams('wordPicture', higher).choices).toBeGreaterThanOrEqual(levelParams('wordPicture', lower).choices)
       const [s, t] = [levelParams('spelling', lower), levelParams('spelling', higher)]
-      expect(t.extraLetters >= s.extraLetters && (s.showWord || !t.showWord) && t.lengths[1] >= s.lengths[1]).toBe(true)
+      const fading = ['word', 'word briefly', 'every other letter briefly', 'none']
+      expect(fading.indexOf(t.hint)).toBeGreaterThan(fading.indexOf(s.hint))
+      expect(t.extraLetters >= s.extraLetters && t.lengths[1] >= s.lengths[1]).toBe(true)
       expect(levelParams('memory', higher).pairs).toBeGreaterThan(levelParams('memory', lower).pairs)
     }
   })

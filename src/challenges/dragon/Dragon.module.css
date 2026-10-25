@@ -62,6 +62,25 @@
   animation: shake 600ms ease-in-out;
 }
 
+/* ...spat out with a puff of fire (open mouth), then "bläh" (tongue out) with smoke from the nose. */
+.spitOut {
+  animation: spitOut var(--refuse) steps(1) both;
+}
+
+.yuck {
+  animation: yuck var(--refuse) steps(1) both;
+}
+
+.fire {
+  transform-origin: right center;
+  animation: fire calc(var(--refuse) * 0.5) ease-out both;
+}
+
+.smoke {
+  transform-origin: left bottom;
+  animation: smoke calc(var(--refuse) * 0.55) ease-out calc(var(--refuse) * 0.45) both;
+}
+
 /* Chewing: the mouth opens and shuts. */
 .chewA {
   animation: chew 360ms steps(1) infinite;
@@ -179,6 +198,60 @@
   }
 }
 
+@keyframes spitOut {
+  0% {
+    visibility: visible;
+  }
+  45%,
+  100% {
+    visibility: hidden;
+  }
+}
+
+@keyframes yuck {
+  0% {
+    visibility: hidden;
+  }
+  45%,
+  100% {
+    visibility: visible;
+  }
+}
+
+@keyframes fire {
+  from {
+    opacity: 0;
+    scale: 0.3;
+  }
+  15% {
+    opacity: 1;
+    scale: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.15;
+    translate: calc(var(--px) * -6) 0;
+  }
+}
+
+@keyframes smoke {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.1;
+    translate: calc(var(--px) * -3) calc(var(--px) * -8);
+  }
+}
+
 @keyframes chew {
   0% {
     visibility: visible;
@@ -207,8 +280,14 @@
   .shake,
   .chewA,
   .chewB,
-  .crumbs {
+  .crumbs,
+  .spitOut,
+  .yuck {
     animation: none;
+  }
+  .fire,
+  .smoke {
+    display: none;
   }
   .cookie {
     transition: none;

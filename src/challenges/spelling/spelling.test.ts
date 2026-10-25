@@ -23,11 +23,11 @@ describe('the words to spell', () => {
     expect(lettersOf(list.find((w) => w.base === 'lås')!)).toEqual(['L', 'Å', 'S'])
   })
 
-  it('has enough longer words (4–5 letters) for the top level, with all their extra letters, none new', () => {
+  it('adds the 5-letter words at the top level, with extra letters only from the short words', () => {
     const [shortest, longest] = levelParams('spelling', 4).lengths
     const list = spellingWords(words, [shortest, longest])
-    expect(list.length).toBeGreaterThanOrEqual(10)
-    for (const word of list) expect(word.base.length, word.base).toBeGreaterThanOrEqual(4)
+    expect(list.filter((word) => word.base.length === 5).length).toBeGreaterThanOrEqual(5)
+    for (const word of list) expect(word.base.length, word.base).toBeLessThanOrEqual(5)
     const { lookAlike, extraLetters: extras } = levelParams('spelling', 4)
     const shortLetters = new Set(spellingWords(words).flatMap(lettersOf))
     for (const seed of seeds)

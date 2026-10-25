@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from 'react'
 import { meadowFlower, meadowSoil, meadowTop } from '../../art/bubbles'
-import { cookie, cookieSize, crumbs, dragonFaces, dragonMouth, dragonSize } from '../../art/dragon'
+import { cookie, cookieSize, crumbs, dragonFaces, dragonMouth, dragonSize, firePuff, smokePuff } from '../../art/dragon'
 import { composeCharacter, outfitFeetRow } from '../../art/outfit'
 import type { RoundOutcome } from '../../rewards/progress'
 import { useProgress } from '../../rewards/store'
@@ -32,9 +32,10 @@ import styles from './Dragon.module.css'
 
 const backgrounds = { meadowTop: pixelBackground(meadowTop), meadowSoil: pixelBackground(meadowSoil) }
 
-/** A cookie's flight into the mouth (or back out), and how long the dragon chews or shakes its head. */
+/** A cookie's flight into the mouth (or back out). */
 const FLY_MS = 450
-const REFUSE_MS = 700
+/** A wrong cookie: spat out with a puff of fire, then "bläh", tongue out and smoke from the nose. */
+const REFUSE_MS = 1000
 /** Chewing and the next question: the right answer's celebration. */
 const EAT_MS = 1300
 /** Room for the top bar above the cookies. */
@@ -48,7 +49,7 @@ const DRAG_PX = 12
  * idle: waiting for a cookie, for as long as the child needs
  * flying: a cookie on its way into the mouth
  * eating: the right cookie; the dragon chews, then the next question
- * refusing: the wrong cookie; the dragon shakes its head and the cookie comes back
+ * refusing: the wrong cookie; the dragon spits it back out with a puff of fire and pulls a face
  */
 type Phase = 'idle' | 'flying' | 'eating' | 'refusing'
 
@@ -246,7 +247,7 @@ export function Dragon<Q extends ChoiceQuestion>({
     <main
       ref={sceneRef}
       className={styles.scene}
-      style={{ '--px': `${px}px`, '--cookie': `${cookiePx}px`, '--fly': `${FLY_MS}ms` } as CSSProperties}
+      style={{ '--px': `${px}px`, '--cookie': `${cookiePx}px`, '--fly': `${FLY_MS}ms`, '--refuse': `${REFUSE_MS}ms` } as CSSProperties}
       // Older Safari has no overflow: clip, so undo any scrolling.
       onScroll={(event) => event.currentTarget.scrollTo(0, 0)}
     >
@@ -269,6 +270,14 @@ export function Dragon<Q extends ChoiceQuestion>({
             <PixelSprite grid={dragonFaces.chew} className={cx(styles.fill, styles.chewA)} />
             <PixelSprite grid={dragonFaces.closed} className={cx(styles.fill, styles.chewB)} />
             {sprite(crumbs, (dragonMouth.x - 6) * px, (dragonMouth.y - 2) * px, styles.crumbs)}
+          </>
+        ) : feeding.phase === 'refusing' ? (
+          <>
+            {/* Out it goes with a puff of fire; then "bläh", with smoke from the nose. */}
+            <PixelSprite grid={dragonFaces.open} className={cx(styles.fill, styles.spitOut)} />
+            <PixelSprite grid={dragonFaces.yuck} className={cx(styles.fill, styles.yuck)} />
+            {sprite(firePuff, (2 - (firePuff[0]?.length ?? 0)) * px, (dragonMouth.y - firePuff.length / 2) * px, styles.fire)}
+            {sprite(smokePuff, (3 - (smokePuff[0]?.length ?? 0) / 2) * px, (19 - smokePuff.length) * px, styles.smoke)}
           </>
         ) : (
           <PixelSprite grid={dragonFaces[face]} className={styles.fill} />

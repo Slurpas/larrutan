@@ -447,6 +447,33 @@ Status 2026-10-25: **done; a local commit, not pushed.**
   - Unit tests cover the rule, the scores (with the simulated players), every level building valid rounds and the save upgrade.
   - Browser tests open stations at a given level (`startChallengeAt`, through a saved game) and check what was said (`hasSaid`).
 
+#### Task 24 — Playtest fixes: the missing Ä, the dragon's "no thanks", Bygg ordet's fading word
+- The user, playing on 2026-10-25:
+  - "Draken vill ha ett Ä" never said the Ä, not even with the speaker button. "Här är Ä!" said it fine.
+  - The dragon could show that it didn't like a letter, by bursting fire or pulling a face (but not by being sick).
+  - In Bygg ordet, level 1 shows the word and level 2 shows nothing. A middle ground: the word for a few seconds, then every other letter for a few seconds.
+
+Status 2026-10-25: **done; a local commit, not pushed.**
+- **The Ä:** ElevenLabs' recording of that one sentence was 1.4 s with no pause: the voice skipped the letter. Our finishing cut nothing.
+  - A retake (`src/speech/retakes.ts`) made a new recording, 2.6 s with the pause and the letter after it, as loud as the rest (about 24 credits).
+  - The other 90 sentences with a pause ("Var är …?", "Draken vill ha ett …!", "Bygg ordet …!") all have speech after the pause, and no clip is unusually short for its text.
+- **The dragon's "no thanks":** a wrong cookie is spat back out with a puff of fire. Then the dragon pulls a face, eyes squeezed shut and tongue out, while three little puffs of smoke rise from its nose. The whole thing takes 1 second instead of 0.7. A cookie tapped meanwhile is still fed afterwards.
+  - New art in `src/art/dragon.ts`: the `yuck` face, `firePuff` and `smokePuff`.
+  - With reduced motion, only the face changes.
+- **Bygg ordet's word fades out step by step:**
+
+  | Level | The word in the slots | Extra letters | Words |
+  |---|---|---|---|
+  | 1 | shown faintly | 3 | 2–4 letters |
+  | 2 | shown until 2.5 s after the voice has said it, then fades | 3 | 2–4 letters |
+  | 3 | every other letter, then fades | 4, one a look-alike | 2–4 letters |
+  | 4 | not shown | 4, one a look-alike | 2–5 letters |
+
+  - **New sentences:** level 2 says "Titta noga! Snart försvinner ordet." and level 3 "Nu syns bara några bokstäver!" (about 64 credits). Level 4 keeps "Nu blir det svårare! Nu syns inte ordet."
+  - **Dropped:** "Nu blir orden längre!", since the longer words now come in with level 4.
+  - **Fix:** the last slot of a 5-letter word now hops in turn when the word is built.
+- **Credits:** about 88 this time. The account can't report how many are left; by my count very few remain this month.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

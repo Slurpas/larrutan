@@ -38,6 +38,8 @@ const backgrounds = { meadowTop: pixelBackground(meadowTop), meadowSoil: pixelBa
 
 /** The built word is celebrated (a happy sound, the word said) before the next one. */
 const BUILT_MS = 1700
+/** On the levels that show the word for a moment: how long it stays after the voice has said it. */
+const HINT_MS = 2500
 /** Room for the top bar above the word's slots. */
 const TOP_BAR = 160
 /** The meadow's height, in art pixels. */
@@ -46,8 +48,8 @@ const GROUND = 32
 /**
  * Bygg ordet: the voice says a word ("Bygg ordet sol!"), its picture is next to the
  * speaker, and the child pops the bubbles with its letters in order to fill the slots.
- * The first level shows the word faintly in the slots; the next ones hide it, add an extra
- * letter that looks like one in the word, and then longer words (src/challenges/levels.ts).
+ * The first level shows the word faintly in the slots; then it shows for a moment only, then
+ * only every other letter for a moment, then not at all (src/challenges/levels.ts).
  * A letter that isn't in the word turns grey; after a wrong tap the voice says the word
  * again and the next slot lights up, after two the right bubble does too. Nothing is timed.
  */
@@ -83,14 +85,25 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
     return () => observer.disconnect()
   }, [])
 
-  // Say each new word; the first round at a new level starts by saying what is harder.
+  // Say each new word; the first round at a new level starts by saying what is harder. A word
+  // shown for a moment fades a little after it has been said.
   const ask = word ? phrases.spellingQuestion(word.base) : null
-  const isFirst = state.questionIndex === 0
+  const { questionIndex } = state
+  const isFirst = questionIndex === 0
   const intro = announceLevel ? levelIntro('spelling', level) : undefined
+  const [hintGoneFor, setHintGoneFor] = useState<number | null>(null)
   useEffect(() => {
     if (!ask) return
-    void speak(isFirst && intro ? [intro, ask] : ask)
-  }, [ask, isFirst, intro])
+    let cancelled = false
+    let timer: ReturnType<typeof setTimeout> | undefined
+    void speak(isFirst && intro ? [intro, ask] : ask).then(() => {
+      if (!cancelled) timer = setTimeout(() => setHintGoneFor(questionIndex), HINT_MS)
+    })
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [ask, isFirst, intro, questionIndex])
   useEffect(() => stopSpeech, [])
 
   // The word is built: a happy sound and the word, then the next one (or the end of the round).
@@ -154,7 +167,9 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
   const area = { left: areaLeft, top: areaTop, width: size.width - areaLeft - 8 * px, height: groundTop - 6 * px - areaTop }
   const homes = bubbleLayout(question.bubbles.length, area, bubblePx, round.seed + state.questionIndex)
   const hint = hintBubble(state)
-  const { showWord } = params
+  const wordHint = params.hint
+  const hintGone = wordHint !== 'word' && hintGoneFor === questionIndex
+  const hinted = (i: number) => wordHint !== 'none' && (wordHint !== 'every other letter briefly' || i % 2 === 0)
 
   const sprite = (grid: readonly string[], left: number, top: number) => (
     <PixelSprite
@@ -238,7 +253,7 @@ export function Spelling({ seed, level, announceLevel, practiceBox, onRoundCompl
               state.phase === 'built' && styles.done,
             )}
           >
-            {i < state.built ? letter : showWord ? <span className={styles.faint}>{letter}</span> : null}
+            {i < state.built ? letter : hinted(i) ? <span className={cx(styles.faint, hintGone && styles.faded)}>{letter}</span> : null}
           </span>
         ))}
       </div>

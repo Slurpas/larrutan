@@ -54,14 +54,19 @@
       "input": "Nu ska du läsa ordet själv!"
     },
     {
+      "text": "Titta noga! Snart försvinner ordet.",
+      "file": "titta-noga-snart-forsvinner-ordet-ee543bfa.mp3",
+      "input": "Titta noga! Snart försvinner ordet."
+    },
+    {
+      "text": "Nu syns bara några bokstäver!",
+      "file": "nu-syns-bara-nagra-bokstaver-8bbccfe2.mp3",
+      "input": "Nu syns bara några bokstäver!"
+    },
+    {
       "text": "Nu blir det svårare! Nu syns inte ordet.",
       "file": "nu-blir-det-svarare-nu-syns-inte-ordet-90888e4e.mp3",
       "input": "Nu blir det svårare! Nu syns inte ordet."
-    },
-    {
-      "text": "Nu blir orden längre!",
-      "file": "nu-blir-orden-langre-bfe0e2e6.mp3",
-      "input": "Nu blir orden längre!"
     },
     {
       "text": "Nu blir det fler kort!",
@@ -705,7 +710,7 @@
     },
     {
       "text": "Draken vill ha ett Ä!",
-      "file": "draken-vill-ha-ett-a-6272a160.mp3",
+      "file": "draken-vill-ha-ett-a-2c660d07.mp3",
       "input": "Draken vill ha ett, … Ä!"
     },
     {

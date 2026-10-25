@@ -51,7 +51,7 @@ test('Bygg ordet can be completed by touch, and a letter that is not in the word
   await expectRoundCompleteThenMap(page)
 })
 
-test('the top level builds longer words, with more letters in the bubbles', async ({ page, hasTouch }) => {
+test('the top level hides the word and asks for words of up to five letters', async ({ page, hasTouch }) => {
   const { lookAlike, extraLetters, lengths } = levelParams('spelling', 4)
   const longer = createSpellingRound({ seed: SEED, words, difficulty: lookAlikeRule(lookAlike), extras: extraLetters, lengths })
   await startChallengeAt(page, hasTouch, 'spelling', 4)

@@ -146,7 +146,7 @@ Attempts, hints and successes are tracked separately from rewards.
 - **Look-alike levels:** they still ask about the look-alike letters; mastery only changes their order.
 - **Saving and visibility:** boxes are saved with the progress (since save version 2) and never shown to the child.
 - **Levels (Task 23, replacing Task 15's easy and hard):**
-  - **Four per station,** each harder in a way the child can notice: more choices or cards, look-alikes, the word written (and then only written), longer words, a longer ride. The table is `src/challenges/levels.ts` (summed up in `docs/CLAUDE_TASKS.md`, Task 23).
+  - **Four per station,** each harder in a way the child can notice: more choices or cards, look-alikes, the word written (and then only written), the word to build fading away step by step, a longer ride. The table is `src/challenges/levels.ts` (summed up in `docs/CLAUDE_TASKS.md`, Task 23).
   - **Every round gets a score** from 0 (no better than guessing) to 1 (flawless): answers right on the first tap in the choice games, letters found on the first tap in Bygg ordet, and in Memory how often the child found a partner card they had already seen.
   - **Up** after two rounds in a row averaging at least 0.8, and the end of the round says so ("Nästa gång blir det svårare."). **Down** after two averaging at most 0.3, without a word. Otherwise the station stays, so one lucky or unlucky round never moves it.
   - **The new level's sentence** ("Nu blir det fler kort!") is said once, on the first round there. The level pips show the level.

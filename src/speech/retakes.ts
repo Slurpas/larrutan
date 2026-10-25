@@ -11,4 +11,6 @@
  */
 export const retakes: Readonly<Record<string, number>> = {
   // Alma's retakes ("Dou fick …", 2026-10-23) were dropped when the voice changed on 2026-10-25.
+  // The first take left out the letter: "Draken vill ha ett …" and nothing (the user, 2026-10-25).
+  'Draken vill ha ett Ä!': 2,
 }

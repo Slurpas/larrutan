@@ -26,8 +26,8 @@ export interface WordPictureLevel {
 }
 
 export interface SpellingLevel {
-  /** The word is shown faintly in the slots. */
-  showWord: boolean
+  /** What of the word is shown faintly in the slots: all of it, all of it for a moment, every other letter for a moment, or nothing. */
+  hint: 'word' | 'word briefly' | 'every other letter briefly' | 'none'
   extraLetters: number
   /** One extra letter looks like a letter of the word. */
   lookAlike: boolean
@@ -69,11 +69,13 @@ export const stationLevels = {
     { params: { choices: 4, word: 'said and written' }, intro: phrases.writtenWordIntro },
     { params: { choices: 4, word: 'written' }, intro: phrases.readYourselfIntro },
   ] satisfies Levels<WordPictureLevel>,
+  // The word fades out step by step (the user's idea, 2026-10-25): shown, shown for a moment,
+  // every other letter for a moment, then not at all.
   spelling: [
-    { params: { showWord: true, extraLetters: 3, lookAlike: false, lengths: [2, 4] } },
-    { params: { showWord: false, extraLetters: 3, lookAlike: false, lengths: [2, 4] }, intro: phrases.hiddenWordIntro },
-    { params: { showWord: false, extraLetters: 4, lookAlike: true, lengths: [2, 4] }, intro: phrases.lookAlikesIntro },
-    { params: { showWord: false, extraLetters: 4, lookAlike: true, lengths: [4, 5] }, intro: phrases.longerWordsIntro },
+    { params: { hint: 'word', extraLetters: 3, lookAlike: false, lengths: [2, 4] } },
+    { params: { hint: 'word briefly', extraLetters: 3, lookAlike: false, lengths: [2, 4] }, intro: phrases.wordFadesIntro },
+    { params: { hint: 'every other letter briefly', extraLetters: 4, lookAlike: true, lengths: [2, 4] }, intro: phrases.someLettersIntro },
+    { params: { hint: 'none', extraLetters: 4, lookAlike: true, lengths: [2, 5] }, intro: phrases.hiddenWordIntro },
   ] satisfies Levels<SpellingLevel>,
   memory: [
     { params: { pairs: 3, lookAlikes: false } },

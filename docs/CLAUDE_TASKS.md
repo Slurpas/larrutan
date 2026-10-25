@@ -508,6 +508,22 @@ Status 2026-10-25: **done; a local commit, not pushed.**
   - **Cost:** each picked item needs two spoken sentences (about 50–80 ElevenLabs credits). Pets need their own feature: a pet that follows the character.
 - **Code:** `composeCharacter` takes the item art to look in, so the sheet can dress the character in ideas.
 
+#### Task 27 — Your own house, with a wardrobe inside
+- The user's child asked why he couldn't walk into the houses, and the user suggested changing clothes inside a building, or a wardrobe in the world (2026-10-25).
+
+Status 2026-10-25: **done; a local commit, not pushed.**
+- **The blue house is the child's home.** Tap any part of it and the character walks to the door and goes in. Enter works too when standing at the door.
+- **The room** (`src/home`, art in `src/art/home.ts`) has a calm wallpaper, a plank floor, a window with curtains, a bed and a rug.
+  - **The wardrobe:** tapping it opens its doors to show the clothes inside, then "Mina saker". "Tillbaka" goes back into the room. A star twinkles over the wardrobe.
+  - **The mirror:** it shows the child's reflection. Tapping it makes the child twirl round and stay a moment facing away, so a cape or wings can be seen from behind.
+  - **The door button** ("Till kartan", with a door icon) goes out to the map. The quick ways to "Mina saker" stay: tapping the character, and the map's button.
+- **The red house:** tapping it walks the character to the door. A knock sounds (a new synthesised effect, `npm run sfx`) and "Zzz" rises from the house: someone is asleep.
+- **No new speech,** so no credits.
+- **Tests:**
+  - Unit tests: each house has one door, with a walkable tile in front of it, reachable from the start.
+  - Browser tests walk there with real taps, go in, open the wardrobe and come out, and knock at the red house.
+  - The test hooks gained `tilePoint`, `housePoint` and `knocks`.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

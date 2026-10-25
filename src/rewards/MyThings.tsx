@@ -25,6 +25,8 @@ const slotRows: { slot: Slot; name: string }[] = [
 
 interface MyThingsProps {
   onClose: () => void
+  /** What the close button says: back to the map, or back into the room it was opened from. */
+  closeLabel?: string
 }
 
 /**
@@ -35,7 +37,7 @@ interface MyThingsProps {
  * who wants to see what there is (2026-10-25). Things new since the last visit are marked.
  * No countdowns, no pressure (PRD §10).
  */
-export function MyThings({ onClose }: MyThingsProps) {
+export function MyThings({ onClose, closeLabel = 'Till kartan' }: MyThingsProps) {
   const progress = useProgress()
   // Marked for this whole visit; from now on they aren't new any more (the map's button stops pointing here).
   const [fresh] = useState(() => newItems(getProgress()))
@@ -69,7 +71,7 @@ export function MyThings({ onClose }: MyThingsProps) {
   return (
     <main className={styles.screen}>
       <div className={styles.topBar}>
-        <RoundButton label="Till kartan" onClick={onClose}>
+        <RoundButton label={closeLabel} onClick={onClose}>
           <HouseIcon />
         </RoundButton>
         <button type="button" className={styles.showAll} aria-pressed={showAll} onClick={() => setShowAll((all) => !all)}>

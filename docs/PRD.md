@@ -208,7 +208,7 @@ A scrolling top-down world with a following camera that never shows space outsid
 - Movement is forgiving; reaching a challenge never needs precise navigation.
 - Map layout lives in data (text grids), separate from movement code.
 
-Phase 1 has one small hub with the three stations and a few things to look at. All stations are visible from the start position on an iPad, so a child who hears "Tryck på en skylt" can see one straight away; the rest of the map is there to explore. Further regions appear as visible locked places once there is a second region worth building.
+Phase 1 has one small hub with the three stations and a few things to look at. Since Task 27 the blue house is the child's home: tap it to walk in, to a room with a wardrobe (to change clothes) and a mirror; at the red house nobody answers the knock (the user's child asked why they couldn't go into the houses). All stations are visible from the start position on an iPad, so a child who hears "Tryck på en skylt" can see one straight away; the rest of the map is there to explore. Further regions appear as visible locked places once there is a second region worth building.
 
 Orientation: landscape first; in portrait, show a picture hint to rotate the iPad.
 

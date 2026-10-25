@@ -3,17 +3,22 @@ import type { ChallengeId } from '../challenges/challengeIds'
 import { outfitFeetRow, outfitHeadTop, outfitSize, type CharacterFacing, type Outfit } from '../art/outfit'
 import { tinyTown } from '../art/kenney'
 import { signPanel, signSize } from '../art/signs'
+import { playEffect } from '../speech/speech'
 import { TILE, cameraZoom } from './camera'
 import { groundTile } from './groundTiles'
 import { findPath, nearestWalkable } from './pathfinding'
 import { addArtTextures, characterTextures, iconKeys, rockKey, shadowKey, signKey, tinyTownKey, waterTexture } from './textures'
 import {
+  houseAt,
+  houseNextTo,
   sameTile,
   stationApproaches,
   stationAt,
   stationNextTo,
   tryStep,
   type Direction,
+  type House,
+  type HouseKind,
   type Station,
   type Tile,
   type TileMap,
@@ -51,6 +56,8 @@ export interface HubSceneOptions {
   onOpenStation: (challenge: ChallengeId) => void
   /** The child tapped their own character. */
   onOpenMyThings: () => void
+  /** The child went in through the door of their own house, the blue one. */
+  onOpenHome: () => void
 }
 
 interface StationMarker {
@@ -63,7 +70,8 @@ const tileCenter = (tile: Tile) => ({ x: (tile.col + 0.5) * TILE, y: (tile.row +
 
 /**
  * The hub area: the child taps a spot to walk there, taps a sign to walk to it
- * and open its challenge, or uses the arrow keys / WASD and Enter / Space.
+ * and open its challenge, taps a house to walk to its door (the blue one is their
+ * home; at the red one nobody answers), or uses the arrow keys / WASD and Enter / Space.
  * 16×16 pixel art (docs/ART_DIRECTION.md): Kenney's Tiny Town scenery plus our
  * own water, rocks, signs and character (src/art).
  */
@@ -71,6 +79,7 @@ export class HubScene extends Phaser.Scene {
   private readonly map: TileMap
   private readonly onOpenStation: (challenge: ChallengeId) => void
   private readonly onOpenMyThings: () => void
+  private readonly onOpenHome: () => void
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   private player!: Phaser.GameObjects.Container
@@ -86,6 +95,10 @@ export class HubScene extends Phaser.Scene {
   private path: Tile[] = []
   /** Opened once the player arrives next to it. */
   private pendingStation: Station | null = null
+  /** Gone into (or knocked on) once the player arrives at its door. */
+  private pendingHouse: House | null = null
+  /** How many times the child has knocked at the red house (for tests). */
+  private knocks = 0
   private readonly heldKeys: Direction[] = []
   /** A quick key tap still moves one step, even if the key is released before the next frame. */
   private queuedStep: Direction | null = null
@@ -95,11 +108,12 @@ export class HubScene extends Phaser.Scene {
   private frames = 0
   private lastTime: number | null = null
 
-  constructor({ map, onOpenStation, onOpenMyThings }: HubSceneOptions) {
+  constructor({ map, onOpenStation, onOpenMyThings, onOpenHome }: HubSceneOptions) {
     super('hub')
     this.map = map
     this.onOpenStation = onOpenStation
     this.onOpenMyThings = onOpenMyThings
+    this.onOpenHome = onOpenHome
     this.playerTile = map.start
   }
 
@@ -142,6 +156,10 @@ export class HubScene extends Phaser.Scene {
         const station = this.pendingStation
         this.pendingStation = null
         this.openStation(station)
+      } else if (this.pendingHouse) {
+        const house = this.pendingHouse
+        this.pendingHouse = null
+        this.goInto(house)
       }
     }
 
@@ -190,12 +208,15 @@ export class HubScene extends Phaser.Scene {
       // The keyboard takes over from any walk started by a tap.
       this.path = []
       this.pendingStation = null
+      this.pendingHouse = null
       if (!this.heldKeys.includes(direction)) this.heldKeys.push(direction)
       if (!event.repeat) this.queuedStep = direction
     } else if ((event.key === 'Enter' || event.key === ' ') && !event.repeat) {
       event.preventDefault()
       const station = this.moveTarget ? undefined : stationNextTo(this.map, this.playerTile)
+      const house = this.moveTarget ? undefined : houseNextTo(this.map, this.playerTile)
       if (station) this.openStation(station)
+      else if (house) this.goInto(house)
     }
   }
 
@@ -223,15 +244,20 @@ export class HubScene extends Phaser.Scene {
     const world = pointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2
     const tapped = { col: Math.floor(world.x / TILE), row: Math.floor(world.y / TILE) }
     const station = stationAt(this.map, tapped)
+    const house = houseAt(this.map, tapped)
 
     if (this.isOnPlayer(world)) {
       // Children tap their own character to dress it up: that opens "Mina saker".
       this.path = []
       this.pendingStation = null
+      this.pendingHouse = null
       this.releaseKeys()
       this.onOpenMyThings()
     } else if (station) {
       this.walkTo(stationApproaches(this.map, station), station)
+    } else if (house) {
+      // To the door: the child asked why they couldn't go into the houses (2026-10-25).
+      this.walkTo([house.front], null, house)
     } else {
       const goal = nearestWalkable(this.map, tapped)
       if (goal) this.walkTo([goal], null)
@@ -249,7 +275,7 @@ export class HubScene extends Phaser.Scene {
     return point.x >= body.left && point.x <= body.right && point.y >= body.top && point.y <= body.bottom
   }
 
-  private walkTo(goals: Tile[], station: Station | null) {
+  private walkTo(goals: Tile[], station: Station | null, house: House | null = null) {
     // Finish the step in progress, then follow the new route from there.
     const from = this.moveTarget ?? this.playerTile
     const path = findPath(this.map, from, goals)
@@ -257,6 +283,37 @@ export class HubScene extends Phaser.Scene {
     this.releaseKeys()
     this.path = path
     this.pendingStation = station
+    this.pendingHouse = house
+  }
+
+  /** In at the door of the child's own house; at the other one, a knock, and someone sleeping inside. */
+  private goInto(house: House) {
+    this.path = []
+    this.pendingHouse = null
+    this.releaseKeys()
+    this.facing = 'up'
+    if (house.kind === 'blueHouse') {
+      this.onOpenHome()
+      return
+    }
+    this.knocks++
+    playEffect('knock')
+    // "Zzz" rises from the door and fades. Letters are never pixel art: Andika, kept sharp.
+    const door = tileCenter(house.door)
+    const zzz = this.add
+      .text(door.x + 4, door.y - TILE / 2, 'Zzz', {
+        fontFamily: 'Andika, ui-rounded, "Segoe UI", system-ui, sans-serif',
+        fontSize: '64px',
+        fontStyle: 'bold',
+        color: '#ffffff',
+        stroke: '#3f2631',
+        strokeThickness: 10,
+      })
+      .setOrigin(0.5, 1)
+      .setScale(0.16)
+      .setDepth(10_000)
+    zzz.texture.setFilter(Phaser.Textures.FilterMode.LINEAR)
+    this.tweens.add({ targets: zzz, y: zzz.y - TILE, alpha: 0, delay: 600, duration: 1600, onComplete: () => zzz.destroy() })
   }
 
   private openStation(station: Station) {
@@ -398,6 +455,28 @@ export class HubScene extends Phaser.Scene {
       x: ((body.left + body.right) / 2 - camera.worldView.x) * camera.zoom,
       y: ((body.top + body.bottom) / 2 - camera.worldView.y) * camera.zoom,
     }
+  }
+
+  getKnocks(): number {
+    return this.knocks
+  }
+
+  /** Where the middle of a tile is on screen, in CSS pixels relative to the canvas. */
+  tileScreenPoint(tile: Tile): { x: number; y: number } | null {
+    if (this.frames < 2) return null
+    const camera = this.cameras.main
+    const center = tileCenter(tile)
+    return { x: (center.x - camera.worldView.x) * camera.zoom, y: (center.y - camera.worldView.y) * camera.zoom }
+  }
+
+  /** Where a house's door is on screen, in CSS pixels relative to the canvas. */
+  houseScreenPoint(kind: HouseKind): { x: number; y: number } | null {
+    for (let row = 0; row < this.map.rows; row++)
+      for (let col = 0; col < this.map.cols; col++) {
+        const house = houseAt(this.map, { col, row })
+        if (house?.kind === kind) return this.tileScreenPoint(house.door)
+      }
+    return null
   }
 
   /** Where a station is on screen, in CSS pixels relative to the canvas. */

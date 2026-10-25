@@ -149,6 +149,39 @@ export function stationAt(map: TileMap, tile: Tile): Station | undefined {
   return map.stations.find((station) => station.tiles.some((t) => sameTile(t, tile)))
 }
 
+export type HouseKind = 'blueHouse' | 'redHouse'
+
+/** A house: its front door (the middle of its bottom row), and the tile in front of it, where the child stands to go in. */
+export interface House {
+  kind: HouseKind
+  door: Tile
+  front: Tile
+}
+
+/** Where a tile sits within its 3×3 house, counted from the house's top-left corner. */
+export function positionInHouse(map: TileMap, tile: Tile, kind: TileKind): { dc: number; dr: number } {
+  let dc = 0
+  while (kindAt(map, { col: tile.col - dc - 1, row: tile.row }) === kind) dc++
+  let dr = 0
+  while (kindAt(map, { col: tile.col, row: tile.row - dr - 1 }) === kind) dr++
+  return { dc: dc % 3, dr: dr % 3 }
+}
+
+/** The house a tile belongs to, if any. */
+export function houseAt(map: TileMap, tile: Tile): House | undefined {
+  const kind = kindAt(map, tile)
+  if (kind !== 'blueHouse' && kind !== 'redHouse') return undefined
+  const { dc, dr } = positionInHouse(map, tile, kind)
+  const door = { col: tile.col - dc + 1, row: tile.row - dr + 2 }
+  return { kind, door, front: { col: door.col, row: door.row + 1 } }
+}
+
+/** The house whose door the child is standing in front of, if any. */
+export function houseNextTo(map: TileMap, tile: Tile): House | undefined {
+  const house = houseAt(map, { col: tile.col, row: tile.row - 1 })
+  return house && sameTile(house.front, tile) ? house : undefined
+}
+
 /** The station the child is standing next to, if any. */
 export function stationNextTo(map: TileMap, tile: Tile): Station | undefined {
   return map.stations.find((station) => stationApproaches(map, station).some((t) => sameTile(t, tile)))

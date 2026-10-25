@@ -7,6 +7,7 @@ import { Memory } from '../challenges/memory/Memory'
 import { Spelling } from '../challenges/spelling/Spelling'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { boxOf, practiceKey } from '../learning/mastery'
+import { Home } from '../home/Home'
 import { MyThings } from '../rewards/MyThings'
 import { newItems } from '../rewards/progress'
 import { getProgress, loadProgress, recordRound, useProgress } from '../rewards/store'
@@ -31,10 +32,18 @@ interface OpenChallenge {
   roundId: string
 }
 
-/** Start screen, or the map with at most one screen (a challenge or "Mina saker") on top of it. */
+/** Start screen, or the map with at most one screen (a challenge, "Mina saker" or the child's room) on top of it. */
 type Screen =
   | { name: 'start' }
-  | { name: 'world'; overlay: null | { name: 'challenge'; challenge: OpenChallenge } | { name: 'myThings' } }
+  | {
+      name: 'world'
+      overlay:
+        | null
+        | { name: 'challenge'; challenge: OpenChallenge }
+        /** `fromHome`: opened at the wardrobe in the child's room, so closing it goes back there. */
+        | { name: 'myThings'; fromHome?: boolean }
+        | { name: 'home' }
+    }
 
 const challengeComponents = {
   findLetter: FindLetter,
@@ -70,6 +79,7 @@ export function App() {
   }
 
   const backToMap = () => setScreen({ name: 'world', overlay: null })
+  const openHome = () => setScreen({ name: 'world', overlay: { name: 'home' } })
 
   let overlay = null
   if (screen.name === 'world' && screen.overlay?.name === 'challenge') {
@@ -89,7 +99,9 @@ export function App() {
       />
     )
   } else if (screen.name === 'world' && screen.overlay?.name === 'myThings') {
-    overlay = <MyThings onClose={backToMap} />
+    overlay = screen.overlay.fromHome ? <MyThings closeLabel="Tillbaka" onClose={openHome} /> : <MyThings onClose={backToMap} />
+  } else if (screen.name === 'world' && screen.overlay?.name === 'home') {
+    overlay = <Home onClose={backToMap} onOpenWardrobe={() => setScreen({ name: 'world', overlay: { name: 'myThings', fromHome: true } })} />
   }
 
   return (
@@ -104,6 +116,7 @@ export function App() {
           hasNewItems={newItems(progress).length > 0}
           onOpenStation={(id) => openChallenge(id, readSeedFromUrl(window.location.search) ?? randomSeed())}
           onOpenMyThings={() => setScreen({ name: 'world', overlay: { name: 'myThings' } })}
+          onOpenHome={openHome}
           onHome={() => setScreen({ name: 'start' })}
         />
       )}

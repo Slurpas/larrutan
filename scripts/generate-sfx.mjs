@@ -74,6 +74,20 @@ const sounds = {
       buffer[i] += envelope * Math.sin(phase) + click
     }
   },
+  /** A knock at a door: two soft, woody taps (the red house, where nobody answers). */
+  knock(buffer) {
+    for (const start of [0, 0.17]) {
+      const from = Math.floor(start * RATE)
+      let noise = 987
+      for (let i = 0; from + i < buffer.length && i < 0.12 * RATE; i++) {
+        const t = i / RATE
+        noise = (noise * 1103515245 + 12345) % 2147483648
+        const body = Math.sin(2 * Math.PI * 180 * t) * Math.exp(-t / 0.03)
+        const knuckle = ((noise / 2147483648) * 2 - 1) * Math.exp(-t / 0.006) * 0.6
+        buffer[from + i] += body + knuckle
+      }
+    }
+  },
   /** A new hat: a glittering run of high notes over a soft bell. */
   newItem(buffer) {
     addNote(buffer, { note: 'C6', start: 0, decay: 0.4, volume: 0.25 })
@@ -83,7 +97,7 @@ const sounds = {
   },
 }
 
-const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9, pop: 0.2 }
+const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9, pop: 0.2, knock: 0.45 }
 
 function toWav(samples) {
   const data = Buffer.alloc(samples.length * 2)

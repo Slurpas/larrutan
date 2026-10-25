@@ -20,6 +20,17 @@ export function HouseIcon({ className }: IconProps) {
   )
 }
 
+/** A door: going out of the child's house, back to the map. */
+export function DoorIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...strokeProps}>
+      <path d="M6 20.5v-16a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v16" />
+      <path d="M3.5 20.5h17" />
+      <path d="M14.5 12.5h.01" />
+    </svg>
+  )
+}
+
 export function SpeakerIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...strokeProps}>

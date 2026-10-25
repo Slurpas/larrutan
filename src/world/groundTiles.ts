@@ -1,6 +1,6 @@
 import { tinyTownHouses, tinyTownTiles } from '../art/kenney'
 import type { WaterEdges } from '../art/scenery'
-import { kindAt, type Tile, type TileKind, type TileMap } from './tileMap'
+import { kindAt, positionInHouse, type Tile, type TileMap } from './tileMap'
 
 /** How a map tile is drawn. Numbers are frames in Kenney's Tiny Town sheet (src/art/kenney.ts). */
 export type GroundTile =
@@ -17,15 +17,6 @@ export type GroundTile =
 function tileNoise({ col, row }: Tile): number {
   const n = Math.sin(col * 12.9898 + row * 78.233) * 43758.5453
   return n - Math.floor(n)
-}
-
-/** Where a tile sits within its 3×3 house: counted from the house's top-left corner. */
-function positionInHouse(map: TileMap, tile: Tile, kind: TileKind): { dc: number; dr: number } {
-  let dc = 0
-  while (kindAt(map, { col: tile.col - dc - 1, row: tile.row }) === kind) dc++
-  let dr = 0
-  while (kindAt(map, { col: tile.col, row: tile.row - dr - 1 }) === kind) dr++
-  return { dc: dc % 3, dr: dr % 3 }
 }
 
 /**

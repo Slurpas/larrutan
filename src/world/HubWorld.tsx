@@ -23,6 +23,8 @@ interface HubWorldProps {
   hasNewItems: boolean
   onOpenStation: (challenge: ChallengeId) => void
   onOpenMyThings: () => void
+  /** The child went in at the door of their own house. */
+  onOpenHome: () => void
   onHome: () => void
 }
 
@@ -30,11 +32,12 @@ interface HubWorldProps {
  * The map the child walks around (Phaser), with React buttons on top. It stays
  * mounted while a challenge is open, so the child comes back to the same spot.
  */
-export function HubWorld({ active, xp, outfit, hasNewItems, onOpenStation, onOpenMyThings, onHome }: HubWorldProps) {
+export function HubWorld({ active, xp, outfit, hasNewItems, onOpenStation, onOpenMyThings, onOpenHome, onHome }: HubWorldProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const hubRef = useRef<HubGame | null>(null)
   const openStation = useEffectEvent((challenge: ChallengeId) => onOpenStation(challenge))
   const openMyThings = useEffectEvent(() => onOpenMyThings())
+  const openHome = useEffectEvent(() => onOpenHome())
   // The game arrives after the first render, so it starts from whatever the props are by then.
   const catchUp = useEffectEvent((hub: HubGame) => {
     hub.setActive(active)
@@ -53,6 +56,7 @@ export function HubWorld({ active, xp, outfit, hasNewItems, onOpenStation, onOpe
         map: hubMap,
         onOpenStation: (challenge) => openStation(challenge),
         onOpenMyThings: () => openMyThings(),
+        onOpenHome: () => openHome(),
       })
       hubRef.current = hub
       catchUp(hub)

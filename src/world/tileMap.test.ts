@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { challengeNames } from '../challenges/challengeIds'
 import { hubMap } from './hubMap'
 import { findPath } from './pathfinding'
-import { isWalkable, kindAt, parseMap, stationApproaches, stationNextTo, tryStep, type StationDef } from './tileMap'
+import { houseAt, houseNextTo, isWalkable, kindAt, parseMap, stationApproaches, stationNextTo, tryStep, type StationDef, type Tile } from './tileMap'
 
 const station: StationDef[] = [{ key: 'a', challenge: 'findLetter' }]
 
@@ -42,6 +42,23 @@ describe('hub map', () => {
     for (const s of hubMap.stations) {
       expect(findPath(hubMap, hubMap.start, stationApproaches(hubMap, s)), s.challenge).not.toBeNull()
     }
+  })
+
+  it("has two houses, each with one door, a tile to stand on in front of it, reachable from the start", () => {
+    for (const kind of ['blueHouse', 'redHouse'] as const) {
+      const tiles: Tile[] = hubMap.kinds.flatMap((row, r) => row.flatMap((k, c) => (k === kind ? [{ col: c, row: r }] : [])))
+      expect(tiles, kind).toHaveLength(9)
+      const doors = new Set(tiles.map((tile) => JSON.stringify(houseAt(hubMap, tile)!.door)))
+      expect(doors.size, kind).toBe(1)
+      const house = houseAt(hubMap, tiles[0]!)!
+      expect(kindAt(hubMap, house.door), kind).toBe(kind)
+      expect(house.door.row, kind).toBe(Math.max(...tiles.map((t) => t.row)))
+      expect(isWalkable(hubMap, house.front), kind).toBe(true)
+      expect(houseNextTo(hubMap, house.front), kind).toEqual(house)
+      expect(findPath(hubMap, hubMap.start, [house.front]), kind).not.toBeNull()
+    }
+    expect(houseAt(hubMap, hubMap.start)).toBeUndefined()
+    expect(houseNextTo(hubMap, hubMap.start)).toBeUndefined()
   })
 
   it('starts the child on a walkable tile that is not next to a station', () => {

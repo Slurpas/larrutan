@@ -68,6 +68,9 @@ export const trialVoices: readonly TrialVoice[] = [
   { label: 'Sarah', name: 'Sarah', model: 'eleven_multilingual_v2' },
   { label: 'Lily', name: 'Lily', model: 'eleven_multilingual_v2' },
   { label: 'Matilda, Flash (sv)', name: 'Matilda', model: 'eleven_flash_v2_5' },
+  // Designed by the user with Voice Design (2026-10-25) from a description of an adult native Swedish narrator.
+  { label: 'Designed Swedish, v2', name: 'Designed Swedish', voiceId: 'Dy9y1y6OKBLEiB4Ojgz7', model: 'eleven_multilingual_v2' },
+  { label: 'Designed Swedish, v3', name: 'Designed Swedish', voiceId: 'Dy9y1y6OKBLEiB4Ojgz7', model: 'eleven_v3' },
 ]
 
 /**

@@ -385,7 +385,7 @@ Status 2026-10-25: **done; the trial ran with the user's go-ahead.** Listening i
 - **The user's verdict:** ElevenLabs' free voices sound like an American saying Swedish words; Lily a bit better; Alma second best despite some wrong words.
 - **Next candidates, both free:**
   - Piper's Lisa, tried at Alma's pace: the user prefers Alma.
-  - A native Swedish voice the user designs with ElevenLabs' Voice Design; it goes in `trialVoices` with its `voiceId`. The first prompt was blocked by ElevenLabs' Prohibited Use Policy (not charged), most likely for mentioning young children; the next one describes an adult narrator only.
+  - A native Swedish voice the user designs with ElevenLabs' Voice Design; it goes in `trialVoices` with its `voiceId`. The first prompt was blocked by ElevenLabs' Prohibited Use Policy (not charged), most likely for mentioning young children. The second, an adult narrator only, worked: the voice (`Dy9y1y6OKBLEiB4Ojgz7`) is on the trial page in Multilingual v2 and v3, for about 400 more credits (about 1,200 in all).
 
 ## Roadmap — later
 

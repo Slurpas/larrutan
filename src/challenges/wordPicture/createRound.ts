@@ -20,6 +20,8 @@ export interface WordPictureOptions extends Omit<WordPictureRules, 'choiceCount'
   seed: number
   questionCount?: number
   choiceCount?: number
+  /** The words it may ask about (all of them unless given): when the child reads, only short ones. */
+  targets?: readonly Word[]
   /** Mastery box per word id: words still being learned come up more often (src/learning). */
   practiceBox?: (word: string) => number
 }
@@ -33,10 +35,11 @@ export function createWordPictureRound({
   words,
   questionCount = 5,
   choiceCount = 3,
+  targets = words,
   practiceBox = () => 1,
 }: WordPictureOptions): ChoiceRound {
-  if (questionCount > words.length) {
-    throw new Error(`A round of ${questionCount} needs at least that many words, got ${words.length}`)
+  if (questionCount > targets.length) {
+    throw new Error(`A round of ${questionCount} needs at least that many words, got ${targets.length}`)
   }
 
   const rng = createRng(seed)
@@ -44,7 +47,11 @@ export function createWordPictureRound({
   const byId = new Map(words.map((word) => [word.id, word]))
   const rules = { words, choiceCount }
 
-  const questions = practiceOrder(ids, practiceBox, rng)
+  const questions = practiceOrder(
+    targets.map((word) => word.id),
+    practiceBox,
+    rng,
+  )
     .slice(0, questionCount)
     .map((target) => {
       const choices = pickChoices(target, ids, choiceCount, rng, (candidate, chosen) =>

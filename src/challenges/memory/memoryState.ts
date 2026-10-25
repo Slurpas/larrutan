@@ -1,3 +1,4 @@
+import { chanceCorrected } from '../levels'
 import type { MemoryCard, MemoryRound } from './createRound'
 
 /**
@@ -19,12 +20,18 @@ export interface MemoryState {
   slips: number
   /** Pairs with a slip; a pair found without one counts as known (mastery). */
   slipped: string[]
+  /** Second cards turned when the first card's partner had been seen: the child could know where it was. */
+  known: number
+  /** …how many of those found the pair, */
+  knownFound: number
+  /** …and the chance of finding it by guessing, added up: 1 / the face-down cards it could have been. */
+  knownChance: number
 }
 
 export type TurnResult = 'turned' | 'match' | 'mismatch' | 'ignored'
 
 export function startMemory(round: MemoryRound): MemoryState {
-  return { round, open: [], matched: [], seen: [], slips: 0, slipped: [] }
+  return { round, open: [], matched: [], seen: [], slips: 0, slipped: [], known: 0, knownFound: 0, knownChance: 0 }
 }
 
 function cardOf(state: MemoryState, id: string): MemoryCard | undefined {
@@ -47,21 +54,37 @@ export function turnCard(state: MemoryState, cardId: string): { state: MemorySta
   const first = open[0] === undefined ? undefined : cardOf(state, open[0])
   if (!first) return { state: { ...state, open: [cardId], seen }, result: 'turned' }
 
-  if (first.pair === card.pair) {
-    return { state: { ...state, open: [], seen, matched: [...state.matched, first.id, card.id] }, result: 'match' }
-  }
+  // Did the child know where the partner was? Then this turn shows memory, not luck.
   const partner = state.round.cards.find((c) => c.pair === first.pair && c.id !== first.id)
-  const slip = partner !== undefined && state.seen.includes(partner.id)
+  const partnerKnown = partner !== undefined && state.seen.includes(partner.id)
+  const faceDown = state.round.cards.length - state.matched.length - 1
+  const tally = partnerKnown
+    ? { known: state.known + 1, knownChance: state.knownChance + 1 / faceDown, knownFound: state.knownFound + (first.pair === card.pair ? 1 : 0) }
+    : {}
+  if (first.pair === card.pair) {
+    return { state: { ...state, ...tally, open: [], seen, matched: [...state.matched, first.id, card.id] }, result: 'match' }
+  }
   return {
     state: {
       ...state,
+      ...tally,
       open: [first.id, cardId],
       seen,
-      slips: state.slips + (slip ? 1 : 0),
-      slipped: slip && !state.slipped.includes(first.pair) ? [...state.slipped, first.pair] : state.slipped,
+      slips: state.slips + (partnerKnown ? 1 : 0),
+      slipped: partnerKnown && !state.slipped.includes(first.pair) ? [...state.slipped, first.pair] : state.slipped,
     },
     result: 'mismatch',
   }
+}
+
+/**
+ * How well the child remembered, from 0 to 1: of the turns where they had seen the partner,
+ * how many found it, compared with guessing. Turning unknown cards is exploring and doesn't
+ * count; a board solved without ever needing to remember is flawless.
+ */
+export function memoryScore(state: MemoryState): number {
+  if (state.known === 0) return 1
+  return chanceCorrected(state.knownFound / state.known, state.knownChance / state.known)
 }
 
 /** Two cards that didn't match turn back. */

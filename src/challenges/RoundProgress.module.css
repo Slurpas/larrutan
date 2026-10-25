@@ -31,3 +31,18 @@
   height: 44px;
   color: var(--color-star);
 }
+
+/* More than five (Memory's bigger boards, the longer ride): smaller, so they still fit beside the speaker on an upright iPad. */
+.compact {
+  gap: 0.3rem;
+}
+
+.compact .slot {
+  width: 26px;
+  height: 26px;
+}
+
+.compact .star {
+  width: 32px;
+  height: 32px;
+}

@@ -14,9 +14,19 @@
       "input": "Tryck på en skylt för att spela!"
     },
     {
+      "text": "Nu blir det fler kex!",
+      "file": "nu-blir-det-fler-kex-c2b9d6fe.mp3",
+      "input": "Nu blir det fler kex!"
+    },
+    {
       "text": "Nu blir det svårare! Några bokstäver är nästan lika. Titta noga!",
       "file": "nu-blir-det-svarare-nagra-bokstaver-ar-n-06539956.mp3",
       "input": "Nu blir det svårare! Några bokstäver är nästan lika. Titta noga!"
+    },
+    {
+      "text": "Nu blir det ännu fler kex!",
+      "file": "nu-blir-det-annu-fler-kex-77b31012.mp3",
+      "input": "Nu blir det ännu fler kex!"
     },
     {
       "text": "Nu blir det svårare! Nu finns det fyra tunnlar.",
@@ -24,14 +34,54 @@
       "input": "Nu blir det svårare! Nu finns det fyra tunnlar."
     },
     {
+      "text": "Nu blir resan längre!",
+      "file": "nu-blir-resan-langre-85ef42a6.mp3",
+      "input": "Nu blir resan längre!"
+    },
+    {
+      "text": "Nu blir det fyra bilder!",
+      "file": "nu-blir-det-fyra-bilder-9857b0c6.mp3",
+      "input": "Nu blir det fyra bilder!"
+    },
+    {
+      "text": "Titta, nu står ordet skrivet!",
+      "file": "titta-nu-star-ordet-skrivet-4f21b0fa.mp3",
+      "input": "Titta, nu står ordet skrivet!"
+    },
+    {
+      "text": "Nu ska du läsa ordet själv!",
+      "file": "nu-ska-du-lasa-ordet-sjalv-31e1e582.mp3",
+      "input": "Nu ska du läsa ordet själv!"
+    },
+    {
       "text": "Nu blir det svårare! Nu syns inte ordet.",
       "file": "nu-blir-det-svarare-nu-syns-inte-ordet-90888e4e.mp3",
       "input": "Nu blir det svårare! Nu syns inte ordet."
     },
     {
+      "text": "Nu blir orden längre!",
+      "file": "nu-blir-orden-langre-bfe0e2e6.mp3",
+      "input": "Nu blir orden längre!"
+    },
+    {
+      "text": "Nu blir det fler kort!",
+      "file": "nu-blir-det-fler-kort-62d822cc.mp3",
+      "input": "Nu blir det fler kort!"
+    },
+    {
       "text": "Nu blir det svårare! Fler kort, och några bokstäver är nästan lika.",
       "file": "nu-blir-det-svarare-fler-kort-och-nagra-b71012f6.mp3",
       "input": "Nu blir det svårare! Fler kort, och några bokstäver är nästan lika."
+    },
+    {
+      "text": "Nu blir det ännu fler kort!",
+      "file": "nu-blir-det-annu-fler-kort-6ef3f056.mp3",
+      "input": "Nu blir det ännu fler kort!"
+    },
+    {
+      "text": "Läs ordet!",
+      "file": "las-ordet-d925c726.mp3",
+      "input": "Läs ordet!"
     },
     {
       "text": "Vänd på två kort. Hitta en bild och en bokstav som hör ihop!",
@@ -1019,6 +1069,11 @@
       "input": "Det där är en isbit."
     },
     {
+      "text": "Bygg ordet isbit!",
+      "file": "bygg-ordet-isbit-b25a3c8e.mp3",
+      "input": "Bygg ordet, … isbit!"
+    },
+    {
       "text": "Vilken bokstav börjar lejon på?",
       "file": "vilken-bokstav-borjar-lejon-pa-960e3962.mp3",
       "input": "Vilken bokstav börjar lejon på?"
@@ -1047,6 +1102,11 @@
       "text": "Det där är ett lejon.",
       "file": "det-dar-ar-ett-lejon-3bf6779e.mp3",
       "input": "Det där är ett lejon."
+    },
+    {
+      "text": "Bygg ordet lejon!",
+      "file": "bygg-ordet-lejon-fd26e344.mp3",
+      "input": "Bygg ordet, … lejon!"
     },
     {
       "text": "Vilken bokstav börjar lastbil på?",
@@ -1249,6 +1309,11 @@
       "input": "Det där är en morot."
     },
     {
+      "text": "Bygg ordet morot!",
+      "file": "bygg-ordet-morot-4abc34be.mp3",
+      "input": "Bygg ordet, … morot!"
+    },
+    {
       "text": "Vilken bokstav börjar myra på?",
       "file": "vilken-bokstav-borjar-myra-pa-0240272c.mp3",
       "input": "Vilken bokstav börjar myra på?"
@@ -1379,6 +1444,11 @@
       "input": "Det där är en nalle."
     },
     {
+      "text": "Bygg ordet nalle!",
+      "file": "bygg-ordet-nalle-92ddffb4.mp3",
+      "input": "Bygg ordet, … nalle!"
+    },
+    {
       "text": "Vilken bokstav börjar orm på?",
       "file": "vilken-bokstav-borjar-orm-pa-b237ef26.mp3",
       "input": "Vilken bokstav börjar orm på?"
@@ -1479,6 +1549,11 @@
       "input": "Det där är en robot."
     },
     {
+      "text": "Bygg ordet robot!",
+      "file": "bygg-ordet-robot-a7f6b5ac.mp3",
+      "input": "Bygg ordet, … robot!"
+    },
+    {
       "text": "Vilken bokstav börjar räv på?",
       "file": "vilken-bokstav-borjar-rav-pa-c46b21de.mp3",
       "input": "Vilken bokstav börjar räv på?"
@@ -1542,6 +1617,11 @@
       "text": "Det där är en raket.",
       "file": "det-dar-ar-en-raket-8caf9e94.mp3",
       "input": "Det där är en raket."
+    },
+    {
+      "text": "Bygg ordet raket!",
+      "file": "bygg-ordet-raket-db558dc2.mp3",
+      "input": "Bygg ordet, … raket!"
     },
     {
       "text": "Vilken bokstav börjar ros på?",
@@ -1814,6 +1894,11 @@
       "input": "Det där är en tomat."
     },
     {
+      "text": "Bygg ordet tomat!",
+      "file": "bygg-ordet-tomat-333eed22.mp3",
+      "input": "Bygg ordet, … tomat!"
+    },
+    {
       "text": "Vilken bokstav börjar tiger på?",
       "file": "vilken-bokstav-borjar-tiger-pa-050cee9a.mp3",
       "input": "Vilken bokstav börjar tiger på?"
@@ -1842,6 +1927,11 @@
       "text": "Det där är en tiger.",
       "file": "det-dar-ar-en-tiger-205dedf4.mp3",
       "input": "Det där är en tiger."
+    },
+    {
+      "text": "Bygg ordet tiger!",
+      "file": "bygg-ordet-tiger-079370b2.mp3",
+      "input": "Bygg ordet, … tiger!"
     },
     {
       "text": "Vilken bokstav börjar åtta på?",
@@ -1944,6 +2034,11 @@
       "input": "Det där är ett äpple."
     },
     {
+      "text": "Bygg ordet äpple!",
+      "file": "bygg-ordet-apple-184a82a2.mp3",
+      "input": "Bygg ordet, … äpple!"
+    },
+    {
       "text": "Vilken bokstav börjar ägg på?",
       "file": "vilken-bokstav-borjar-agg-pa-67cabc66.mp3",
       "input": "Vilken bokstav börjar ägg på?"
@@ -2007,6 +2102,11 @@
       "text": "Det där är en ängel.",
       "file": "det-dar-ar-en-angel-705b6c42.mp3",
       "input": "Det där är en ängel."
+    },
+    {
+      "text": "Bygg ordet ängel!",
+      "file": "bygg-ordet-angel-c218b000.mp3",
+      "input": "Bygg ordet, … ängel!"
     },
     {
       "text": "Vilken bokstav börjar öga på?",

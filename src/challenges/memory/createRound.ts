@@ -35,7 +35,10 @@ export interface MemoryOptions {
   words: readonly Word[]
   letters: readonly Letter[]
   confusables: readonly ConfusableGroup[]
+  /** 'hard': two of the pairs' letters look alike. */
   difficulty?: Difficulty
+  /** Pairs on the board (by default: 3, or 4 when hard). */
+  pairs?: number
   /** Mastery box per word id: words still being learned come up more often (src/learning). */
   practiceBox?: (word: string) => number
 }
@@ -52,10 +55,10 @@ export function createMemoryRound({
   letters,
   confusables,
   difficulty = 'easy',
+  pairs: count = pairCounts[difficulty],
   practiceBox = () => 1,
 }: MemoryOptions): MemoryRound {
   const rng = createRng(seed)
-  const count = pairCounts[difficulty]
   const taught = new Set(letters.map((letter) => letter.id))
   const candidates = practiceOrder(
     words.filter((word) => taught.has(word.firstLetter)),

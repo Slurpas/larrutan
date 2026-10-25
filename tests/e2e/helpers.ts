@@ -1,5 +1,10 @@
 import { expect, type Locator, type Page } from '@playwright/test'
 import type { ChallengeId } from '../../src/challenges/challengeIds'
+import type { Level } from '../../src/challenges/levels'
+import { databaseName, profileStore } from '../../src/persistence/database'
+import { toSaveFile } from '../../src/persistence/saveFile'
+import { initialProgress } from '../../src/rewards/progress'
+import { clipFileName } from '../../src/speech/clipName'
 import type { Tile } from '../../src/world/tileMap'
 import '../../src/world/hubTestApi'
 
@@ -43,6 +48,44 @@ export async function startChallenge(page: Page, hasTouch: boolean, challenge: C
   await enterMap(page, hasTouch)
   await tapStation(page, challenge, hasTouch)
   await expect(page.getByRole('button', { name: 'Lyssna igen' })).toBeVisible()
+}
+
+/** Puts a save on the device. Open the game first (so its database exists), and again after, to load it. */
+export function putSave(page: Page, save: unknown) {
+  return page.evaluate(
+    ({ name, store, save }) =>
+      new Promise<void>((resolve, reject) => {
+        const open = indexedDB.open(name)
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const transaction = open.result.transaction(store, 'readwrite')
+          transaction.objectStore(store).put(save, 'default')
+          transaction.oncomplete = () => {
+            open.result.close()
+            resolve()
+          }
+        }
+      }),
+    { name: databaseName, store: profileStore, save },
+  )
+}
+
+/**
+ * Opens a challenge whose station is at `level`, for a child who has played nothing else.
+ * `played`: the level of the last round there; a lower one means the station has just gone up.
+ */
+export async function startChallengeAt(page: Page, hasTouch: boolean, challenge: ChallengeId, level: Level, played: Level = level) {
+  await enterMap(page, hasTouch)
+  await putSave(page, toSaveFile({ ...initialProgress, stations: { [challenge]: { level, recent: [], played } } }, new Date()))
+  await startChallenge(page, hasTouch, challenge)
+  await expect(page.getByRole('img', { name: `Nivå ${level} av 4` })).toBeVisible()
+}
+
+/** Has the game played this sentence since the page was opened? (The silent fixture lists every clip.) */
+export async function hasSaid(page: Page, text: string): Promise<boolean> {
+  const clips = await page.evaluate(() => (window as unknown as { __playedClips?: string[] }).__playedClips ?? [])
+  const name = clipFileName(text).replace(/\.mp3$/, '')
+  return clips.some((clip) => clip.includes(name))
 }
 
 /** `timeout`: the mine cart takes a few seconds per question (riding in and through a tunnel). */

@@ -6,7 +6,7 @@ import { cx } from '../ui/cx'
 import { CheckIcon } from '../ui/icons'
 import { ChallengeTopBar } from './ChallengeTopBar'
 import type { ChoiceQuestion, ChoiceRound } from './choiceQuestion'
-import type { Difficulty } from './difficulty'
+import type { Level } from './levels'
 import { RoundComplete } from './RoundComplete'
 import { useChoiceRound, type RoundResult } from './useChoiceRound'
 import type { ChallengeVoice } from './voices'
@@ -19,9 +19,9 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
   round: ChoiceRound<Q>
   /** What the challenge says (src/challenges/voices.ts). */
   voice: ChallengeVoice<Q>
-  difficulty: Difficulty
-  /** How many difficulty levels this challenge has, for the level pips. */
-  difficultyCount: number
+  level: Level
+  /** Said before the first question when the station has just gone up a level. */
+  levelIntro?: string
   /** Called once when the last question is answered; returns what the round earned. */
   onRoundComplete?: (result: RoundResult) => RoundOutcome
   /** What a question practises, for mastery: the letter in Hitta bokstaven, the word in the others. */
@@ -32,8 +32,10 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
   renderChoice: (choice: string) => ReactNode
   /** Accessible name of a choice button (also used by tests). */
   choiceLabel: (choice: string) => string
-  /** Shown above the choices, e.g. the picture in Första bokstaven. Tapping it says the short form again. */
+  /** Shown above the choices, e.g. the written word in Ord och bild. Tapping it says the short form again. */
   showcase?: (question: Q) => ReactNode
+  /** 'word': the showcase is a written word, as wide as it needs to be. */
+  showcaseKind?: 'picture' | 'word'
   /** Shown next to the speaker when there is no Swedish voice, so the question can still be seen. */
   silentPrompt?: (question: Q) => ReactNode
   onExit: () => void
@@ -47,8 +49,8 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
 export function ChoiceChallenge<Q extends ChoiceQuestion>({
   round,
   voice,
-  difficulty,
-  difficultyCount,
+  level,
+  levelIntro,
   onRoundComplete,
   practiceItem,
   knowsChallenge = false,
@@ -56,6 +58,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   renderChoice,
   choiceLabel,
   showcase,
+  showcaseKind = 'picture',
   silentPrompt,
   onExit,
   onPlayAgain,
@@ -63,7 +66,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   const { state, question, revealed, outcome, choose, replay, sayAgain } = useChoiceRound({
     round,
     voice,
-    difficulty,
+    levelIntro,
     onRoundComplete,
     practiceItem,
     knowsChallenge,
@@ -101,12 +104,11 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   }
 
   return (
-    <main className={cx(styles.screen, showcase && styles.withShowcase)}>
+    <main className={cx(styles.screen, question.choices.length > 3 && styles.fourChoices, showcase && styles.withShowcase)}>
       <ChallengeTopBar
         onExit={handleExit}
         onReplay={replay}
-        difficulty={difficulty}
-        difficultyCount={difficultyCount}
+        level={level}
         total={state.round.questions.length}
         current={state.questionIndex}
         beside={
@@ -116,7 +118,12 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
 
       <div className={styles.body}>
         {showcase && (
-          <button type="button" className={styles.showcase} aria-label="Lyssna på ordet" onClick={sayAgain}>
+          <button
+            type="button"
+            className={cx(styles.showcase, showcaseKind === 'word' && styles.wordShowcase)}
+            aria-label="Lyssna på ordet"
+            onClick={sayAgain}
+          >
             {showcase(question)}
           </button>
         )}

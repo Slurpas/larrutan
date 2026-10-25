@@ -2,7 +2,8 @@ import { dragonVoice, firstLetterVoice, wordPictureVoice } from '../challenges/v
 import { letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
-import { spellingWords } from '../challenges/spelling/createRound'
+import { spelledLengths, spellingWords } from '../challenges/spelling/createRound'
+import { stationLevels } from '../challenges/levels'
 import { items } from '../rewards/items'
 
 /** Played by the "Test the voice" button in the ?debug=voices panel. */
@@ -22,10 +23,9 @@ export function spokenGroups(): SpokenGroup[] {
       title: 'Map, rewards and Mina saker',
       texts: [
         phrases.hubWelcome,
-        phrases.lookAlikesIntro,
-        phrases.fourTunnelsIntro,
-        phrases.hiddenWordIntro,
-        phrases.moreCardsIntro,
+        // What each new level is (said once, when the child gets there).
+        ...Object.values(stationLevels).flatMap((levels) => levels.flatMap((level) => ('intro' in level ? [level.intro] : []))),
+        phrases.readWordQuestion,
         phrases.memoryIntro,
         phrases.memoryShort,
         phrases.nextTimeHarder,
@@ -51,7 +51,7 @@ export function spokenGroups(): SpokenGroup[] {
     })
   }
 
-  const spelled = new Set(spellingWords(words).map((word) => word.id))
+  const spelled = new Set(spellingWords(words, spelledLengths).map((word) => word.id))
   for (const word of words) {
     const firstLetterQuestion = { word: word.id, target: word.firstLetter, choices: [word.firstLetter] }
     const pictureQuestion = { target: word.id, choices: [word.id] }

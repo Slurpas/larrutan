@@ -5,7 +5,7 @@ import { confusableLetters, letters } from '../../src/content/letters'
 import { boxOf, practiceKey, recordPractice } from '../../src/learning/mastery'
 import { backupStore, databaseName, profileStore } from '../../src/persistence/database'
 import { expect, test } from './fixtures'
-import { SEED, answerKey, enterMap, press, tapPlayer, tapStation, waitForQuestion } from './helpers'
+import { SEED, answerKey, enterMap, press, putSave, tapPlayer, tapStation, waitForQuestion } from './helpers'
 
 /** Hitta bokstaven (Mata draken): feeds the dragon the right cookie of every question with the keyboard. */
 async function playRoundByKeyboard(page: Page, round: ChoiceRound) {
@@ -38,15 +38,14 @@ function savedWornItem(page: Page) {
 // Mata draken rounds take a while: each cookie flies to the dragon, which chews.
 test.slow()
 
-const easyRound = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters, difficulty: 'easy' })
-// The hard round comes after the easy one, so it favours letters the easy round didn't practise (src/learning).
-const afterEasy = recordPractice({}, 'findLetter', easyRound.questions.map((q) => ({ item: q.target, firstTry: true })))
-const hardRound = createFindLetterRound({
+// Two rounds at level 1. The second favours letters the first didn't practise (src/learning).
+const firstRound = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters })
+const afterFirst = recordPractice({}, 'findLetter', firstRound.questions.map((q) => ({ item: q.target, firstTry: true })))
+const secondRound = createFindLetterRound({
   seed: SEED,
   letters,
   confusables: confusableLetters,
-  difficulty: 'hard',
-  practiceBox: (id) => boxOf(afterEasy, practiceKey('findLetter', id)),
+  practiceBox: (id) => boxOf(afterFirst, practiceKey('findLetter', id)),
 })
 
 test('a new item is marked on the map; tapping the character opens Mina saker, where it can be worn', async ({ page, hasTouch }) => {
@@ -55,8 +54,8 @@ test('a new item is marked on the map; tapping the character opens Mina saker, w
   await expect(page.getByRole('button', { name: 'Mina saker', exact: true })).toBeVisible()
 
   await tapStation(page, 'findLetter', hasTouch)
-  await expect(page.getByRole('img', { name: 'Lätt nivå' })).toBeVisible()
-  await playRoundByKeyboard(page, easyRound)
+  await expect(page.getByRole('img', { name: 'Nivå 1 av 4' })).toBeVisible()
+  await playRoundByKeyboard(page, firstRound)
   await expect(page.getByRole('button', { name: 'Ny sak: Keps, ta på' })).toBeVisible()
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
 
@@ -76,31 +75,36 @@ test('a new item is marked on the map; tapping the character opens Mina saker, w
   await expect(page.getByRole('button', { name: 'Mina saker', exact: true })).toBeVisible()
 })
 
-test('a round without slips makes the next one hard, and says so; items come at most every other round', async ({ page, hasTouch }) => {
+test('two rounds without slips make the next one harder, and say so; items come at most every other round', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   await tapStation(page, 'findLetter', hasTouch)
-  await playRoundByKeyboard(page, easyRound)
+  await playRoundByKeyboard(page, firstRound)
   // The new item is put on right where it was earned.
   await press(page.getByRole('button', { name: 'Ny sak: Keps, ta på' }), hasTouch)
   await expect(page.getByRole('button', { name: 'Ny sak: Keps, på' })).toBeDisabled()
-  // No slips: the station says it gets harder next time, and it does.
-  await expect(page.getByRole('img', { name: 'Nästa gång: svårare' })).toBeVisible()
+  // One good round is not enough to change the level.
+  await expect(page.getByRole('img', { name: /^Nästa gång: svårare/ })).toHaveCount(0)
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
   await expect.poll(() => page.evaluate(() => window.__larrutanHub?.outfit().head)).toBe('cap')
   // Worn from the reward screen: nothing is new any more.
   await expect(page.getByRole('button', { name: 'Mina saker', exact: true })).toBeVisible()
 
   await tapStation(page, 'findLetter', hasTouch)
-  await expect(page.getByRole('img', { name: 'Svår nivå' })).toBeVisible()
-  await playRoundByKeyboard(page, hardRound)
-  // The blue sweater and the striped one are earned by now, but the second round gives nothing.
+  await expect(page.getByRole('img', { name: 'Nivå 1 av 4' })).toBeVisible()
+  await playRoundByKeyboard(page, secondRound)
+  // The blue sweater is earned by now, but the second round gives nothing.
   await expect(page.getByRole('button', { name: /^Ny sak/ })).toHaveCount(0)
+  // Two good rounds: the station says it gets harder next time, and it does.
+  await expect(page.getByRole('img', { name: 'Nästa gång: svårare, nivå 2 av 4' })).toBeVisible()
+  await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
+  await tapStation(page, 'findLetter', hasTouch)
+  await expect(page.getByRole('img', { name: 'Nivå 2 av 4' })).toBeVisible()
 })
 
 test('progress is saved on the device and survives a reload', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   await tapStation(page, 'findLetter', hasTouch)
-  await playRoundByKeyboard(page, easyRound)
+  await playRoundByKeyboard(page, firstRound)
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
   await press(page.getByRole('button', { name: 'Mina saker' }), hasTouch)
   await press(page.getByRole('button', { name: 'Keps, Vanlig, ny', exact: true }), hasTouch)
@@ -111,9 +115,10 @@ test('progress is saved on the device and survives a reload', async ({ page, has
   await enterMap(page, hasTouch)
   await expect(page.getByRole('img', { name: 'Nivå 1' })).toBeVisible()
   await expect.poll(() => page.evaluate(() => window.__larrutanHub?.outfit().head)).toBe('cap')
-  // The level is remembered too: the sign now opens the hard level.
+  // How the first round went is remembered too: one more good round after the reload raises the level.
   await tapStation(page, 'findLetter', hasTouch)
-  await expect(page.getByRole('img', { name: 'Svår nivå' })).toBeVisible()
+  await playRoundByKeyboard(page, secondRound)
+  await expect(page.getByRole('img', { name: 'Nästa gång: svårare, nivå 2 av 4' })).toBeVisible()
 })
 
 test('a broken save is repaired and kept as a backup, and the game still starts', async ({ page, hasTouch }) => {
@@ -123,22 +128,7 @@ test('a broken save is repaired and kept as a backup, and the game still starts'
     savedAt: 'yesterday',
     progress: { xp: 'lots', roundsCompleted: 1, completedLevels: ['findLetter:easy'], unlockedItems: ['cap', 'dragon'], wornItem: 'cap' },
   }
-  await page.evaluate(
-    ({ name, store, save }) =>
-      new Promise<void>((resolve, reject) => {
-        const open = indexedDB.open(name)
-        open.onerror = () => reject(open.error)
-        open.onsuccess = () => {
-          const transaction = open.result.transaction(store, 'readwrite')
-          transaction.objectStore(store).put(save, 'default')
-          transaction.oncomplete = () => {
-            open.result.close()
-            resolve()
-          }
-        }
-      }),
-    { name: databaseName, store: profileStore, save: broken },
-  )
+  await putSave(page, broken)
 
   // enterMap opens the page again, which loads (and repairs) the broken save exactly once.
   await enterMap(page, hasTouch)

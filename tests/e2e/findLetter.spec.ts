@@ -1,8 +1,10 @@
 import type { Page } from '@playwright/test'
+import { lookAlikeRule } from '../../src/challenges/difficulty'
 import { createFindLetterRound } from '../../src/challenges/findLetter/createRound'
+import { levelParams } from '../../src/challenges/levels'
 import { confusableLetters, getLetter, letters } from '../../src/content/letters'
 import { expect, test } from './fixtures'
-import { SEED, answerKey, expectRoundCompleteThenMap, press, startChallenge, waitForQuestion } from './helpers'
+import { SEED, answerKey, expectRoundCompleteThenMap, press, startChallenge, startChallengeAt, waitForQuestion } from './helpers'
 
 const round = createFindLetterRound({ seed: SEED, letters, confusables: confusableLetters })
 const total = round.questions.length
@@ -78,4 +80,24 @@ test('a cookie can also be dragged to the dragon; dropping it elsewhere puts it 
   await page.mouse.move(viewport.width - 120, viewport.height - 150, { steps: 8 })
   await page.mouse.up()
   await waitForQuestion(page, 1, total, questionTimeout)
+})
+
+test('the top level offers five cookies, look-alikes among them', async ({ page, hasTouch }) => {
+  const { choices, lookAlikes, questions } = levelParams('findLetter', 4)
+  const top = createFindLetterRound({
+    seed: SEED,
+    letters,
+    confusables: confusableLetters,
+    difficulty: lookAlikeRule(lookAlikes),
+    choiceCount: choices,
+    questionCount: questions,
+  })
+  await startChallengeAt(page, hasTouch, 'findLetter', 4)
+  for (const [index, question] of top.questions.entries()) {
+    await waitForQuestion(page, index, top.questions.length, questionTimeout)
+    expect(question.choices).toHaveLength(5)
+    for (const id of question.choices) await expect(letterButton(page, id)).toBeVisible()
+    await page.keyboard.press(answerKey(question.choices, question.target))
+  }
+  await expectRoundCompleteThenMap(page, questionTimeout)
 })

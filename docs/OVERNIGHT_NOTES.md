@@ -1,5 +1,66 @@
 # Overnight notes
 
+## Night 3 (2026-10-25)
+
+You asked me to:
+- stop Memory from saying "Nu blir det svårare" at the start of every game;
+- give the games more levels that scale (Memory 6 → 8 → 12 → 16 cards), with at most four tunnels in the mine;
+- follow how the child does with averages, so the level doesn't flap: up for a child who keeps winning, the same or lower for one who struggles;
+- for Memory, compare the fewest possible turns, a typical child and random tapping.
+
+It is Task 23, one local commit, **not pushed**. Try it at http://localhost:5173; details are in `docs/CLAUDE_TASKS.md`, Task 23.
+
+### What changed
+- **The awkward sentence is gone.** A level's sentence comes only on the first round after the station went up. Nothing is said at level 1 or after going down.
+- **Four levels per station:**
+
+  | | 1 | 2 | 3 | 4 |
+  |---|---|---|---|---|
+  | Mata draken | 3 cookies | 4 | 4, look-alikes | 5, look-alikes |
+  | Gruvvagnen | 3 tunnels | 4 | 4, look-alikes | the same, 7 pictures instead of 5 |
+  | Ord och bild | 3 pictures | 4 | the word said and written | only written: "Läs ordet!" |
+  | Bygg ordet | word shown faintly | word hidden | 4 extra letters, one a look-alike | words of 4–5 letters |
+  | Memory | 6 cards | 8 | 12, look-alikes | 16 |
+
+- **How the level moves:**
+  - Every round scores from 0 (no better than tapping at random) to 1 (flawless).
+  - Two rounds in a row averaging at least 0.8 raise the level; two averaging at most 0.3 lower it, quietly. Anything in between keeps it, and counting starts afresh at each new level.
+  - Example, 3 cookies: one slip in five scores 0.7. A flawless round plus one with a slip goes up; two rounds with a slip each stay.
+- **Memory measures memory, not luck.** Only turns where the child had already seen the partner card count. Simulated players, average turns per board:
+
+  | Cards | Fewest | Perfect memory | Remembers 3 in 4 | Half | Random tapping |
+  |---|---|---|---|---|---|
+  | 6 | 3 | 4.3 | 4.5 | 4.8 | 8.9 |
+  | 8 | 4 | 5.9 | 6.3 | 6.7 | 16 |
+  | 12 | 6 | 9.2 | 9.7 | 10.6 | 35.5 |
+  | 16 | 8 | 12.4 | 13.3 | 14.4 | 64 |
+
+  - Their scores: perfect memory 1.0, three in four about 0.86, half about 0.72, a quarter about 0.5, random tapping 0.04–0.19. So a child who understands the game and tries stays or climbs; random tapping goes down.
+  - On the smallest board (6 cards) random tapping scores 0.36, because there are too few turns to tell luck from memory. It is the lowest level, so that only means an occasional early step up.
+
+### Decisions I made, and the options I'd have asked about
+1. **Memory sizes 6, 8, 12, 16 (your suggestion).** 16 cards still fit the iPad with cards about 100 points wide. Bigger boards would also run short of letters: each pair needs its own first letter, and 13 are taught.
+   - Options: 6 → 10 → 14 → 18; or stopping at 12.
+2. **Gruvvagnen keeps four tunnels.** Its top level is a longer ride, 7 pictures instead of 5.
+   - Options: a faster cart; or no fourth level.
+3. **Ord och bild's new steps are about reading.** Level 3 shows the word while the voice says it; level 4 only shows it, with 2–4-letter words. The word is said only when help points at the answer.
+   - Options: five pictures instead; or stopping at four pictures.
+4. **The thresholds** (0.8 up, 0.3 down, two rounds) are one line, `levelRule` in `src/challenges/levels.ts`.
+   - Options: three rounds (steadier, slower); 0.7 to go up (faster).
+5. **XP:** levels 3 and 4 give 8 per round, with no first-time bonus, so the item pacing stays as tuned.
+   - Option: 30 XP the first time, which brings the crown about 20 rounds sooner for a child who climbs.
+6. **Old saves:** easy became level 1 and hard level 2, with nothing announced. In Mata draken, Gruvvagnen and Bygg ordet the old hard is the new level 3, so those stations start a little easier and climb after two good rounds.
+   - Option: hard becomes level 3 there.
+7. **I didn't change:** Bygg ordet's extra bubbles can show letters the game hasn't taught yet (K from "fisk", P from "apa"). It was like that before.
+   - Option: limit the extra bubbles to the 13 taught letters.
+
+### To check
+- **Not checked on a real iPad.** The screenshots and browser tests use Playwright's WebKit at iPad size.
+- **The simulated children are a model, not your children.** Tell me if the levels move too fast or too slowly.
+- **Your 3 approvals** on `?review=voices` from last night are saved in the working tree, not in my commit.
+- **20 new clips** to review: 9 new sentences, 1 reworded ("Nu blir det fler kort!") and "Bygg ordet …!" for the 10 five-letter words. They used about 430 ElevenLabs credits.
+- **Reaching levels 3 and 4** takes four to six good rounds at a station, so it may take a few days of play to see them all.
+
 ## Night 2 (2026-10-24)
 
 You asked me to:

@@ -1,9 +1,11 @@
 import type { Page } from '@playwright/test'
+import { lookAlikeRule } from '../../src/challenges/difficulty'
 import { createFirstLetterRound } from '../../src/challenges/firstLetter/createRound'
+import { levelParams } from '../../src/challenges/levels'
 import { confusableLetters, getLetter, letters } from '../../src/content/letters'
 import { words } from '../../src/content/words'
 import { expect, test } from './fixtures'
-import { SEED, answerKey, expectRoundCompleteThenMap, press, startChallenge, waitForQuestion } from './helpers'
+import { SEED, answerKey, expectRoundCompleteThenMap, press, startChallenge, startChallengeAt, waitForQuestion } from './helpers'
 
 const round = createFirstLetterRound({ seed: SEED, words, letters, confusables: confusableLetters })
 const total = round.questions.length
@@ -77,4 +79,22 @@ test('the mine cart is steered onto a track and sent into its tunnel', async ({ 
   if (!card) throw new Error('no card')
   await page.mouse.click(card.x + card.width / 2, card.y + card.height + 90)
   await waitForQuestion(page, 3, total, rideTimeout)
+})
+
+test('the top level is a longer ride, still with four tunnels', async ({ page, hasTouch }) => {
+  const { choices, lookAlikes, questions } = levelParams('firstLetter', 4)
+  const ride = createFirstLetterRound({
+    seed: SEED,
+    words,
+    letters,
+    confusables: confusableLetters,
+    difficulty: lookAlikeRule(lookAlikes),
+    choiceCount: choices,
+    questionCount: questions,
+  })
+  await startChallengeAt(page, hasTouch, 'firstLetter', 4)
+  // Only the start: the whole ride takes over half a minute.
+  await waitForQuestion(page, 0, questions, rideTimeout)
+  expect(ride.questions[0]!.choices).toHaveLength(4)
+  for (const id of ride.questions[0]!.choices) await expect(letterButton(page, id)).toBeVisible()
 })

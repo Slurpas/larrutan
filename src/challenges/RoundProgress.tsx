@@ -11,7 +11,7 @@ interface RoundProgressProps {
 /** A row of stars that fill in as questions are answered. No numbers to read. */
 export function RoundProgress({ total, current }: RoundProgressProps) {
   return (
-    <div className={styles.progress} role="img" aria-label={`Fråga ${current + 1} av ${total}`}>
+    <div className={cx(styles.progress, total > 5 && styles.compact)} role="img" aria-label={`Fråga ${current + 1} av ${total}`}>
       {Array.from({ length: total }, (_, index) => (
         <span
           key={index}

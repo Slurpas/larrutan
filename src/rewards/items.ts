@@ -1,6 +1,6 @@
 import type { Slot } from '../art/wardrobe'
 import type { ChallengeId } from '../challenges/challengeIds'
-import type { Difficulty } from '../challenges/difficulty'
+import type { Level } from '../challenges/levels'
 
 /** 1 = Vanlig … 5 = Legendarisk. Cosmetic only, shown as stars plus colour (PRD §10). */
 export type Rarity = 1 | 2 | 3 | 4 | 5
@@ -16,7 +16,7 @@ export const rarityNames: Record<Rarity, string> = {
 export type UnlockCondition =
   | { type: 'roundsCompleted'; count: number }
   | { type: 'playerLevel'; level: number }
-  | { type: 'levelCompleted'; challenge: ChallengeId; difficulty: Difficulty }
+  | { type: 'levelCompleted'; challenge: ChallengeId; level: Level }
   /** Everything a challenge practises (its letters or words) is at least in this mastery box (src/learning). */
   | { type: 'mastered'; challenge: ChallengeId; box: number }
 
@@ -59,7 +59,7 @@ export const items: readonly Item[] = [
     slot: 'top',
     indefinite: 'en blå tröja',
     rarity: 1,
-    unlock: { type: 'levelCompleted', challenge: 'findLetter', difficulty: 'easy' },
+    unlock: { type: 'levelCompleted', challenge: 'findLetter', level: 1 },
     hint: 'Klara Hitta bokstaven så får du den blå tröjan.',
   },
   {
@@ -68,7 +68,7 @@ export const items: readonly Item[] = [
     slot: 'bottoms',
     indefinite: 'gröna byxor',
     rarity: 1,
-    unlock: { type: 'levelCompleted', challenge: 'firstLetter', difficulty: 'easy' },
+    unlock: { type: 'levelCompleted', challenge: 'firstLetter', level: 1 },
     hint: 'Klara Första bokstaven så får du de gröna byxorna.',
   },
   {
@@ -77,7 +77,7 @@ export const items: readonly Item[] = [
     slot: 'head',
     indefinite: 'en mössa',
     rarity: 1,
-    unlock: { type: 'levelCompleted', challenge: 'wordPicture', difficulty: 'easy' },
+    unlock: { type: 'levelCompleted', challenge: 'wordPicture', level: 1 },
     hint: 'Klara Ord och bild så får du mössan.',
   },
   {
@@ -123,7 +123,7 @@ export const items: readonly Item[] = [
     slot: 'top',
     indefinite: 'en randig tröja',
     rarity: 2,
-    unlock: { type: 'levelCompleted', challenge: 'findLetter', difficulty: 'hard' },
+    unlock: { type: 'levelCompleted', challenge: 'findLetter', level: 2 },
     hint: 'Klara den svåra nivån i Hitta bokstaven så får du den randiga tröjan.',
   },
   {
@@ -141,7 +141,7 @@ export const items: readonly Item[] = [
     slot: 'held',
     indefinite: 'en ballong',
     rarity: 2,
-    unlock: { type: 'levelCompleted', challenge: 'firstLetter', difficulty: 'hard' },
+    unlock: { type: 'levelCompleted', challenge: 'firstLetter', level: 2 },
     hint: 'Klara den svåra nivån i Första bokstaven så får du ballongen.',
   },
   {

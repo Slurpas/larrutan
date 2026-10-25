@@ -12,7 +12,8 @@ describe('where the bubbles float', () => {
 
   it('keeps every bubble inside the sky and apart from the others', () => {
     for (const [name, { area, size }] of Object.entries(screens))
-      for (const count of [5, 7, 8])
+      // Up to five letters and four extra ones.
+      for (const count of [5, 7, 8, 9])
         for (const seed of [1, 2, 3]) {
           const points = bubbleLayout(count, area, size, seed)
           expect(points, name).toHaveLength(count)

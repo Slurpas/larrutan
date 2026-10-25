@@ -1,3 +1,4 @@
+import { chanceCorrected } from '../levels'
 import type { SpellingQuestion, SpellingRound } from './createRound'
 
 /**
@@ -20,17 +21,45 @@ export interface SpellingState {
   wrongTaps: number
   /** For each finished word: built without a single wrong tap? Feeds mastery. */
   firstTry: boolean[]
+  /** The chance that a tap on any bubble in play was right, when the letter needed now was first looked for. */
+  stepChance: number
+  /** Letters placed so far in the round; how many on the first tap; the chance of that by guessing, added up. */
+  steps: number
+  stepsFirstTry: number
+  stepsChance: number
   phase: 'building' | 'built' | 'finished'
 }
 
 export type TapResult = 'right' | 'wrong-letter' | 'not-yet' | 'ignored'
 
 export function startSpelling(round: SpellingRound): SpellingState {
-  return { round, questionIndex: 0, built: 0, used: [], removed: [], wrongInStep: 0, wrongInWord: 0, wrongTaps: 0, firstTry: [], phase: 'building' }
+  return {
+    round,
+    questionIndex: 0,
+    built: 0,
+    used: [],
+    removed: [],
+    wrongInStep: 0,
+    wrongInWord: 0,
+    wrongTaps: 0,
+    firstTry: [],
+    stepChance: guessChance(round.questions[0], 0, [], []),
+    steps: 0,
+    stepsFirstTry: 0,
+    stepsChance: 0,
+    phase: 'building',
+  }
 }
 
 export function currentWord(state: SpellingState): SpellingQuestion | undefined {
   return state.round.questions[state.questionIndex]
+}
+
+/** The chance that tapping any bubble in play gives the letter needed next (two L bubbles in "nalle" both do). */
+function guessChance(question: SpellingQuestion | undefined, built: number, used: readonly string[], removed: readonly string[]): number {
+  if (!question) return 0
+  const open = question.bubbles.filter((b) => !used.includes(b.id) && !removed.includes(b.id))
+  return open.filter((b) => b.letter === question.letters[built]).length / Math.max(1, open.length)
 }
 
 /** The letter the word needs next, if any. */
@@ -52,14 +81,19 @@ export function tapBubble(state: SpellingState, bubbleId: string): { state: Spel
   if (bubble.letter === nextLetter(state)) {
     const built = state.built + 1
     const done = built === question.letters.length
+    const used = [...state.used, bubbleId]
     return {
       state: {
         ...state,
         built,
-        used: [...state.used, bubbleId],
+        used,
         wrongInStep: 0,
         phase: done ? 'built' : 'building',
         firstTry: done ? [...state.firstTry, state.wrongInWord === 0] : state.firstTry,
+        stepChance: guessChance(question, built, used, state.removed),
+        steps: state.steps + 1,
+        stepsFirstTry: state.stepsFirstTry + (state.wrongInStep === 0 ? 1 : 0),
+        stepsChance: state.stepsChance + state.stepChance,
       },
       result: 'right',
     }
@@ -82,7 +116,23 @@ export function nextWord(state: SpellingState): SpellingState {
   if (state.phase !== 'built') return state
   const questionIndex = state.questionIndex + 1
   const finished = questionIndex >= state.round.questions.length
-  return { ...state, questionIndex, built: 0, used: [], removed: [], wrongInStep: 0, wrongInWord: 0, phase: finished ? 'finished' : 'building' }
+  return {
+    ...state,
+    questionIndex,
+    built: 0,
+    used: [],
+    removed: [],
+    wrongInStep: 0,
+    wrongInWord: 0,
+    stepChance: guessChance(state.round.questions[questionIndex], 0, [], []),
+    phase: finished ? 'finished' : 'building',
+  }
+}
+
+/** How well the round went, from 0 to 1: letters found on the first tap, compared with tapping any bubble. */
+export function spellingScore(state: SpellingState): number {
+  if (state.steps === 0) return 1
+  return chanceCorrected(state.stepsFirstTry / state.steps, state.stepsChance / state.steps)
 }
 
 /** The bubble to point at when the child is stuck (after two wrong taps in a row). */

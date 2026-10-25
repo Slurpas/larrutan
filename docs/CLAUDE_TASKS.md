@@ -285,7 +285,7 @@ Status 2026-10-24: **done.**
 - **When:**
   - An easy round with at most one wrong tap makes the station hard next time. The round end says "Nästa gång blir det svårare." and shows the level pips.
   - A hard round with four or more wrong taps makes it easy again, quietly.
-  - The numbers are in `src/challenges/difficulty.ts`.
+  - The numbers were in `src/challenges/difficulty.ts` (replaced by four levels in Task 23).
 - **Saved per station** (save version 4). Older saves keep their current levels.
 
 #### Task 16 — Mata draken (Hitta bokstaven)
@@ -397,6 +397,55 @@ Status 2026-10-25: **done.**
 - **Tidying:** some clips ended in a long silence and a click, which kept the trim from working ("Sax." lasted 2.7 s); they now end shortly after the last word. About 10 of the 81 "Var är …?", "Draken vill ha ett …!" and "Bygg ordet …!" sentences have little or no pause, because v3 didn't pause there; a retake (`src/speech/retakes.ts`) can ask for a new take.
 - **Credit:** the start screen says "Röst: skapad med ElevenLabs (elevenlabs.io)", as the free plan requires.
 - **Review:** every clip has a new name, so all of them are "to review" on `?review=voices`. Alma's fixes don't apply; a word the new voice says wrong needs a new kind of fix (a respelling), still to build.
+
+#### Task 23 — More levels, set by how the child plays
+- The user (2026-10-25, overnight):
+  - Memory says "Nu blir det svårare" at the start of every game, which is awkward.
+  - Two levels are too few. Memory should grow step by step (6 → 8 → 12 → 16 cards), and the other games too where it makes sense, but the mine keeps at most four tunnels.
+  - The level should follow averages, so it doesn't flap: up for a child who keeps winning, the same or lower for one who struggles, never demotivating.
+  - For Memory: compare the fewest possible turns, a typical child and random tapping.
+
+Status 2026-10-25: **done; a local commit, not pushed.**
+- **Four levels per station.** One table holds them all (`src/challenges/levels.ts`):
+
+  | | Level 1 | Level 2 | Level 3 | Level 4 |
+  |---|---|---|---|---|
+  | Mata draken | 3 cookies | 4 cookies | 4, with look-alikes | 5, with look-alikes |
+  | Gruvvagnen | 3 tunnels | 4 tunnels | 4, with look-alikes | the same, 7 pictures instead of 5 |
+  | Ord och bild | 3 pictures, the word said | 4 pictures | the word said and written | the word only written: "Läs ordet!" |
+  | Bygg ordet | the word shown faintly, 3 extra letters | the word hidden | 4 extra letters, one a look-alike | words of 4–5 letters |
+  | Memory | 6 cards | 8 cards | 12 cards, with look-alikes | 16 cards |
+
+  - On Ord och bild's top level, only 2–4-letter words are asked (the ones Bygg ordet spells).
+- **Every round gets a score from 0 to 1, with guessing taken out:** 0 is no better than tapping at random, 1 is flawless.
+  - Mata draken, Gruvvagnen and Ord och bild count questions answered right on the first tap.
+  - Bygg ordet counts letters found on the first tap.
+  - Memory counts the turns where the child had already seen the partner card: how often they found it. Turning cards they haven't seen is exploring and doesn't count.
+- **The rule** (`levelRule`):
+  - Up after two rounds in a row averaging at least 0.8; down after two averaging at most 0.3. Otherwise the station stays where it is.
+  - The last three scores are kept, and counting starts afresh at a new level, so one lucky or unlucky round never moves a station.
+  - Example, Mata draken with 3 cookies: one slip in five scores 0.7. A flawless round plus one with a slip goes up; two rounds with a slip each stay.
+- **What the child hears:**
+  - Going up: the round end says "Nästa gång blir det svårare." and the pips show the new level (four now).
+  - The new level's sentence ("Nu blir det fler kort!") comes only on the first round there. Nothing is said at level 1, or after going down, which happens without a word.
+  - 9 new sentences, 1 reworded, and "Bygg ordet …!" for the 10 five-letter words: 20 clips, about 430 ElevenLabs credits.
+- **Memory, measured** with simulated players (4,000 boards per cell, average turns):
+
+  | Cards | Fewest possible | Perfect memory | Remembers 3 in 4 | Remembers half | Random tapping |
+  |---|---|---|---|---|---|
+  | 6 | 3 | 4.3 | 4.5 | 4.8 | 8.9 |
+  | 8 | 4 | 5.9 | 6.3 | 6.7 | 16 |
+  | 12 | 6 | 9.2 | 9.7 | 10.6 | 35.5 |
+  | 16 | 8 | 12.4 | 13.3 | 14.4 | 64 |
+
+  - **Scores:** perfect memory 1.0; remembering 3 in 4 about 0.86; half about 0.72; a quarter about 0.5; random tapping 0.04–0.19.
+  - **The smallest board** is the exception: random tapping scores 0.36 there, because six cards leave too few turns to tell luck from memory. It is the lowest level, so that only means an occasional early step up.
+- **XP:** levels 1 and 2 give what easy and hard gave (20 and 30 the first time, then 5 and 8). Levels 3 and 4 give 8 every round, with no first-time bonus: the item pacing was tuned on two levels, and the extra XP would have brought the crown about 20 rounds sooner for a child who climbs.
+- **Saving:** save version 6. Easy and hard become levels 1 and 2, with nothing announced; levels 3 and 4 are reached by playing.
+- **Layout:** more than five progress circles (Memory's bigger boards, the longer ride) are drawn smaller. On an upright iPad they had run into the speaker and the picture.
+- **Tests:**
+  - Unit tests cover the rule, the scores (with the simulated players), every level building valid rounds and the save upgrade.
+  - Browser tests open stations at a given level (`startChallengeAt`, through a saved game) and check what was said (`hasSaid`).
 
 ## Roadmap — later
 

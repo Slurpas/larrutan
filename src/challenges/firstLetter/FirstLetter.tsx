@@ -3,23 +3,34 @@ import { confusableLetters, getLetter, letters } from '../../content/letters'
 import { getWord, words } from '../../content/words'
 import { Picture } from '../../ui/Picture'
 import type { ChallengeScreenProps } from '../challengeProps'
-import { challengeDifficulties } from '../difficulty'
+import { lookAlikeRule } from '../difficulty'
+import { levelIntro, levelParams } from '../levels'
 import { MineCart } from '../mineCart/MineCart'
 import { firstLetterVoice } from '../voices'
 import { createFirstLetterRound } from './createRound'
 
 /** Första bokstaven, as Gruvvagnen: see a picture, hear "Vilken bokstav börjar sol på?", ride into the tunnel with that letter. */
-export function FirstLetter({ seed, difficulty, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
-  const [round] = useState(() =>
-    createFirstLetterRound({ seed, words, letters, confusables: confusableLetters, difficulty, practiceBox }),
-  )
+export function FirstLetter({ seed, level, announceLevel, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
+  const [round] = useState(() => {
+    const { choices, lookAlikes, questions } = levelParams('firstLetter', level)
+    return createFirstLetterRound({
+      seed,
+      words,
+      letters,
+      confusables: confusableLetters,
+      difficulty: lookAlikeRule(lookAlikes),
+      choiceCount: choices,
+      questionCount: questions,
+      practiceBox,
+    })
+  })
 
   return (
     <MineCart
       round={round}
       voice={firstLetterVoice}
-      difficulty={difficulty}
-      difficultyCount={challengeDifficulties.firstLetter.length}
+      level={level}
+      levelIntro={announceLevel ? levelIntro('firstLetter', level) : undefined}
       onRoundComplete={onRoundComplete}
       practiceItem={(q) => q.word}
       knowsChallenge={knowsChallenge}

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { nextDifficulty, type Difficulty } from '../challenges/difficulty'
+import { announcesLevel, stationLevel, type Level } from '../challenges/levels'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { Memory } from '../challenges/memory/Memory'
@@ -22,7 +22,9 @@ import styles from './App.module.css'
 interface OpenChallenge {
   id: ChallengeId
   seed: number
-  difficulty: Difficulty
+  level: Level
+  /** The station has just gone up to this level: its intro is said, once. */
+  announceLevel: boolean
   /** Finished before (progress is saved), so the long instructions can be skipped. */
   knowsChallenge: boolean
   /** Unique for this round, so its reward can never be granted twice. */
@@ -54,15 +56,16 @@ export function App() {
     void loadProgress().then(() => setScreen({ name: 'world', overlay: null }))
   }
 
-  /** Opens a challenge at the station's current level (src/challenges/difficulty.ts). */
+  /** Opens a challenge at the station's current level (src/challenges/levels.ts). */
   function openChallenge(id: ChallengeId, seed: number) {
-    const { completedLevels, levels } = getProgress()
-    const difficulty = nextDifficulty(id, levels)
-    const knowsChallenge = completedLevels.some((level) => level.startsWith(`${id}:`))
-    const roundId = `${id}:${difficulty}:${seed}:${++roundCounter.current}`
+    const { completedLevels, stations } = getProgress()
+    const level = stationLevel(stations[id])
+    const announceLevel = announcesLevel(stations[id])
+    const knowsChallenge = completedLevels.some((key) => key.startsWith(`${id}:`))
+    const roundId = `${id}:${level}:${seed}:${++roundCounter.current}`
     setScreen({
       name: 'world',
-      overlay: { name: 'challenge', challenge: { id, seed, difficulty, knowsChallenge, roundId } },
+      overlay: { name: 'challenge', challenge: { id, seed, level, announceLevel, knowsChallenge, roundId } },
     })
   }
 
@@ -70,16 +73,17 @@ export function App() {
 
   let overlay = null
   if (screen.name === 'world' && screen.overlay?.name === 'challenge') {
-    const { id, seed, difficulty, knowsChallenge, roundId } = screen.overlay.challenge
+    const { id, seed, level, announceLevel, knowsChallenge, roundId } = screen.overlay.challenge
     const Challenge = challengeComponents[id]
     overlay = (
       <Challenge
         key={roundId}
         seed={seed}
-        difficulty={difficulty}
+        level={level}
+        announceLevel={announceLevel}
         knowsChallenge={knowsChallenge}
         practiceBox={(item) => boxOf(getProgress().mastery, practiceKey(id, item))}
-        onRoundComplete={({ wrongTaps, practiced }) => recordRound({ roundId, challenge: id, difficulty, wrongTaps, practiced })}
+        onRoundComplete={({ score, practiced }) => recordRound({ roundId, challenge: id, level, score, practiced })}
         onExit={backToMap}
         onPlayAgain={() => openChallenge(id, randomSeed())}
       />

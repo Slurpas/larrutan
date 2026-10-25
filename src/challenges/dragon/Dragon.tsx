@@ -22,7 +22,7 @@ import { pixelBackground } from '../../ui/pixelImage'
 import { PixelSprite } from '../../ui/PixelSprite'
 import { ChallengeTopBar } from '../ChallengeTopBar'
 import type { ChoiceQuestion, ChoiceRound } from '../choiceQuestion'
-import type { Difficulty } from '../difficulty'
+import type { Level } from '../levels'
 import { RoundComplete } from '../RoundComplete'
 import { sceneScale } from '../sceneScale'
 import { useChoiceRound, type RoundResult } from '../useChoiceRound'
@@ -61,8 +61,9 @@ interface Feeding {
 export interface DragonProps<Q extends ChoiceQuestion> {
   round: ChoiceRound<Q>
   voice: ChallengeVoice<Q>
-  difficulty: Difficulty
-  difficultyCount: number
+  level: Level
+  /** Said before the first question when the station has just gone up a level. */
+  levelIntro?: string
   onRoundComplete?: (result: RoundResult) => RoundOutcome
   practiceItem: (question: Q) => string
   knowsChallenge?: boolean
@@ -86,8 +87,8 @@ export interface DragonProps<Q extends ChoiceQuestion> {
 export function Dragon<Q extends ChoiceQuestion>({
   round,
   voice,
-  difficulty,
-  difficultyCount,
+  level,
+  levelIntro,
   onRoundComplete,
   practiceItem,
   knowsChallenge = false,
@@ -100,7 +101,7 @@ export function Dragon<Q extends ChoiceQuestion>({
   const { state, question, revealed, outcome, choose, replay } = useChoiceRound({
     round,
     voice,
-    difficulty,
+    levelIntro,
     onRoundComplete,
     practiceItem,
     knowsChallenge,
@@ -321,8 +322,7 @@ export function Dragon<Q extends ChoiceQuestion>({
         <ChallengeTopBar
           onExit={handleExit}
           onReplay={replay}
-          difficulty={difficulty}
-          difficultyCount={difficultyCount}
+          level={level}
           total={state.round.questions.length}
           current={state.questionIndex}
           beside={voiceStatus === 'missing' && silentPrompt && <span className={cards.silentPrompt}>{silentPrompt(question)}</span>}

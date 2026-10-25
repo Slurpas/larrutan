@@ -1,4 +1,4 @@
-import type { Difficulty } from '../challenges/difficulty'
+import type { Level } from '../challenges/levels'
 
 /**
  * All reward numbers in one place (PRD §10), tuned after playtests.
@@ -6,18 +6,26 @@ import type { Difficulty } from '../challenges/difficulty'
  * and hints or wrong answers along the way never reduce them.
  */
 export const rewardRules = {
-  /** XP for finishing a challenge level for the first time. */
-  firstCompletionXp: { easy: 20, hard: 30 } satisfies Record<Difficulty, number>,
-  /** Replaying a level already completed is still worth something, but much less. */
-  replayShare: 0.25,
+  /**
+   * XP for a round at each station level: the first time that level is completed, and every
+   * round after. Levels 3 and 4 (2026-10-25) have no first-time bonus: the item pacing was
+   * tuned on two levels, and the extra XP would have brought the crown about 20 rounds
+   * sooner for a child who climbs. Reaching a level is celebrated on the end screen instead.
+   */
+  levelXp: {
+    1: { first: 20, replay: 5 },
+    2: { first: 30, replay: 8 },
+    3: { first: 8, replay: 8 },
+    4: { first: 8, replay: 8 },
+  } satisfies Record<Level, { first: number; replay: number }>,
   /** XP needed to go from level n to n + 1 is `levelStepXp + levelStepGrowth * n`. */
   levelStepXp: 20,
   levelStepGrowth: 10,
 } as const
 
-export function roundXp(difficulty: Difficulty, firstCompletion: boolean): number {
-  const full = rewardRules.firstCompletionXp[difficulty]
-  return firstCompletion ? full : Math.round(full * rewardRules.replayShare)
+export function roundXp(level: Level, firstCompletion: boolean): number {
+  const xp = rewardRules.levelXp[level]
+  return firstCompletion ? xp.first : xp.replay
 }
 
 /** Total XP needed to reach a player level (level 1 needs none): 0, 30, 70, 120, 180, … */

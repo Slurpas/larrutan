@@ -1,9 +1,9 @@
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { levelAfterRound, levelKey, nextDifficulty, type Difficulty, type StationLevels } from '../challenges/difficulty'
+import { levelKey, nextStation, stationLevel, type Level, type StationState } from '../challenges/levels'
 import { letters } from '../content/letters'
 import { words } from '../content/words'
-import { spellingWords } from '../challenges/spelling/createRound'
+import { spelledLengths, spellingWords } from '../challenges/spelling/createRound'
 import { boxOf, practiceKey, recordPractice, type Mastery, type Practiced } from '../learning/mastery'
 import { findItem, items, type UnlockCondition } from './items'
 import { levelForXp, roundXp } from './rules'
@@ -11,10 +11,10 @@ import { levelForXp, roundXp } from './rules'
 export interface Progress {
   xp: number
   roundsCompleted: number
-  /** Challenge levels finished at least once, e.g. "findLetter:hard". */
+  /** Station levels finished at least once, e.g. "findLetter:2". */
   completedLevels: string[]
-  /** The level each station opens at next (src/challenges/difficulty.ts). */
-  levels: StationLevels
+  /** Each station's level and how the last rounds there went (src/challenges/levels.ts). */
+  stations: Partial<Record<ChallengeId, StationState>>
   /** In the order they were earned. */
   unlockedItems: string[]
   /** How many of `unlockedItems` the child has looked at in "Mina saker" or put on; the rest are new. */
@@ -31,9 +31,9 @@ export interface RoundCompletion {
   /** Unique for each round played; the same id is never rewarded twice. */
   roundId: string
   challenge: ChallengeId
-  difficulty: Difficulty
-  /** Never used to reduce a reward. */
-  wrongTaps: number
+  level: Level
+  /** How well it went, from 0 (no better than guessing) to 1: moves the station's level, never a reward. */
+  score: number
   /** What each question practised, and whether the first tap was right: updates mastery. */
   practiced: readonly Practiced[]
 }
@@ -49,13 +49,15 @@ export interface RoundOutcome {
   newItems: string[]
   /** The station opens at a different level next time: 'up' is announced, 'down' happens quietly. */
   levelChange: 'up' | 'down' | null
+  /** The level the station opens at next time. */
+  stationLevel: Level
 }
 
 export const initialProgress: Progress = {
   xp: 0,
   roundsCompleted: 0,
   completedLevels: [],
-  levels: {},
+  stations: {},
   unlockedItems: [],
   itemsSeen: 0,
   worn: {},
@@ -71,18 +73,17 @@ export function completeRound(
   const already = progress.rounds[completion.roundId]
   if (already) return { progress, outcome: already }
 
-  const key = levelKey(completion.challenge, completion.difficulty)
+  const key = levelKey(completion.challenge, completion.level)
   const firstCompletion = !progress.completedLevels.includes(key)
-  const xpGained = roundXp(completion.difficulty, firstCompletion)
+  const xpGained = roundXp(completion.level, firstCompletion)
 
-  const levelBefore = nextDifficulty(completion.challenge, progress.levels)
-  const levelNext = levelAfterRound(completion.challenge, completion.difficulty, completion.wrongTaps)
+  const station = nextStation(progress.stations[completion.challenge], completion.score)
   const next: Progress = {
     ...progress,
     xp: progress.xp + xpGained,
     roundsCompleted: progress.roundsCompleted + 1,
     completedLevels: firstCompletion ? [...progress.completedLevels, key] : progress.completedLevels,
-    levels: { ...progress.levels, [completion.challenge]: levelNext },
+    stations: { ...progress.stations, [completion.challenge]: station.state },
     mastery: recordPractice(progress.mastery, completion.challenge, completion.practiced),
   }
   // Items are rare treats (user feedback 2026-10-24): at most one, and only every other round
@@ -102,7 +103,8 @@ export function completeRound(
     levelBefore: levelForXp(progress.xp),
     levelAfter: levelForXp(next.xp),
     newItems,
-    levelChange: levelNext === levelBefore ? null : levelNext === 'hard' ? 'up' : 'down',
+    levelChange: station.change,
+    stationLevel: stationLevel(station.state),
   }
   return {
     progress: {
@@ -119,7 +121,7 @@ const practisedIn: Record<ChallengeId, readonly string[]> = {
   findLetter: letters.map((letter) => letter.id),
   firstLetter: words.map((word) => word.id),
   wordPicture: words.map((word) => word.id),
-  spelling: spellingWords(words).map((word) => word.id),
+  spelling: spellingWords(words, spelledLengths).map((word) => word.id),
   memory: words.map((word) => word.id),
 }
 
@@ -130,7 +132,7 @@ export function isUnlocked(condition: UnlockCondition, progress: Progress): bool
     case 'playerLevel':
       return levelForXp(progress.xp) >= condition.level
     case 'levelCompleted':
-      return progress.completedLevels.includes(levelKey(condition.challenge, condition.difficulty))
+      return progress.completedLevels.includes(levelKey(condition.challenge, condition.level))
     case 'mastered':
       return practisedIn[condition.challenge].every(
         (item) => boxOf(progress.mastery, practiceKey(condition.challenge, item)) >= condition.box,

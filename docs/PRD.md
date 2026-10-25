@@ -143,13 +143,14 @@ Attempts, hints and successes are tracked separately from rewards.
 - **Moving between boxes:** right on the first tap moves an item up one box; needing another try moves it down one box, never all the way back.
 - **Choosing a round:** questions are picked in a weighted random order, and each box comes up about half as often as the one below. Items still being learned dominate, but known items still come back.
 - **New players:** everything is in box 1, so they get exactly the same seeded rounds as before mastery existed.
-- **Hard level:** it still asks about the look-alike letters; mastery only changes their order.
+- **Look-alike levels:** they still ask about the look-alike letters; mastery only changes their order.
 - **Saving and visibility:** boxes are saved with the progress (since save version 2) and never shown to the child.
-- **Difficulty (Task 15):**
-  - **Hard is clearly harder:** four choices instead of three, with the look-alikes of the answer.
-  - **The level is per station:** an easy round with at most one wrong tap makes the next one hard, and the end of the round says so ("Nästa gång blir det svårare."). A hard round with four or more wrong taps makes the next one easy again, without a word.
-  - **Every hard round** starts by saying what is harder. The level pips show it too.
-  - **Saved:** the level is part of the save (version 4).
+- **Levels (Task 23, replacing Task 15's easy and hard):**
+  - **Four per station,** each harder in a way the child can notice: more choices or cards, look-alikes, the word written (and then only written), longer words, a longer ride. The table is `src/challenges/levels.ts` (summed up in `docs/CLAUDE_TASKS.md`, Task 23).
+  - **Every round gets a score** from 0 (no better than guessing) to 1 (flawless): answers right on the first tap in the choice games, letters found on the first tap in Bygg ordet, and in Memory how often the child found a partner card they had already seen.
+  - **Up** after two rounds in a row averaging at least 0.8, and the end of the round says so ("Nästa gång blir det svårare."). **Down** after two averaging at most 0.3, without a word. Otherwise the station stays, so one lucky or unlucky round never moves it.
+  - **The new level's sentence** ("Nu blir det fler kort!") is said once, on the first round there. The level pips show the level.
+  - **Saved** per station, with the last three scores (save version 6).
 
 ## 7. Voice and audio
 
@@ -285,12 +286,14 @@ Phase 1 tests the rules with a few placeholder items (emoji). Phase 2 adds the r
 
 **Phase 1 implementation (Task 5):** easy XP 20, hard XP 30, replays a quarter; levels at 30, 70, 120, 180 XP. Hitta bokstaven and Första bokstaven have an easy and a hard level (hard offers exactly one look-alike of the answer); a sign opens the first level not yet completed. Five emoji hats, one per rarity (replaced by the wardrobe in Task 10). Progress is saved on the device since Task 7 (§12).
 
-**Wardrobe (Task 10, bigger in Task 14):** pixel-art items in five slots. A round gives **at most one item, and only every other round** (user feedback 2026-10-24); when more are earned they wait, in the order of the list below. The hard levels can be finished in the first session, so they give uncommon items, not rare ones.
+**Four station levels (Task 23):** levels 1 and 2 give what easy and hard gave (20 and 30 the first time, then 5 and 8). Levels 3 and 4 give 8 every round, with no first-time bonus, so a child who climbs doesn't reach the rare and legendary items sooner.
+
+**Wardrobe (Task 10, bigger in Task 14):** pixel-art items in five slots. A round gives **at most one item, and only every other round** (user feedback 2026-10-24); when more are earned they wait, in the order of the list below. Level 2 can be finished in the first session, so it gives uncommon items, not rare ones.
 
 | Tier | Items and how they are earned |
 |---|---|
-| Vanlig | keps (first round), blå tröja, gröna byxor, mössa (the easy level of each challenge), blomma (3 rounds), röd keps (5), gul tröja (7) |
-| Ovanlig | rosett (level 3), randig tröja and ballong (the hard levels), ryggsäck (10 rounds), rosa tröja (12), grön keps (level 4), partyhatt (level 5), blå ballong (15), röda byxor (18), solros (20) |
+| Vanlig | keps (first round), blå tröja, gröna byxor, mössa (level 1 of Hitta bokstaven, Första bokstaven and Ord och bild), blomma (3 rounds), röd keps (5), gul tröja (7) |
+| Ovanlig | rosett (level 3), randig tröja and ballong (level 2 of Hitta bokstaven and Första bokstaven), ryggsäck (10 rounds), rosa tröja (12), grön keps (level 4), partyhatt (level 5), blå ballong (15), röda byxor (18), solros (20) |
 | Sällsynt | hög hatt (level 6), mantel (25 rounds), stjärntröja (level 7), grön mantel (30), trollstav (35), vikingahjälm (level 8), grönrandig tröja (40), röd ryggsäck (45), gula byxor (50) |
 | Episk | studentmössa (level 9), vingar (60 rounds), regnbågsbyxor (every letter of Hitta bokstaven in the top mastery box), pirathatt (65), fjärilsvingar (80), kockmössa (90), stjärnbyxor (every word of Ord och bild in the top box) |
 | Legendarisk | krona (level 10), guldmantel (every word of Första bokstaven in the top box), guldvingar (level 13), regnbågsmantel (150 rounds) |

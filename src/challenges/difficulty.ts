@@ -1,47 +1,14 @@
-import type { ChallengeId } from './challengeIds'
-
 /**
- * How hard a round is (PRD §5, §6). The hard level is clearly harder: four choices
- * instead of three, with the letters that look alike (A, Å, Ä; O, Ö) among them.
+ * How the letters of a question are picked (PRD §5, §6): 'easy' never offers letters that
+ * look or sound alike; 'hard' offers the answer's look-alikes on purpose. Which one a round
+ * uses, and how many choices, comes from the station's level (src/challenges/levels.ts).
  */
 export type Difficulty = 'easy' | 'hard'
 
-/** The difficulties each challenge offers, easiest first. */
-export const challengeDifficulties: Record<ChallengeId, readonly Difficulty[]> = {
-  findLetter: ['easy', 'hard'],
-  firstLetter: ['easy', 'hard'],
-  wordPicture: ['easy'],
-  spelling: ['easy', 'hard'],
-  memory: ['easy', 'hard'],
-}
-
-/** How many choices a question offers at each level. */
+/** How many choices a question offers when nothing else is said. */
 export const choiceCounts: Record<Difficulty, number> = { easy: 3, hard: 4 }
 
-/**
- * When a station changes level (a gentle, reversible rule, PRD §6; user feedback
- * 2026-10-24): an easy round with at most `upAtMostWrong` wrong taps makes the next
- * round at that station hard; a hard round with at least `downAtLeastWrong` makes it
- * easy again. Otherwise it stays. Rewards never depend on this.
- */
-export const levelRules = { upAtMostWrong: 1, downAtLeastWrong: 4 } as const
-
-/** Identifies one challenge level, e.g. "findLetter:hard". */
-export function levelKey(challenge: ChallengeId, difficulty: Difficulty): string {
-  return `${challenge}:${difficulty}`
-}
-
-/** The level each station opens at; a station never played opens easy. */
-export type StationLevels = Readonly<Partial<Record<ChallengeId, Difficulty>>>
-
-export function nextDifficulty(challenge: ChallengeId, levels: StationLevels): Difficulty {
-  const level = levels[challenge] ?? 'easy'
-  return challengeDifficulties[challenge].includes(level) ? level : 'easy'
-}
-
-/** The level a station opens at next time, after a round played at `difficulty` with `wrongTaps` slips. */
-export function levelAfterRound(challenge: ChallengeId, difficulty: Difficulty, wrongTaps: number): Difficulty {
-  if (!challengeDifficulties[challenge].includes('hard')) return 'easy'
-  if (difficulty === 'easy') return wrongTaps <= levelRules.upAtMostWrong ? 'hard' : 'easy'
-  return wrongTaps >= levelRules.downAtLeastWrong ? 'easy' : 'hard'
+/** The look-alike rule of a level that does or doesn't use look-alikes. */
+export function lookAlikeRule(lookAlikes: boolean): Difficulty {
+  return lookAlikes ? 'hard' : 'easy'
 }

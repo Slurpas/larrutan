@@ -1,12 +1,15 @@
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import { challengeNames, type ChallengeId } from '../challenges/challengeIds'
 import type { ChoiceQuestion, ChoiceRound } from '../challenges/choiceQuestion'
+import { lookAlikeRule } from '../challenges/difficulty'
 import { createFindLetterRound } from '../challenges/findLetter/createRound'
 import { createFirstLetterRound } from '../challenges/firstLetter/createRound'
-import { dragonVoice, firstLetterVoice, wordPictureVoice, type ChallengeVoice } from '../challenges/voices'
+import { levelIntro, levelParams, type Level } from '../challenges/levels'
+import { dragonVoice, firstLetterVoice, readWordVoice, wordPictureVoice, type ChallengeVoice } from '../challenges/voices'
 import { createWordPictureRound } from '../challenges/wordPicture/createRound'
-import { createSpellingRound } from '../challenges/spelling/createRound'
+import { createSpellingRound, spellingWords } from '../challenges/spelling/createRound'
 import { createMemoryRound } from '../challenges/memory/createRound'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
@@ -20,6 +23,9 @@ import { speechVoice } from './voiceSettings'
 
 const catalogue = new Set(spokenTexts())
 const seeds = Array.from({ length: 300 }, (_, i) => i * 104729 + 3)
+const levels = [1, 2, 3, 4] as const satisfies readonly Level[]
+/** Every level of a station, a different one for each seed. */
+const levelFor = (seed: number): Level => levels[seed % levels.length]!
 
 /** Everything a round can make the challenge say, including every wrong choice the child might tap. */
 function everythingSaid<Q extends ChoiceQuestion>(round: ChoiceRound<Q>, voice: ChallengeVoice<Q>): string[] {
@@ -32,50 +38,78 @@ function everythingSaid<Q extends ChoiceQuestion>(round: ChoiceRound<Q>, voice: 
 }
 
 describe('speech catalogue', () => {
-  it('contains everything Hitta bokstaven (Mata draken) can say', () => {
+  it('contains everything Hitta bokstaven (Mata draken) can say, at every level', () => {
     for (const seed of seeds) {
-      const round = createFindLetterRound({ seed, letters, confusables: confusableLetters })
+      const { choices, lookAlikes, questions } = levelParams('findLetter', levelFor(seed))
+      const round = createFindLetterRound({
+        seed,
+        letters,
+        confusables: confusableLetters,
+        difficulty: lookAlikeRule(lookAlikes),
+        choiceCount: choices,
+        questionCount: questions,
+      })
       for (const text of everythingSaid(round, dragonVoice)) expect(catalogue).toContain(text)
     }
   })
 
-  it('contains everything Första bokstaven can say', () => {
+  it('contains everything Första bokstaven can say, at every level', () => {
     for (const seed of seeds) {
-      const round = createFirstLetterRound({ seed, words, letters, confusables: confusableLetters })
+      const { choices, lookAlikes, questions } = levelParams('firstLetter', levelFor(seed))
+      const round = createFirstLetterRound({
+        seed,
+        words,
+        letters,
+        confusables: confusableLetters,
+        difficulty: lookAlikeRule(lookAlikes),
+        choiceCount: choices,
+        questionCount: questions,
+      })
       for (const text of everythingSaid(round, firstLetterVoice)) expect(catalogue).toContain(text)
     }
   })
 
-  it('contains everything Ord och bild can say', () => {
+  it('contains everything Ord och bild can say, at every level', () => {
     for (const seed of seeds) {
-      const round = createWordPictureRound({ seed, words })
-      for (const text of everythingSaid(round, wordPictureVoice)) expect(catalogue).toContain(text)
+      const { choices, word } = levelParams('wordPicture', levelFor(seed))
+      const targets = word === 'written' ? spellingWords(words) : words
+      const round = createWordPictureRound({ seed, words, choiceCount: choices, targets })
+      for (const text of everythingSaid(round, word === 'written' ? readWordVoice : wordPictureVoice)) expect(catalogue).toContain(text)
     }
+  })
+
+  it('contains what every level says when the child first gets there', () => {
+    for (const challenge of Object.keys(challengeNames) as ChallengeId[])
+      for (const level of levels) {
+        const intro = levelIntro(challenge, level)
+        if (intro) expect(catalogue, `${challenge} ${level}`).toContain(intro)
+      }
   })
 
   it('contains everything said about rewards', () => {
     for (const text of [phrases.levelUp, phrases.myThingsHelp, phrases.nextTimeHarder]) expect(catalogue).toContain(text)
-    for (const voice of [dragonVoice, firstLetterVoice]) expect(catalogue).toContain(voice.hardIntro)
     for (const item of items) {
       expect(catalogue).toContain(phrases.itemUnlocked(item.indefinite))
       expect(catalogue).toContain(item.hint)
     }
   })
 
-  it('contains everything Bygg ordet can say', () => {
+  it('contains everything Bygg ordet can say, at every level', () => {
     for (const seed of seeds) {
-      for (const question of createSpellingRound({ seed, words, difficulty: seed % 2 ? 'hard' : 'easy' }).questions) {
+      const { lookAlike, extraLetters, lengths } = levelParams('spelling', levelFor(seed))
+      const round = createSpellingRound({ seed, words, difficulty: lookAlikeRule(lookAlike), extras: extraLetters, lengths })
+      for (const question of round.questions) {
         const word = words.find((w) => w.id === question.word)!
         expect(catalogue).toContain(phrases.spellingQuestion(word.base))
         expect(catalogue).toContain(phrases.firstLetterShort(word.base))
       }
     }
-    expect(catalogue).toContain(phrases.hiddenWordIntro)
   })
 
-  it('contains everything Memory can say', () => {
+  it('contains everything Memory can say, at every level', () => {
     for (const seed of seeds) {
-      const board = createMemoryRound({ seed, words, letters, confusables: confusableLetters, difficulty: seed % 2 ? 'hard' : 'easy' })
+      const { pairs, lookAlikes } = levelParams('memory', levelFor(seed))
+      const board = createMemoryRound({ seed, words, letters, confusables: confusableLetters, difficulty: lookAlikeRule(lookAlikes), pairs })
       for (const card of board.cards) {
         const word = words.find((w) => w.id === card.pair)!
         const letter = letters.find((l) => l.id === card.letter)!
@@ -83,22 +117,7 @@ describe('speech catalogue', () => {
         expect(catalogue).toContain(phrases.firstLetterReveal(word.base, letter.spoken))
       }
     }
-    for (const text of [phrases.memoryIntro, phrases.memoryShort, phrases.moreCardsIntro]) expect(catalogue).toContain(text)
-  })
-
-  it('contains everything the hard levels can say', () => {
-    for (const seed of seeds.slice(0, 100)) {
-      const findLetter = createFindLetterRound({ seed, letters, confusables: confusableLetters, difficulty: 'hard' })
-      for (const text of everythingSaid(findLetter, dragonVoice)) expect(catalogue).toContain(text)
-      const firstLetter = createFirstLetterRound({
-        seed,
-        words,
-        letters,
-        confusables: confusableLetters,
-        difficulty: 'hard',
-      })
-      for (const text of everythingSaid(firstLetter, firstLetterVoice)) expect(catalogue).toContain(text)
-    }
+    for (const text of [phrases.memoryIntro, phrases.memoryShort]) expect(catalogue).toContain(text)
   })
 
   it('gives every sentence its own file name', () => {

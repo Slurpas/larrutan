@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import type { ChallengeId } from '../challenges/challengeIds'
-import type { Difficulty } from '../challenges/difficulty'
+import type { Level } from '../challenges/levels'
 import { letters } from '../content/letters'
 import { getItem, items } from './items'
 import { completeRound, initialProgress, newItems, seeItems, wear, type Progress } from './progress'
 import { levelForXp, levelProgress, xpForLevel } from './rules'
 
 let roundCounter = 0
-function play(progress: Progress, challenge: ChallengeId, difficulty: Difficulty = 'easy', wrongTaps = 0) {
-  return completeRound(progress, { roundId: `round-${++roundCounter}`, challenge, difficulty, wrongTaps, practiced: [] })
+function play(progress: Progress, challenge: ChallengeId, level: Level = 1, score = 1) {
+  return completeRound(progress, { roundId: `round-${++roundCounter}`, challenge, level, score, practiced: [] })
 }
 
 describe('XP', () => {
@@ -22,16 +22,25 @@ describe('XP', () => {
     expect(replay.outcome.xpGained).toBeLessThan(first.outcome.xpGained)
   })
 
-  it('gives more for the hard level, and counts each level separately', () => {
-    const easy = play(initialProgress, 'findLetter', 'easy')
-    const hard = play(easy.progress, 'findLetter', 'hard')
-    expect(hard.outcome.firstCompletion).toBe(true)
-    expect(hard.outcome.xpGained).toBeGreaterThan(easy.outcome.xpGained)
+  it('gives more for level 2, and counts each level separately', () => {
+    const first = play(initialProgress, 'findLetter', 1)
+    const second = play(first.progress, 'findLetter', 2)
+    expect(second.outcome.firstCompletion).toBe(true)
+    expect(second.outcome.xpGained).toBeGreaterThan(first.outcome.xpGained)
+  })
+
+  it('gives no first-time bonus at levels 3 and 4, so climbing never hurries the items', () => {
+    const replay = play(play(initialProgress, 'memory', 2).progress, 'memory', 2)
+    for (const level of [3, 4] as const) {
+      const first = play(initialProgress, 'memory', level)
+      expect(first.outcome.firstCompletion).toBe(true)
+      expect(first.outcome.xpGained).toBe(replay.outcome.xpGained)
+    }
   })
 
   it('never reduces a reward for wrong answers or hints', () => {
-    const perfect = play(initialProgress, 'wordPicture', 'easy', 0)
-    const struggled = play(initialProgress, 'wordPicture', 'easy', 12)
+    const perfect = play(initialProgress, 'wordPicture', 1, 1)
+    const struggled = play(initialProgress, 'wordPicture', 1, 0)
     expect(struggled.outcome.xpGained).toBe(perfect.outcome.xpGained)
     expect(struggled.outcome.newItems).toEqual(perfect.outcome.newItems)
   })
@@ -40,8 +49,8 @@ describe('XP', () => {
     const completion = {
       roundId: 'same-round',
       challenge: 'firstLetter' as const,
-      difficulty: 'easy' as const,
-      wrongTaps: 0,
+      level: 1 as const,
+      score: 1,
       practiced: [{ item: 'sun', firstTry: true }],
     }
     const once = completeRound(initialProgress, completion)
@@ -62,26 +71,27 @@ describe('XP', () => {
 })
 
 /**
- * A plausible way to play (at about five rounds a day): every level once in the first
- * session, then rounds at each sign's hardest level, in turn.
+ * A plausible way to play (at about five rounds a day): the first two levels of three
+ * stations in the first session, then rounds there, in turn. Higher levels give the same
+ * XP as level 2 replays, so climbing further doesn't change this pace.
  */
 function playRounds(count: number): Progress {
   const firstSession = [
-    ['findLetter', 'easy'],
-    ['findLetter', 'hard'],
-    ['firstLetter', 'easy'],
-    ['firstLetter', 'hard'],
-    ['wordPicture', 'easy'],
+    ['findLetter', 1],
+    ['findLetter', 2],
+    ['firstLetter', 1],
+    ['firstLetter', 2],
+    ['wordPicture', 1],
   ] as const
   const replays = [
-    ['findLetter', 'hard'],
-    ['firstLetter', 'hard'],
-    ['wordPicture', 'easy'],
+    ['findLetter', 3],
+    ['firstLetter', 3],
+    ['wordPicture', 1],
   ] as const
   let progress = initialProgress
   for (let i = 0; i < count; i++) {
-    const [challenge, difficulty] = firstSession[i] ?? replays[i % replays.length]!
-    progress = play(progress, challenge, difficulty).progress
+    const [challenge, level] = firstSession[i] ?? replays[i % replays.length]!
+    progress = play(progress, challenge, level).progress
   }
   return progress
 }
@@ -104,7 +114,7 @@ describe('unlocks', () => {
     let progress = initialProgress
     let lastItemRound = -2
     for (let i = 0; i < 200; i++) {
-      const round = play(progress, (['findLetter', 'firstLetter', 'wordPicture'] as const)[i % 3], i % 2 ? 'hard' : 'easy')
+      const round = play(progress, (['findLetter', 'firstLetter', 'wordPicture', 'spelling', 'memory'] as const)[i % 5], ((i % 4) + 1) as Level)
       expect(round.outcome.newItems.length, `round ${i + 1}`).toBeLessThanOrEqual(1)
       if (round.outcome.newItems.length > 0) {
         expect(i - lastItemRound, `round ${i + 1}`).toBeGreaterThanOrEqual(2)
@@ -154,20 +164,24 @@ describe('unlocks', () => {
 })
 
 describe('station levels', () => {
-  it('announces when a station gets harder, and changes back quietly', () => {
-    const clean = play(initialProgress, 'findLetter', 'easy', 0)
-    expect(clean.outcome.levelChange).toBe('up')
-    expect(clean.progress.levels.findLetter).toBe('hard')
-    const stillHard = play(clean.progress, 'findLetter', 'hard', 2)
-    expect(stillHard.outcome.levelChange).toBe(null)
-    const tooHard = play(stillHard.progress, 'findLetter', 'hard', 5)
-    expect(tooHard.outcome.levelChange).toBe('down')
-    expect(tooHard.progress.levels.findLetter).toBe('easy')
+  it('goes up after two good rounds and says so, and goes back down quietly after two poor ones', () => {
+    const once = play(initialProgress, 'findLetter', 1, 1)
+    expect(once.outcome).toMatchObject({ levelChange: null, stationLevel: 1 })
+    const twice = play(once.progress, 'findLetter', 1, 0.9)
+    expect(twice.outcome).toMatchObject({ levelChange: 'up', stationLevel: 2 })
+    expect(twice.progress.stations.findLetter).toMatchObject({ level: 2, recent: [] })
+    const poor = play(twice.progress, 'findLetter', 2, 0.2)
+    expect(poor.outcome.levelChange).toBe(null)
+    const poorAgain = play(poor.progress, 'findLetter', 2, 0.1)
+    expect(poorAgain.outcome).toMatchObject({ levelChange: 'down', stationLevel: 1 })
   })
 
-  it('stays easy after an easy round with several slips, and never changes Ord och bild', () => {
-    expect(play(initialProgress, 'firstLetter', 'easy', 3).outcome.levelChange).toBe(null)
-    expect(play(initialProgress, 'wordPicture', 'easy', 0).outcome.levelChange).toBe(null)
+  it('keeps every station to itself, Ord och bild too', () => {
+    let progress = play(play(initialProgress, 'wordPicture', 1, 1).progress, 'wordPicture', 1, 1).progress
+    expect(progress.stations.wordPicture?.level).toBe(2)
+    progress = play(progress, 'memory', 1, 1).progress
+    expect(progress.stations.memory).toEqual({ level: 1, recent: [1], played: 1 })
+    expect(progress.stations.findLetter).toBeUndefined()
   })
 })
 

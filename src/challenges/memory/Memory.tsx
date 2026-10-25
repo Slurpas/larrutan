@@ -14,11 +14,12 @@ import { pixelBackground } from '../../ui/pixelImage'
 import { PixelSprite } from '../../ui/PixelSprite'
 import { ChallengeTopBar } from '../ChallengeTopBar'
 import type { ChallengeScreenProps } from '../challengeProps'
-import { challengeDifficulties } from '../difficulty'
+import { lookAlikeRule } from '../difficulty'
+import { levelIntro, levelParams } from '../levels'
 import { RoundComplete } from '../RoundComplete'
 import { sceneScale } from '../sceneScale'
 import { createMemoryRound, type MemoryCard } from './createRound'
-import { closeCards, isFinished, startMemory, turnCard } from './memoryState'
+import { closeCards, isFinished, memoryScore, startMemory, turnCard } from './memoryState'
 import styles from './Memory.module.css'
 
 const backgrounds = { meadowTop: pixelBackground(meadowTop), meadowSoil: pixelBackground(meadowSoil) }
@@ -50,13 +51,14 @@ function cardGrid(count: number, width: number, height: number, gap: number) {
  * Memory: cards lie face down; each pair is a picture and the letter its word starts with.
  * The child turns two at a time and hears each one ("A.", "Anka."). A pair stays face up
  * with a chime and "anka börjar på A!"; two that don't match turn back after a moment,
- * or as soon as the next card is turned. Hard: four pairs instead of three, with two
- * letters that look alike. Nothing is timed.
+ * or as soon as the next card is turned. Each level has more pairs (3, 4, 6, 8), from the
+ * third with two letters that look alike (src/challenges/levels.ts). Nothing is timed.
  */
-export function Memory({ seed, difficulty, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
-  const [round] = useState(() =>
-    createMemoryRound({ seed, words, letters, confusables: confusableLetters, difficulty, practiceBox }),
-  )
+export function Memory({ seed, level, announceLevel, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
+  const [round] = useState(() => {
+    const { pairs, lookAlikes } = levelParams('memory', level)
+    return createMemoryRound({ seed, words, letters, confusables: confusableLetters, difficulty: lookAlikeRule(lookAlikes), pairs, practiceBox })
+  })
   const [state, setState] = useState(() => startMemory(round))
   const [outcome, setOutcome] = useState<RoundOutcome | null>(null)
   const [done, setDone] = useState(false)
@@ -75,11 +77,13 @@ export function Memory({ seed, difficulty, knowsChallenge, practiceBox, onRoundC
     return () => observer.disconnect()
   }, [])
 
-  // What to do, once: the short form when the child knows the game; a hard round first says what is harder.
+  // What to do, once: the short form when the child knows the game. Only the first round at a
+  // new level starts by saying what is new (every round of a hard level used to: user feedback).
+  const newLevel = announceLevel ? levelIntro('memory', level) : undefined
   useEffect(() => {
     const intro = knowsChallenge ? phrases.memoryShort : phrases.memoryIntro
-    void speak(difficulty === 'hard' ? [phrases.moreCardsIntro, intro] : intro)
-  }, [knowsChallenge, difficulty])
+    void speak(newLevel ? [newLevel, intro] : intro)
+  }, [knowsChallenge, newLevel])
   useEffect(() => stopSpeech, [])
 
   // Two cards that don't match turn back after a moment.
@@ -92,7 +96,7 @@ export function Memory({ seed, difficulty, knowsChallenge, practiceBox, onRoundC
   // Every pair found: a moment to enjoy it, then the round is done.
   const finishRound = useEffectEvent(() => {
     const practiced = round.pairs.map((pair) => ({ item: pair, firstTry: !state.slipped.includes(pair) }))
-    setOutcome(onRoundComplete({ wrongTaps: state.slips, practiced }))
+    setOutcome(onRoundComplete({ score: memoryScore(state), practiced }))
     setDone(true)
   })
   const finished = isFinished(state)
@@ -117,7 +121,7 @@ export function Memory({ seed, difficulty, knowsChallenge, practiceBox, onRoundC
     onExit()
   }
 
-  /** Keys 1–8 turn the cards in reading order. */
+  /** Keys 1–9 turn the first cards in reading order. */
   const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
     const card = round.cards[Number(event.key) - 1]
     if (card) turn(card)
@@ -214,8 +218,7 @@ export function Memory({ seed, difficulty, knowsChallenge, practiceBox, onRoundC
         <ChallengeTopBar
           onExit={handleExit}
           onReplay={() => void speak(phrases.memoryIntro)}
-          difficulty={difficulty}
-          difficultyCount={challengeDifficulties.memory.length}
+          level={level}
           total={round.pairs.length}
           current={pairsFound}
         />

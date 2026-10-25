@@ -1,9 +1,10 @@
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
-import { challengeDifficulties, levelKey, type Difficulty, type StationLevels } from '../challenges/difficulty'
+import { challengeNames } from '../challenges/challengeIds'
+import { levelCount, levelKey, levelRule, type Level, type StationState } from '../challenges/levels'
 import { letters } from '../content/letters'
 import { words } from '../content/words'
-import { spellingWords } from '../challenges/spelling/createRound'
+import { spelledLengths, spellingWords } from '../challenges/spelling/createRound'
 import { highestBox, lowestBox, practiceKey, type Mastery } from '../learning/mastery'
 import { findItem, items } from '../rewards/items'
 import { initialProgress, type Progress } from '../rewards/progress'
@@ -13,8 +14,9 @@ import { initialProgress, type Progress } from '../rewards/progress'
  * shape changes, and add an upgrade step from the old version, with a test, in `readSave`.
  * 1: Task 7. 2: mastery per letter and word (Task 11). 3: an outfit, one item per slot (Task 10).
  * 4: the level each station opens at (Task 15). 5: how many items the child has seen (Task 19).
+ * 6: four levels per station, with the scores of the last rounds (Task 23).
  */
-export const saveVersion = 5
+export const saveVersion = 6
 
 export interface SaveFile {
   version: number
@@ -32,11 +34,11 @@ export type ReadResult =
   | { kind: 'newer'; progress: Progress }
 
 export function toSaveFile(progress: Progress, now: Date): SaveFile {
-  const { xp, roundsCompleted, completedLevels, levels, unlockedItems, itemsSeen, worn, mastery } = progress
+  const { xp, roundsCompleted, completedLevels, stations, unlockedItems, itemsSeen, worn, mastery } = progress
   return {
     version: saveVersion,
     savedAt: now.toISOString(),
-    progress: { xp, roundsCompleted, completedLevels, levels, unlockedItems, itemsSeen, worn, mastery },
+    progress: { xp, roundsCompleted, completedLevels, stations, unlockedItems, itemsSeen, worn, mastery },
   }
 }
 
@@ -51,16 +53,15 @@ export function readSave(stored: unknown): ReadResult {
   if (stored.version <= 2) upgraded = upgradeFrom2(upgraded)
   if (stored.version <= 3) upgraded = upgradeFrom3(upgraded)
   if (stored.version <= 4) upgraded = upgradeFrom4(upgraded)
+  if (stored.version <= 5) upgraded = upgradeFrom5(upgraded)
   const { progress, repaired } = repair(upgraded)
   if (stored.version > saveVersion) return { kind: 'newer', progress }
   return { kind: 'loaded', progress, repaired }
 }
 
-const knownLevels = new Set(
-  (Object.keys(challengeDifficulties) as ChallengeId[]).flatMap((challenge) =>
-    challengeDifficulties[challenge].map((difficulty) => levelKey(challenge, difficulty)),
-  ),
-)
+const challengeIds = Object.keys(challengeNames) as ChallengeId[]
+const allLevels = Array.from({ length: levelCount }, (_, i) => (i + 1) as Level)
+const knownLevels = new Set(challengeIds.flatMap((challenge) => allLevels.map((level) => levelKey(challenge, level))))
 const knownItems = new Set(items.map((item) => item.id))
 const letterIds = letters.map((letter) => letter.id)
 const wordIds = words.map((word) => word.id)
@@ -68,7 +69,7 @@ const knownPractice = new Set([
   ...letterIds.map((id) => practiceKey('findLetter', id)),
   ...wordIds.map((id) => practiceKey('firstLetter', id)),
   ...wordIds.map((id) => practiceKey('wordPicture', id)),
-  ...spellingWords(words).map((word) => practiceKey('spelling', word.id)),
+  ...spellingWords(words, spelledLengths).map((word) => practiceKey('spelling', word.id)),
   ...wordIds.map((id) => practiceKey('memory', id)),
 ])
 
@@ -92,10 +93,9 @@ function upgradeFrom2(progress: unknown): unknown {
 function upgradeFrom3(progress: unknown): unknown {
   if (!isRecord(progress)) return progress
   const done = Array.isArray(progress.completedLevels) ? progress.completedLevels : []
+  // The stations that had a hard level then, in that version's names ("findLetter:easy").
   const levels = Object.fromEntries(
-    (Object.keys(challengeDifficulties) as ChallengeId[])
-      .filter((challenge) => challengeDifficulties[challenge].includes('hard') && done.includes(levelKey(challenge, 'easy')))
-      .map((challenge) => [challenge, 'hard']),
+    ['findLetter', 'firstLetter'].filter((challenge) => done.includes(`${challenge}:easy`)).map((challenge) => [challenge, 'hard']),
   )
   return { ...progress, levels }
 }
@@ -106,6 +106,23 @@ function upgradeFrom3(progress: unknown): unknown {
  */
 function upgradeFrom4(progress: unknown): unknown {
   return isRecord(progress) ? { ...progress, itemsSeen: 0 } : progress
+}
+
+/**
+ * Version 5 had two levels per station, easy and hard: they become levels 1 and 2, with no
+ * scores yet and nothing to announce. Levels 3 and 4 are reached by playing.
+ */
+function upgradeFrom5(progress: unknown): unknown {
+  if (!isRecord(progress)) return progress
+  const { levels, ...rest } = progress
+  const asLevel = (difficulty: unknown) => (difficulty === 'hard' ? 2 : 1)
+  const stations = isRecord(levels)
+    ? Object.fromEntries(Object.entries(levels).map(([challenge, difficulty]) => [challenge, { level: asLevel(difficulty), recent: [], played: asLevel(difficulty) }]))
+    : {}
+  const completedLevels = Array.isArray(rest.completedLevels)
+    ? rest.completedLevels.map((key: unknown) => (typeof key === 'string' ? key.replace(/:easy$/, ':1').replace(/:hard$/, ':2') : key))
+    : rest.completedLevels
+  return { ...rest, stations, completedLevels }
 }
 
 /** Keeps every field that makes sense and resets the rest, so one bad value never loses everything. */
@@ -139,18 +156,23 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
     return Object.fromEntries(kept) as Mastery
   }
 
-  /** Only levels a station really has. */
-  const levelsFrom = (value: unknown): StationLevels => {
+  /** Only stations the game has, at a real level, with scores between 0 and 1. */
+  const stationsFrom = (value: unknown): Progress['stations'] => {
     if (!isRecord(value)) {
       repaired = true
       return {}
     }
-    const kept = Object.entries(value).filter(
-      ([challenge, level]) =>
-        challenge in challengeDifficulties && challengeDifficulties[challenge as ChallengeId].includes(level as Difficulty),
-    )
+    const isLevel = (level: unknown): level is Level => Number.isInteger(level) && (level as number) >= 1 && (level as number) <= levelCount
+    const kept = Object.entries(value).flatMap(([challenge, station]): [string, StationState][] => {
+      if (!(challenge in challengeNames) || !isRecord(station) || !isLevel(station.level)) return []
+      const saved = Array.isArray(station.recent) ? station.recent : []
+      const recent = saved.filter((score): score is number => typeof score === 'number' && score >= 0 && score <= 1).slice(-levelRule.remember)
+      if (recent.length !== saved.length || !Array.isArray(station.recent)) repaired = true
+      if (station.played !== undefined && !isLevel(station.played)) repaired = true
+      return [[challenge, isLevel(station.played) ? { level: station.level, recent, played: station.played } : { level: station.level, recent }]]
+    })
     if (kept.length !== Object.keys(value).length) repaired = true
-    return Object.fromEntries(kept) as StationLevels
+    return Object.fromEntries(kept)
   }
 
   const unlockedItems = known(saved.unlockedItems, knownItems)
@@ -173,7 +195,7 @@ function repair(saved: unknown): { progress: Progress; repaired: boolean } {
       xp: count(saved.xp),
       roundsCompleted: count(saved.roundsCompleted),
       completedLevels: known(saved.completedLevels, knownLevels),
-      levels: levelsFrom(saved.levels),
+      stations: stationsFrom(saved.stations),
       unlockedItems,
       itemsSeen: Math.min(count(saved.itemsSeen), unlockedItems.length),
       worn: outfitFrom(saved.worn),

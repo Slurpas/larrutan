@@ -29,12 +29,23 @@ export const phrases = {
   /** A turned letter card: just the letter ("A."). */
   letterShort: (letter: string) => `${letter}.`,
 
-  /** Before the first question of a hard round, saying what is harder (Task 15). */
+  /** Said once, before the first round at a new level, saying what is harder (src/challenges/levels.ts). */
   lookAlikesIntro: 'Nu blir det svårare! Några bokstäver är nästan lika. Titta noga!',
+  moreCookiesIntro: 'Nu blir det fler kex!',
+  evenMoreCookiesIntro: 'Nu blir det ännu fler kex!',
   fourTunnelsIntro: 'Nu blir det svårare! Nu finns det fyra tunnlar.',
+  longerRideIntro: 'Nu blir resan längre!',
+  fourPicturesIntro: 'Nu blir det fyra bilder!',
+  writtenWordIntro: 'Titta, nu står ordet skrivet!',
+  readYourselfIntro: 'Nu ska du läsa ordet själv!',
   hiddenWordIntro: 'Nu blir det svårare! Nu syns inte ordet.',
-  moreCardsIntro: 'Nu blir det svårare! Fler kort, och några bokstäver är nästan lika.',
-  /** At the end of a round after which the station opens at the hard level. */
+  longerWordsIntro: 'Nu blir orden längre!',
+  moreCardsIntro: 'Nu blir det fler kort!',
+  lookAlikeCardsIntro: 'Nu blir det svårare! Fler kort, och några bokstäver är nästan lika.',
+  evenMoreCardsIntro: 'Nu blir det ännu fler kort!',
+  /** Ord och bild when the child reads the word: the word is only written. */
+  readWordQuestion: 'Läs ordet!',
+  /** At the end of a round after which the station opens a level higher. */
   nextTimeHarder: 'Nästa gång blir det svårare.',
   levelUp: 'Du har gått upp en nivå!',
   itemUnlocked: (indefinite: string) => `Du fick ${indefinite}!`,

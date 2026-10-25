@@ -8,6 +8,11 @@
   background: linear-gradient(var(--color-sky-top), var(--color-sky-bottom));
 }
 
+/* Four cards need a little less room each to fit side by side on an iPad held upright. */
+.fourChoices {
+  --card-size: clamp(110px, min(19vw, 34vh), 220px);
+}
+
 /* With a picture above the choices, the cards shrink to leave room for it. */
 .withShowcase {
   --card-size: clamp(110px, min(18vw, 24vh), 180px);
@@ -48,6 +53,19 @@
   font-size: calc(var(--size) * 0.62);
   line-height: 1;
   cursor: pointer;
+}
+
+/* A written word instead of a picture: as wide as the word, in the letters' font. */
+.wordShowcase {
+  width: auto;
+  min-width: var(--size);
+  height: calc(var(--size) * 0.62);
+  padding: 0 calc(var(--size) * 0.14);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: calc(var(--size) * 0.36);
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .showcase:focus-visible {

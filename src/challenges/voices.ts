@@ -17,8 +17,6 @@ export interface ChallengeVoice<Q extends ChoiceQuestion> {
   reveal(question: Q): string
   /** Names a wrong choice the child tapped: "Det där är S." */
   nameChoice(choice: string): string
-  /** Said before the first question of a hard round: what is harder. */
-  hardIntro?: string
 }
 
 const letterName = (id: string) => getLetter(id).spoken
@@ -34,7 +32,6 @@ export const dragonVoice: ChallengeVoice<ChoiceQuestion> = {
   ask: (q) => phrases.dragonQuestion(letterName(q.target)),
   reveal: (q) => phrases.hereIs(letterName(q.target)),
   nameChoice: (id) => phrases.thatIs(letterName(id)),
-  hardIntro: phrases.lookAlikesIntro,
 }
 
 export const firstLetterVoice: ChallengeVoice<FirstLetterQuestion> = {
@@ -42,11 +39,17 @@ export const firstLetterVoice: ChallengeVoice<FirstLetterQuestion> = {
   askAgain: (q) => phrases.firstLetterShort(getWord(q.word).base),
   reveal: (q) => phrases.firstLetterReveal(getWord(q.word).base, letterName(q.target)),
   nameChoice: (id) => phrases.thatIs(letterName(id)),
-  hardIntro: phrases.fourTunnelsIntro,
 }
 
 export const wordPictureVoice: ChallengeVoice<ChoiceQuestion> = {
   ask: (q) => phrases.wordPictureQuestion(getWord(q.target).definite),
   reveal: (q) => phrases.hereIs(getWord(q.target).definite),
   nameChoice: (id) => phrases.thatIs(getWord(id).indefinite),
+}
+
+/** Ord och bild when the word is only written: the child reads it ("Läs ordet!") and hears it only when help shows the answer. */
+export const readWordVoice: ChallengeVoice<ChoiceQuestion> = {
+  ask: () => phrases.readWordQuestion,
+  reveal: wordPictureVoice.reveal,
+  nameChoice: wordPictureVoice.nameChoice,
 }

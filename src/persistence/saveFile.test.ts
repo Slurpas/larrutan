@@ -4,20 +4,20 @@ import { readSave, saveVersion, toSaveFile } from './saveFile'
 
 const now = new Date('2026-10-23T12:00:00Z')
 
-/** Some real progress: two rounds played (level 2), four items unlocked, the cap worn. */
+/** Some real progress: two rounds played (level 2), an item unlocked and worn, two stations with a score. */
 function playedProgress(): Progress {
   const first = completeRound(initialProgress, {
     roundId: 'r1',
     challenge: 'findLetter',
-    difficulty: 'easy',
-    wrongTaps: 0,
+    level: 1,
+    score: 1,
     practiced: [{ item: 'a', firstTry: true }],
   })
   const second = completeRound(first.progress, {
     roundId: 'r2',
     challenge: 'firstLetter',
-    difficulty: 'easy',
-    wrongTaps: 3,
+    level: 1,
+    score: 0.4,
     practiced: [{ item: 'sun', firstTry: false }],
   })
   return wear(second.progress, 'cap')
@@ -53,16 +53,13 @@ describe('saving and loading', () => {
   it('still rewards the first round after loading, because round ids are not saved', () => {
     const loaded = readSave(stored(playedProgress()))
     if (loaded.kind !== 'loaded') throw new Error(loaded.kind)
-    const again = completeRound(loaded.progress, {
-      roundId: 'r1',
-      challenge: 'wordPicture',
-      difficulty: 'easy',
-      wrongTaps: 0,
-      practiced: [],
-    })
+    const again = completeRound(loaded.progress, { roundId: 'r1', challenge: 'wordPicture', level: 1, score: 1, practiced: [] })
     expect(again.outcome.xpGained).toBeGreaterThan(0)
   })
 })
+
+/** A station as an old save's level becomes: easy is level 1, hard level 2, with nothing to announce. */
+const upgradedStation = (level: 1 | 2) => ({ level, recent: [], played: level })
 
 describe('upgrading old saves', () => {
   it('upgrades a version 1 save (Task 7) without losing anything, starting mastery empty', () => {
@@ -71,8 +68,16 @@ describe('upgrading old saves', () => {
     expect(readSave(version1)).toEqual({
       kind: 'loaded',
       repaired: false,
-      // Easy done at both stations: they opened hard, and still do.
-      progress: { ...progress, worn: { head: 'cap' }, mastery: {}, levels: { findLetter: 'hard', firstLetter: 'hard' }, itemsSeen: 0, rounds: {} },
+      // Easy done at both stations: they opened hard (now level 2), and still do.
+      progress: {
+        ...progress,
+        completedLevels: ['findLetter:1', 'firstLetter:1'],
+        worn: { head: 'cap' },
+        mastery: {},
+        stations: { findLetter: upgradedStation(2), firstLetter: upgradedStation(2) },
+        itemsSeen: 0,
+        rounds: {},
+      },
     })
   })
 
@@ -80,7 +85,11 @@ describe('upgrading old saves', () => {
     const progress = { xp: 90, roundsCompleted: 4, completedLevels: ['findLetter:hard'], unlockedItems: ['cap', 'top-hat'], mastery: { 'findLetter:a': 3 } }
     for (const [wornItem, worn] of [['top-hat', { head: 'top-hat' }], [null, {}]] as const) {
       const version2 = { version: 2, savedAt: '2026-10-23T09:00:00.000Z', progress: { ...progress, wornItem } }
-      expect(readSave(version2)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, worn, levels: {}, itemsSeen: 0, rounds: {} } })
+      expect(readSave(version2)).toEqual({
+        kind: 'loaded',
+        repaired: false,
+        progress: { ...progress, completedLevels: ['findLetter:2'], worn, stations: {}, itemsSeen: 0, rounds: {} },
+      })
     }
   })
 
@@ -97,14 +106,44 @@ describe('upgrading old saves', () => {
     expect(readSave(version3)).toEqual({
       kind: 'loaded',
       repaired: false,
-      progress: { ...progress, levels: { findLetter: 'hard' }, itemsSeen: 0, rounds: {} },
+      progress: {
+        ...progress,
+        completedLevels: ['findLetter:1', 'findLetter:2', 'firstLetter:2', 'wordPicture:1'],
+        stations: { findLetter: upgradedStation(2) },
+        itemsSeen: 0,
+        rounds: {},
+      },
     })
   })
 
   it('upgrades a version 4 save (Task 15): every item counts as new, so the map points to "Mina saker" once', () => {
-    const progress = { xp: 60, roundsCompleted: 3, completedLevels: [], levels: {}, unlockedItems: ['cap', 'beanie'], worn: {}, mastery: {} }
-    const version4 = { version: 4, savedAt: '2026-10-24T09:00:00.000Z', progress }
-    expect(readSave(version4)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, itemsSeen: 0, rounds: {} } })
+    const progress = { xp: 60, roundsCompleted: 3, completedLevels: [], unlockedItems: ['cap', 'beanie'], worn: {}, mastery: {} }
+    const version4 = { version: 4, savedAt: '2026-10-24T09:00:00.000Z', progress: { ...progress, levels: {} } }
+    expect(readSave(version4)).toEqual({ kind: 'loaded', repaired: false, progress: { ...progress, stations: {}, itemsSeen: 0, rounds: {} } })
+  })
+
+  it('upgrades a version 5 save (Task 19): easy and hard become levels 1 and 2, and nothing is announced', () => {
+    const progress = {
+      xp: 150,
+      roundsCompleted: 9,
+      completedLevels: ['findLetter:easy', 'findLetter:hard', 'memory:easy', 'spelling:easy', 'spelling:hard'],
+      unlockedItems: ['cap', 'beanie'],
+      itemsSeen: 1,
+      worn: { head: 'beanie' },
+      mastery: { 'memory:sun': 3 },
+    }
+    const version5 = { version: 5, savedAt: '2026-10-25T09:00:00.000Z', progress: { ...progress, levels: { findLetter: 'hard', memory: 'easy', spelling: 'hard' } } }
+    const result = readSave(version5)
+    expect(result).toEqual({
+      kind: 'loaded',
+      repaired: false,
+      progress: {
+        ...progress,
+        completedLevels: ['findLetter:1', 'findLetter:2', 'memory:1', 'spelling:1', 'spelling:2'],
+        stations: { findLetter: upgradedStation(2), memory: upgradedStation(1), spelling: upgradedStation(2) },
+        rounds: {},
+      },
+    })
   })
 })
 
@@ -124,7 +163,8 @@ describe('recovering from broken saves', () => {
     expect(result.progress.xp).toBe(0)
     expect(result.progress.unlockedItems).toEqual(playedProgress().unlockedItems)
     expect(result.progress.worn).toEqual({ head: 'cap' })
-    expect(result.progress.completedLevels).toEqual(['findLetter:easy', 'firstLetter:easy'])
+    expect(result.progress.completedLevels).toEqual(['findLetter:1', 'firstLetter:1'])
+    expect(result.progress.stations).toEqual(playedProgress().stations)
   })
 
   it('never accepts negative, fractional or huge numbers', () => {
@@ -145,12 +185,12 @@ describe('recovering from broken saves', () => {
   it('drops unknown items and levels, and duplicates', () => {
     const file = stored(playedProgress()) as { progress: Record<string, unknown> }
     file.progress.unlockedItems = ['cap', 'dragon', 'bow', 'cap', 7]
-    file.progress.completedLevels = ['findLetter:easy', 'findLetter:impossible']
+    file.progress.completedLevels = ['findLetter:1', 'findLetter:5', 'findLetter:easy', 'dragons:1']
     const result = readSave(file)
     expect(result).toMatchObject({
       kind: 'loaded',
       repaired: true,
-      progress: { unlockedItems: ['cap', 'bow'], completedLevels: ['findLetter:easy'] },
+      progress: { unlockedItems: ['cap', 'bow'], completedLevels: ['findLetter:1'] },
     })
   })
 
@@ -162,10 +202,20 @@ describe('recovering from broken saves', () => {
     }
   })
 
-  it('drops levels a station does not have, and keeps the rest', () => {
+  it('keeps only real stations at real levels, with scores between 0 and 1 (the last three)', () => {
     const file = stored(playedProgress()) as { progress: Record<string, unknown> }
-    file.progress.levels = { findLetter: 'hard', wordPicture: 'hard', dragons: 'easy', firstLetter: 'impossible' }
-    expect(readSave(file)).toMatchObject({ kind: 'loaded', repaired: true, progress: { levels: { findLetter: 'hard' } } })
+    file.progress.stations = {
+      findLetter: { level: 3, recent: [0.5, 1.4, 'good', 0.9], played: 2 },
+      memory: { level: 2, recent: [0.1, 0.2, 0.3, 0.4], played: 7 },
+      wordPicture: { level: 5, recent: [] },
+      spelling: 'hard',
+      dragons: { level: 1, recent: [] },
+    }
+    expect(readSave(file)).toMatchObject({
+      kind: 'loaded',
+      repaired: true,
+      progress: { stations: { findLetter: { level: 3, recent: [0.5, 0.9], played: 2 }, memory: { level: 2, recent: [0.2, 0.3, 0.4] } } },
+    })
   })
 
   it('drops mastery for unknown letters, words or boxes, and keeps the rest', () => {

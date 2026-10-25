@@ -3,13 +3,14 @@ import type { Practiced } from '../learning/mastery'
 import type { RoundOutcome } from '../rewards/progress'
 import { speak, stopSpeech } from '../speech/speech'
 import type { ChoiceQuestion, ChoiceRound } from './choiceQuestion'
-import type { Difficulty } from './difficulty'
+import { firstTryScore } from './levels'
 import { advance, choose as chooseIn, currentQuestion, isAnswerRevealed, startRound, type RoundState } from './roundState'
 import type { ChallengeVoice } from './voices'
 
 /** What a finished round tells the app. */
 export interface RoundResult {
-  wrongTaps: number
+  /** How well it went, from 0 (no better than guessing) to 1 (flawless): moves the station's level. */
+  score: number
   practiced: Practiced[]
 }
 
@@ -17,7 +18,8 @@ export interface ChoiceRoundOptions<Q extends ChoiceQuestion> {
   round: ChoiceRound<Q>
   /** What the challenge says (src/challenges/voices.ts). */
   voice: ChallengeVoice<Q>
-  difficulty: Difficulty
+  /** Said before the first question when the station has just gone up a level (src/challenges/levels.ts). */
+  levelIntro?: string
   /** Called once when the last question is answered; returns what the round earned. */
   onRoundComplete?: (result: RoundResult) => RoundOutcome
   /** What a question practises, for mastery: the letter in Hitta bokstaven, the word in the others. */
@@ -36,7 +38,7 @@ export interface ChoiceRoundOptions<Q extends ChoiceQuestion> {
 export function useChoiceRound<Q extends ChoiceQuestion>({
   round,
   voice,
-  difficulty,
+  levelIntro,
   onRoundComplete,
   practiceItem,
   knowsChallenge = false,
@@ -61,13 +63,14 @@ export function useChoiceRound<Q extends ChoiceQuestion>({
     return full ? voice.ask(q) : short(q)
   }
 
-  // Ask each new question out loud; a hard round starts by saying what is harder.
-  const isFirstQuestion = state.questionIndex === 0
-  const hardIntro = difficulty === 'hard' ? voice.hardIntro : undefined
+  // Ask each new question out loud, even one worded like the last ("Läs ordet!"); the first
+  // round at a new level starts by saying what is harder.
+  const { questionIndex } = state
+  const isFirstQuestion = questionIndex === 0
   useEffect(() => {
     if (!questionText) return
-    void speak(isFirstQuestion && hardIntro ? [hardIntro, questionText] : questionText)
-  }, [questionText, isFirstQuestion, hardIntro])
+    void speak(isFirstQuestion && levelIntro ? [levelIntro, questionText] : questionText)
+  }, [questionText, questionIndex, isFirstQuestion, levelIntro])
 
   // Stop talking when the child leaves.
   useEffect(() => stopSpeech, [])
@@ -75,7 +78,11 @@ export function useChoiceRound<Q extends ChoiceQuestion>({
   const finishRound = useEffectEvent(() => {
     if (!onRoundComplete) return
     const practiced = state.round.questions.map((q, i) => ({ item: practiceItem(q), firstTry: state.firstTry[i] ?? false }))
-    setOutcome(onRoundComplete({ wrongTaps: state.wrongTaps, practiced }))
+    const score = firstTryScore(
+      practiced.map((p) => p.firstTry),
+      state.round.questions.map((q) => q.choices.length),
+    )
+    setOutcome(onRoundComplete({ score, practiced }))
   })
 
   // After a correct answer: a happy chime, then the next question (or the end of the round).

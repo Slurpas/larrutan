@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { composeCharacter } from '../art/outfit'
 import { phrases } from '../content/phrases'
 import { getItem, type Item } from '../rewards/items'
+import { levelCount } from './levels'
 import type { RoundOutcome } from '../rewards/progress'
 import { Stars } from '../rewards/Stars'
 import { getProgress, markItemsSeen, useProgress, wearItem } from '../rewards/store'
@@ -59,10 +60,14 @@ export function RoundComplete({ outcome, onPlayAgain, onExit }: RoundCompletePro
           <XpBar xp={outcome.xpAfter} fromXp={outcome.xpBefore} size="large" />
           {levelUp && <p className={styles.levelUp}>Ny nivå!</p>}
           {harderNextTime && (
-            // The station's level pips: the second one fills in. The words are for adults; the voice says it.
-            <p className={styles.harder} role="img" aria-label="Nästa gång: svårare">
-              <span className={styles.pip} />
-              <span className={cx(styles.pip, styles.pipNew)} />
+            // The station's level pips: the new level fills in. The words are for adults; the voice says it.
+            <p className={styles.harder} role="img" aria-label={`Nästa gång: svårare, nivå ${outcome.stationLevel} av ${levelCount}`}>
+              {Array.from({ length: levelCount }, (_, i) => (
+                <span
+                  key={i}
+                  className={cx(styles.pip, i < outcome.stationLevel - 1 && styles.pipOn, i === outcome.stationLevel - 1 && styles.pipNew)}
+                />
+              ))}
             </p>
           )}
           {newItems.map((item) => {

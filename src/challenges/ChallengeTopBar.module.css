@@ -15,7 +15,7 @@
   gap: 0.6rem;
 }
 
-/* Difficulty as filled pips: one for easy, two for hard. */
+/* The station's level as filled pips, one of four for level 1. */
 .level {
   display: flex;
   gap: 0.35rem;

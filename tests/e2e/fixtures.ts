@@ -12,9 +12,12 @@ export { expect } from '@playwright/test'
  *   cache), then reports playing and, a moment later, ended.
  * - The device voice never speaks; it reports start and end.
  * The game sees the same events as in real playback, so the tests still check the flow.
+ * Every clip the game asks to play is listed in `window.__playedClips`, so a test can check what was said.
  */
 function fakeAudio() {
   const clipLength = 1000
+  const played: string[] = []
+  Object.defineProperty(window, '__playedClips', { value: played })
   const playing = new WeakSet<HTMLMediaElement>()
   const turn = new WeakMap<HTMLMediaElement, number>()
   const sources = new WeakMap<HTMLMediaElement, string>()
@@ -46,6 +49,7 @@ function fakeAudio() {
   })
 
   const play = (element: HTMLMediaElement): Promise<void> => {
+    played.push(element.src)
     const myTurn = (turn.get(element) ?? 0) + 1
     turn.set(element, myTurn)
     element.muted = true

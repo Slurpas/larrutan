@@ -101,6 +101,7 @@ Start with **upper-case letters**; lower case is a later difficulty step. Mathem
 | **Ord och bild** (word to picture) | "Var är katten?" | Taps the matching picture among 2–4 |
 | **Bygg ordet** (build the word) | "Bygg ordet sol!", and sees the picture | Pops the word's letters in order from soap bubbles (Task 17). Easy shows the word faintly; hard shows only empty slots |
 | **Memory** | "Hitta paren!", then each turned card ("A.", "Anka.") | Turns two cards at a time to find each picture and the letter its word starts with (Task 18). Easy: 3 pairs; hard: 4, with look-alike letters |
+| **Bokstavskorgarna** (the letter baskets) | "Lägg bilderna i rätt korg!", then each picture picked up ("Sol.") | Puts each picture in the basket of the letter its word starts with (Task 29). The baskets stand in their places from the start; the pictures lie in piles. Level 1 shows every picture; from level 2 only the top ones. 3 to 4 letters |
 | **Sortera korten** (sort the cards) | "Sortera korten!", then each card picked up ("B.", "Bil.") | Moves top cards between piles until each letter lies in one pile with the pictures whose words start with it (Task 28). Level 1 shows every card; from level 2 only the top cards start face up. 3 to 7 letters |
 
 Each challenge is a small engine fed by content data. A round is about 5 questions. Add a new challenge type only when the existing ones work well with a child.
@@ -140,7 +141,7 @@ Attempts, hints and successes are tracked separately from rewards.
 **Phase 2:** simple mastery tracking per letter and word using Leitner boxes (correct moves an item up a box, wrong moves it down, higher boxes come back less often), and gentle, reversible difficulty adaptation that changes the challenge, never the interface, and never labels the child.
 
 **Implementation (Task 11, `src/learning/mastery.ts`):**
-- **Boxes:** each challenge keeps its own boxes (1–5): letters in Hitta bokstaven, words in Första bokstaven, Ord och bild, Bygg ordet, Memory and Sortera korten.
+- **Boxes:** each challenge keeps its own boxes (1–5): letters in Hitta bokstaven, words in Första bokstaven, Ord och bild, Bygg ordet, Memory, Sortera korten and Bokstavskorgarna.
 - **Moving between boxes:** right on the first tap moves an item up one box; needing another try moves it down one box, never all the way back.
 - **Choosing a round:** questions are picked in a weighted random order, and each box comes up about half as often as the one below. Items still being learned dominate, but known items still come back.
 - **New players:** everything is in box 1, so they get exactly the same seeded rounds as before mastery existed.
@@ -148,7 +149,7 @@ Attempts, hints and successes are tracked separately from rewards.
 - **Saving and visibility:** boxes are saved with the progress (since save version 2) and never shown to the child.
 - **Levels (Task 23, replacing Task 15's easy and hard):**
   - **Four per station,** each harder in a way the child can notice: more choices or cards, look-alikes, the word written (and then only written), the word to build fading away step by step, a longer ride. The table is `src/challenges/levels.ts` (summed up in `docs/CLAUDE_TASKS.md`, Task 23).
-  - **Every round gets a score** from 0 (no better than guessing) to 1 (flawless): answers right on the first tap in the choice games, letters found on the first tap in Bygg ordet, in Memory how often the child found a partner card they had already seen, and in Sortera korten how often a card put on another card was allowed there.
+  - **Every round gets a score** from 0 (no better than guessing) to 1 (flawless): answers right on the first tap in the choice games, letters found on the first tap in Bygg ordet, in Memory how often the child found a partner card they had already seen, in Sortera korten how often a card put on another card was allowed there, and in Bokstavskorgarna how often a picture went in the right basket.
   - **Up** after two rounds in a row averaging at least 0.8, and the end of the round says so ("Nästa gång blir det svårare."). **Down** after two averaging at most 0.3, without a word. Otherwise the station stays, so one lucky or unlucky round never moves it.
   - **The new level's sentence** ("Nu blir det fler kort!") is said once, on the first round there. The level pips show the level.
   - **Saved** per station, with the last three scores (save version 6).

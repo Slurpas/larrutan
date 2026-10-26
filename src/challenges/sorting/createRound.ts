@@ -1,8 +1,7 @@
-import { areConfusable, type ConfusableGroup, type Letter } from '../../content/letters'
-import { alsoCalledLetters } from '../../content/validation'
+import type { ConfusableGroup, Letter } from '../../content/letters'
 import type { Word } from '../../content/words'
-import { practiceOrder } from '../../learning/mastery'
 import type { Difficulty } from '../difficulty'
+import { pickLetterSets } from '../letterSets'
 import { createRng, shuffle } from '../random'
 
 /**
@@ -46,11 +45,7 @@ export interface SortingOptions {
   practiceBox?: (word: string) => number
 }
 
-/**
- * Letters with enough words, never two that are easy to mix up on the easy levels (two that
- * look alike on the hard ones), and no picture that another name links to another set's
- * letter (the train, "lok", never in a round with L). Dealt so no pile starts sorted.
- */
+/** The letters and their pictures (`pickLetterSets`), dealt so no pile starts sorted. */
 export function createSortingRound({
   seed,
   words,
@@ -62,51 +57,19 @@ export function createSortingRound({
   practiceBox = () => 1,
 }: SortingOptions): SortingRound {
   const rng = createRng(seed)
-  const pictures = cardsPerSet - 1
-  const wordsOf = (letter: string) => words.filter((word) => word.firstLetter === letter)
-  const box = (letter: Letter) => Math.min(...wordsOf(letter.id).map((word) => practiceBox(word.id)))
-  const candidates = practiceOrder(
-    letters.filter((letter) => wordsOf(letter.id).length >= pictures),
-    box,
-    rng,
-  )
-  const looks = confusables.filter((group) => group.reason === 'looks')
-  const lookAlike = (a: string, b: string) => a !== b && areConfusable(a, b, looks)
-  /** A letter's pictures that no other name links to another letter of the round. */
-  const fittingWords = (letter: string, round: readonly Letter[]) =>
-    wordsOf(letter).filter((word) => ![...alsoCalledLetters(word, letters)].some((other) => other !== letter && round.some((r) => r.id === other)))
-  /** Every letter keeps enough pictures with these letters together. */
-  const fits = (round: readonly Letter[]) => round.every((letter) => fittingWords(letter.id, round).length >= pictures)
-
-  const chosen: Letter[] = []
-  if (difficulty === 'hard') {
-    const pair = candidates.flatMap((first) => candidates.filter((other) => lookAlike(first.id, other.id) && fits([first, other])).map((other) => [first, other]))[0]
-    if (pair) chosen.push(...pair)
-  }
-  for (const letter of candidates) {
-    if (chosen.length === sets) break
-    if (chosen.includes(letter) || !fits([...chosen, letter])) continue
-    if (difficulty === 'easy' && chosen.some((c) => areConfusable(c.id, letter.id, confusables))) continue
-    chosen.push(letter)
-  }
-  if (chosen.length < sets) throw new Error(`A round of ${sets} sets needs that many letters with ${pictures} words each`)
-
-  // Pictures for each letter, none with another name that starts with another set's letter.
+  const picked = pickLetterSets({ rng, words, letters, confusables, sets, pictures: cardsPerSet - 1, difficulty, practiceBox })
   const cards: Record<string, SortingCard> = {}
-  for (const letter of chosen) {
+  for (const { letter, pictures } of picked) {
     cards[`letter-${letter.id}`] = { id: `letter-${letter.id}`, kind: 'letter', set: letter.id }
-    const fitting = fittingWords(letter.id, chosen)
-    const picked = practiceOrder(fitting, (word) => practiceBox(word.id), rng).slice(0, pictures)
-    if (picked.length < pictures) throw new Error(`"${letter.id}" has only ${picked.length} pictures that fit this round`)
-    for (const word of picked) cards[`picture-${word.id}`] = { id: `picture-${word.id}`, kind: 'picture', set: letter.id, word: word.id }
+    for (const word of pictures) cards[`picture-${word.id}`] = { id: `picture-${word.id}`, kind: 'picture', set: letter.id, word: word.id }
   }
 
   // Deal: shuffled, a pile of cardsPerSet for each set; again if any pile happens to be sorted already.
   let piles: string[][] = []
   for (let attempt = 0; attempt < 50; attempt++) {
     const deck = shuffle(Object.keys(cards), rng)
-    piles = chosen.map((_, i) => deck.slice(i * cardsPerSet, (i + 1) * cardsPerSet))
+    piles = picked.map((_, i) => deck.slice(i * cardsPerSet, (i + 1) * cardsPerSet))
     if (piles.every((pile) => new Set(pile.map((id) => cards[id]!.set)).size > 1)) break
   }
-  return { seed, sets: chosen.map((letter) => letter.id), cards, piles: [...piles, ...Array.from({ length: freePiles }, () => [])] }
+  return { seed, sets: picked.map(({ letter }) => letter.id), cards, piles: [...piles, ...Array.from({ length: freePiles }, () => [])] }
 }

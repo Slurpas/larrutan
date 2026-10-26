@@ -268,10 +268,11 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
         ]
       })}
 
-      {/* All cards in one list, so a card that moves to another pile slides there. */}
-      {state.piles.flatMap((pile, i) =>
-        layout(pile).map(({ id, top, strip }, k) => {
-          const isTop = k === pile.length - 1
+      {/* All cards in one list, in one order (by id), so a card that moves to another pile keeps its element and slides there. */}
+      {state.piles
+        .flatMap((pile, i) => layout(pile).map((place, k) => ({ ...place, i, k, isTop: k === pile.length - 1 })))
+        .sort((a, b) => a.id.localeCompare(b.id))
+        .map(({ id, top, strip, i, k, isTop }) => {
           const dragged = isTop && drag?.from === i
           const shake = refused?.card === id
           const faceUp = state.seen.includes(id)
@@ -306,8 +307,7 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
               )}
             </div>
           )
-        }),
-      )}
+        })}
 
       {state.piles.map((pile, i) => {
         const top = pile.at(-1)

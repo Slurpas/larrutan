@@ -555,6 +555,38 @@ Status 2026-10-26: **done; a local commit, not pushed.**
   - Unit tests: valid deals at every level; the look-alike and "lok" rules; the moving rules; a letter shows above its pile only once seen; every deal sorted by the solver; random play scores near 0.
   - Browser tests: a round by keyboard, by touch (with a refused card) and at level 4; a drag with the mouse. The map test opens the new station.
 
+#### Task 29 — Bokstavskorgarna: the letters in fixed places
+- The user (2026-10-26): split Sortera korten in two. A new game where the letters are not cards but fixed places from the start, and the pictures are dragged to the right one. Then (Task 30) Sortera korten becomes 4 piles of 4, where matching cards move together.
+
+Status 2026-10-26: **done; a local commit, not pushed.**
+- **A new station** in the top row of the map, its sign a basket of fruit and an A (ananas and apelsin). Four signs now share the top row: Hitta bokstaven and Sortera korten each moved one tile, so there are still two tiles between signs and every sign shows from the start on the smallest iPad.
+- **How it plays** (`src/challenges/baskets`):
+  - A straw basket for each letter stands on the meadow, in alphabet order, with its letter on a tag. The pictures lie in piles above them.
+  - Tap a pile to pick up its top picture (it lifts, and its word is said), then tap the right basket; or drag the picture there. Tapping a basket with nothing picked up says its letter. Keys: 1–9 pick up from a pile, a letter key drops in that letter's basket.
+  - In the right basket the picture flies in and leans among the others, with a pop. When a basket has all its pictures, its tag turns green, the basket hops, and the chime and the letter's name sound.
+  - In the wrong basket the picture shakes and stays, and the picture and the letter are named ("Sol. … A.").
+  - It can't get stuck: every top picture has a basket.
+- **Levels:**
+
+  | Level | Letters | Pictures per letter | Piles | Face down at the start | Look-alike letters |
+  |---|---|---|---|---|---|
+  | 1 | 3 | 2 | 6 single pictures | none | no |
+  | 2 | 3 | 3 | 3 piles of 3 | all but the top pictures | no |
+  | 3 | 4 | 3 | 4 piles of 3 | all but the top pictures | two that look alike |
+  | 4 | 4 | 4 | 4 piles of 4 | all but the top pictures | no |
+
+  - Level 4 has no look-alikes: no two letters that look alike have four pictures each (A, F, L, M, R, S and T have four; Ä and N three). More words for Ä or N would allow it.
+  - The level sentences are Memory's ("Nu blir det fler kort!" and the others).
+- **Choosing letters** (`src/challenges/letterSets.ts`, shared with Sortera korten): other names tie letters together ("lok" ties T to L, "råtta" M to R, "mandarin" A to M, "fågel" A to F, "lamm" F to L), so with four pictures each, some letters can't share a round. The picker now goes back and tries again instead of getting stuck. Where the old way found letters it finds the same ones, so every Sortera korten round stays as it was (checked on 456 rounds).
+- **Score:** pictures put in the right basket the first time, compared with picking a basket at random. One slip in sixteen still counts as a good round.
+- **Mastery:** each picture is practised (right if it never went in a wrong basket).
+- **New speech:** "Lägg varje bild i korgen med bokstaven som den börjar på!" (the first time) and "Lägg bilderna i rätt korg!" (after that). About 83 credits; the account can't report how many are left.
+- **Portrait:** the meadow is higher, so the iPad's hint to turn it covers soil, not the last basket.
+- **Fixed in Sortera korten:** a card moving to a pile further right jumped there instead of sliding (React moved its element, which stops a CSS transition). The cards are now drawn in one fixed order, and every move slides (checked in WebKit).
+- **Tests:**
+  - Unit tests: valid rounds at every level (letters in alphabet order, piles of one size); the look-alike and other-name rules; the dropping rules; guessing scores near 0, one slip stays high.
+  - Browser tests: a round by keyboard, by touch (a basket says its letter, a wrong basket names both) and at level 4; a drag with the mouse, whose closing click doesn't tap the basket. The map test opens the new station.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

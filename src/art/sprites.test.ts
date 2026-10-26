@@ -9,7 +9,8 @@ import { palette } from './palette'
 import { pictures, pictureSize } from './pictures'
 import { rock, waterTile } from './scenery'
 import { cardBack } from './memory'
-import { apple, cards, mouse, piles, signSize, stationSign, sun } from './signs'
+import { apple, cards, fruitBasket, mouse, piles, signSize, stationSign, sun } from './signs'
+import { basket } from './baskets'
 
 /** Every row the same width, and only palette colours (or "." for transparent). */
 function problems(grid: readonly string[]): string[] {
@@ -35,6 +36,8 @@ describe('sprites', () => {
       mouse,
       cards,
       piles,
+      fruitBasket,
+      basket,
       rock,
       water: waterTile(allSides, 0),
       ...pictures,

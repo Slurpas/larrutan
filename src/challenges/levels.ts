@@ -52,6 +52,17 @@ export interface SortingLevel {
   lookAlikes: boolean
 }
 
+/** Bokstavskorgarna: a basket for each letter, and its pictures dealt into piles. */
+export interface BasketsLevel {
+  sets: number
+  picturesPerSet: number
+  piles: number
+  /** Only the top picture of each pile is shown until it is uncovered. */
+  hidden: boolean
+  /** Two of the letters look alike. */
+  lookAlikes: boolean
+}
+
 interface StationLevel<P> {
   params: P
   /** Said before the first round at this level. */
@@ -101,6 +112,14 @@ export const stationLevels = {
     { params: { sets: 5, cardsPerSet: 4, hidden: true, lookAlikes: true }, intro: phrases.lookAlikeCardsIntro },
     { params: { sets: 7, cardsPerSet: 4, hidden: true, lookAlikes: true }, intro: phrases.evenMoreCardsIntro },
   ] satisfies Levels<SortingLevel>,
+  // The user's idea (2026-10-26): the letters stand in fixed places from the start. Level 4 has
+  // no look-alikes: no two letters that look alike have four pictures each.
+  baskets: [
+    { params: { sets: 3, picturesPerSet: 2, piles: 6, hidden: false, lookAlikes: false } },
+    { params: { sets: 3, picturesPerSet: 3, piles: 3, hidden: true, lookAlikes: false }, intro: phrases.moreCardsIntro },
+    { params: { sets: 4, picturesPerSet: 3, piles: 4, hidden: true, lookAlikes: true }, intro: phrases.lookAlikeCardsIntro },
+    { params: { sets: 4, picturesPerSet: 4, piles: 4, hidden: true, lookAlikes: false }, intro: phrases.evenMoreCardsIntro },
+  ] satisfies Levels<BasketsLevel>,
 } as const satisfies Record<ChallengeId, Levels<unknown>>
 
 export function levelParams<C extends ChallengeId>(challenge: C, level: Level): (typeof stationLevels)[C][number]['params'] {

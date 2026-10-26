@@ -29,6 +29,8 @@ export const phrases = {
   /** Sortera korten: the first time, and after that. */
   sortingIntro: 'Lägg en bokstav och bilderna som börjar på den i samma hög!',
   sortingShort: 'Sortera korten!',
+  basketsIntro: 'Lägg varje bild i korgen med bokstaven som den börjar på!',
+  basketsShort: 'Lägg bilderna i rätt korg!',
   /** A turned letter card: just the letter ("A."). */
   letterShort: (letter: string) => `${letter}.`,
 

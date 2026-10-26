@@ -72,6 +72,7 @@ const knownPractice = new Set([
   ...spellingWords(words, spelledLengths).map((word) => practiceKey('spelling', word.id)),
   ...wordIds.map((id) => practiceKey('memory', id)),
   ...wordIds.map((id) => practiceKey('sorting', id)),
+  ...wordIds.map((id) => practiceKey('baskets', id)),
 ])
 
 /** Version 1 had no mastery: everything starts unpractised. */

@@ -119,7 +119,7 @@ describe('unlocks', () => {
     let progress = initialProgress
     let lastItemRound = -2
     for (let i = 0; i < 200; i++) {
-      const round = play(progress, (['findLetter', 'firstLetter', 'wordPicture', 'spelling', 'memory', 'sorting'] as const)[i % 6], ((i % 4) + 1) as Level)
+      const round = play(progress, (['findLetter', 'firstLetter', 'wordPicture', 'spelling', 'memory', 'sorting', 'baskets'] as const)[i % 7], ((i % 4) + 1) as Level)
       expect(round.outcome.newItems.length, `round ${i + 1}`).toBeLessThanOrEqual(1)
       if (round.outcome.newItems.length > 0) {
         if (i >= 6) expect(i - lastItemRound, `round ${i + 1}`).toBeGreaterThanOrEqual(2)

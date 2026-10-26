@@ -27,7 +27,7 @@ export function stationSign(highlighted: boolean): string[] {
   return sign.outline('o').toGrid()
 }
 
-/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse; Memory: two cards; Sortera korten: two piles). */
+/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse; Memory: two cards; Sortera korten: two piles; Bokstavskorgarna: a basket). */
 export const sun: readonly string[] = (() => {
   const icon = new Pixels(13, 13)
   // Rays: straight up, down and sideways, and four diagonals.
@@ -82,4 +82,25 @@ export const piles: readonly string[] = (() => {
   icon.rect(2, 7, 4, 2, 'r').rect(3, 9, 2, 1, 'r').set(5, 8, 'R').set(4, 6, 'G')
   icon.rect(12, 6, 2, 4, 'y').rect(11, 7, 4, 2, 'y').set(14, 8, 'Y').set(13, 9, 'Y')
   return icon.toGrid()
+})()
+
+/** A pineapple and an orange (ananas and apelsin, both A) in a wicker basket. */
+export const fruitBasket: readonly string[] = (() => {
+  const icon = new Pixels(13, 12)
+  icon.rect(3, 3, 3, 3, 'y').set(4, 3, 'Y').set(3, 4, 'Y').set(5, 4, 'Y').set(4, 5, 'Y')
+  icon.set(3, 2, 'G').set(4, 1, 'G').set(4, 2, 'G').set(5, 2, 'G')
+  icon.ellipse(8.5, 4.5, 1.6, 1.6, 'Y').set(8, 3, 'y')
+  icon.polygon(
+    [
+      [1, 7],
+      [12, 7],
+      [10.5, 11],
+      [2.5, 11],
+    ],
+    'L',
+  )
+  // Straw, like the game's baskets: a light rim, and a shadow under each strand.
+  icon.shade('L', 'd', (x, y) => y % 2 === 0 && x % 3 !== 1)
+  icon.rect(1, 6, 11, 1, 'e')
+  return icon.outline('o').toGrid()
 })()

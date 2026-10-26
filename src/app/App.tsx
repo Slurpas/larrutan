@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { announcesLevel, stationLevel, type Level } from '../challenges/levels'
+import { Baskets } from '../challenges/baskets/Baskets'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { Memory } from '../challenges/memory/Memory'
@@ -53,6 +54,7 @@ const challengeComponents = {
   spelling: Spelling,
   memory: Memory,
   sorting: Sorting,
+  baskets: Baskets,
 } satisfies Record<ChallengeId, unknown>
 
 export function App() {

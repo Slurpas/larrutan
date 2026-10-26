@@ -138,6 +138,10 @@ describe('the levels of every station', () => {
       const [u, v] = [levelParams('sorting', lower), levelParams('sorting', higher)]
       expect(v.sets * v.cardsPerSet).toBeGreaterThan(u.sets * u.cardsPerSet)
       expect((v.hidden || !u.hidden) && (v.lookAlikes || !u.lookAlikes), `sorting ${higher}`).toBe(true)
+      // Bokstavskorgarna's top level has more pictures, but no look-alikes: no two look-alike letters have four pictures each.
+      const [p, q] = [levelParams('baskets', lower), levelParams('baskets', higher)]
+      expect(q.sets * q.picturesPerSet).toBeGreaterThan(p.sets * p.picturesPerSet)
+      expect(q.hidden || !p.hidden, `baskets ${higher}`).toBe(true)
     }
   })
 

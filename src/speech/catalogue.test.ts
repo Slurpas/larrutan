@@ -12,6 +12,7 @@ import { createWordPictureRound } from '../challenges/wordPicture/createRound'
 import { createSpellingRound, spellingWords } from '../challenges/spelling/createRound'
 import { createMemoryRound } from '../challenges/memory/createRound'
 import { createSortingRound } from '../challenges/sorting/createRound'
+import { createBasketsRound } from '../challenges/baskets/createRound'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
@@ -135,6 +136,17 @@ describe('speech catalogue', () => {
       }
     }
     for (const text of [phrases.sortingIntro, phrases.sortingShort]) expect(catalogue).toContain(text)
+  })
+
+  it('contains everything Bokstavskorgarna can say, at every level', () => {
+    for (const seed of seeds) {
+      const { sets, picturesPerSet, piles, lookAlikes } = levelParams('baskets', levelFor(seed))
+      const round = createBasketsRound({ seed, words, letters, confusables: confusableLetters, sets, picturesPerSet, piles, difficulty: lookAlikeRule(lookAlikes) })
+      // A picture is named when it is picked up; a basket's letter when it is tapped, filled, or refuses a picture.
+      for (const card of Object.values(round.cards)) expect(catalogue).toContain(phrases.firstLetterShort(words.find((w) => w.id === card.word)!.base))
+      for (const set of round.sets) expect(catalogue).toContain(phrases.letterShort(letters.find((l) => l.id === set)!.spoken))
+    }
+    for (const text of [phrases.basketsIntro, phrases.basketsShort]) expect(catalogue).toContain(text)
   })
 
   it('gives every sentence its own file name', () => {

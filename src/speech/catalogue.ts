@@ -30,6 +30,8 @@ export function spokenGroups(): SpokenGroup[] {
         phrases.memoryShort,
         phrases.sortingIntro,
         phrases.sortingShort,
+        phrases.basketsIntro,
+        phrases.basketsShort,
         phrases.nextTimeHarder,
         phrases.levelUp,
         phrases.myThingsHelp,

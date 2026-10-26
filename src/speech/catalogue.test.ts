@@ -11,6 +11,7 @@ import { dragonVoice, firstLetterVoice, readWordVoice, wordPictureVoice, type Ch
 import { createWordPictureRound } from '../challenges/wordPicture/createRound'
 import { createSpellingRound, spellingWords } from '../challenges/spelling/createRound'
 import { createMemoryRound } from '../challenges/memory/createRound'
+import { createSortingRound } from '../challenges/sorting/createRound'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
@@ -120,6 +121,20 @@ describe('speech catalogue', () => {
       }
     }
     for (const text of [phrases.memoryIntro, phrases.memoryShort]) expect(catalogue).toContain(text)
+  })
+
+  it('contains everything Sortera korten can say, at every level', () => {
+    for (const seed of seeds) {
+      const { sets, cardsPerSet, lookAlikes } = levelParams('sorting', levelFor(seed))
+      const round = createSortingRound({ seed, words, letters, confusables: confusableLetters, sets, cardsPerSet, difficulty: lookAlikeRule(lookAlikes) })
+      // Every card is named when it is picked up, and when another card is refused on it.
+      for (const card of Object.values(round.cards)) {
+        const letter = letters.find((l) => l.id === card.set)!
+        expect(catalogue).toContain(card.kind === 'letter' ? phrases.letterShort(letter.spoken) : phrases.firstLetterShort(words.find((w) => w.id === card.word)!.base))
+        expect(catalogue).toContain(phrases.letterShort(letter.spoken))
+      }
+    }
+    for (const text of [phrases.sortingIntro, phrases.sortingShort]) expect(catalogue).toContain(text)
   })
 
   it('gives every sentence its own file name', () => {

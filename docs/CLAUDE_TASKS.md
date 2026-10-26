@@ -524,6 +524,37 @@ Status 2026-10-25: **done; a local commit, not pushed.**
   - Browser tests walk there with real taps, go in, open the wardrobe and come out, and knock at the red house.
   - The test hooks gained `tilePoint`, `housePoint` and `knocks`.
 
+#### Task 28 — Sortera korten: a card game of piles
+- The user (2026-10-26): a Memory-like game where everything shows, and the child drags cards onto each other until each letter is in one pile with the pictures whose words start with it (B with bi, bil and burk). Maybe 7 piles of 4 cards, only the top card of each pile showing at first. A letter, once found, stays in sight above its pile.
+
+Status 2026-10-26: **done; a local commit, not pushed.**
+- **A new station** at the top of the map, between Hitta bokstaven and Första bokstaven. Its sign shows two piles of cards.
+- **How it plays** (`src/challenges/sorting`):
+  - The cards are dealt into piles, with two empty piles as room to move. No pile starts sorted.
+  - Tap a pile to pick up its top card (it lifts, and its name is said: "A.", "Anka."), then tap where it goes. Dragging works too, and a short drag counts as a tap. Keys 1–9 tap pile 1–9.
+  - A card may go on an empty pile, or on a card of its own letter. Anywhere else it slides back and shakes, and both cards are named ("Sol. … Anka."), so the child hears they start differently.
+  - A card underneath turns face up when it is uncovered.
+  - **The letter above a pile:** shown in white once the pile has its letter at the bottom (seen) and only that letter's cards on it. When a pile holds all of a letter's cards it turns green, with a chime and the letter's name. A finished pile also turns any card still face down face up.
+  - **Every deal can be sorted.** With more piles than letters, two top cards always share a letter or a pile is empty. A solver in `sortingState.ts` proves it for 150 seeds at every level, and the browser tests use it to play.
+- **Levels:**
+
+  | Level | Letters | Cards per letter | Face down at the start | Look-alike letters |
+  |---|---|---|---|---|
+  | 1 | 3 | 3 (the letter and 2 pictures) | none | no |
+  | 2 | 4 | 3 | all but the top cards | no |
+  | 3 | 5 | 4 | all but the top cards | two that look alike |
+  | 4 | 7 | 4 | all but the top cards | two that look alike |
+
+  - The user's 7 piles of 4 cards is level 4 (plus the two empty piles).
+  - The level sentences are Memory's: "Nu blir det fler kort!", the look-alike one, and "Nu blir det ännu fler kort!".
+  - A picture never has another name linking it to another letter in the round (no "lok" with L).
+- **Score:** every move onto a card counts. Allowed on the first try scores, compared with dropping on a random pile, so a careful child scores near 1 and guessing scores near 0.
+- **Mastery:** each picture card is practised (right if it was never refused on another letter).
+- **New speech:** "Lägg en bokstav och bilderna som börjar på den i samma hög!" (the first time) and "Sortera korten!" (after that). About 74 credits; the account can't report how many are left.
+- **Tests:**
+  - Unit tests: valid deals at every level; the look-alike and "lok" rules; the moving rules; a letter shows above its pile only once seen; every deal sorted by the solver; random play scores near 0.
+  - Browser tests: a round by keyboard, by touch (with a refused card) and at level 4; a drag with the mouse. The map test opens the new station.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

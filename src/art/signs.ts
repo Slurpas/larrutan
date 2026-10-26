@@ -27,7 +27,7 @@ export function stationSign(highlighted: boolean): string[] {
   return sign.outline('o').toGrid()
 }
 
-/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse; Memory: two cards). */
+/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse; Memory: two cards; Sortera korten: two piles). */
 export const sun: readonly string[] = (() => {
   const icon = new Pixels(13, 13)
   // Rays: straight up, down and sideways, and four diagonals.
@@ -69,4 +69,17 @@ export const cards: readonly string[] = (() => {
   icon.rect(5, 2, 1, 9, 'o').set(6, 2, 'o').rect(6, 3, 5, 7, 'w')
   icon.rect(7, 6, 2, 2, 'r').set(8, 5, 'G')
   return icon.outline('o').toGrid()
+})()
+
+export const piles: readonly string[] = (() => {
+  const icon = new Pixels(17, 12)
+  // Two piles of cards, fanned like the game's, so a strip of each card underneath shows: apples on one, suns on the other.
+  for (const [x, under, dot] of [[0, 2, 'r'], [9, 1, 'y']] as const) {
+    for (let k = under; k >= 0; k--) icon.rect(x, 4 - 2 * k, 8, 8, 'o').rect(x + 1, 5 - 2 * k, 6, 6, 'w')
+    for (let k = 1; k <= under; k++) icon.set(x + 2, 5 - 2 * k, dot)
+  }
+  // An apple, and a sun.
+  icon.rect(2, 7, 4, 2, 'r').rect(3, 9, 2, 1, 'r').set(5, 8, 'R').set(4, 6, 'G')
+  icon.rect(12, 6, 2, 4, 'y').rect(11, 7, 4, 2, 'y').set(14, 8, 'Y').set(13, 9, 'Y')
+  return icon.toGrid()
 })()

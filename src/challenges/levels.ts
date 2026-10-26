@@ -41,6 +41,17 @@ export interface MemoryLevel {
   lookAlikes: boolean
 }
 
+/** Sortera korten: piles to sort, each set a letter and pictures that start with it. */
+export interface SortingLevel {
+  sets: number
+  /** The letter and its pictures. */
+  cardsPerSet: number
+  /** Only the top card of each pile is shown until it is uncovered. */
+  hidden: boolean
+  /** Two of the letters look alike. */
+  lookAlikes: boolean
+}
+
 interface StationLevel<P> {
   params: P
   /** Said before the first round at this level. */
@@ -83,6 +94,13 @@ export const stationLevels = {
     { params: { pairs: 6, lookAlikes: true }, intro: phrases.lookAlikeCardsIntro },
     { params: { pairs: 8, lookAlikes: true }, intro: phrases.evenMoreCardsIntro },
   ] satisfies Levels<MemoryLevel>,
+  // The user's idea (2026-10-25): seven piles of four at the top, the cards under the top one hidden.
+  sorting: [
+    { params: { sets: 3, cardsPerSet: 3, hidden: false, lookAlikes: false } },
+    { params: { sets: 4, cardsPerSet: 3, hidden: true, lookAlikes: false }, intro: phrases.moreCardsIntro },
+    { params: { sets: 5, cardsPerSet: 4, hidden: true, lookAlikes: true }, intro: phrases.lookAlikeCardsIntro },
+    { params: { sets: 7, cardsPerSet: 4, hidden: true, lookAlikes: true }, intro: phrases.evenMoreCardsIntro },
+  ] satisfies Levels<SortingLevel>,
 } as const satisfies Record<ChallengeId, Levels<unknown>>
 
 export function levelParams<C extends ChallengeId>(challenge: C, level: Level): (typeof stationLevels)[C][number]['params'] {

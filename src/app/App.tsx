@@ -4,6 +4,7 @@ import { announcesLevel, stationLevel, type Level } from '../challenges/levels'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { Memory } from '../challenges/memory/Memory'
+import { Sorting } from '../challenges/sorting/Sorting'
 import { Spelling } from '../challenges/spelling/Spelling'
 import { WordPicture } from '../challenges/wordPicture/WordPicture'
 import { boxOf, practiceKey } from '../learning/mastery'
@@ -51,6 +52,7 @@ const challengeComponents = {
   wordPicture: WordPicture,
   spelling: Spelling,
   memory: Memory,
+  sorting: Sorting,
 } satisfies Record<ChallengeId, unknown>
 
 export function App() {

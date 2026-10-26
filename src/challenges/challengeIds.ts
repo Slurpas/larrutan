@@ -1,4 +1,4 @@
-export type ChallengeId = 'findLetter' | 'firstLetter' | 'wordPicture' | 'spelling' | 'memory'
+export type ChallengeId = 'findLetter' | 'firstLetter' | 'wordPicture' | 'spelling' | 'memory' | 'sorting'
 
 /** Names for adults, tests and accessibility; children see pictures. */
 export const challengeNames: Record<ChallengeId, string> = {
@@ -7,4 +7,5 @@ export const challengeNames: Record<ChallengeId, string> = {
   wordPicture: 'Ord och bild',
   spelling: 'Bygg ordet',
   memory: 'Memory',
+  sorting: 'Sortera korten',
 }

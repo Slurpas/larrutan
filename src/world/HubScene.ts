@@ -34,6 +34,7 @@ const stationContent: Record<ChallengeId, { pictures: (keyof typeof iconKeys)[];
   wordPicture: { pictures: ['apple', 'mouse'], letters: '' },
   spelling: { pictures: [], letters: 'ABC' },
   memory: { pictures: ['cards'], letters: '' },
+  sorting: { pictures: ['piles'], letters: '' },
 }
 
 /** Walk frames per second, and where the feet are: the bottom of the tile the character stands on. */

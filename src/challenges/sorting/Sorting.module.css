@@ -1,0 +1,202 @@
+/*
+ * Sortera korten. --card is a card's size in screen pixels, --px one art pixel of the meadow.
+ * The cards are drawn, and the piles are tapped: each pile is one button over its column.
+ */
+.scene {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  overflow: clip;
+  background: linear-gradient(var(--color-sky-top), var(--color-sky-bottom));
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.grass,
+.soil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-size: calc(var(--px) * 16) calc(var(--px) * 16);
+  background-repeat: repeat-x;
+}
+
+.grass {
+  top: 0;
+  height: calc(var(--px) * 16);
+}
+
+.soil {
+  top: calc(var(--px) * 16);
+  bottom: 0;
+  background-repeat: repeat;
+}
+
+/* A pile's column: the whole of it can be tapped, or a card dragged from it. */
+.pile {
+  position: absolute;
+  z-index: 200;
+  padding: 0;
+  border: 0;
+  border-radius: 1.25rem;
+  background: none;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.pile:focus-visible {
+  outline: 6px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+/* Where a card can go: an empty pile. */
+.empty {
+  position: absolute;
+  width: var(--card);
+  height: var(--card);
+  border: 5px dashed var(--color-ink);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 0.4);
+}
+
+.card {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: var(--card);
+  height: var(--card);
+  overflow: hidden;
+  border: 5px solid var(--color-ink);
+  border-radius: 1.25rem;
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: calc(var(--card) * 0.6);
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  transition:
+    transform 120ms ease-out,
+    left 180ms ease-out,
+    top 180ms ease-out;
+}
+
+.backArt {
+  width: 100%;
+  height: 100%;
+}
+
+.pictureFront {
+  font-size: calc(var(--card) * 0.56);
+}
+
+/* A face-up card under another: what it shows sits in the strip that peeks out (--strip high). */
+.covered {
+  place-items: start center;
+  padding-top: calc(var(--strip) * 0.04);
+  font-size: calc(var(--strip) * 0.72);
+}
+
+.covered.pictureFront {
+  font-size: calc(var(--strip) * 0.68);
+}
+
+/* Uncovered just now: it turns over. */
+.turned {
+  animation: turn 220ms ease-out;
+}
+
+/* A pile with all of a letter's cards: green. */
+.sorted {
+  border-color: var(--color-correct-edge);
+  background: var(--color-correct);
+}
+
+/* The card picked up: lifted, waiting for where it goes. */
+.lifted {
+  transform: translateY(calc(var(--card) * -0.14));
+  box-shadow: 0 10px 0 rgb(0 0 0 / 0.18);
+}
+
+.dragged {
+  transition: none;
+  box-shadow: 0 14px 0 rgb(0 0 0 / 0.2);
+}
+
+.shake {
+  animation: shake 400ms ease-in-out;
+}
+
+/* The letter of a pile that has its letter at the bottom: it stays in sight above the pile. */
+.tab {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border: 4px solid var(--color-ink);
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: calc(var(--card) * 0.28);
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.tabDone {
+  border-color: var(--color-correct-edge);
+  background: var(--color-correct);
+}
+
+.top {
+  position: absolute;
+  z-index: 300;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1.25rem) 0
+    calc(env(safe-area-inset-left) + 1.25rem);
+}
+
+.seed {
+  position: absolute;
+  right: calc(env(safe-area-inset-right) + 1.25rem);
+  bottom: calc(env(safe-area-inset-bottom) + 0.25rem);
+  margin: 0;
+  color: var(--color-white);
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+@keyframes turn {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes shake {
+  25% {
+    translate: calc(var(--card) * -0.1) 0;
+  }
+  75% {
+    translate: calc(var(--card) * 0.1) 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turned,
+  .shake {
+    animation: none;
+  }
+  .card {
+    transition: none;
+  }
+}

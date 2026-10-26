@@ -26,6 +26,9 @@ export const phrases = {
   /** Memory: the first time, then the short form once the child knows the game. */
   memoryIntro: 'Vänd på två kort. Hitta en bild och en bokstav som hör ihop!',
   memoryShort: 'Hitta paren!',
+  /** Sortera korten: the first time, and after that. */
+  sortingIntro: 'Lägg en bokstav och bilderna som börjar på den i samma hög!',
+  sortingShort: 'Sortera korten!',
   /** A turned letter card: just the letter ("A."). */
   letterShort: (letter: string) => `${letter}.`,
 

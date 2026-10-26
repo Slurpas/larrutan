@@ -4,7 +4,8 @@ import type { SortingRound } from './createRound'
 /**
  * Where a Sortera korten round is: the piles, and which cards the child has seen. Pure, so
  * the rules are tested without a screen. A top card may go onto an empty pile, or onto a
- * pile whose top card belongs to the same letter.
+ * pile whose top card belongs to the same letter, and the face-up cards of its letter right
+ * under it go along (the user's idea, 2026-10-26: matching cards move together).
  */
 export interface SortingState {
   round: SortingRound
@@ -16,7 +17,7 @@ export interface SortingState {
   drops: number
   dropHits: number
   dropChance: number
-  /** Cards once put on a pile of another letter (mastery: not known on the first try). */
+  /** Top cards once put on a pile of another letter (mastery: not known on the first try). */
   slipped: string[]
 }
 
@@ -35,7 +36,21 @@ function setSize(state: SortingState, set: string): number {
   return Object.values(state.round.cards).filter((card) => card.set === set).length
 }
 
-/** May the top card of `from` go onto pile `to`? */
+/** How many cards move together from the top of a pile: the top card, and the face-up cards of its letter right under it. */
+export function runLength(state: SortingState, pile: number): number {
+  const cards = state.piles[pile] ?? []
+  const top = cards.at(-1)
+  if (top === undefined) return 0
+  let count = 1
+  while (count < cards.length) {
+    const card = cards[cards.length - 1 - count]!
+    if (!state.seen.includes(card) || setOf(state, card) !== setOf(state, top)) break
+    count++
+  }
+  return count
+}
+
+/** May the top card of `from` (and the cards that go with it) go onto pile `to`? */
 export function canMove(state: SortingState, from: number, to: number): boolean {
   const card = state.piles[from]?.at(-1)
   const target = state.piles[to]
@@ -44,7 +59,7 @@ export function canMove(state: SortingState, from: number, to: number): boolean 
   return top === undefined || setOf(state, top) === setOf(state, card)
 }
 
-/** Moves the top card of `from` onto `to`; a move the rules don't allow is 'wrong', and nothing moves. */
+/** Moves the top card of `from`, with the cards that go with it, onto `to`; a move the rules don't allow is 'wrong', and nothing moves. */
 export function moveCard(state: SortingState, from: number, to: number): { state: SortingState; result: MoveResult } {
   const card = state.piles[from]?.at(-1)
   const target = state.piles[to]
@@ -62,7 +77,8 @@ export function moveCard(state: SortingState, from: number, to: number): { state
       result: 'wrong',
     }
   }
-  const piles = state.piles.map((pile, i) => (i === from ? pile.slice(0, -1) : i === to ? [...pile, card] : pile))
+  const moving = state.piles[from]!.slice(-runLength(state, from))
+  const piles = state.piles.map((pile, i) => (i === from ? pile.slice(0, -moving.length) : i === to ? [...pile, ...moving] : pile))
   const moved = { ...state, ...tally(true), piles }
   // The card underneath turns face up, and so does every card of a pile just finished (a letter never uncovered, too).
   const shown = [...piles[from]!.slice(-1), ...piles.flatMap((pile, i) => (isSetDone(moved, i) ? pile : []))]
@@ -105,19 +121,15 @@ export function sortingScore(state: SortingState): number {
  * A way to sort the round, move by move ([from, to]), knowing every card: first onto a pile
  * of the card's letter that holds nothing else, then into an empty pile, then onto a top
  * card of its letter, from the shorter run of that letter to the longer (so cards never go
- * back and forth). Used by the tests (every deal can be sorted) and the browser tests.
+ * back and forth). `hidden`: played as the game is, so a face-down card stays behind when
+ * the cards of its letter above it move. Used by the tests (every deal can be sorted) and the
+ * browser tests.
  */
-export function solve(round: SortingRound, limit = 400): [number, number][] {
-  let state = startSorting(round, false)
+export function solve(round: SortingRound, hidden = false, limit = 400): [number, number][] {
+  let state = startSorting(round, hidden)
   const moves: [number, number][] = []
   const clean = (pile: string[]) => pile.length > 0 && pile.every((card) => setOf(state, card) === setOf(state, pile[0]!))
   const piles = () => state.piles.map((pile, i) => ({ pile, i }))
-  /** How many cards of the top card's letter lie on top of each other. */
-  const run = (pile: string[]) => {
-    let count = 0
-    while (count < pile.length && setOf(state, pile[pile.length - 1 - count]!) === setOf(state, pile.at(-1)!)) count++
-    return count
-  }
   while (!isFinished(state) && moves.length < limit) {
     const mixed = piles().filter(({ pile }) => pile.length > 0 && !clean(pile))
     const sameSet = (from: number, to: number) => {
@@ -138,9 +150,9 @@ export function solve(round: SortingRound, limit = 400): [number, number][] {
       // A card from a mixed pile into an empty one.
       mixed.flatMap(({ i: from }) => piles().filter(({ pile }) => pile.length === 0).map(({ i }) => [from, i] as [number, number]))[0] ??
       // Onto a top card of its own letter, from the shorter run of that letter to the longer.
-      mixed.flatMap(({ pile, i: from }) =>
+      mixed.flatMap(({ i: from }) =>
         piles()
-          .filter(({ pile: other, i }) => i !== from && sameSet(from, i) && (run(other) > run(pile) || (run(other) === run(pile) && i < from)))
+          .filter(({ i }) => i !== from && sameSet(from, i) && (runLength(state, i) > runLength(state, from) || (runLength(state, i) === runLength(state, from) && i < from)))
           .map(({ i }) => [from, i] as [number, number]),
       )[0]
     if (!move) break

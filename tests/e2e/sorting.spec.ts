@@ -13,6 +13,8 @@ const roundAt = (level: Level) => {
   const { sets, cardsPerSet, lookAlikes } = levelParams('sorting', level)
   return createSortingRound({ seed: SEED, words, letters, confusables: confusableLetters, sets, cardsPerSet, difficulty: lookAlikeRule(lookAlikes) })
 }
+/** The solver's moves, played as the child sees the level (matching face-up cards move together). */
+const movesAt = (level: Level) => solve(roundAt(level), levelParams('sorting', level).hidden)
 /** What the game calls a card: "A." or "Anka." */
 const nameOf = (round: SortingRound, id: string) => {
   const card = round.cards[id]!
@@ -26,7 +28,7 @@ test('Sortera korten can be completed with the keyboard', async ({ page, hasTouc
   const round = roundAt(1)
   await startChallenge(page, hasTouch, 'sorting')
   await expect(piles(page)).toHaveCount(round.sets.length + freePiles)
-  for (const [from, to] of solve(round)) {
+  for (const [from, to] of movesAt(1)) {
     await page.keyboard.press(String(from + 1))
     await page.keyboard.press(String(to + 1))
   }
@@ -47,7 +49,7 @@ test('by touch: a card put on another letter comes back and both cards are named
   await expect(pile(page, 0)).toHaveAccessibleName(`Hög 1: ${nameOf(round, moving).slice(0, -1)}`)
   await expect.poll(() => hasSaid(page, nameOf(round, tops[to]!))).toBe(true)
 
-  for (const [from, onto] of solve(round)) {
+  for (const [from, onto] of movesAt(1)) {
     await press(pile(page, from), hasTouch)
     await press(pile(page, onto), hasTouch)
   }
@@ -58,7 +60,7 @@ test('a card can be dragged to another pile', async ({ page, hasTouch }) => {
   test.skip(hasTouch, 'Playwright cannot drag by touch; the mouse sends the same pointer events')
   const round = roundAt(1)
   await startChallenge(page, hasTouch, 'sorting')
-  const [from, to] = solve(round)[0]!
+  const [from, to] = movesAt(1)[0]!
   const moving = round.piles[from]!.at(-1)!
   const a = (await pile(page, from).boundingBox())!
   const b = (await pile(page, to).boundingBox())!
@@ -71,12 +73,13 @@ test('a card can be dragged to another pile', async ({ page, hasTouch }) => {
   await expect(page.getByRole('button', { pressed: true })).toHaveCount(0)
 })
 
-test('the top level has nine piles, two of them empty, and can be completed', async ({ page, hasTouch }) => {
+test('the top level has four piles of four and two empty ones, and can be completed', async ({ page, hasTouch }) => {
   const round = roundAt(4)
   await startChallengeAt(page, hasTouch, 'sorting', 4)
-  await expect(piles(page)).toHaveCount(9)
+  await expect(piles(page)).toHaveCount(round.sets.length + freePiles)
+  expect(round.piles.slice(0, 4).every((pile) => pile.length === 4)).toBe(true)
   await expect(page.getByRole('button', { name: /^Hög \d+: tom$/ })).toHaveCount(freePiles)
-  for (const [from, to] of solve(round)) {
+  for (const [from, to] of movesAt(4)) {
     await page.keyboard.press(String(from + 1))
     await page.keyboard.press(String(to + 1))
   }

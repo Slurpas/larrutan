@@ -587,6 +587,47 @@ Status 2026-10-26: **done; a local commit, not pushed.**
   - Unit tests: valid rounds at every level (letters in alphabet order, piles of one size); the look-alike and other-name rules; the dropping rules; guessing scores near 0, one slip stays high.
   - Browser tests: a round by keyboard, by touch (a basket says its letter, a wrong basket names both) and at level 4; a drag with the mouse, whose closing click doesn't tap the basket. The map test opens the new station.
 
+### Night queue 2026-10-27 (the user asked me to plan and build these while they sleep)
+
+The user (2026-10-27, going to bed): "please do what you think would be best and I'll check the results tomorrow. Continue with the tasks you create/queue and need." Their ideas:
+- Use the free voice when the ElevenLabs credits run out, and make those sentences again with ElevenLabs the next month.
+- The games are all about letters. A separate world for maths, and an outer world where a small version of the child walks to "the town of maths" or "the town of letters", each with its own map of games.
+- A maths game where you drive a lawnmower: the grass hides sums, and the mower stops at one until the child answers.
+- A game where you count fruit: 3 oranges and 4 pineapples, how many in all? Help that fades level by level: first "3 + 4 = 7" shown, then without the answer, then only the fruit.
+
+Done one by one, each in its own local commit, not pushed until the user has checked them. Task 30 was agreed the day before.
+
+#### Task 30 — Sortera korten: 4 piles of 4, matching cards move together
+- The user (2026-10-26): "4 x 4 locations where the top is always on display. If you stack 2 cards that fit on top of each other, you move both in one go."
+
+Status 2026-10-27: **done; a local commit, not pushed.**
+- **Matching cards move together:** picking up a top card takes the face-up cards of its letter right under it too (`runLength` in `sortingState.ts`). They lift, follow a drag, slide and shake together. A face-down card stays behind even if it matches: the child hasn't seen it. Only the top card counts as a slip when a group is refused.
+- **Smaller boards, top level 4 piles of 4** (plus the two empty piles):
+
+  | Level | Letters | Cards per letter | Face down at the start | Look-alike letters |
+  |---|---|---|---|---|
+  | 1 | 3 | 3 | none | no |
+  | 2 | 3 | 4 | all but the top cards | no |
+  | 3 | 4 | 4 | all but the top cards | no |
+  | 4 | 4 | 4 | all but the top cards | two that look alike |
+
+  - Level 4 says Mata draken's "Nu blir det svårare! Några bokstäver är nästan lika. Titta noga!" (it has no more cards than level 3). No new speech.
+  - A child already at level 3 or 4 stays there, on the new boards.
+- **Every deal can still be sorted:** the solver now plays as the child sees the cards (face-down cards stay behind) and sorts 150 deals at every level.
+- **Tests:** a unit test for groups (all face up, and with a face-down card under them); the browser tests play the solver's moves at levels 1 and 4, which fail unless groups move together.
+
+#### Task 31 — The free voice when the ElevenLabs credits run out
+Status 2026-10-27: queued.
+
+#### Task 32 — The world: a map of towns
+Status 2026-10-27: queued.
+
+#### Task 33 — Räkna frukterna: adding fruit
+Status 2026-10-27: queued.
+
+#### Task 34 — Gräsklipparen: mowing for sums
+Status 2026-10-27: queued.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

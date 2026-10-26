@@ -105,12 +105,12 @@ export const stationLevels = {
     { params: { pairs: 6, lookAlikes: true }, intro: phrases.lookAlikeCardsIntro },
     { params: { pairs: 8, lookAlikes: true }, intro: phrases.evenMoreCardsIntro },
   ] satisfies Levels<MemoryLevel>,
-  // The user's idea (2026-10-25): seven piles of four at the top, the cards under the top one hidden.
+  // The user's idea (2026-10-26): four piles of four at the top, the cards under the top one hidden.
   sorting: [
     { params: { sets: 3, cardsPerSet: 3, hidden: false, lookAlikes: false } },
-    { params: { sets: 4, cardsPerSet: 3, hidden: true, lookAlikes: false }, intro: phrases.moreCardsIntro },
-    { params: { sets: 5, cardsPerSet: 4, hidden: true, lookAlikes: true }, intro: phrases.lookAlikeCardsIntro },
-    { params: { sets: 7, cardsPerSet: 4, hidden: true, lookAlikes: true }, intro: phrases.evenMoreCardsIntro },
+    { params: { sets: 3, cardsPerSet: 4, hidden: true, lookAlikes: false }, intro: phrases.moreCardsIntro },
+    { params: { sets: 4, cardsPerSet: 4, hidden: true, lookAlikes: false }, intro: phrases.evenMoreCardsIntro },
+    { params: { sets: 4, cardsPerSet: 4, hidden: true, lookAlikes: true }, intro: phrases.lookAlikesIntro },
   ] satisfies Levels<SortingLevel>,
   // The user's idea (2026-10-26): the letters stand in fixed places from the start. Level 4 has
   // no look-alikes: no two letters that look alike have four pictures each.

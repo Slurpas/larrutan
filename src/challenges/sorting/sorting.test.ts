@@ -6,7 +6,7 @@ import { lookAlikeRule } from '../difficulty'
 import { levelParams, levelRule, type Level } from '../levels'
 import { createRng } from '../random'
 import { createSortingRound, freePiles, type SortingRound } from './createRound'
-import { canMove, isFinished, isSetDone, moveCard, pileLetter, setOf, solve, sortingScore, startSorting } from './sortingState'
+import { canMove, isFinished, isSetDone, moveCard, pileLetter, runLength, setOf, solve, sortingScore, startSorting } from './sortingState'
 
 const seeds = Array.from({ length: 150 }, (_, i) => i * 7919 + 3)
 const levels = [1, 2, 3, 4] as const satisfies readonly Level[]
@@ -128,13 +128,41 @@ describe('moving cards', () => {
     expect(pileLetter(state, 0)).toBe('a')
   })
 
+  it('moves the cards of one letter on top of each other together, but not a face-down card under them', () => {
+    // Sol at the bottom, A and anka on it (both A), apa face down under them in the hidden game.
+    const stacked: SortingRound = {
+      ...round,
+      cards: { ...round.cards, 'picture-monkey': { id: 'picture-monkey', kind: 'picture', set: 'a', word: 'monkey' } },
+      piles: [['picture-sun', 'picture-monkey', 'letter-a', 'picture-duck'], ['letter-s'], [], []],
+    }
+    const open = startSorting(stacked, false)
+    expect(runLength(open, 0)).toBe(3)
+    const moved = moveCard(open, 0, 2).state
+    expect(moved.piles).toEqual([['picture-sun'], ['letter-s'], ['picture-monkey', 'letter-a', 'picture-duck'], []])
+    expect(isSetDone(moved, 2)).toBe(true)
+
+    // Face down, apa is not seen, so A and anka go without it; then it is uncovered and can follow.
+    let hidden = { ...startSorting(stacked, true), seen: ['letter-a', 'picture-duck', 'letter-s'] }
+    expect(runLength(hidden, 0)).toBe(2)
+    hidden = moveCard(hidden, 0, 2).state
+    expect(hidden.piles[0]).toEqual(['picture-sun', 'picture-monkey'])
+    expect(hidden.seen).toContain('picture-monkey')
+    expect(moveCard(hidden, 0, 2).state.piles[2]).toEqual(['letter-a', 'picture-duck', 'picture-monkey'])
+    // A refused group stays where it was, and only its top card counts as a slip.
+    const refused = moveCard(open, 0, 1)
+    expect(refused.result).toBe('wrong')
+    expect(refused.state.piles).toEqual(open.piles)
+    expect(refused.state.slipped).toEqual(['picture-duck'])
+  })
+
   it('can always be sorted: a solution for every deal, at every level', () => {
     for (const seed of seeds)
       for (const level of levels) {
         const round = roundAt(seed, level)
-        const moves = solve(round)
+        const { hidden } = levelParams('sorting', level)
+        const moves = solve(round, hidden)
         expect(moves.length, `${seed} ${level}`).toBeGreaterThan(0)
-        let state = startSorting(round, true)
+        let state = startSorting(round, hidden)
         for (const [from, to] of moves) {
           const step = moveCard(state, from, to)
           expect(step.result, `${seed} ${level}`).toBe('moved')

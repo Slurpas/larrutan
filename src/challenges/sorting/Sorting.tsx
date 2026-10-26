@@ -17,7 +17,7 @@ import { levelIntro, levelParams } from '../levels'
 import { RoundComplete } from '../RoundComplete'
 import { sceneScale } from '../sceneScale'
 import { createSortingRound } from './createRound'
-import { isFinished, isSetDone, moveCard, pileLetter, setOf, sortingScore, startSorting } from './sortingState'
+import { isFinished, isSetDone, moveCard, pileLetter, runLength, setOf, sortingScore, startSorting } from './sortingState'
 import styles from './Sorting.module.css'
 
 const backgrounds = { meadowTop: pixelBackground(meadowTop), meadowSoil: pixelBackground(meadowSoil) }
@@ -43,9 +43,9 @@ interface Drag {
 
 /**
  * Sortera korten: cards in piles, each a letter or a picture. Tap a pile to pick up its top
- * card (its name is said), then tap where it goes; or drag it there. A card may go on an
- * empty pile, or on a card of its own letter; anywhere else it comes back, and both cards
- * are named. From the second level only the top cards start face up. Once a pile has its
+ * card (its name is said), then tap where it goes; or drag it there. Face-up cards of the
+ * same letter on top of each other go along. A card may go on an empty pile, or on a card of
+ * its own letter; anywhere else it comes back, and both cards are named. From the second level only the top cards start face up. Once a pile has its
  * letter at the bottom and nothing else, or every card of a letter, the letter shows above
  * it. Done when every letter has its pile. Nothing is timed.
  */
@@ -68,8 +68,8 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
   const [drag, setDrag] = useState<Drag | null>(null)
   /** Cards turned face up by the last move: they turn over. */
   const [turned, setTurned] = useState<readonly string[]>([])
-  /** The card just refused, and a counter so the shake can repeat. */
-  const [refused, setRefused] = useState<{ card: string; count: number } | null>(null)
+  /** The cards just refused, and a counter so the shake can repeat. */
+  const [refused, setRefused] = useState<{ cards: readonly string[]; count: number } | null>(null)
   const [outcome, setOutcome] = useState<RoundOutcome | null>(null)
   const [done, setDone] = useState(false)
   const dragStart = useRef<{ from: number; x: number; y: number; moved: boolean } | null>(null)
@@ -130,7 +130,8 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
     setState(next)
     if (result === 'wrong') {
       // It comes back; both cards are named, so the child hears that they start differently.
-      setRefused((r) => ({ card, count: (r?.count ?? 0) + 1 }))
+      const cards = state.piles[from]!.slice(-runLength(state, from))
+      setRefused((r) => ({ cards, count: (r?.count ?? 0) + 1 }))
       const there = state.piles[to]?.at(-1)
       void speak(there ? [nameOf(card), { pause: 300 }, nameOf(there)] : nameOf(card))
       return
@@ -237,6 +238,7 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
   }
 
   const setsDone = state.piles.filter((_, i) => isSetDone(state, i)).length
+  const runs = state.piles.map((_, i) => runLength(state, i))
 
   return (
     <main
@@ -270,11 +272,13 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
 
       {/* All cards in one list, in one order (by id), so a card that moves to another pile keeps its element and slides there. */}
       {state.piles
-        .flatMap((pile, i) => layout(pile).map((place, k) => ({ ...place, i, k, isTop: k === pile.length - 1 })))
+        .flatMap((pile, i) => layout(pile).map((place, k) => ({ ...place, i, k })))
         .sort((a, b) => a.id.localeCompare(b.id))
-        .map(({ id, top, strip, i, k, isTop }) => {
-          const dragged = isTop && drag?.from === i
-          const shake = refused?.card === id
+        .map(({ id, top, strip, i, k }) => {
+          // The top card and the cards that go with it are picked up, dragged and refused together.
+          const moving = k >= state.piles[i]!.length - runs[i]!
+          const dragged = moving && drag !== null && drag.from === i
+          const shake = refused !== null && refused.cards.includes(id)
           const faceUp = state.seen.includes(id)
           const info = round.cards[id]!
           return (
@@ -285,7 +289,7 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
                 faceUp && info.kind === 'picture' && styles.pictureFront,
                 faceUp && strip !== undefined && styles.covered,
                 isSetDone(state, i) && styles.sorted,
-                isTop && selected === i && !drag && styles.lifted,
+                moving && selected === i && !drag && styles.lifted,
                 dragged && styles.dragged,
                 turned.includes(id) && styles.turned,
                 shake && styles.shake,
@@ -293,7 +297,7 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
               style={{
                 left: pileX(i),
                 top: boardTop + top,
-                zIndex: dragged ? 100 : k + 1,
+                zIndex: dragged ? 100 + k : k + 1,
                 transform: dragged ? `translate(${drag.dx}px, ${drag.dy}px) scale(1.06)` : undefined,
                 ...(strip !== undefined && ({ '--strip': `${strip}px` } as CSSProperties)),
               }}

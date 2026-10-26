@@ -102,7 +102,7 @@ Start with **upper-case letters**; lower case is a later difficulty step. Mathem
 | **Bygg ordet** (build the word) | "Bygg ordet sol!", and sees the picture | Pops the word's letters in order from soap bubbles (Task 17). Easy shows the word faintly; hard shows only empty slots |
 | **Memory** | "Hitta paren!", then each turned card ("A.", "Anka.") | Turns two cards at a time to find each picture and the letter its word starts with (Task 18). Easy: 3 pairs; hard: 4, with look-alike letters |
 | **Bokstavskorgarna** (the letter baskets) | "Lägg bilderna i rätt korg!", then each picture picked up ("Sol.") | Puts each picture in the basket of the letter its word starts with (Task 29). The baskets stand in their places from the start; the pictures lie in piles. Level 1 shows every picture; from level 2 only the top ones. 3 to 4 letters |
-| **Sortera korten** (sort the cards) | "Sortera korten!", then each card picked up ("B.", "Bil.") | Moves top cards between piles until each letter lies in one pile with the pictures whose words start with it (Task 28). Level 1 shows every card; from level 2 only the top cards start face up. 3 to 7 letters |
+| **Sortera korten** (sort the cards) | "Sortera korten!", then each card picked up ("B.", "Bil.") | Moves top cards between piles until each letter lies in one pile with the pictures whose words start with it (Task 28). Face-up cards of one letter on top of each other move together (Task 30). Level 1 shows every card; from level 2 only the top cards start face up. 3 or 4 letters, at most 4 piles of 4 |
 
 Each challenge is a small engine fed by content data. A round is about 5 questions. Add a new challenge type only when the existing ones work well with a child.
 

@@ -135,8 +135,10 @@ describe('the levels of every station', () => {
       expect(fading.indexOf(t.hint)).toBeGreaterThan(fading.indexOf(s.hint))
       expect(t.extraLetters >= s.extraLetters && t.lengths[1] >= s.lengths[1]).toBe(true)
       expect(levelParams('memory', higher).pairs).toBeGreaterThan(levelParams('memory', lower).pairs)
+      // Sortera korten: more cards, or the same cards with look-alikes, and never fewer of either.
       const [u, v] = [levelParams('sorting', lower), levelParams('sorting', higher)]
-      expect(v.sets * v.cardsPerSet).toBeGreaterThan(u.sets * u.cardsPerSet)
+      expect(v.sets * v.cardsPerSet).toBeGreaterThanOrEqual(u.sets * u.cardsPerSet)
+      expect(v.sets * v.cardsPerSet > u.sets * u.cardsPerSet || (v.lookAlikes && !u.lookAlikes), `sorting ${higher}`).toBe(true)
       expect((v.hidden || !u.hidden) && (v.lookAlikes || !u.lookAlikes), `sorting ${higher}`).toBe(true)
       // Bokstavskorgarna's top level has more pictures, but no look-alikes: no two look-alike letters have four pictures each.
       const [p, q] = [levelParams('baskets', lower), levelParams('baskets', higher)]

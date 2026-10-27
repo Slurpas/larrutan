@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { TILE, cameraZoom } from './camera'
 import { hubMap } from './hubMap'
+import { places } from './places'
 
 const mapWidth = hubMap.cols * TILE
 const mapHeight = hubMap.rows * TILE
@@ -9,6 +10,12 @@ describe('cameraZoom', () => {
   it('shows tiles at 64 px on iPads held sideways', () => {
     expect(cameraZoom(1180, 820, mapWidth, mapHeight) * TILE).toBe(64)
     expect(cameraZoom(1024, 768, mapWidth, mapHeight) * TILE).toBe(64)
+  })
+
+  it('draws the world at half size on iPads held sideways, so the child looks small in it', () => {
+    const { map, tilePx } = places.world
+    expect(cameraZoom(1180, 820, map.cols * TILE, map.rows * TILE, tilePx) * TILE).toBe(32)
+    expect(cameraZoom(1024, 768, map.cols * TILE, map.rows * TILE, tilePx) * TILE).toBe(32)
   })
 
   it('zooms out on iPads held upright so all signs still fit across', () => {

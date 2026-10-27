@@ -6,7 +6,7 @@ import { toSaveFile } from '../../src/persistence/saveFile'
 import { initialProgress } from '../../src/rewards/progress'
 import { clipFileName } from '../../src/speech/clipName'
 import { stopgapVoice } from '../../src/speech/voiceSettings'
-import type { Tile } from '../../src/world/tileMap'
+import type { Tile, TownId } from '../../src/world/tileMap'
 import '../../src/world/hubTestApi'
 
 /** Fixed seed: rounds are predictable, so tests know every answer. */
@@ -17,17 +17,17 @@ export function press(locator: Locator, hasTouch: boolean) {
   return hasTouch ? locator.tap() : locator.click()
 }
 
-/** Start screen → Spela → the map, ready for input. */
+/** Start screen → Spela → the town of letters' map (?place skips the walk through the world), ready for input. */
 export async function enterMap(page: Page, hasTouch: boolean) {
-  await page.goto(`/?seed=${SEED}`)
+  await page.goto(`/?seed=${SEED}&place=letters`)
   await press(page.getByRole('button', { name: 'Spela' }), hasTouch)
   await page.waitForFunction(() => window.__larrutanHub?.stationPoint('findLetter') != null)
 }
 
-/** A real tap (or click) on a station's sign in the game canvas. */
-export async function tapStation(page: Page, challenge: ChallengeId, hasTouch: boolean) {
-  const point = await page.evaluate((id) => window.__larrutanHub!.stationPoint(id), challenge)
-  if (!point) throw new Error(`No station for ${challenge}`)
+/** A real tap (or click) on a sign in the game canvas: a challenge's, or on the world map a town's. */
+export async function tapStation(page: Page, id: ChallengeId | TownId, hasTouch: boolean) {
+  const point = await page.evaluate((sign) => window.__larrutanHub!.stationPoint(sign), id)
+  if (!point) throw new Error(`No sign for ${id}`)
   if (hasTouch) await page.touchscreen.tap(point.x, point.y)
   else await page.mouse.click(point.x, point.y)
 }
@@ -98,7 +98,8 @@ export async function expectRoundCompleteThenMap(page: Page, timeout?: number) {
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible({ timeout })
   await page.getByRole('button', { name: 'Till kartan' }).click()
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeHidden()
-  await expect(page.getByRole('button', { name: 'Till start' })).toBeVisible()
+  // Back on the town of letters' map, whose top-left button leads out to the world.
+  await expect(page.getByRole('button', { name: 'Till världen' })).toBeVisible()
 }
 
 export function answerKey(choices: readonly string[], target: string): string {

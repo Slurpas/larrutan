@@ -56,7 +56,7 @@ export function createHubGame(parent: HTMLElement, options: HubSceneOptions): Hu
       playerPoint: () => scene.playerScreenPoint(),
       isMoving: () => scene.isMoving(),
       outfit: () => scene.getOutfit(),
-      stationPoint: (challenge) => scene.stationScreenPoint(challenge),
+      stationPoint: (id) => scene.stationScreenPoint(id),
       tilePoint: (tile) => scene.tileScreenPoint(tile),
       housePoint: (kind) => scene.houseScreenPoint(kind),
       knocks: () => scene.getKnocks(),

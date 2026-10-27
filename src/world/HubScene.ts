@@ -9,12 +9,14 @@ import { groundTile } from './groundTiles'
 import { findPath, nearestWalkable } from './pathfinding'
 import { addArtTextures, characterTextures, iconKeys, rockKey, shadowKey, signKey, tinyTownKey, waterTexture } from './textures'
 import {
+  destinationOf,
   houseAt,
   houseNextTo,
   sameTile,
   stationApproaches,
   stationAt,
   stationNextTo,
+  townSignAt,
   tryStep,
   type Direction,
   type House,
@@ -22,13 +24,16 @@ import {
   type Station,
   type Tile,
   type TileMap,
+  type TownId,
 } from './tileMap'
 
 /** Tiles per second. */
 const WALK_SPEED = 4.5
 
-/** What each station's sign shows: pictures (src/art/signs.ts) and letters (in Andika). */
-const stationContent: Record<ChallengeId, { pictures: (keyof typeof iconKeys)[]; letters: string }> = {
+/** What each sign shows: pictures (src/art/signs.ts) and letters or digits (in Andika). The towns' signs are on the world map. */
+const signContent: Record<ChallengeId | TownId, { pictures: (keyof typeof iconKeys)[]; letters: string }> = {
+  letters: { pictures: [], letters: 'ABC' },
+  maths: { pictures: [], letters: '123' },
   findLetter: { pictures: [], letters: 'AÖ' },
   firstLetter: { pictures: ['sun'], letters: 'S' },
   wordPicture: { pictures: ['apple', 'mouse'], letters: '' },
@@ -55,7 +60,13 @@ const keyDirections: Record<string, Direction> = {
 
 export interface HubSceneOptions {
   map: TileMap
+  /** Where the character stands at first (src/world/places.ts, `arrivalTile`). */
+  start: Tile
+  /** How big a tile is on screen (src/world/places.ts). */
+  tilePx: number
   onOpenStation: (challenge: ChallengeId) => void
+  /** The child walked to a town's sign on the world map. */
+  onOpenTown: (town: TownId) => void
   /** The child tapped their own character. */
   onOpenMyThings: () => void
   /** The child went in through the door of their own house, the blue one. */
@@ -79,7 +90,9 @@ const tileCenter = (tile: Tile) => ({ x: (tile.col + 0.5) * TILE, y: (tile.row +
  */
 export class HubScene extends Phaser.Scene {
   private readonly map: TileMap
+  private readonly tilePx: number
   private readonly onOpenStation: (challenge: ChallengeId) => void
+  private readonly onOpenTown: (town: TownId) => void
   private readonly onOpenMyThings: () => void
   private readonly onOpenHome: () => void
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -110,13 +123,15 @@ export class HubScene extends Phaser.Scene {
   private frames = 0
   private lastTime: number | null = null
 
-  constructor({ map, onOpenStation, onOpenMyThings, onOpenHome }: HubSceneOptions) {
+  constructor({ map, start, tilePx, onOpenStation, onOpenTown, onOpenMyThings, onOpenHome }: HubSceneOptions) {
     super('hub')
     this.map = map
+    this.tilePx = tilePx
     this.onOpenStation = onOpenStation
+    this.onOpenTown = onOpenTown
     this.onOpenMyThings = onOpenMyThings
     this.onOpenHome = onOpenHome
-    this.playerTile = map.start
+    this.playerTile = start
   }
 
   preload() {
@@ -245,7 +260,7 @@ export class HubScene extends Phaser.Scene {
   private handlePointer(pointer: Phaser.Input.Pointer) {
     const world = pointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2
     const tapped = { col: Math.floor(world.x / TILE), row: Math.floor(world.y / TILE) }
-    const station = stationAt(this.map, tapped)
+    const station = stationAt(this.map, tapped) ?? townSignAt(this.map, tapped)
     const house = houseAt(this.map, tapped)
 
     if (this.isOnPlayer(world)) {
@@ -322,7 +337,8 @@ export class HubScene extends Phaser.Scene {
     this.path = []
     this.pendingStation = null
     this.releaseKeys()
-    this.onOpenStation(station.challenge)
+    if ('challenge' in station) this.onOpenStation(station.challenge)
+    else this.onOpenTown(station.town)
   }
 
   // --- Camera ------------------------------------------------------------
@@ -330,7 +346,7 @@ export class HubScene extends Phaser.Scene {
   private fitCamera() {
     const { width, height } = this.scale
     if (width === 0 || height === 0) return
-    this.cameras.main.setZoom(cameraZoom(width, height, this.map.cols * TILE, this.map.rows * TILE))
+    this.cameras.main.setZoom(cameraZoom(width, height, this.map.cols * TILE, this.map.rows * TILE, this.tilePx))
   }
 
   // --- Drawing --------------------------------------------------------------
@@ -373,7 +389,7 @@ export class HubScene extends Phaser.Scene {
     // The panel's centre, relative to the container.
     const panelX = -signSize.width / 2 + signPanel.x + signPanel.width / 2
     const panelY = -signSize.height / 2 + signPanel.y + signPanel.height / 2
-    const { pictures, letters } = stationContent[station.challenge]
+    const { pictures, letters } = signContent[destinationOf(station)]
     const items: Phaser.GameObjects.GameObject[] = [sign]
     const slots = pictures.length + (letters ? 1 : 0)
     const slotX = (index: number) => panelX + (slots === 1 ? 0 : index === 0 ? -6 : 6)
@@ -481,9 +497,9 @@ export class HubScene extends Phaser.Scene {
     return null
   }
 
-  /** Where a station is on screen, in CSS pixels relative to the canvas. */
-  stationScreenPoint(challenge: ChallengeId): { x: number; y: number } | null {
-    const marker = this.markers.find((m) => m.station.challenge === challenge)
+  /** Where a sign is on screen, by its challenge or town, in CSS pixels relative to the canvas. */
+  stationScreenPoint(id: ChallengeId | TownId): { x: number; y: number } | null {
+    const marker = this.markers.find((m) => destinationOf(m.station) === id)
     if (!marker || this.frames < 2) return null
     const camera = this.cameras.main
     return {

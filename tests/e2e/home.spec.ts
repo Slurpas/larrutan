@@ -75,7 +75,7 @@ test('the blue house is home: inside, the wardrobe opens Mina saker, and the doo
 
   await press(page.getByRole('button', { name: 'Till kartan' }), hasTouch)
   await expect(home).toHaveCount(0)
-  await expect(page.getByRole('button', { name: 'Till start' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Till världen' })).toBeVisible()
 })
 
 test('at the red house nobody answers the knock', async ({ page, hasTouch }) => {

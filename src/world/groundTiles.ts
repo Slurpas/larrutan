@@ -55,6 +55,11 @@ export function groundTile(map: TileMap, tile: Tile): GroundTile {
       const { dc, dr } = positionInHouse(map, tile, kind)
       return { kind: 'ground', frame: tinyTownHouses[kind][dr]?.[dc] ?? grass }
     }
+    case 'townHouseBlue':
+    case 'townHouseRed': {
+      const { dc, dr } = positionInHouse(map, tile, kind)
+      return { kind: 'ground', frame: tinyTownHouses[kind === 'townHouseBlue' ? 'blueHouse' : 'redHouse'][dr]?.[dc] ?? grass }
+    }
     case 'water': {
       const land = (dc: number, dr: number) => kindAt(map, { col: tile.col + dc, row: tile.row + dr }) !== 'water'
       return {

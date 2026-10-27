@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { challengeNames } from '../challenges/challengeIds'
 import { hubMap } from './hubMap'
 import { findPath } from './pathfinding'
-import { houseAt, houseNextTo, isWalkable, kindAt, parseMap, stationApproaches, stationNextTo, tryStep, type StationDef, type Tile } from './tileMap'
+import { arrivalTile, places, townOf, type PlaceId } from './places'
+import { destinationOf, houseAt, houseNextTo, isWalkable, kindAt, parseMap, stationApproaches, stationNextTo, townSignAt, tryStep, type StationDef, type Tile } from './tileMap'
 
 const station: StationDef[] = [{ key: 'a', challenge: 'findLetter' }]
 
@@ -25,59 +25,91 @@ describe('parseMap', () => {
   })
 })
 
-describe('hub map', () => {
+describe.each(Object.entries(places) as [PlaceId, (typeof places)[PlaceId]][])('the %s map', (id, { map, tilePx }) => {
   it('is surrounded by obstacles, so the child can never walk off the map', () => {
-    for (let col = 0; col < hubMap.cols; col++) {
-      expect(isWalkable(hubMap, { col, row: 0 })).toBe(false)
-      expect(isWalkable(hubMap, { col, row: hubMap.rows - 1 })).toBe(false)
+    for (let col = 0; col < map.cols; col++) {
+      expect(isWalkable(map, { col, row: 0 })).toBe(false)
+      expect(isWalkable(map, { col, row: map.rows - 1 })).toBe(false)
     }
-    for (let row = 0; row < hubMap.rows; row++) {
-      expect(isWalkable(hubMap, { col: 0, row })).toBe(false)
-      expect(isWalkable(hubMap, { col: hubMap.cols - 1, row })).toBe(false)
-    }
-  })
-
-  it('has a sign for every challenge, each reachable from the start', () => {
-    expect(hubMap.stations.map((s) => s.challenge).sort()).toEqual(Object.keys(challengeNames).sort())
-    for (const s of hubMap.stations) {
-      expect(findPath(hubMap, hubMap.start, stationApproaches(hubMap, s)), s.challenge).not.toBeNull()
+    for (let row = 0; row < map.rows; row++) {
+      expect(isWalkable(map, { col: 0, row })).toBe(false)
+      expect(isWalkable(map, { col: map.cols - 1, row })).toBe(false)
     }
   })
 
-  it("has two houses, each with one door, a tile to stand on in front of it, reachable from the start", () => {
+  it('has a sign for each of its challenges (the world: each town), each reachable from the start', () => {
+    const wanted = id === 'world' ? Object.keys(places).filter((place) => place !== 'world') : Object.keys(townOf).filter((c) => townOf[c as keyof typeof townOf] === id)
+    expect(map.stations.map(destinationOf).sort()).toEqual(wanted.sort())
+    for (const s of map.stations) {
+      expect(findPath(map, map.start, stationApproaches(map, s)), destinationOf(s)).not.toBeNull()
+    }
+  })
+
+  it('has houses with one door each, and a tile in front of it reachable from the start', () => {
     for (const kind of ['blueHouse', 'redHouse'] as const) {
-      const tiles: Tile[] = hubMap.kinds.flatMap((row, r) => row.flatMap((k, c) => (k === kind ? [{ col: c, row: r }] : [])))
-      expect(tiles, kind).toHaveLength(9)
-      const doors = new Set(tiles.map((tile) => JSON.stringify(houseAt(hubMap, tile)!.door)))
-      expect(doors.size, kind).toBe(1)
-      const house = houseAt(hubMap, tiles[0]!)!
-      expect(kindAt(hubMap, house.door), kind).toBe(kind)
-      expect(house.door.row, kind).toBe(Math.max(...tiles.map((t) => t.row)))
-      expect(isWalkable(hubMap, house.front), kind).toBe(true)
-      expect(houseNextTo(hubMap, house.front), kind).toEqual(house)
-      expect(findPath(hubMap, hubMap.start, [house.front]), kind).not.toBeNull()
+      const tiles: Tile[] = map.kinds.flatMap((row, r) => row.flatMap((k, c) => (k === kind ? [{ col: c, row: r }] : [])))
+      expect(tiles.length % 9, kind).toBe(0)
+      for (const tile of tiles) {
+        const house = houseAt(map, tile)!
+        expect(kindAt(map, house.door), kind).toBe(kind)
+        expect(isWalkable(map, house.front), kind).toBe(true)
+        expect(houseNextTo(map, house.front), kind).toEqual(house)
+        expect(findPath(map, map.start, [house.front]), kind).not.toBeNull()
+      }
     }
-    expect(houseAt(hubMap, hubMap.start)).toBeUndefined()
-    expect(houseNextTo(hubMap, hubMap.start)).toBeUndefined()
+    expect(houseAt(map, map.start)).toBeUndefined()
+    expect(houseNextTo(map, map.start)).toBeUndefined()
   })
 
-  it('starts the child on a walkable tile that is not next to a station', () => {
-    expect(isWalkable(hubMap, hubMap.start)).toBe(true)
-    expect(stationNextTo(hubMap, hubMap.start)).toBeUndefined()
+  it('starts the child on a walkable tile that is not next to a sign', () => {
+    expect(isWalkable(map, map.start)).toBe(true)
+    expect(stationNextTo(map, map.start)).toBeUndefined()
   })
 
-  it('shows every sign from the start on the smallest iPad (1024×768 at 64 px tiles)', () => {
-    // The camera centres on the start, so the visible area reaches 8 tiles left/right and 6 up/down.
-    const halfWidth = 1024 / 64 / 2
-    const halfHeight = 768 / 64 / 2
-    const centre = { x: hubMap.start.col + 0.5, y: hubMap.start.row + 0.5 }
-    for (const s of hubMap.stations) {
+  it('shows every sign from the start on the smallest iPad (1024×768)', () => {
+    // The camera centres on the start: at 64 px tiles the visible area reaches 8 tiles left and right and 6 up and down; at 32 px, twice as far.
+    const halfWidth = 1024 / tilePx / 2
+    const halfHeight = 768 / tilePx / 2
+    const centre = { x: map.start.col + 0.5, y: map.start.row + 0.5 }
+    for (const s of map.stations) {
       // Signs stand about one tile above their block.
-      expect(s.origin.col, s.challenge).toBeGreaterThanOrEqual(centre.x - halfWidth)
-      expect(s.origin.col + 2, s.challenge).toBeLessThanOrEqual(centre.x + halfWidth)
-      expect(s.origin.row - 1, s.challenge).toBeGreaterThanOrEqual(centre.y - halfHeight)
-      expect(s.origin.row + 2, s.challenge).toBeLessThanOrEqual(centre.y + halfHeight)
+      expect(s.origin.col, destinationOf(s)).toBeGreaterThanOrEqual(centre.x - halfWidth)
+      expect(s.origin.col + 2, destinationOf(s)).toBeLessThanOrEqual(centre.x + halfWidth)
+      expect(s.origin.row - 1, destinationOf(s)).toBeGreaterThanOrEqual(centre.y - halfHeight)
+      expect(s.origin.row + 2, destinationOf(s)).toBeLessThanOrEqual(centre.y + halfHeight)
     }
+  })
+})
+
+describe('the towns', () => {
+  it("has the child's home only in the town of letters, with the red house to knock at", () => {
+    const count = (kind: string) => (id: PlaceId) => places[id].map.kinds.flat().filter((k) => k === kind).length / 9
+    expect(count('blueHouse')('letters')).toBe(1)
+    expect(count('redHouse')('letters')).toBe(1)
+    expect(count('blueHouse')('maths')).toBe(0)
+    expect(count('blueHouse')('world')).toBe(0)
+    expect(count('redHouse')('world')).toBe(0)
+  })
+
+  it('puts the child outside a town they leave, and at the start anywhere else', () => {
+    for (const town of ['letters', 'maths'] as const) {
+      const tile = arrivalTile('world', town)
+      expect(isWalkable(places.world.map, tile)).toBe(true)
+      expect(destinationOf(stationNextTo(places.world.map, tile)!)).toBe(town)
+      expect(arrivalTile(town, 'world')).toEqual(places[town].map.start)
+    }
+    expect(arrivalTile('world', null)).toEqual(places.world.map.start)
+  })
+
+  it("leads from every house of a town on the world map to that town's sign", () => {
+    const world = places.world.map
+    for (let row = 0; row < world.rows; row++)
+      for (let col = 0; col < world.cols; col++) {
+        const sign = townSignAt(world, { col, row })
+        const kind = kindAt(world, { col, row })
+        if (kind !== 'townHouseBlue' && kind !== 'townHouseRed') expect(sign).toBeUndefined()
+        else expect(sign && destinationOf(sign), `${col},${row}`).toBe(col < world.cols / 2 ? 'letters' : 'maths')
+      }
   })
 })
 
@@ -90,9 +122,9 @@ describe('tryStep', () => {
   })
 
   it('never walks into a station', () => {
-    const findLetter = hubMap.stations.find((s) => s.challenge === 'findLetter')!
+    const findLetter = hubMap.stations.find((s) => destinationOf(s) === 'findLetter')!
     const below = { col: findLetter.origin.col + 1, row: findLetter.origin.row + 2 }
     expect(tryStep(hubMap, below, 'up')).toEqual(below)
-    expect(stationNextTo(hubMap, below)?.challenge).toBe('findLetter')
+    expect(destinationOf(stationNextTo(hubMap, below)!)).toBe('findLetter')
   })
 })

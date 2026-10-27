@@ -6,7 +6,7 @@ import { stationApproaches, type Tile } from '../../src/world/tileMap'
 import { expect, test } from './fixtures'
 import { enterMap, playerTile, press, tapStation } from './helpers'
 
-const stationFor = (challenge: ChallengeId) => hubMap.stations.find((s) => s.challenge === challenge)!
+const stationFor = (challenge: ChallengeId) => hubMap.stations.find((s) => 'challenge' in s && s.challenge === challenge)!
 
 function arrowFor(from: Tile, to: Tile): string {
   if (to.col > from.col) return 'ArrowRight'

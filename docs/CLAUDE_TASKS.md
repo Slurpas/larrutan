@@ -628,7 +628,16 @@ Status 2026-10-27: **done; a local commit, not pushed.**
 - **Tests:** the budget split, and the game picking ElevenLabs' clip over Alma's.
 
 #### Task 32 — The world: a map of towns
-Status 2026-10-27: queued.
+- The user (2026-10-27): an outer world where a small version of the child walks into "the town of maths" or "the town of letters", and from there to the game screen to pick a game.
+
+Status 2026-10-27: **done; a local commit, not pushed.**
+- **The world** (`src/world/worldMap.ts`): the game starts there after "Spela". It is drawn at half the towns' size (32 px tiles on an iPad), so the child looks small in a big world. On a road between two towns stand two signs, "ABC" (the town of letters) and "123" (the town of maths), with three houses behind each, and a pond to the south. Both signs show from the start, and "Tryck på en skylt för att spela!" is said there.
+- **Going in:** walking to a town's sign, or tapping one of its houses (they can't be entered; `townSignAt`), opens that town's map. The town of letters is the map from before, unchanged.
+- **Going out:** in a town, the top-left button is now "Till världen" (a folded map). It leads back to the world, where the child stands outside the town they left (`arrivalTile`). In the world, the button goes to the start screen as before.
+- **The town of maths** (`src/world/mathsTownMap.ts`) has its paths, a pond and two red houses to knock at. Its signs come with the maths games (Tasks 33 and 34), in the same places as the town of letters' signs.
+- **For testing:** `?place=letters` (or `maths`, `world`) starts in that place after "Spela". Browser tests start in the town of letters this way.
+- **No new speech.**
+- **Tests:** every place's map is closed, has its signs (the world: one per town), each reachable and visible from the start on the smallest iPad, with working house doors; the home is only in the town of letters; every town house leads to its own town's sign; the child comes back out outside the town. Browser tests walk from the world into the town of letters and back, and tap a house of the town of maths to go in.
 
 #### Task 33 — Räkna frukterna: adding fruit
 Status 2026-10-27: queued.

@@ -20,6 +20,17 @@ export function HouseIcon({ className }: IconProps) {
   )
 }
 
+/** A folded map: out of a town, back to the world. */
+export function MapIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...strokeProps}>
+      <path d="M3.5 6.5 9 4.5l6 2 5.5-2v13L15 19.5l-6-2-5.5 2z" />
+      <path d="M9 4.5v13" />
+      <path d="M15 6.5v13" />
+    </svg>
+  )
+}
+
 /** A door: going out of the child's house, back to the map. */
 export function DoorIcon({ className }: IconProps) {
   return (

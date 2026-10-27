@@ -17,6 +17,7 @@ import { NoVoiceWarning } from '../speech/NoVoiceWarning'
 import { unlockSpeech } from '../speech/speech'
 import { VoiceDebug, voiceDebugRequested } from '../speech/VoiceDebug'
 import { HubWorld } from '../world/HubWorld'
+import { readPlaceFromUrl, type PlaceId } from '../world/places'
 import { RotateHint } from './RotateHint'
 import { StartScreen } from './StartScreen'
 import { randomSeed, readSeedFromUrl } from './seed'
@@ -59,6 +60,13 @@ const challengeComponents = {
 
 export function App() {
   const [screen, setScreen] = useState<Screen>({ name: 'start' })
+  /** Where the child is: the world, or a town (src/world/places.ts), and where they came from. */
+  const [place, setPlace] = useState<PlaceId>('world')
+  const [cameFrom, setCameFrom] = useState<PlaceId | null>(null)
+  const goTo = (next: PlaceId) => {
+    setCameFrom(place)
+    setPlace(next)
+  }
   const progress = useProgress()
   const roundCounter = useRef(0)
 
@@ -66,7 +74,11 @@ export function App() {
     // Must run inside the tap itself, or iPad Safari stays silent.
     unlockSpeech()
     // The saved game has almost always loaded by now; waiting makes sure nothing is played before it.
-    void loadProgress().then(() => setScreen({ name: 'world', overlay: null }))
+    void loadProgress().then(() => {
+      setCameFrom(null)
+      setPlace(readPlaceFromUrl(window.location.search) ?? 'world')
+      setScreen({ name: 'world', overlay: null })
+    })
   }
 
   /** Opens a challenge at the station's current level (src/challenges/levels.ts). */
@@ -114,14 +126,18 @@ export function App() {
         <StartScreen onPlay={handlePlay} />
       ) : (
         <HubWorld
+          key={place}
+          place={place}
+          from={cameFrom}
           active={screen.overlay === null}
           xp={progress.xp}
           outfit={progress.worn}
           hasNewItems={newItems(progress).length > 0}
           onOpenStation={(id) => openChallenge(id, readSeedFromUrl(window.location.search) ?? randomSeed())}
+          onOpenTown={goTo}
           onOpenMyThings={() => setScreen({ name: 'world', overlay: { name: 'myThings' } })}
           onOpenHome={openHome}
-          onHome={() => setScreen({ name: 'start' })}
+          onLeave={() => (place === 'world' ? setScreen({ name: 'start' }) : goTo('world'))}
         />
       )}
       {overlay && <div className={styles.overlay}>{overlay}</div>}

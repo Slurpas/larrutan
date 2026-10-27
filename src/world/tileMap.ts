@@ -12,6 +12,9 @@ export type TileKind =
   | 'water'
   | 'blueHouse'
   | 'redHouse'
+  /** A house of a town on the world map: it can't be entered, and tapping it walks to its town's sign. */
+  | 'townHouseBlue'
+  | 'townHouseRed'
   | 'station'
 
 export interface Tile {
@@ -19,16 +22,26 @@ export interface Tile {
   row: number
 }
 
-export interface StationDef {
+/** The towns on the world map, each with its own map of games (the user's idea, 2026-10-27). */
+export type TownId = 'letters' | 'maths'
+
+/** What a sign opens: a challenge, or (on the world map) a town. */
+export type Destination = { challenge: ChallengeId } | { town: TownId }
+
+export type StationDef = {
   /** The grid character that marks this station's 2×2 block. */
   key: string
-  challenge: ChallengeId
-}
+} & Destination
 
-export interface Station extends StationDef {
+export type Station = StationDef & {
   /** Top-left tile of the 2×2 block. */
   origin: Tile
   tiles: Tile[]
+}
+
+/** A sign's challenge or town, as one id (the two never share a name). */
+export function destinationOf(station: Station): ChallengeId | TownId {
+  return 'challenge' in station ? station.challenge : station.town
 }
 
 export interface TileMap {
@@ -53,6 +66,8 @@ const legend: Record<string, TileKind> = {
   '~': 'water',
   H: 'blueHouse',
   h: 'redHouse',
+  Q: 'townHouseBlue',
+  K: 'townHouseRed',
 }
 
 const walkable: ReadonlySet<TileKind> = new Set(['grass', 'flowers', 'mushrooms', 'path'])
@@ -180,6 +195,14 @@ export function houseAt(map: TileMap, tile: Tile): House | undefined {
 export function houseNextTo(map: TileMap, tile: Tile): House | undefined {
   const house = houseAt(map, { col: tile.col, row: tile.row - 1 })
   return house && sameTile(house.front, tile) ? house : undefined
+}
+
+/** On the world map, a town's houses lead to its sign: for a town house, the nearest sign that opens a town. */
+export function townSignAt(map: TileMap, tile: Tile): Station | undefined {
+  const kind = kindAt(map, tile)
+  if (kind !== 'townHouseBlue' && kind !== 'townHouseRed') return undefined
+  const distance = (station: Station) => Math.hypot(station.origin.col + 0.5 - tile.col, station.origin.row + 0.5 - tile.row)
+  return map.stations.filter((station) => 'town' in station).sort((a, b) => distance(a) - distance(b))[0]
 }
 
 /** The station the child is standing next to, if any. */

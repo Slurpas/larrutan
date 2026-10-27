@@ -41,6 +41,7 @@ const signContent: Record<ChallengeId | TownId, { pictures: (keyof typeof iconKe
   memory: { pictures: ['cards'], letters: '' },
   sorting: { pictures: ['piles'], letters: '' },
   baskets: { pictures: ['fruitBasket'], letters: 'A' },
+  fruit: { pictures: ['apple'], letters: '1+2' },
 }
 
 /** Walk frames per second, and where the feet are: the bottom of the tile the character stands on. */
@@ -404,8 +405,9 @@ export class HubScene extends Phaser.Scene {
           color: '#3f2631',
         })
         .setOrigin(0.5)
-      // As tall as the panel, but never wider than it (three letters).
-      text.setScale(Math.min((signPanel.height * 0.95) / text.height, (signPanel.width * 0.9) / text.width))
+      // As tall as the panel, but never wider than it (three letters), or than its half next to a picture ("1+2").
+      const room = pictures.length > 0 ? signPanel.width / 2 - 1 : signPanel.width * 0.9
+      text.setScale(Math.min((signPanel.height * 0.95) / text.height, room / text.width))
       text.texture.setFilter(Phaser.Textures.FilterMode.LINEAR)
       items.push(text)
     }

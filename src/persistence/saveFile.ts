@@ -1,3 +1,4 @@
+import { factKey, fruitFacts } from '../challenges/fruit/createRound'
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { challengeNames } from '../challenges/challengeIds'
@@ -73,6 +74,7 @@ const knownPractice = new Set([
   ...wordIds.map((id) => practiceKey('memory', id)),
   ...wordIds.map((id) => practiceKey('sorting', id)),
   ...wordIds.map((id) => practiceKey('baskets', id)),
+  ...fruitFacts(10).map((fact) => practiceKey('fruit', factKey(fact))),
 ])
 
 /** Version 1 had no mastery: everything starts unpractised. */

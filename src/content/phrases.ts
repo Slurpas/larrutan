@@ -31,6 +31,11 @@ export const phrases = {
   sortingShort: 'Sortera korten!',
   basketsIntro: 'Lägg varje bild i korgen med bokstaven som den börjar på!',
   basketsShort: 'Lägg bilderna i rätt korg!',
+  /** Räkna frukterna: the question the first time and from the speaker, and the short form after that. */
+  fruitQuestion: 'Räkna frukterna! Hur många är det?',
+  fruitShort: 'Hur många?',
+  /** A number on its own ("Sju."): a tapped number, or counting. */
+  numberShort: (word: string) => `${word.charAt(0).toLocaleUpperCase('sv')}${word.slice(1)}.`,
   /** A turned letter card: just the letter ("A."). */
   letterShort: (letter: string) => `${letter}.`,
 
@@ -49,6 +54,10 @@ export const phrases = {
   moreCardsIntro: 'Nu blir det fler kort!',
   lookAlikeCardsIntro: 'Nu blir det svårare! Fler kort, och några bokstäver är nästan lika.',
   evenMoreCardsIntro: 'Nu blir det ännu fler kort!',
+  /** Räkna frukterna's levels: the sum under the fruit shows less and less. */
+  countYourselfIntro: 'Nu räknar du själv!',
+  oneNumberIntro: 'Nu syns bara en siffra!',
+  noNumbersIntro: 'Nu syns inga siffror!',
   /** Ord och bild when the child reads the word: the word is only written. */
   readWordQuestion: 'Läs ordet!',
   /** At the end of a round after which the station opens a level higher. */

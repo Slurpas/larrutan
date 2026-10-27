@@ -5,6 +5,7 @@ import { words } from '../content/words'
 import { lettersOf, spelledLengths, spellingWords } from '../challenges/spelling/createRound'
 import { stationLevels } from '../challenges/levels'
 import { items } from '../rewards/items'
+import { numberWords } from '../content/numbers'
 
 /** Played by the "Test the voice" button in the ?debug=voices panel. */
 export const voiceTestPhrase = phrases.hubWelcome
@@ -40,6 +41,12 @@ export function spokenGroups(): SpokenGroup[] {
       ],
     },
   ]
+
+  // The maths games: the questions, and every number on its own ("Sju.") and pointed at ("Här är sju!").
+  groups.push({
+    title: 'Maths',
+    texts: [phrases.fruitQuestion, phrases.fruitShort, ...numberWords.flatMap(({ word }) => [phrases.numberShort(word), phrases.hereIs(word)])],
+  })
 
   for (const letter of letters) {
     const question = { target: letter.id, choices: [letter.id] }

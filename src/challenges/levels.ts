@@ -63,6 +63,15 @@ export interface BasketsLevel {
   lookAlikes: boolean
 }
 
+/** Räkna frukterna: two kinds of fruit to add up, and how much of the sum under them shows. */
+export interface FruitLevel {
+  /** The largest total. */
+  maxSum: number
+  choices: number
+  /** All of it ("3 + 4 = 7", the child finds the 7), the parts ("3 + 4 = ?"), the first part ("3 + ? = ?"), or nothing. */
+  shown: 'all' | 'parts' | 'first part' | 'nothing'
+}
+
 interface StationLevel<P> {
   params: P
   /** Said before the first round at this level. */
@@ -120,6 +129,13 @@ export const stationLevels = {
     { params: { sets: 4, picturesPerSet: 3, piles: 4, hidden: true, lookAlikes: true }, intro: phrases.lookAlikeCardsIntro },
     { params: { sets: 4, picturesPerSet: 4, piles: 4, hidden: true, lookAlikes: false }, intro: phrases.evenMoreCardsIntro },
   ] satisfies Levels<BasketsLevel>,
+  // The user's idea (2026-10-27): first the whole sum is written, then less and less of it.
+  fruit: [
+    { params: { maxSum: 9, choices: 3, shown: 'all' } },
+    { params: { maxSum: 9, choices: 3, shown: 'parts' }, intro: phrases.countYourselfIntro },
+    { params: { maxSum: 9, choices: 4, shown: 'first part' }, intro: phrases.oneNumberIntro },
+    { params: { maxSum: 10, choices: 4, shown: 'nothing' }, intro: phrases.noNumbersIntro },
+  ] satisfies Levels<FruitLevel>,
 } as const satisfies Record<ChallengeId, Levels<unknown>>
 
 export function levelParams<C extends ChallengeId>(challenge: C, level: Level): (typeof stationLevels)[C][number]['params'] {

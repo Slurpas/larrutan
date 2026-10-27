@@ -6,6 +6,7 @@ import { toSaveFile } from '../../src/persistence/saveFile'
 import { initialProgress } from '../../src/rewards/progress'
 import { clipFileName } from '../../src/speech/clipName'
 import { stopgapVoice } from '../../src/speech/voiceSettings'
+import { townOf } from '../../src/world/places'
 import type { Tile, TownId } from '../../src/world/tileMap'
 import '../../src/world/hubTestApi'
 
@@ -17,11 +18,13 @@ export function press(locator: Locator, hasTouch: boolean) {
   return hasTouch ? locator.tap() : locator.click()
 }
 
-/** Start screen → Spela → the town of letters' map (?place skips the walk through the world), ready for input. */
-export async function enterMap(page: Page, hasTouch: boolean) {
-  await page.goto(`/?seed=${SEED}&place=letters`)
+/** Start screen → Spela → a town's map (?place skips the walk through the world), ready for input. */
+export async function enterMap(page: Page, hasTouch: boolean, town: TownId = 'letters') {
+  await page.goto(`/?seed=${SEED}&place=${town}`)
   await press(page.getByRole('button', { name: 'Spela' }), hasTouch)
-  await page.waitForFunction(() => window.__larrutanHub?.stationPoint('findLetter') != null)
+  const sign = (Object.keys(townOf) as ChallengeId[]).find((challenge) => townOf[challenge] === town)
+  if (!sign) throw new Error(`No sign in the town of ${town}`)
+  await page.waitForFunction((id) => window.__larrutanHub?.stationPoint(id) != null, sign)
 }
 
 /** A real tap (or click) on a sign in the game canvas: a challenge's, or on the world map a town's. */
@@ -46,7 +49,7 @@ export function playerTile(page: Page): Promise<Tile> {
 
 /** Walks over the map to a challenge's sign and opens it. */
 export async function startChallenge(page: Page, hasTouch: boolean, challenge: ChallengeId) {
-  await enterMap(page, hasTouch)
+  await enterMap(page, hasTouch, townOf[challenge])
   await tapStation(page, challenge, hasTouch)
   await expect(page.getByRole('button', { name: 'Lyssna igen' })).toBeVisible()
 }
@@ -76,7 +79,7 @@ export function putSave(page: Page, save: unknown) {
  * `played`: the level of the last round there; a lower one means the station has just gone up.
  */
 export async function startChallengeAt(page: Page, hasTouch: boolean, challenge: ChallengeId, level: Level, played: Level = level) {
-  await enterMap(page, hasTouch)
+  await enterMap(page, hasTouch, townOf[challenge])
   await putSave(page, toSaveFile({ ...initialProgress, stations: { [challenge]: { level, recent: [], played } } }, new Date()))
   await startChallenge(page, hasTouch, challenge)
   await expect(page.getByRole('img', { name: `Nivå ${level} av 4` })).toBeVisible()
@@ -98,7 +101,7 @@ export async function expectRoundCompleteThenMap(page: Page, timeout?: number) {
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeVisible({ timeout })
   await page.getByRole('button', { name: 'Till kartan' }).click()
   await expect(page.getByRole('heading', { name: 'Bra jobbat!' })).toBeHidden()
-  // Back on the town of letters' map, whose top-left button leads out to the world.
+  // Back on the town's map, whose top-left button leads out to the world.
   await expect(page.getByRole('button', { name: 'Till världen' })).toBeVisible()
 }
 

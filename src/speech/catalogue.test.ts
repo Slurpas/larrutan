@@ -7,12 +7,13 @@ import { lookAlikeRule } from '../challenges/difficulty'
 import { createFindLetterRound } from '../challenges/findLetter/createRound'
 import { createFirstLetterRound } from '../challenges/firstLetter/createRound'
 import { levelIntro, levelParams, type Level } from '../challenges/levels'
-import { dragonVoice, firstLetterVoice, readWordVoice, wordPictureVoice, type ChallengeVoice } from '../challenges/voices'
+import { dragonVoice, firstLetterVoice, fruitVoice, readWordVoice, wordPictureVoice, type ChallengeVoice } from '../challenges/voices'
 import { createWordPictureRound } from '../challenges/wordPicture/createRound'
 import { createSpellingRound, spellingWords } from '../challenges/spelling/createRound'
 import { createMemoryRound } from '../challenges/memory/createRound'
 import { createSortingRound } from '../challenges/sorting/createRound'
 import { createBasketsRound } from '../challenges/baskets/createRound'
+import { createFruitRound } from '../challenges/fruit/createRound'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
@@ -136,6 +137,13 @@ describe('speech catalogue', () => {
       }
     }
     for (const text of [phrases.sortingIntro, phrases.sortingShort]) expect(catalogue).toContain(text)
+  })
+
+  it('contains everything Räkna frukterna can say, at every level', () => {
+    for (const seed of seeds) {
+      const { maxSum, choices } = levelParams('fruit', levelFor(seed))
+      for (const text of everythingSaid(createFruitRound({ seed, maxSum, choices }), fruitVoice)) expect(catalogue).toContain(text)
+    }
   })
 
   it('contains everything Bokstavskorgarna can say, at every level', () => {

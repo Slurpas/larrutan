@@ -1,0 +1,102 @@
+/* Räkna frukterna: the fruit in rows of five, and the sum under them. --fruit is one fruit's size. */
+.sum {
+  --fruit: clamp(36px, min(5.6vw, 8.5vh), 76px);
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.6vw, 1.25rem);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fruits {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), var(--fruit));
+  gap: 0.15rem;
+  /* As tall as the taller kind (--rows), so the numbers under both line up. */
+  min-height: calc(var(--fruit) * var(--rows) + 0.15rem * (var(--rows) - 1));
+  align-content: end;
+  font-size: calc(var(--fruit) / 1.15);
+}
+
+.fruit {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+/* Counting help after a wrong answer: each fruit's number, in a small circle. */
+.count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: grid;
+  place-items: center;
+  min-width: calc(var(--fruit) * 0.42);
+  height: calc(var(--fruit) * 0.42);
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  background: var(--color-white);
+  font-size: calc(var(--fruit) * 0.28);
+  animation: pop 300ms ease-out backwards;
+}
+
+.number {
+  font-size: calc(var(--fruit) * 0.9);
+}
+
+/* A part's number in its fruit's colour. */
+.apple {
+  color: #c34b35;
+}
+
+.orange {
+  color: #e38628;
+}
+
+.pineapple {
+  color: #b8860b;
+}
+
+.sign {
+  align-self: flex-end;
+  padding-bottom: calc(var(--fruit) * 0.05);
+  font-size: calc(var(--fruit) * 0.9);
+}
+
+.answer {
+  align-self: flex-end;
+  display: grid;
+  place-items: center;
+  min-width: calc(var(--fruit) * 1.1);
+  height: calc(var(--fruit) * 1.1);
+  border: 4px dashed var(--color-ink);
+  border-radius: 1rem;
+  font-size: calc(var(--fruit) * 0.9);
+}
+
+.solved {
+  border-style: solid;
+  border-color: var(--color-correct-edge);
+  background: var(--color-correct);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .count {
+    animation: none;
+  }
+}

@@ -7,6 +7,12 @@
   "stability": 0.5,
   "similarity": 0.75,
   "pauseSeconds": 0.7,
+  "stopgapVoice": {
+    "engine": "Piper (piper-tts 1.8.0)",
+    "voice": "sv_SE-alma-medium",
+    "lengthScale": 1.4,
+    "pauseSeconds": 0.15
+  },
   "clips": [
     {
       "text": "Tryck på en skylt för att spela!",
@@ -82,6 +88,24 @@
       "text": "Nu blir det ännu fler kort!",
       "file": "nu-blir-det-annu-fler-kort-6ef3f056.mp3",
       "input": "Nu blir det ännu fler kort!"
+    },
+    {
+      "text": "Nu räknar du själv!",
+      "file": "nu-raknar-du-sjalv-f371ea49.mp3",
+      "input": "Nu räknar du själv!",
+      "stopgap": true
+    },
+    {
+      "text": "Nu syns bara en siffra!",
+      "file": "nu-syns-bara-en-siffra-cda840c9.mp3",
+      "input": "Nu syns bara en siffra!",
+      "stopgap": true
+    },
+    {
+      "text": "Nu syns inga siffror!",
+      "file": "nu-syns-inga-siffror-0f2860b9.mp3",
+      "input": "Nu syns inga siffror!",
+      "stopgap": true
     },
     {
       "text": "Läs ordet!",
@@ -507,6 +531,137 @@
       "text": "Klara hundrafemtio rundor så får du regnbågsmanteln.",
       "file": "klara-hundrafemtio-rundor-sa-far-du-regn-c1ac78dc.mp3",
       "input": "Klara hundrafemtio rundor så får du regnbågsmanteln."
+    },
+    {
+      "text": "Räkna frukterna! Hur många är det?",
+      "file": "rakna-frukterna-hur-manga-ar-det-2be0e151.mp3",
+      "input": "Räkna frukterna! Hur många är det?",
+      "stopgap": true
+    },
+    {
+      "text": "Hur många?",
+      "file": "hur-manga-6773ec09.mp3",
+      "input": "Hur många?",
+      "stopgap": true
+    },
+    {
+      "text": "Ett.",
+      "file": "ett-b0387347.mp3",
+      "input": "Ett.",
+      "stopgap": true
+    },
+    {
+      "text": "Här är ett!",
+      "file": "har-ar-ett-33f509e9.mp3",
+      "input": "Här är ett!",
+      "stopgap": true
+    },
+    {
+      "text": "Två.",
+      "file": "tva-d033a5d7.mp3",
+      "input": "Två.",
+      "stopgap": true
+    },
+    {
+      "text": "Här är två!",
+      "file": "har-ar-tva-35b2fd65.mp3",
+      "input": "Här är två!",
+      "stopgap": true
+    },
+    {
+      "text": "Tre.",
+      "file": "tre-556b3f97.mp3",
+      "input": "Tre.",
+      "stopgap": true
+    },
+    {
+      "text": "Här är tre!",
+      "file": "har-ar-tre-c7a846e5.mp3",
+      "input": "Här är tre!",
+      "stopgap": true
+    },
+    {
+      "text": "Fyra.",
+      "file": "fyra-ed0e6431.mp3",
+      "input": "Fyra.",
+      "stopgap": true
+    },
+    {
+      "text": "Här är fyra!",
+      "file": "har-ar-fyra-8ea5260b.mp3",
+      "input": "Här är fyra!",
+      "stopgap": true
+    },
+    {
+      "text": "Fem.",
+      "file": "fem-b2fb3525.mp3",
+      "input": "Fem.",
+      "stopgap": true
+    },
+    {
+      "text": "Här är fem!",
+      "file": "har-ar-fem-db7ebca5.mp3",
+      "input": "Här är fem!",
+      "stopgap": true
+    },
+    {
+      "text": "Sex.",
+      "file": "sex-c390cb55.mp3",
+      "input": "Sex.",
+      "stopgap": true
+    },
+    {
+      "text": "Här är sex!",
+      "file": "har-ar-sex-ae8e60d5.mp3",
+      "input": "Här är sex!",
+      "stopgap": true
+    },
+    {
+      "text": "Sju.",
+      "file": "sju-d781f1fe.mp3",
+      "input": "[[ ʂˈʉː. ]]",
+      "stopgap": true
+    },
+    {
+      "text": "Här är sju!",
+      "file": "har-ar-sju-0568ceb2.mp3",
+      "input": "Här är [[ ʂˈʉː! ]]",
+      "stopgap": true
+    },
+    {
+      "text": "Åtta.",
+      "file": "atta-e0a03862.mp3",
+      "input": "Åtta."
+    },
+    {
+      "text": "Här är åtta!",
+      "file": "har-ar-atta-c2041b6b.mp3",
+      "input": "Här är åtta!",
+      "stopgap": true
+    },
+    {
+      "text": "Nio.",
+      "file": "nio-855e1b6e.mp3",
+      "input": "[[ nˈiːʊ. ]]",
+      "stopgap": true
+    },
+    {
+      "text": "Här är nio!",
+      "file": "har-ar-nio-99bc92bc.mp3",
+      "input": "Här är [[ nˈiːʊ! ]]",
+      "stopgap": true
+    },
+    {
+      "text": "Tio.",
+      "file": "tio-8d39e1ce.mp3",
+      "input": "[[ tˈiːʊ. ]]",
+      "stopgap": true
+    },
+    {
+      "text": "Här är tio!",
+      "file": "har-ar-tio-f40e96d4.mp3",
+      "input": "Här är [[ tˈiːʊ! ]]",
+      "stopgap": true
     },
     {
       "text": "Draken vill ha ett A!",
@@ -2017,11 +2172,6 @@
       "text": "Vilken bokstav börjar åtta på?",
       "file": "vilken-bokstav-borjar-atta-pa-3623520e.mp3",
       "input": "Vilken bokstav börjar åtta på?"
-    },
-    {
-      "text": "Åtta.",
-      "file": "atta-e0a03862.mp3",
-      "input": "Åtta."
     },
     {
       "text": "åtta börjar på Å!",

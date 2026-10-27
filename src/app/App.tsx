@@ -4,6 +4,7 @@ import { announcesLevel, stationLevel, type Level } from '../challenges/levels'
 import { Baskets } from '../challenges/baskets/Baskets'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
+import { Fruit } from '../challenges/fruit/Fruit'
 import { Memory } from '../challenges/memory/Memory'
 import { Sorting } from '../challenges/sorting/Sorting'
 import { Spelling } from '../challenges/spelling/Spelling'
@@ -56,6 +57,7 @@ const challengeComponents = {
   memory: Memory,
   sorting: Sorting,
   baskets: Baskets,
+  fruit: Fruit,
 } satisfies Record<ChallengeId, unknown>
 
 export function App() {

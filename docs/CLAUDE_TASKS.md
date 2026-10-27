@@ -640,7 +640,25 @@ Status 2026-10-27: **done; a local commit, not pushed.**
 - **Tests:** every place's map is closed, has its signs (the world: one per town), each reachable and visible from the start on the smallest iPad, with working house doors; the home is only in the town of letters; every town house leads to its own town's sign; the child comes back out outside the town. Browser tests walk from the world into the town of letters and back, and tap a house of the town of maths to go in.
 
 #### Task 33 — Räkna frukterna: adding fruit
-Status 2026-10-27: queued.
+- The user (2026-10-27): you see two kinds of fruit, say 3 oranges and 4 pineapples, and pick how many there are in all. Help that fades: first "3 + 4 = 7" written, so the child picks the 7; then without the answer; then without the numbers, or just one.
+
+Status 2026-10-27: **done; a local commit, not pushed.**
+- **The first game in the town of maths:** its sign (an apple and "1+2") stands where Hitta bokstaven's stands in the town of letters.
+- **How it plays** (`src/challenges/fruit`): two kinds of fruit (apples, oranges, pineapples) in rows of five, with the sum written under them. Each part's number has its fruit's colour, as the user described. The child taps one of 3 or 4 number cards; the other numbers are close to the answer (at most 2 away, 3 next to 10), in counting order, so guessing big or small doesn't work. Five sums a round, never the same total twice in a row. Number keys pick the number itself (0 for 10).
+- **Help:** a wrong number is named ("Sex.") and greyed out, and from then on every fruit shows its number, counting on from the first kind into the second, so the child can count. When only the answer is left: "Här är sju!".
+- **Levels:**
+
+  | Level | Sum under the fruit | Largest total | Numbers to choose from |
+  |---|---|---|---|
+  | 1 | "3 + 4 = 7": find the 7 | 9 | 3 |
+  | 2 | "3 + 4 = ?" | 9 | 3 |
+  | 3 | "3 + ? = ?" | 9 | 4 |
+  | 4 | none, only the fruit | 10 | 4 |
+
+- **Score and mastery:** like the other choice games (right on the first tap, with guessing taken out); each sum ("3+4") has its mastery box.
+- **New speech, free for now (Task 31):** "Räkna frukterna! Hur många är det?", "Hur många?", the three level sentences ("Nu räknar du själv!", "Nu syns bara en siffra!", "Nu syns inga siffror!"), and the numbers 1–10 on their own ("Sju.") and pointed at ("Här är sju!"). 24 sentences, all said by Alma until ElevenLabs makes them: about 256 credits (`npm run speech -- --max-credits 256`). "Åtta." already had an ElevenLabs clip (the word).
+- **Code:** the card screen's showcase can be a scene as big as it needs (`showcaseKind: 'scene'`), told how many wrong taps there were; a challenge can map keys to choices (`keyChoice`). Sign text next to a picture now fits its half of the panel.
+- **Tests:** unit tests for the sums (all parts, close choices in order, two kinds of fruit, practice order), the speech list and the levels; browser tests play a round by number keys at level 1, by touch with the counting help at level 2, and level 4 with no numbers showing.
 
 #### Task 34 — Gräsklipparen: mowing for sums
 Status 2026-10-27: queued.

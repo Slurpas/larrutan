@@ -140,6 +140,11 @@ describe('the levels of every station', () => {
       expect(v.sets * v.cardsPerSet).toBeGreaterThanOrEqual(u.sets * u.cardsPerSet)
       expect(v.sets * v.cardsPerSet > u.sets * u.cardsPerSet || (v.lookAlikes && !u.lookAlikes), `sorting ${higher}`).toBe(true)
       expect((v.hidden || !u.hidden) && (v.lookAlikes || !u.lookAlikes), `sorting ${higher}`).toBe(true)
+      // Räkna frukterna: less of the sum shows, the totals never get smaller, nor the choices fewer.
+      const order = ['all', 'parts', 'first part', 'nothing']
+      const [f, g] = [levelParams('fruit', lower), levelParams('fruit', higher)]
+      expect(order.indexOf(g.shown)).toBeGreaterThan(order.indexOf(f.shown))
+      expect(g.maxSum >= f.maxSum && g.choices >= f.choices).toBe(true)
       // Bokstavskorgarna's top level has more pictures, but no look-alikes: no two look-alike letters have four pictures each.
       const [p, q] = [levelParams('baskets', lower), levelParams('baskets', higher)]
       expect(q.sets * q.picturesPerSet).toBeGreaterThan(p.sets * p.picturesPerSet)

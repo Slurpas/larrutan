@@ -32,10 +32,15 @@ export interface ChoiceChallengeProps<Q extends ChoiceQuestion> {
   renderChoice: (choice: string) => ReactNode
   /** Accessible name of a choice button (also used by tests). */
   choiceLabel: (choice: string) => string
-  /** Shown above the choices, e.g. the written word in Ord och bild. Tapping it says the short form again. */
-  showcase?: (question: Q) => ReactNode
-  /** 'word': the showcase is a written word, as wide as it needs to be. */
-  showcaseKind?: 'picture' | 'word'
+  /**
+   * Shown above the choices, e.g. the written word in Ord och bild. Tapping it says the short form
+   * again. `help`: how many wrong choices the child has tapped in this question, and whether it is solved.
+   */
+  showcase?: (question: Q, help: { wrongTaps: number; solved: boolean }) => ReactNode
+  /** 'word': the showcase is a written word, as wide as it needs to be; 'scene': a picture as big as it needs to be (Räkna frukterna's fruit). */
+  showcaseKind?: 'picture' | 'word' | 'scene'
+  /** The choice a key picks (a number's own digit); by default keys 1–4 pick the choices in order. */
+  keyChoice?: (key: string, question: Q) => string | undefined
   /** Shown next to the speaker when there is no Swedish voice, so the question can still be seen. */
   silentPrompt?: (question: Q) => ReactNode
   onExit: () => void
@@ -60,6 +65,7 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
   showcase,
   showcaseKind = 'picture',
   silentPrompt,
+  keyChoice = (key, q) => (/^[1-9]$/.test(key) ? q.choices[Number(key) - 1] : undefined),
   onExit,
   onPlayAgain,
 }: ChoiceChallengeProps<Q>) {
@@ -82,9 +88,8 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
 
   const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
     if (!question) return
-    const number = Number(event.key)
-    const choice = question.choices[number - 1]
-    if (Number.isInteger(number) && number >= 1 && choice) {
+    const choice = keyChoice(event.key, question)
+    if (choice) {
       choose(choice)
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault()
@@ -120,11 +125,11 @@ export function ChoiceChallenge<Q extends ChoiceQuestion>({
         {showcase && (
           <button
             type="button"
-            className={cx(styles.showcase, showcaseKind === 'word' && styles.wordShowcase)}
-            aria-label="Lyssna på ordet"
+            className={cx(styles.showcase, showcaseKind === 'word' && styles.wordShowcase, showcaseKind === 'scene' && styles.sceneShowcase)}
+            aria-label={showcaseKind === 'scene' ? 'Frågan igen' : 'Lyssna på ordet'}
             onClick={sayAgain}
           >
-            {showcase(question)}
+            {showcase(question, { wrongTaps: state.removed.length, solved: state.phase === 'correct' })}
           </button>
         )}
 

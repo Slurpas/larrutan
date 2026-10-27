@@ -102,6 +102,7 @@ Start with **upper-case letters**; lower case is a later difficulty step. Mathem
 | **Bygg ordet** (build the word) | "Bygg ordet sol!", and sees the picture | Pops the word's letters in order from soap bubbles (Task 17). Easy shows the word faintly; hard shows only empty slots |
 | **Memory** | "Hitta paren!", then each turned card ("A.", "Anka.") | Turns two cards at a time to find each picture and the letter its word starts with (Task 18). Easy: 3 pairs; hard: 4, with look-alike letters |
 | **Bokstavskorgarna** (the letter baskets) | "Lägg bilderna i rätt korg!", then each picture picked up ("Sol.") | Puts each picture in the basket of the letter its word starts with (Task 29). The baskets stand in their places from the start; the pictures lie in piles. Level 1 shows every picture; from level 2 only the top ones. 3 to 4 letters |
+| **Räkna frukterna** (count the fruit, in the town of maths) | "Räkna frukterna! Hur många är det?" | Counts two kinds of fruit and taps the total among 3–4 number cards (Task 33). Level 1 writes the whole sum ("3 + 4 = 7"), level 2 the parts, level 3 the first part, level 4 nothing. After a wrong number every fruit shows its number, to count by |
 | **Sortera korten** (sort the cards) | "Sortera korten!", then each card picked up ("B.", "Bil.") | Moves top cards between piles until each letter lies in one pile with the pictures whose words start with it (Task 28). Face-up cards of one letter on top of each other move together (Task 30). Level 1 shows every card; from level 2 only the top cards start face up. 3 or 4 letters, at most 4 piles of 4 |
 
 Each challenge is a small engine fed by content data. A round is about 5 questions. Add a new challenge type only when the existing ones work well with a child.
@@ -141,7 +142,7 @@ Attempts, hints and successes are tracked separately from rewards.
 **Phase 2:** simple mastery tracking per letter and word using Leitner boxes (correct moves an item up a box, wrong moves it down, higher boxes come back less often), and gentle, reversible difficulty adaptation that changes the challenge, never the interface, and never labels the child.
 
 **Implementation (Task 11, `src/learning/mastery.ts`):**
-- **Boxes:** each challenge keeps its own boxes (1–5): letters in Hitta bokstaven, words in Första bokstaven, Ord och bild, Bygg ordet, Memory, Sortera korten and Bokstavskorgarna.
+- **Boxes:** each challenge keeps its own boxes (1–5): letters in Hitta bokstaven, words in Första bokstaven, Ord och bild, Bygg ordet, Memory, Sortera korten and Bokstavskorgarna, and sums ("3+4") in Räkna frukterna.
 - **Moving between boxes:** right on the first tap moves an item up one box; needing another try moves it down one box, never all the way back.
 - **Choosing a round:** questions are picked in a weighted random order, and each box comes up about half as often as the one below. Items still being learned dominate, but known items still come back.
 - **New players:** everything is in box 1, so they get exactly the same seeded rounds as before mastery existed.

@@ -1,8 +1,10 @@
 import { getLetter } from '../content/letters'
+import { numberWord } from '../content/numbers'
 import { phrases } from '../content/phrases'
 import { getWord } from '../content/words'
 import type { ChoiceQuestion } from './choiceQuestion'
 import type { FirstLetterQuestion } from './firstLetter/createRound'
+import type { FruitQuestion } from './fruit/createRound'
 
 /**
  * Everything a challenge says, built from content. The speech catalogue uses
@@ -52,4 +54,12 @@ export const readWordVoice: ChallengeVoice<ChoiceQuestion> = {
   ask: () => phrases.readWordQuestion,
   reveal: wordPictureVoice.reveal,
   nameChoice: wordPictureVoice.nameChoice,
+}
+
+/** Räkna frukterna: the same question every time; a tapped number on its own ("Sex."), and "Här är sju!" once only the answer is left. */
+export const fruitVoice: ChallengeVoice<FruitQuestion> = {
+  ask: () => phrases.fruitQuestion,
+  askAgain: () => phrases.fruitShort,
+  reveal: (q) => phrases.hereIs(numberWord(Number(q.target))),
+  nameChoice: (id) => phrases.numberShort(numberWord(Number(id))),
 }

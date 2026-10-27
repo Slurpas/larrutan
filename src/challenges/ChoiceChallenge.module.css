@@ -68,6 +68,15 @@
   letter-spacing: 0.08em;
 }
 
+/* A picture as big as it needs to be: Räkna frukterna's fruit and sum. */
+.sceneShowcase {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  padding: clamp(0.75rem, 2.5vh, 1.5rem) clamp(1rem, 3vw, 2.25rem);
+  font-size: 1rem;
+}
+
 .showcase:focus-visible {
   outline: 6px solid var(--color-focus);
   outline-offset: 10px;

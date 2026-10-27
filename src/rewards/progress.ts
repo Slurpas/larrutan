@@ -1,3 +1,4 @@
+import { factKey, fruitFacts } from '../challenges/fruit/createRound'
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { levelKey, nextStation, stationLevel, type Level, type StationState } from '../challenges/levels'
@@ -124,6 +125,7 @@ const practisedIn: Record<ChallengeId, readonly string[]> = {
   memory: words.map((word) => word.id),
   sorting: words.map((word) => word.id),
   baskets: words.map((word) => word.id),
+  fruit: fruitFacts(10).map(factKey),
 }
 
 export function isUnlocked(condition: UnlockCondition, progress: Progress): boolean {

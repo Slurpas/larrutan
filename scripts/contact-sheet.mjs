@@ -70,7 +70,7 @@ const png = await page.evaluate(async (d) => {
   await sheet.decode()
 
   const canvas = document.createElement('canvas')
-  canvas.width = 1960
+  canvas.width = 2240
   canvas.height = 1230
   const ctx = canvas.getContext('2d')
   ctx.imageSmoothingEnabled = false
@@ -115,7 +115,7 @@ const png = await page.evaluate(async (d) => {
 
   // Signs with sample content, at 4×.
   label('Station signs (normal, and next to the child), with letters in Andika', 24, 560)
-  const contents = [['AÖ'], ['sun', 'S'], ['apple', 'mouse'], ['ABC'], ['cards'], ['piles'], ['fruitBasket', 'A']]
+  const contents = [['AÖ'], ['sun', 'S'], ['apple', 'mouse'], ['ABC'], ['cards'], ['piles'], ['fruitBasket', 'A'], ['apple', '1+2']]
   contents.forEach((content, i) => {
     d.signs.forEach((sign, h) => {
       const x = 24 + i * 272 + h * 132
@@ -136,7 +136,11 @@ const png = await page.evaluate(async (d) => {
       }
       if (text) {
         ctx.fillStyle = '#3f2631'
+        // As tall as the panel, but no wider than its half next to a picture (as the game does).
         ctx.font = `700 ${p.height * 4 * 0.78}px Andika`
+        const room = pictures.length ? (p.width / 2 - 1) * 4 : p.width * 4 * 0.9
+        const wide = ctx.measureText(text).width
+        if (wide > room) ctx.font = `700 ${(p.height * 4 * 0.78 * room) / wide}px Andika`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         const left = pictures.length ? cursor : px

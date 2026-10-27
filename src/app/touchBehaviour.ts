@@ -5,6 +5,10 @@
  * - Pinch zoom is blocked. Safari ignores user-scalable=no, so its own
  *   gesture events must be cancelled.
  * - The long-press / right-click menu is blocked.
+ * - What can be dragged (cards, cookies, the mower's lawn) is marked `data-drag`. A moving
+ *   touch there is the page's: iPad Safari would otherwise take it over to pan or bounce the
+ *   page and cancel the drag, even with touch-action: none (the user couldn't drag cards
+ *   on the iPad, only tap one pile and then another, 2026-10-27).
  */
 export function setupTouchBehaviour(): void {
   document.addEventListener('touchstart', () => {}, { passive: true })
@@ -14,4 +18,11 @@ export function setupTouchBehaviour(): void {
     document.addEventListener(type, prevent, { passive: false })
   }
   document.addEventListener('contextmenu', prevent)
+  document.addEventListener(
+    'touchmove',
+    (event) => {
+      if (event.target instanceof Element && event.target.closest('[data-drag]')) event.preventDefault()
+    },
+    { passive: false },
+  )
 }

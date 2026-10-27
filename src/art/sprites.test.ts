@@ -10,7 +10,7 @@ import { pictures, pictureSize } from './pictures'
 import { rock, waterTile } from './scenery'
 import { cardBack } from './memory'
 import { apple, cards, fruitBasket, mouse, mowerIcon, piles, signSize, stationSign, sun } from './signs'
-import { bloom, hintFlowers, mowedGrass, mowerWithRider, tallGrass } from './garden'
+import { bloom, mowedGrass, mowerWithRider, tallGrass, wildFlowers } from './garden'
 import { basket } from './baskets'
 
 /** Every row the same width, and only palette colours (or "." for transparent). */
@@ -43,7 +43,7 @@ describe('sprites', () => {
       tallGrass,
       mowedLight: mowedGrass(false),
       mowedDark: mowedGrass(true),
-      hintFlowers,
+      wildFlowers,
       bloom,
       mowerRight: mowerWithRider({ head: 'crown', back: 'cape', held: 'balloon' }, 'right'),
       mowerLeft: mowerWithRider({}, 'left'),

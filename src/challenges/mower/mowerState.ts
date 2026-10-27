@@ -61,8 +61,9 @@ export function isRevealed(state: MowerState): boolean {
   return !!sum && sum.choices.every((choice) => choice === sum.target || state.asking!.removed.includes(choice))
 }
 
+/** Every sum answered, and every cell mowed (the user: the game ends when all the grass is cut). */
 export function isFinished(state: MowerState): boolean {
-  return state.firstTry.length === state.round.spots.length
+  return state.firstTry.length === state.round.spots.length && state.mowed.length === state.round.cols * state.round.rows
 }
 
 /** Sums right on the first tap, with guessing taken out (as the choice games). */

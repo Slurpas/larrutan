@@ -98,18 +98,39 @@ describe('mowing', () => {
     expect(step.state.firstTry).toEqual([false])
   })
 
-  it('is done when every sum is answered, and scores answers right the first time', () => {
+  it('is done only when every sum is answered and the whole lawn is mowed, and scores answers right the first time', () => {
     let state = startMowing(round)
-    for (const spot of round.spots) {
-      for (let i = 0; i < 40 && !isFinished(state); i++) {
-        if (state.asking) state = answerSum(state, currentSum(state)!.target).state
-        else if (state.mower.col === spot.col && state.mower.row === spot.row) break
-        else state = driveToward(state, spot)
-      }
+    const answerAll = () => {
+      while (state.asking) state = answerSum(state, currentSum(state)!.target).state
     }
-    while (state.asking) state = answerSum(state, currentSum(state)!.target).state
+    // To each sum first: answered, but grass is left, so not done yet.
+    for (const spot of round.spots)
+      for (let i = 0; i < 40 && (state.mower.col !== spot.col || state.mower.row !== spot.row); i++) {
+        answerAll()
+        state = driveToward(state, spot)
+      }
+    answerAll()
+    expect(state.firstTry).toHaveLength(round.spots.length)
+    expect(isFinished(state)).toBe(false)
+    // Then back and forth over every row.
+    for (let row = 0; row < round.rows; row++)
+      for (const col of row % 2 === 0 ? [0, round.cols - 1] : [round.cols - 1, 0])
+        for (let i = 0; i < 40 && (state.mower.col !== col || state.mower.row !== row); i++) state = driveToward(state, { col, row })
+    expect(state.mowed).toHaveLength(round.cols * round.rows)
     expect(isFinished(state)).toBe(true)
     expect(mowerScore(state)).toBe(1)
     expect(driveToward(state, round.start)).toBe(state)
+  })
+
+  it('grows flowers here and there, never on the start, chosen apart from the sums', () => {
+    let together = 0
+    for (const seed of seeds) {
+      const r = roundAt(seed, 4)
+      expect(r.flowers.length).toBeGreaterThan(0)
+      for (const flower of r.flowers) expect(flower).not.toEqual(r.start)
+      together += r.spots.filter((spot) => r.flowers.some((f) => f.col === spot.col && f.row === spot.row)).length
+    }
+    // About 7 cells in 39 have flowers, so about one sum in six has flowers over it: they say nothing.
+    expect(together / (seeds.length * 5)).toBeLessThan(0.4)
   })
 })

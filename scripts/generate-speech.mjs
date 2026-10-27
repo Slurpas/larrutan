@@ -7,6 +7,7 @@
 //                                   nothing: new sentences are said by the free voice (Alma, `stopgapVoice`) until
 //   npm run speech -- --max-credits N  makes them with ElevenLabs, as many as N credits (or what the month has
 //                                   left) pay for; the free voice says the rest until a later run
+//   npm run speech -- --max-credits N --only "Tand."   only that sentence with ElevenLabs (a retake, a fix)
 //   npm run speech -- --all         regenerate everything
 //   npm run speech -- --samples     the voice trial: a few game sentences in each voice of `trialPiperVoices`
 //                                   and `trialVoices` (ElevenLabs), next to the current voice, in
@@ -38,6 +39,8 @@ const regenerateAll = args.includes('--all')
 /** The value after a flag, e.g. `--max-credits 500`. */
 const option = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined)
 const maxCredits = option('--max-credits') === undefined ? undefined : Number(option('--max-credits'))
+/** --only "text" (may be given more than once): ElevenLabs makes only these sentences this run. */
+const only = args.flatMap((arg, i) => (args[i - 1] === '--only' ? [arg] : []))
 
 // Load the catalogue through Vite, so TypeScript and extensionless imports just work.
 const server = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false } })
@@ -235,13 +238,17 @@ async function generateWithElevenLabs(todo) {
   const paid = todo.filter((clip) => !existsSync(cached(clip)))
   const credits = paid.length > 0 && maxCredits !== undefined ? await readCredits(key) : null
   const budget = Math.min(maxCredits ?? 0, credits?.left ?? Number.POSITIVE_INFINITY)
-  const { now, later } = elevenLabs.withinBudget(paid, (clip) => elevenLabs.creditsFor([clip.input], model), budget)
+  const wanted = only.length > 0 ? paid.filter((clip) => only.includes(clip.text)) : paid
+  if (only.length > 0 && wanted.length < only.length) console.warn(`--only: ${only.length - wanted.length} of them have nothing to make (already made, or not a sentence of the game).`)
+  const fits = elevenLabs.withinBudget(wanted, (clip) => elevenLabs.creditsFor([clip.input], model), budget)
+  const { now } = fits
+  const later = paid.filter((clip) => !now.includes(clip))
   const making = todo.filter((clip) => !later.includes(clip))
   const needed = elevenLabs.creditsFor(
     now.map((clip) => clip.input),
     model,
   )
-  const why = maxCredits === undefined ? 'no --max-credits given' : 'more than the credits allowed'
+  const why = maxCredits === undefined ? 'no --max-credits given' : only.length > 0 ? 'not asked for with --only' : 'more than the credits allowed'
   console.log(`${making.length} to make with ElevenLabs (about ${needed} credits)${later.length > 0 ? `, ${later.length} wait (${why})` : ''}.`)
   mkdirSync(elevenLabsCache, { recursive: true })
   for (const [i, clip] of making.entries()) {

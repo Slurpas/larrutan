@@ -73,6 +73,38 @@ test('a card can be dragged to another pile', async ({ page, hasTouch }) => {
   await expect(page.getByRole('button', { pressed: true })).toHaveCount(0)
 })
 
+test.describe('with a touch screen', () => {
+  // Real touches come only through Chromium's DevTools protocol; iPad WebKit gets the same events, but Playwright can't drag there.
+  test.use({ hasTouch: true })
+
+  test('a card can be dragged by touch, and the page keeps the moving touch (iPad Safari would cancel the drag)', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium')
+    const round = roundAt(1)
+    await startChallenge(page, true, 'sorting')
+    const [from, to] = movesAt(1)[0]!
+    const moving = round.piles[from]!.at(-1)!
+    const a = (await pile(page, from).boundingBox())!
+    const b = (await pile(page, to).boundingBox())!
+    // Whether each touchmove was cancelled by the page (so Safari can't take it over), seen after every other listener.
+    await page.evaluate(() => {
+      const seen: boolean[] = []
+      ;(window as unknown as { touchMoves: boolean[] }).touchMoves = seen
+      window.addEventListener('touchmove', (event) => seen.push(event.defaultPrevented))
+    })
+    const cdp = await page.context().newCDPSession(page)
+    const touch = (type: 'touchStart' | 'touchMove' | 'touchEnd', x: number, y: number) =>
+      cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] })
+    const y = a.y + 120
+    await touch('touchStart', a.x + a.width / 2, y)
+    for (let i = 1; i <= 8; i++) await touch('touchMove', a.x + a.width / 2 + ((b.x - a.x) * i) / 8, y)
+    await touch('touchEnd', b.x + b.width / 2, y)
+    await expect(pile(page, to)).toHaveAccessibleName(`Hög ${to + 1}: ${nameOf(round, moving).slice(0, -1)}`)
+    const moves = await page.evaluate(() => (window as unknown as { touchMoves: boolean[] }).touchMoves)
+    expect(moves.length).toBeGreaterThan(0)
+    expect(moves.every(Boolean)).toBe(true)
+  })
+})
+
 test('the top level has four piles of four and two empty ones, and can be completed', async ({ page, hasTouch }) => {
   const round = roundAt(4)
   await startChallengeAt(page, hasTouch, 'sorting', 4)

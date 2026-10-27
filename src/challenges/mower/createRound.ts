@@ -5,7 +5,9 @@ import { createRng, shuffle } from '../random'
 
 /**
  * Gräsklipparen (the user's idea, 2026-10-27): the child mows a lawn, and sums hide under the
- * tall grass where flowers peek through. Mowing over one stops the mower until it is answered.
+ * tall grass, unmarked: mowing over one stops the mower until it is answered. The round ends
+ * when the whole lawn is mowed. Flowers grow here and there, as decoration only (the user's
+ * feedback the same day: flowers on the sums gave them away).
  */
 export interface MowerQuestion extends ChoiceQuestion {
   /** The sum's two numbers; the target is its answer. */
@@ -25,10 +27,15 @@ export interface MowerRound extends ChoiceRound<MowerQuestion> {
   start: Cell
   /** Where the sums hide. Whichever is found first asks the first question, and so on. */
   spots: Cell[]
+  /** Where flowers grow in the tall grass, wherever they happen to: they say nothing about the sums. */
+  flowers: Cell[]
 }
 
-/** The lawn, in cells (src/art/garden.ts). */
-export const lawn = { cols: 8, rows: 4 } as const
+/** The lawn, in cells (src/art/garden.ts); a fifth row at the user's wish (2026-10-27). */
+export const lawn = { cols: 8, rows: 5 } as const
+
+/** How many cells have flowers in their grass. */
+const flowerCells = 7
 
 /** A sum as a mastery item: "2+3", "7-2". */
 export const sumKey = ({ parts: [a, b], sign }: Pick<MowerQuestion, 'parts' | 'sign'>) => `${a}${sign}${b}`
@@ -79,11 +86,17 @@ export function createMowerRound({ seed, maxResult = 5, minus = false, sums = 3,
     if (apart(cell, start, 1) && spots.every((spot) => apart(cell, spot, 1))) spots.push(cell)
   }
 
+  // Flowers anywhere but the start, chosen on their own: some may grow over a sum, most don't.
+  const flowers = shuffle(cells, rng)
+    .filter((cell) => apart(cell, start, 0))
+    .slice(0, flowerCells)
+
   return {
     seed,
     ...lawn,
     start,
     spots,
+    flowers,
     questions: picked.map((sum) => ({ ...sum, target: String(answerOf(sum)), choices: numberChoices(answerOf(sum), choices, rng) })),
   }
 }

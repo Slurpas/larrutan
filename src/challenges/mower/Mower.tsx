@@ -1,6 +1,6 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { meadowSoil, meadowTop } from '../../art/bubbles'
-import { bloom, cellSize, hintFlowers, mowedGrass, mowerRiderSize, mowerWithRider, tallGrass } from '../../art/garden'
+import { bloom, cellSize, mowedGrass, mowerRiderSize, mowerWithRider, tallGrass, wildFlowers } from '../../art/garden'
 import { numberWord } from '../../content/numbers'
 import { phrases } from '../../content/phrases'
 import type { RoundOutcome } from '../../rewards/progress'
@@ -27,7 +27,7 @@ const backgrounds = {
   tall: pixelBackground(tallGrass),
   light: pixelBackground(mowedGrass(false)),
   dark: pixelBackground(mowedGrass(true)),
-  hint: pixelBackground(hintFlowers),
+  flowers: pixelBackground(wildFlowers),
 }
 /** Room for the top bar above the lawn, and for the sum and its numbers under it. */
 const TOP_BAR = 150
@@ -44,11 +44,12 @@ const FINISH_MS = 1600
 
 /**
  * Gräsklipparen, in the town of maths (the user's idea, 2026-10-27): the child rides a mower
- * over a lawn, by tapping or dragging where to go (or the arrow keys). Flowers peek through the
- * tall grass where a sum hides; mowing over one stops the mower, the sum is read out ("Vad
- * blir det? Två. Plus. Ett.") and the child taps the answer among close numbers. A wrong number
- * is named and greyed out; when only the answer is left it is pointed at. An answered sum
- * becomes a flower in bloom. Done when every sum is answered. Nothing is timed.
+ * over a lawn, by tapping or dragging where to go (or the arrow keys). Sums hide in the tall
+ * grass, unmarked; mowing over one stops the mower, the sum is read out ("Vad blir det? Två.
+ * Plus. Ett.") and the child taps the answer among close numbers, then the mower drives on to
+ * where it was going. A wrong number is named and greyed out; when only the answer is left it
+ * is pointed at. An answered sum becomes a flower in bloom. Done when the whole lawn is mowed.
+ * Nothing is timed.
  */
 export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
   const params = levelParams('mower', level)
@@ -102,11 +103,8 @@ export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox,
     const timer = setTimeout(() => {
       const next = driveToward(state, goal)
       setState(next)
-      // A sum found on the way: the mower stops there.
-      if (next.asking) {
-        setGoal(null)
-        dragging.current = false
-      }
+      // A sum found on the way stops the mower; once it is answered, it drives on to the same place.
+      if (next.asking) dragging.current = false
     }, STEP_MS)
     return () => clearTimeout(timer)
   }, [state, goal, celebrating])
@@ -223,6 +221,9 @@ export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox,
       <div
         ref={lawnRef}
         className={styles.lawn}
+        data-drag
+        // Where the mower is, for the browser tests.
+        data-mower={cellKey(state.mower)}
         style={{ left: lawnLeft, top: lawnTop, width: lawnWidth, height: lawnHeight }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -234,7 +235,7 @@ export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox,
             const key = cellKey({ col, row })
             const mowed = state.mowed.includes(key)
             const spot = round.spots.findIndex((s) => s.col === col && s.row === row)
-            const hidden = spot >= 0 && !state.found.includes(spot)
+            const flowers = !mowed && round.flowers.some((f) => f.col === col && f.row === row)
             return (
               <div
                 key={key}
@@ -245,7 +246,7 @@ export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox,
                   top: row * cell,
                   width: cell,
                   height: cell,
-                  backgroundImage: [hidden && backgrounds.hint, mowed ? (col % 2 === 0 ? backgrounds.light : backgrounds.dark) : backgrounds.tall].filter(Boolean).join(', '),
+                  backgroundImage: [flowers && backgrounds.flowers, mowed ? (col % 2 === 0 ? backgrounds.light : backgrounds.dark) : backgrounds.tall].filter(Boolean).join(', '),
                 }}
               >
                 {spot >= 0 && answered(spot) && <PixelSprite grid={bloom} className={styles.bloom} />}

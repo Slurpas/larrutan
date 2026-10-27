@@ -320,6 +320,7 @@ export function Sorting({ seed, level, announceLevel, knowsChallenge, practiceBo
             key={i}
             type="button"
             className={styles.pile}
+            data-drag
             style={{ left: pileX(i) - gap / 2, top: TOP_BAR, width: card + gap, height: groundTop - TOP_BAR }}
             aria-label={`Hög ${i + 1}: ${top ? nameOf(top).slice(0, -1) : 'tom'}`}
             aria-pressed={selected === i}

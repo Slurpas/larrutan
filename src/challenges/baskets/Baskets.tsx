@@ -336,6 +336,7 @@ export function Baskets({ seed, level, announceLevel, knowsChallenge, practiceBo
             key={i}
             type="button"
             className={styles.target}
+            data-drag
             style={{ left: pileX(i) - gap / 2, top: TOP_BAR, width: card + gap, height: basketsArea - TOP_BAR }}
             aria-label={`Hög ${i + 1}: ${top ? pictureName(top).slice(0, -1) : 'tom'}`}
             aria-pressed={selected === i}

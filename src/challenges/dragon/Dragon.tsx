@@ -310,6 +310,7 @@ export function Dragon<Q extends ChoiceQuestion>({
               )}
               style={{ left: at.x - cookiePx / 2, top: at.y - cookiePx / 2, transform, '--delay': `${i * 90}ms` } as CSSProperties}
               aria-label={choiceLabel(id)}
+              data-drag
               disabled={isRemoved}
               onClick={() => handleClick(id)}
               onPointerDown={(event) => handlePointerDown(event, id)}

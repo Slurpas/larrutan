@@ -665,7 +665,8 @@ Status 2026-10-27: **done; a local commit, not pushed.**
 
 Status 2026-10-27: **done; a local commit, not pushed.**
 - **The second game in the town of maths:** its sign (a red mower) stands where Första bokstaven's stands in the town of letters.
-- **How it plays** (`src/challenges/mower`): a lawn of 8 × 4 cells of tall grass. The child rides a red mower (wearing their own outfit, `mowerWithRider` in `src/art/garden.ts`) by tapping where to go, dragging, or the arrow keys. It drives a cell at a time, across first and then up or down, and mows every cell it passes, in light and dark stripes. Flowers peek through the grass where a sum hides; mowing over one stops the mower and reads the sum ("Vad blir det? Två. Plus. Ett.", put together from single clips). The child taps the answer among close numbers. A wrong number is named and greyed out; when only the answer is left: "Här är fem!". An answered sum becomes a flower in bloom. Done when every sum is answered; nothing is timed.
+- **How it plays** (`src/challenges/mower`): a lawn of 8 × 5 cells of tall grass. The child rides a red mower (wearing their own outfit, `mowerWithRider` in `src/art/garden.ts`) by tapping where to go, dragging, or the arrow keys. It drives a cell at a time, across first and then up or down, and mows every cell it passes, in light and dark stripes. Sums hide in the grass, unmarked; mowing over one stops the mower and reads the sum ("Vad blir det? Två. Plus. Ett.", put together from single clips). The child taps the answer among close numbers, and the mower drives on to where it was going. A wrong number is named and greyed out; when only the answer is left: "Här är fem!". An answered sum becomes a flower in bloom. Done when the whole lawn is mowed; nothing is timed.
+- **After the user's first look (2026-10-27):** flowers no longer mark the sums (they gave them away); they grow in 7 random cells as decoration, chosen apart from the sums. The round ends only when all the grass is cut, and the lawn has a fifth row.
 - **Levels:**
 
   | Level | Sums | Hidden in the lawn | Dots to count | Numbers to choose from |
@@ -679,6 +680,14 @@ Status 2026-10-27: **done; a local commit, not pushed.**
 - **New speech, free for now (Task 31):** "Klipp gräset! Under blommorna gömmer sig tal.", "Klipp gräset!", "Vad blir det?", "Plus.", "Minus.", and the level sentences "Nu blir talen större!", "Nu försvinner prickarna!", "Nu kommer minus också!". The numbers come from Task 33. All 32 maths sentences are said by Alma until ElevenLabs makes them: about 405 credits (`npm run speech -- --max-credits 405`).
 - **Code:** the close numbers of both maths games come from `numberChoices` (`src/challenges/numberChoices.ts`); the lawn art is `src/art/garden.ts`.
 - **Tests:** unit tests for the sums (plus, minus with answers of at least 1), the spots (apart, never next to the start), driving and mowing, stopping, answering and the score; the speech list; the levels. Browser tests play whole rounds at levels 1 and 4 by tapping flowers and answering (following the mower in the pure rules, since it may find another sum on the way), and the help at level 2.
+
+#### Task 35 — Playtest fixes: dragging on the iPad, and "Tand"
+- The user (2026-10-27): "Tand" sounds a lot like "Kand". Cards in Sortera korten can't be dragged, only moved by tapping one pile and then another.
+
+Status 2026-10-27: **done; a local commit, not pushed.**
+- **Dragging on the iPad:** the drag worked with a mouse (Chromium and WebKit) and with real touches in Chromium, so the code was right; iPad Safari took the moving finger over (to pan or bounce the page) and cancelled the drag, even with `touch-action: none`. Everything that drags is now marked `data-drag` (Sortera korten's and Bokstavskorgarna's piles, Mata draken's cookies, Gräsklipparen's lawn), and the page keeps a moving touch there (`touchmove` default prevented, `src/app/touchBehaviour.ts`). A browser test drags a card by real touch (Chromium) and checks every move was kept.
+- **"Tand.":** a new take with ElevenLabs (about 5 credits; `retakes.ts`). The other sentences with "tand" ("Var är tanden?", "Bygg ordet tand!" and four more) keep their takes: say if any of them sounds wrong too.
+- **`npm run speech -- --max-credits N --only "Tand."`** makes just that sentence with ElevenLabs, while the 32 new maths sentences keep waiting (they come first in the catalogue, so a small budget would otherwise stop at them).
 
 ## Roadmap — later
 

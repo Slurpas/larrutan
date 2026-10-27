@@ -3,7 +3,7 @@ import { Pixels } from './pixels'
 
 /**
  * Gräsklipparen: a lawn of 32×32 cells (tall grass, and mowed in light and dark stripes),
- * flowers peeking through the grass where a sum hides, a flower in bloom where one was
+ * flowers peeking through the grass here and there, a flower in bloom where a sum was
  * answered, and the child riding a red mower, seen from the side. The sums are UI (Andika).
  */
 export const cellSize = 32
@@ -36,8 +36,8 @@ export function mowedGrass(dark: boolean): string[] {
   return art.toGrid()
 }
 
-/** Three flowers peeking through the tall grass: a sum hides here. */
-export const hintFlowers: readonly string[] = (() => {
+/** Three flowers peeking through the tall grass, here and there on the lawn. */
+export const wildFlowers: readonly string[] = (() => {
   const art = new Pixels(cellSize, cellSize)
   for (const [x, y, petal] of [
     [8, 9, 'y'],

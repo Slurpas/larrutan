@@ -68,6 +68,15 @@ export const almaVoice: PiperVoice = {
   pauseSeconds: 0.15,
 }
 
+/**
+ * The free voice that says a sentence ElevenLabs hasn't made yet (the user's idea, 2026-10-27):
+ * a run that may not spend credits (no --max-credits, or the month has run out) gives new
+ * sentences an Alma clip, and a later run with credits makes them with `speechVoice`. The game
+ * plays the `speechVoice` clip when there is one (`clipFor` in clipName.ts), and the generator
+ * then deletes the Alma one.
+ */
+export const stopgapVoice: PiperVoice = almaVoice
+
 /** An ElevenLabs voice to compare with the current one, found by its name among the account's voices. */
 export interface TrialVoice {
   label: string

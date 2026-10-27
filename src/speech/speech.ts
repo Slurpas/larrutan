@@ -1,6 +1,6 @@
 import silenceUrl from './audio/silence.mp3?url'
 import { createBrowserVoice, type BrowserVoiceInfo, type VoiceStatus } from './browserVoice'
-import { clipFileName } from './clipName'
+import { clipFor } from './clipName'
 import { createClipPlayer } from './clipPlayer'
 import { createEventLog } from './eventLog'
 
@@ -43,9 +43,10 @@ let turn = 0
 
 const quote = (text: string) => JSON.stringify(text.length > 40 ? `${text.slice(0, 40)}…` : text)
 
-/** The generated clip for a sentence, if there is one (for the review page). */
-export function clipUrl(text: string): string | undefined {
-  return clipUrls.get(clipFileName(text))
+/** The generated clip for a sentence, if there is one: its file, its URL, and whether the free voice says it for now. */
+export function clipOf(text: string): { file: string; url: string; stopgap: boolean } | undefined {
+  const clip = clipFor(text, (file) => clipUrls.has(file))
+  return clip && { ...clip, url: clipUrls.get(clip.file)! }
 }
 
 /** Call once at startup. */
@@ -84,7 +85,7 @@ export async function speak(items: Utterance | readonly Utterance[]): Promise<vo
       continue
     }
     const text = item
-    const url = clipUrls.get(clipFileName(text))
+    const url = clipOf(text)?.url
     if (url) {
       const outcome = await clips.play(url, quote(text))
       // E.g. iPad Safari refusing to play: better the device's own voice than silence.

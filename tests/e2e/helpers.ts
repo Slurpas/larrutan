@@ -5,6 +5,7 @@ import { databaseName, profileStore } from '../../src/persistence/database'
 import { toSaveFile } from '../../src/persistence/saveFile'
 import { initialProgress } from '../../src/rewards/progress'
 import { clipFileName } from '../../src/speech/clipName'
+import { stopgapVoice } from '../../src/speech/voiceSettings'
 import type { Tile } from '../../src/world/tileMap'
 import '../../src/world/hubTestApi'
 
@@ -81,11 +82,11 @@ export async function startChallengeAt(page: Page, hasTouch: boolean, challenge:
   await expect(page.getByRole('img', { name: `Nivå ${level} av 4` })).toBeVisible()
 }
 
-/** Has the game played this sentence since the page was opened? (The silent fixture lists every clip.) */
+/** Has the game played this sentence since the page was opened, in the voice or the free one standing in? (The silent fixture lists every clip.) */
 export async function hasSaid(page: Page, text: string): Promise<boolean> {
   const clips = await page.evaluate(() => (window as unknown as { __playedClips?: string[] }).__playedClips ?? [])
-  const name = clipFileName(text).replace(/\.mp3$/, '')
-  return clips.some((clip) => clip.includes(name))
+  const names = [clipFileName(text), clipFileName(text, stopgapVoice)].map((file) => file.replace(/\.mp3$/, ''))
+  return clips.some((clip) => names.some((name) => clip.includes(name)))
 }
 
 /** `timeout`: the mine cart takes a few seconds per question (riding in and through a tunnel). */

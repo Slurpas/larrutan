@@ -18,10 +18,10 @@ import { phrases } from '../content/phrases'
 import { words } from '../content/words'
 import { items } from '../rewards/items'
 import { spokenTexts } from './catalogue'
-import { clipFileName } from './clipName'
+import { clipFileName, clipFor } from './clipName'
 import { retakes } from './retakes'
 import type { SoundId } from './speech'
-import { speechVoice } from './voiceSettings'
+import { speechVoice, stopgapVoice } from './voiceSettings'
 
 const catalogue = new Set(spokenTexts())
 const seeds = Array.from({ length: 300 }, (_, i) => i * 104729 + 3)
@@ -186,10 +186,17 @@ describe('speech catalogue', () => {
     }
   })
 
-  it('has a generated audio file for every sentence (run `npm run speech` after changing content)', () => {
-    const missing = [...catalogue].filter(
-      (text) => !existsSync(fileURLToPath(new URL(`./audio/sv/${clipFileName(text)}`, import.meta.url))),
-    )
+  it('has a generated audio file for every sentence, in the voice or for now the free one (run `npm run speech` after changing content)', () => {
+    const missing = [...catalogue].filter((text) => !clipFor(text, (file) => existsSync(fileURLToPath(new URL(`./audio/sv/${file}`, import.meta.url)))))
     expect(missing).toEqual([])
+  })
+
+  it('plays the free voice only for a sentence the voice has no clip for yet', () => {
+    const own = clipFileName('Sju.')
+    const free = clipFileName('Sju.', stopgapVoice)
+    expect(own).not.toBe(free)
+    expect(clipFor('Sju.', (file) => file === own || file === free)).toEqual({ file: own, stopgap: false })
+    expect(clipFor('Sju.', (file) => file === free)).toEqual(speechVoice.engine === 'ElevenLabs' ? { file: free, stopgap: true } : undefined)
+    expect(clipFor('Sju.', () => false)).toBeUndefined()
   })
 })

@@ -14,6 +14,7 @@ import {
   readApiKey,
   synthesize,
   trialSentences,
+  withinBudget,
   withRetries,
 } from './elevenLabs'
 
@@ -56,6 +57,15 @@ describe('credits', () => {
     expect(budgetProblem(1500, 9000, 1000)).toMatch(/more than --max-credits 1000/)
     expect(budgetProblem(500, 300, 1000)).toMatch(/only 300 are left/)
     expect(budgetProblem(500, 300, Number.NaN)).toMatch(/must be a number/)
+  })
+
+  it('pay for the clips in order until the next one would cost more than allowed; the rest wait for the free voice', () => {
+    const cost = (text: string) => text.length
+    expect(withinBudget(['ab', 'cd', 'ef'], cost, 4)).toEqual({ now: ['ab', 'cd'], later: ['ef'] })
+    // Stops at the first that doesn't fit, even if a later one would: sentences that belong together keep one voice.
+    expect(withinBudget(['abc', 'defg', 'h'], cost, 5)).toEqual({ now: ['abc'], later: ['defg', 'h'] })
+    expect(withinBudget(['ab'], cost, 0)).toEqual({ now: [], later: ['ab'] })
+    expect(withinBudget(['ab', 'cd'], cost, Number.POSITIVE_INFINITY)).toEqual({ now: ['ab', 'cd'], later: [] })
   })
 
   it('left this month are read from the account, with the key in a header only', async () => {

@@ -43,6 +43,18 @@ export function budgetProblem(needed: number, left: number | null, cap: number |
   return null
 }
 
+/**
+ * Which clips ElevenLabs makes now, in order: as many as `budget` credits pay for, stopping at
+ * the first that doesn't fit, so sentences that belong together stay in one voice. The rest are
+ * said by the free voice until a later run (`stopgapVoice` in src/speech/voiceSettings.ts).
+ */
+export function withinBudget<T>(items: readonly T[], cost: (item: T) => number, budget: number): { now: T[]; later: T[] } {
+  let spent = 0
+  const first = items.findIndex((item) => (spent += cost(item)) > budget)
+  const cut = first === -1 ? items.length : first
+  return { now: items.slice(0, cut), later: items.slice(cut) }
+}
+
 /** A refused request, with ElevenLabs' own explanation. */
 export class ElevenLabsError extends Error {
   constructor(

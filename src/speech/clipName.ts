@@ -1,6 +1,6 @@
 import { elevenLabsInput, speechInput } from '../content/pronunciation'
 import { retakes } from './retakes'
-import { speechVoice, type SpeechVoice } from './voiceSettings'
+import { speechVoice, stopgapVoice, type SpeechVoice } from './voiceSettings'
 
 /**
  * The audio file for a sentence: a readable slug plus a hash of everything that
@@ -25,6 +25,18 @@ export function clipFileName(text: string, voice: SpeechVoice = speechVoice): st
   const input = voice.engine === 'ElevenLabs' ? elevenLabsInput(text, voice.pauseSeconds, voice.model) : speechInput(text)
   const shapedBy = [text, input, JSON.stringify(voice), ...(take ? [`take ${take}`] : [])].join('\n')
   return `${slug}-${fnv1a(shapedBy.normalize('NFC'))}.mp3`
+}
+
+/**
+ * The clip the game plays for a sentence, given which files there are: the voice's own, or
+ * while ElevenLabs hasn't made it yet, the free voice's (`stopgapVoice`).
+ */
+export function clipFor(text: string, has: (file: string) => boolean): { file: string; stopgap: boolean } | undefined {
+  const own = clipFileName(text)
+  if (has(own)) return { file: own, stopgap: false }
+  if (speechVoice.engine !== 'ElevenLabs') return undefined
+  const stopgap = clipFileName(text, stopgapVoice)
+  return has(stopgap) ? { file: stopgap, stopgap: true } : undefined
 }
 
 /** 32-bit FNV-1a, as 8 hex digits. Tiny and stable; collisions are checked in tests. */

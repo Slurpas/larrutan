@@ -3,7 +3,10 @@
 // don't exist yet.
 //
 //   npm run speech                  new sentences, and any whose pronunciation or voice changed (both are
-//                                   part of the file name, src/speech/clipName.ts)
+//                                   part of the file name, src/speech/clipName.ts). With ElevenLabs it spends
+//                                   nothing: new sentences are said by the free voice (Alma, `stopgapVoice`) until
+//   npm run speech -- --max-credits N  makes them with ElevenLabs, as many as N credits (or what the month has
+//                                   left) pay for; the free voice says the rest until a later run
 //   npm run speech -- --all         regenerate everything
 //   npm run speech -- --samples     the voice trial: a few game sentences in each voice of `trialPiperVoices`
 //                                   and `trialVoices` (ElevenLabs), next to the current voice, in
@@ -11,8 +14,8 @@
 //   npm run speech -- --list-voices the ElevenLabs voices this account can use, and the credits left
 //
 // Piper needs its venv and voice in .tools/ (see README). ElevenLabs needs ELEVENLABS_API_KEY in .env and
-// never spends more than --max-credits (the trial: 1000 unless told otherwise; making the game's clips:
-// required) or than the month has left. Both need ffmpeg on PATH (or FFMPEG=path).
+// never spends more than --max-credits (the trial: 1000 unless told otherwise; the game's clips: nothing
+// unless told) or than the month has left. Both need ffmpeg on PATH (or FFMPEG=path).
 
 import { execFileSync, spawnSync } from 'node:child_process'
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
@@ -41,7 +44,7 @@ const server = await createServer({ appType: 'custom', logLevel: 'error', server
 const { spokenTexts } = await server.ssrLoadModule('/src/speech/catalogue.ts')
 const { clipFileName } = await server.ssrLoadModule('/src/speech/clipName.ts')
 const { elevenLabsInput, pauseMark, pronunciations, speechInput, withPauses } = await server.ssrLoadModule('/src/content/pronunciation.ts')
-const { speechVoice, trialPiperVoices, trialSettings, trialVoices } = await server.ssrLoadModule('/src/speech/voiceSettings.ts')
+const { speechVoice, stopgapVoice, trialPiperVoices, trialSettings, trialVoices } = await server.ssrLoadModule('/src/speech/voiceSettings.ts')
 const { countReviews, noApprovals, pruneApprovals } = await server.ssrLoadModule('/src/speech/review/approvals.ts')
 const { retakes } = await server.ssrLoadModule('/src/speech/retakes.ts')
 const elevenLabs = await server.ssrLoadModule('/scripts/elevenLabs.ts')
@@ -97,18 +100,32 @@ async function generateClips() {
   const todo = clips.filter((clip) => regenerateAll || !existsSync(path.join(audioDir, clip.file)))
   console.log(`${clips.length} sentences, ${todo.length} to generate`)
 
+  // What ElevenLabs doesn't make this time (and has never made) the free voice says until a run that may spend the credits.
+  let waiting = []
   if (todo.length > 0) {
-    if (isElevenLabs) await generateWithElevenLabs(todo)
+    if (isElevenLabs) waiting = (await generateWithElevenLabs(todo)).filter((clip) => !existsSync(path.join(audioDir, clip.file)))
     else generateWithPiper(todo)
   }
+  const stopgapOf = (clip) => ({ text: clip.text, file: clipFileName(clip.text, stopgapVoice), input: speechInput(clip.text), stopgap: true })
+  const toSay = waiting.map(stopgapOf).filter((clip) => !existsSync(path.join(audioDir, clip.file)))
+  if (toSay.length > 0) {
+    checkPiper(stopgapVoice)
+    console.log(`${readableName(stopgapVoice)}, the free voice, makes ${toSay.length} of them for now.`)
+    sayWithPiper(
+      toSay.map((clip) => ({ input: clip.input, target: path.join(audioDir, clip.file) })),
+      stopgapVoice,
+    )
+  }
+  const waitingTexts = new Set(waiting.map((clip) => clip.text))
+  const listed = clips.map((clip) => (waitingTexts.has(clip.text) ? stopgapOf(clip) : clip))
 
   // A tiny silent clip, played inside the first tap so iPad Safari allows audio afterwards.
   if (!existsSync(silencePath)) {
     execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-f', 'lavfi', '-i', 'anullsrc=r=24000:cl=mono', '-t', '0.1', '-b:a', '32k', silencePath])
   }
 
-  // Remove clips for sentences the game no longer says.
-  const wanted = new Set(clips.map((clip) => clip.file))
+  // Remove clips for sentences the game no longer says, and the free voice's once ElevenLabs has made the sentence.
+  const wanted = new Set(listed.map((clip) => clip.file))
   for (const file of readdirSync(audioDir)) {
     if (file.endsWith('.mp3') && !wanted.has(file)) {
       rmSync(path.join(audioDir, file))
@@ -117,9 +134,16 @@ async function generateClips() {
   }
 
   // What was generated with what, for review and licence records.
-  writeFileSync(manifestPath, `${JSON.stringify({ ...speechVoice, clips }, null, 2)}\n`, 'utf8')
+  writeFileSync(manifestPath, `${JSON.stringify({ ...speechVoice, ...(waiting.length > 0 && { stopgapVoice }), clips: listed }, null, 2)}\n`, 'utf8')
   rmSync(work, { recursive: true, force: true })
   console.log(`done: ${clips.length} clips in ${path.relative(root, audioDir)}`)
+  if (waiting.length > 0) {
+    const credits = elevenLabs.creditsFor(
+      waiting.map((clip) => clip.input),
+      speechVoice.model,
+    )
+    console.log(`${waiting.length} said by ${readableName(stopgapVoice)} until ElevenLabs makes them (about ${credits} credits): npm run speech -- --max-credits ${credits}`)
+  }
 
   // Approvals of clips that changed or disappeared no longer apply (PRD §7: review on ?review=voices).
   const approvals = pruneApprovals(existsSync(approvalsPath) ? JSON.parse(readFileSync(approvalsPath, 'utf8')) : noApprovals, wanted)
@@ -186,8 +210,16 @@ function sayWithPiper(items, voice) {
 
 // --- ElevenLabs --------------------------------------------------------------------------------
 
+/**
+ * Makes what the credits allowed pay for (--max-credits, or what the month has left if less), in
+ * catalogue order. Returns the clips it didn't make: the free voice says them meanwhile.
+ */
 async function generateWithElevenLabs(todo) {
-  const key = elevenLabsKey()
+  const key = optionalElevenLabsKey()
+  if (!key) {
+    console.warn('No ELEVENLABS_API_KEY in .env (see "Trying ElevenLabs" in README.md).')
+    return todo
+  }
   const { voiceId, model, speed, stability, similarity } = speechVoice
   const voice = { voiceId, model, speed, stability, similarity }
   // A retake (src/speech/retakes.ts) is a new recording, so it has its own place in the cache.
@@ -198,19 +230,21 @@ async function generateWithElevenLabs(todo) {
         ? elevenLabs.sampleName([voiceId, model, speed, stability, similarity, clip.input, `take ${retakes[clip.text]}`])
         : elevenLabs.elevenLabsSampleName(voice, clip.input),
     )
-  const toMake = todo.filter((clip) => !existsSync(cached(clip)))
+  // What ElevenLabs sent before costs nothing; the rest, as far as the credits allowed go.
+  if (maxCredits !== undefined && !(maxCredits >= 0)) stop('--max-credits must be a number.')
+  const paid = todo.filter((clip) => !existsSync(cached(clip)))
+  const credits = paid.length > 0 && maxCredits !== undefined ? await readCredits(key) : null
+  const budget = Math.min(maxCredits ?? 0, credits?.left ?? Number.POSITIVE_INFINITY)
+  const { now, later } = elevenLabs.withinBudget(paid, (clip) => elevenLabs.creditsFor([clip.input], model), budget)
+  const making = todo.filter((clip) => !later.includes(clip))
   const needed = elevenLabs.creditsFor(
-    toMake.map((clip) => clip.input),
+    now.map((clip) => clip.input),
     model,
   )
-  if (toMake.length > 0) {
-    const credits = await readCredits(key)
-    const problem = elevenLabs.budgetProblem(needed, credits?.left ?? null, maxCredits)
-    if (problem) stop(problem)
-  }
-  console.log(`${todo.length - toMake.length} already made, ${toMake.length} to make: about ${needed} credits.`)
+  const why = maxCredits === undefined ? 'no --max-credits given' : 'more than the credits allowed'
+  console.log(`${making.length} to make with ElevenLabs (about ${needed} credits)${later.length > 0 ? `, ${later.length} wait (${why})` : ''}.`)
   mkdirSync(elevenLabsCache, { recursive: true })
-  for (const [i, clip] of todo.entries()) {
+  for (const [i, clip] of making.entries()) {
     // Each answer is kept as soon as it comes: if the run stops, the next one makes only the rest.
     const raw = cached(clip)
     if (!existsSync(raw)) {
@@ -218,15 +252,18 @@ async function generateWithElevenLabs(todo) {
         writeFileSync(raw, await elevenLabs.withRetries(() => elevenLabs.synthesize(key, voice, clip.input, seedOf(clip.file))))
       } catch (error) {
         if (!(error instanceof elevenLabs.ElevenLabsError)) throw error
-        stop(`Stopped at ${i + 1} of ${todo.length}: ${error.message}\nWhat was made is kept: run npm run speech again (when there are credits) to make the rest.`)
+        // E.g. the month's credits ran out: what was made is kept, and the rest wait for a later run.
+        console.warn(`ElevenLabs stopped at ${i + 1} of ${making.length}: ${error.message}`)
+        return [...making.slice(i), ...later]
       }
     }
     // Eleven v3 pauses for about a second at a pause mark ("Var är … tigern?"): that pause is shortened to pauseSeconds.
     const hasPause = withPauses(clip.text) !== clip.text
     finish(tidyElevenLabs(raw, model === 'eleven_v3' && hasPause ? speechVoice.pauseSeconds : undefined), path.join(audioDir, clip.file))
-    console.log(`  ${i + 1}/${todo.length} ${clip.text}`)
+    console.log(`  ${i + 1}/${making.length} ${clip.text}`)
   }
-  if (toMake.length > 0) await readCredits(key)
+  if (needed > 0) await readCredits(key)
+  return later
 }
 
 /**

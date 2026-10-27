@@ -2,7 +2,7 @@ import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react'
 import { Picture } from '../../ui/Picture'
 import { spokenGroups } from '../catalogue'
 import { clipFileName } from '../clipName'
-import { clipUrl } from '../speech'
+import { clipOf } from '../speech'
 import { countReviews, voiceReviewEndpoint, type Approvals, type ReviewRequest } from './approvals'
 import styles from './VoiceReview.module.css'
 
@@ -10,6 +10,8 @@ interface Clip {
   file: string
   text: string
   url: string | undefined
+  /** Said by the free voice until ElevenLabs makes it (src/speech/voiceSettings.ts, `stopgapVoice`). */
+  stopgap: boolean
   group: string
   word?: string
 }
@@ -32,9 +34,11 @@ export default function VoiceReview() {
     () =>
       spokenGroups().flatMap((group) =>
         group.texts.map((text) => ({
-          file: clipFileName(text),
+          // The file that plays: approvals belong to what was heard.
+          file: clipOf(text)?.file ?? clipFileName(text),
           text,
-          url: clipUrl(text),
+          url: clipOf(text)?.url,
+          stopgap: clipOf(text)?.stopgap ?? false,
           group: group.title,
           word: group.word,
         })),
@@ -197,6 +201,7 @@ export default function VoiceReview() {
                   <span className={styles.text}>
                     {clip.text}
                     {!clip.url && <em> (no clip, run npm run speech)</em>}
+                    {clip.stopgap && <em> (Alma for now, until ElevenLabs makes it)</em>}
                   </span>
                   <button
                     type="button"

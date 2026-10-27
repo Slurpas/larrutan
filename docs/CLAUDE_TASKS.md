@@ -617,7 +617,15 @@ Status 2026-10-27: **done; a local commit, not pushed.**
 - **Tests:** a unit test for groups (all face up, and with a face-down card under them); the browser tests play the solver's moves at levels 1 and 4, which fail unless groups move together.
 
 #### Task 31 — The free voice when the ElevenLabs credits run out
-Status 2026-10-27: queued.
+- The user (2026-10-27): use the free voice when the ElevenLabs credits run out, and make those sentences with ElevenLabs the next month.
+
+Status 2026-10-27: **done; a local commit, not pushed.**
+- **`npm run speech` never spends credits unless told:** without `--max-credits N`, every new sentence gets a stand-in clip from Alma (`stopgapVoice`, free and offline). With `--max-credits N`, ElevenLabs makes the new sentences in catalogue order as far as N credits (or the month's credits, if fewer and readable) go, stopping at the first that doesn't fit, so sentences that belong together keep one voice. Alma says the rest.
+- **When the month runs out during a run** (ElevenLabs refuses), what was made is kept and the rest get Alma.
+- **Next month:** `npm run speech -- --max-credits N` makes the waiting sentences with ElevenLabs. The game plays an ElevenLabs clip when there is one and Alma's otherwise (`clipFor` in `clipName.ts`); the generator deletes Alma's clip once ElevenLabs has made the sentence. Every run ends with how many sentences wait and the credits they need.
+- **Review page:** a stand-in clip is marked "Alma for now", and its approval is its own (it belongs to what was heard).
+- **Checked:** a throwaway sentence got an Alma clip without spending anything, the unit test for audio accepted it, and removing the sentence removed the clip again.
+- **Tests:** the budget split, and the game picking ElevenLabs' clip over Alma's.
 
 #### Task 32 — The world: a map of towns
 Status 2026-10-27: queued.

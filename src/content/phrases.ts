@@ -34,6 +34,12 @@ export const phrases = {
   /** Räkna frukterna: the question the first time and from the speaker, and the short form after that. */
   fruitQuestion: 'Räkna frukterna! Hur många är det?',
   fruitShort: 'Hur många?',
+  /** Gräsklipparen: the first time, after that, and when the mower finds a sum ("Vad blir det? Två. Plus. Ett."). */
+  mowerIntro: 'Klipp gräset! Under blommorna gömmer sig tal.',
+  mowerShort: 'Klipp gräset!',
+  mowerQuestion: 'Vad blir det?',
+  plus: 'Plus.',
+  minus: 'Minus.',
   /** A number on its own ("Sju."): a tapped number, or counting. */
   numberShort: (word: string) => `${word.charAt(0).toLocaleUpperCase('sv')}${word.slice(1)}.`,
   /** A turned letter card: just the letter ("A."). */
@@ -58,6 +64,10 @@ export const phrases = {
   countYourselfIntro: 'Nu räknar du själv!',
   oneNumberIntro: 'Nu syns bara en siffra!',
   noNumbersIntro: 'Nu syns inga siffror!',
+  /** Gräsklipparen's levels. */
+  biggerNumbersIntro: 'Nu blir talen större!',
+  noDotsIntro: 'Nu försvinner prickarna!',
+  minusIntro: 'Nu kommer minus också!',
   /** Ord och bild when the child reads the word: the word is only written. */
   readWordQuestion: 'Läs ordet!',
   /** At the end of a round after which the station opens a level higher. */

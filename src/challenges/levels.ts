@@ -72,6 +72,19 @@ export interface FruitLevel {
   shown: 'all' | 'parts' | 'first part' | 'nothing'
 }
 
+/** Gräsklipparen: sums hidden in the lawn. */
+export interface MowerLevel {
+  /** The largest number in a sum, and in an answer. */
+  maxResult: number
+  /** Minus sums too (always with an answer of at least 1). */
+  minus: boolean
+  /** Dots under each number, to count. */
+  dots: boolean
+  /** How many sums hide in the lawn. */
+  sums: number
+  choices: number
+}
+
 interface StationLevel<P> {
   params: P
   /** Said before the first round at this level. */
@@ -136,6 +149,13 @@ export const stationLevels = {
     { params: { maxSum: 9, choices: 4, shown: 'first part' }, intro: phrases.oneNumberIntro },
     { params: { maxSum: 10, choices: 4, shown: 'nothing' }, intro: phrases.noNumbersIntro },
   ] satisfies Levels<FruitLevel>,
+  // The user's idea (2026-10-27): a lawnmower uncovers sums hidden in the grass.
+  mower: [
+    { params: { maxResult: 5, minus: false, dots: true, sums: 3, choices: 3 } },
+    { params: { maxResult: 10, minus: false, dots: true, sums: 4, choices: 3 }, intro: phrases.biggerNumbersIntro },
+    { params: { maxResult: 10, minus: false, dots: false, sums: 4, choices: 4 }, intro: phrases.noDotsIntro },
+    { params: { maxResult: 10, minus: true, dots: false, sums: 5, choices: 4 }, intro: phrases.minusIntro },
+  ] satisfies Levels<MowerLevel>,
 } as const satisfies Record<ChallengeId, Levels<unknown>>
 
 export function levelParams<C extends ChallengeId>(challenge: C, level: Level): (typeof stationLevels)[C][number]['params'] {

@@ -661,7 +661,24 @@ Status 2026-10-27: **done; a local commit, not pushed.**
 - **Tests:** unit tests for the sums (all parts, close choices in order, two kinds of fruit, practice order), the speech list and the levels; browser tests play a round by number keys at level 1, by touch with the counting help at level 2, and level 4 with no numbers showing.
 
 #### Task 34 — Gräsklipparen: mowing for sums
-Status 2026-10-27: queued.
+- The user (2026-10-27): you drive a lawnmower, the grass covers maths problems, and when one is uncovered the mower stops and you answer it.
+
+Status 2026-10-27: **done; a local commit, not pushed.**
+- **The second game in the town of maths:** its sign (a red mower) stands where Första bokstaven's stands in the town of letters.
+- **How it plays** (`src/challenges/mower`): a lawn of 8 × 4 cells of tall grass. The child rides a red mower (wearing their own outfit, `mowerWithRider` in `src/art/garden.ts`) by tapping where to go, dragging, or the arrow keys. It drives a cell at a time, across first and then up or down, and mows every cell it passes, in light and dark stripes. Flowers peek through the grass where a sum hides; mowing over one stops the mower and reads the sum ("Vad blir det? Två. Plus. Ett.", put together from single clips). The child taps the answer among close numbers. A wrong number is named and greyed out; when only the answer is left: "Här är fem!". An answered sum becomes a flower in bloom. Done when every sum is answered; nothing is timed.
+- **Levels:**
+
+  | Level | Sums | Hidden in the lawn | Dots to count | Numbers to choose from |
+  |---|---|---|---|---|
+  | 1 | plus, answers up to 5 | 3 | yes | 3 |
+  | 2 | plus, answers up to 10 | 4 | yes | 3 |
+  | 3 | plus, answers up to 10 | 4 | no | 4 |
+  | 4 | plus and minus, up to 10 | 5 | no | 4 |
+
+- **Score and mastery:** like the choice games: right on the first tap, with guessing taken out; each sum ("2+3", "7-2") has its mastery box.
+- **New speech, free for now (Task 31):** "Klipp gräset! Under blommorna gömmer sig tal.", "Klipp gräset!", "Vad blir det?", "Plus.", "Minus.", and the level sentences "Nu blir talen större!", "Nu försvinner prickarna!", "Nu kommer minus också!". The numbers come from Task 33. All 32 maths sentences are said by Alma until ElevenLabs makes them: about 405 credits (`npm run speech -- --max-credits 405`).
+- **Code:** the close numbers of both maths games come from `numberChoices` (`src/challenges/numberChoices.ts`); the lawn art is `src/art/garden.ts`.
+- **Tests:** unit tests for the sums (plus, minus with answers of at least 1), the spots (apart, never next to the start), driving and mowing, stopping, answering and the score; the speech list; the levels. Browser tests play whole rounds at levels 1 and 4 by tapping flowers and answering (following the mower in the pure rules, since it may find another sum on the way), and the help at level 2.
 
 ## Roadmap — later
 

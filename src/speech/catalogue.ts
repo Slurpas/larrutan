@@ -45,7 +45,16 @@ export function spokenGroups(): SpokenGroup[] {
   // The maths games: the questions, and every number on its own ("Sju.") and pointed at ("Här är sju!").
   groups.push({
     title: 'Maths',
-    texts: [phrases.fruitQuestion, phrases.fruitShort, ...numberWords.flatMap(({ word }) => [phrases.numberShort(word), phrases.hereIs(word)])],
+    texts: [
+      phrases.fruitQuestion,
+      phrases.fruitShort,
+      phrases.mowerIntro,
+      phrases.mowerShort,
+      phrases.mowerQuestion,
+      phrases.plus,
+      phrases.minus,
+      ...numberWords.flatMap(({ word }) => [phrases.numberShort(word), phrases.hereIs(word)]),
+    ],
   })
 
   for (const letter of letters) {

@@ -12,7 +12,7 @@ const server = await createServer({ appType: 'custom', logLevel: 'error', server
 const load = (path) => server.ssrLoadModule(path)
 const { palette } = await load('/src/art/palette.ts')
 const { characterFrames } = await load('/src/art/character.ts')
-const { stationSign, signPanel, sun, apple, mouse, cards: cardsIcon, piles, fruitBasket } = await load('/src/art/signs.ts')
+const { stationSign, signPanel, sun, apple, mouse, cards: cardsIcon, piles, fruitBasket, mowerIcon } = await load('/src/art/signs.ts')
 const { rock, waterTile } = await load('/src/art/scenery.ts')
 const { tinyTownHouses, tinyTownTiles } = await load('/src/art/kenney.ts')
 const { composeCharacter, outfitSize } = await load('/src/art/outfit.ts')
@@ -50,7 +50,7 @@ const data = {
   characterFrames,
   signs: [stationSign(false), stationSign(true)],
   signPanel,
-  icons: { sun, apple, mouse, cards: cardsIcon, piles, fruitBasket },
+  icons: { sun, apple, mouse, cards: cardsIcon, piles, fruitBasket, mowerIcon },
   rock,
   pondTiles,
   kenneyTiles: tinyTownTiles,
@@ -70,7 +70,7 @@ const png = await page.evaluate(async (d) => {
   await sheet.decode()
 
   const canvas = document.createElement('canvas')
-  canvas.width = 2240
+  canvas.width = 2520
   canvas.height = 1230
   const ctx = canvas.getContext('2d')
   ctx.imageSmoothingEnabled = false
@@ -115,7 +115,7 @@ const png = await page.evaluate(async (d) => {
 
   // Signs with sample content, at 4×.
   label('Station signs (normal, and next to the child), with letters in Andika', 24, 560)
-  const contents = [['AÖ'], ['sun', 'S'], ['apple', 'mouse'], ['ABC'], ['cards'], ['piles'], ['fruitBasket', 'A'], ['apple', '1+2']]
+  const contents = [['AÖ'], ['sun', 'S'], ['apple', 'mouse'], ['ABC'], ['cards'], ['piles'], ['fruitBasket', 'A'], ['apple', '1+2'], ['mowerIcon']]
   contents.forEach((content, i) => {
     d.signs.forEach((sign, h) => {
       const x = 24 + i * 272 + h * 132

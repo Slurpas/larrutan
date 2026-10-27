@@ -27,7 +27,7 @@ export function stationSign(highlighted: boolean): string[] {
   return sign.outline('o').toGrid()
 }
 
-/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse; Memory: two cards; Sortera korten: two piles; Bokstavskorgarna: a basket). */
+/** Pictures for the signs (Första bokstaven: a sun; Ord och bild: an apple and a mouse; Memory: two cards; Sortera korten: two piles; Bokstavskorgarna: a basket; Gräsklipparen: a mower). */
 export const sun: readonly string[] = (() => {
   const icon = new Pixels(13, 13)
   // Rays: straight up, down and sideways, and four diagonals.
@@ -102,5 +102,15 @@ export const fruitBasket: readonly string[] = (() => {
   // Straw, like the game's baskets: a light rim, and a shadow under each strand.
   icon.shade('L', 'd', (x, y) => y % 2 === 0 && x % 3 !== 1)
   icon.rect(1, 6, 11, 1, 'e')
+  return icon.outline('o').toGrid()
+})()
+
+/** A little red ride-on mower, with its seat, steering wheel and grey cutting deck. */
+export const mowerIcon: readonly string[] = (() => {
+  const icon = new Pixels(15, 11)
+  icon.rect(2, 4, 10, 3, 'r').rect(11, 5, 2, 2, 'r').set(12, 5, 'y')
+  icon.rect(2, 1, 2, 3, 'B').rect(6, 1, 3, 1, 'B').set(8, 2, 'm').set(8, 3, 'm')
+  icon.rect(5, 7, 6, 1, 'n')
+  icon.ellipse(4, 8, 2.1, 2.1, 'B').ellipse(11.5, 8.5, 1.5, 1.5, 'B')
   return icon.outline('o').toGrid()
 })()

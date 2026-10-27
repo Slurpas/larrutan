@@ -108,6 +108,24 @@
       "stopgap": true
     },
     {
+      "text": "Nu blir talen större!",
+      "file": "nu-blir-talen-storre-6a972411.mp3",
+      "input": "Nu blir talen större!",
+      "stopgap": true
+    },
+    {
+      "text": "Nu försvinner prickarna!",
+      "file": "nu-forsvinner-prickarna-a54102c5.mp3",
+      "input": "Nu försvinner prickarna!",
+      "stopgap": true
+    },
+    {
+      "text": "Nu kommer minus också!",
+      "file": "nu-kommer-minus-ocksa-24b66c65.mp3",
+      "input": "Nu kommer minus också!",
+      "stopgap": true
+    },
+    {
       "text": "Läs ordet!",
       "file": "las-ordet-d925c726.mp3",
       "input": "Läs ordet!"
@@ -542,6 +560,36 @@
       "text": "Hur många?",
       "file": "hur-manga-6773ec09.mp3",
       "input": "Hur många?",
+      "stopgap": true
+    },
+    {
+      "text": "Klipp gräset! Under blommorna gömmer sig tal.",
+      "file": "klipp-graset-under-blommorna-gommer-sig-f0c47f71.mp3",
+      "input": "Klipp gräset! Under blommorna gömmer sig tal.",
+      "stopgap": true
+    },
+    {
+      "text": "Klipp gräset!",
+      "file": "klipp-graset-50e70239.mp3",
+      "input": "Klipp gräset!",
+      "stopgap": true
+    },
+    {
+      "text": "Vad blir det?",
+      "file": "vad-blir-det-572bce59.mp3",
+      "input": "Vad blir det?",
+      "stopgap": true
+    },
+    {
+      "text": "Plus.",
+      "file": "plus-ccdc9a99.mp3",
+      "input": "Plus.",
+      "stopgap": true
+    },
+    {
+      "text": "Minus.",
+      "file": "minus-cdc00bd9.mp3",
+      "input": "Minus.",
       "stopgap": true
     },
     {

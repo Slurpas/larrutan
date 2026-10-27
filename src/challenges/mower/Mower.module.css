@@ -1,0 +1,181 @@
+/* Gräsklipparen. --px is one art pixel of the meadow. */
+.scene {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  overflow: clip;
+  background: linear-gradient(var(--color-sky-top), var(--color-sky-bottom));
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.grass,
+.soil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-size: calc(var(--px) * 16) calc(var(--px) * 16);
+  background-repeat: repeat-x;
+}
+
+.grass {
+  top: 0;
+  height: calc(var(--px) * 16);
+}
+
+.soil {
+  top: calc(var(--px) * 16);
+  bottom: 0;
+  background-repeat: repeat;
+}
+
+/* The lawn: tap or drag on it to drive the mower there. */
+.lawn {
+  position: absolute;
+  z-index: 10;
+  border-radius: 0.75rem;
+  outline: 6px solid var(--color-correct-edge);
+  touch-action: none;
+  cursor: pointer;
+}
+
+.cell {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.bloom {
+  width: 62%;
+  height: 80%;
+  animation: grow 500ms ease-out;
+}
+
+.mower {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  transition-property: left, top;
+  transition-timing-function: linear;
+}
+
+/* The sum and its numbers to choose from, under the lawn; on a narrow screen the numbers go under the sum. */
+.panel {
+  --card-size: clamp(88px, min(14vw, 15vh), 130px);
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0 1rem;
+}
+
+.sum {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35em;
+  padding: 0.3em 0.5em;
+  border: 5px solid var(--color-ink);
+  border-radius: 1.25rem;
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: clamp(2.5rem, min(6vw, 8vh), 4.5rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* As many dots as the number, in rows of five, to count. */
+.dots {
+  display: grid;
+  grid-template-columns: repeat(5, 0.2em);
+  justify-content: center;
+  gap: 0.06em;
+  margin-top: 0.12em;
+}
+
+.dot {
+  width: 0.2em;
+  height: 0.2em;
+  border-radius: 50%;
+  background: var(--color-ink);
+}
+
+.sign {
+  padding: 0 0.05em;
+}
+
+.answer {
+  min-width: 1em;
+  padding: 0 0.1em;
+  border: 4px dashed var(--color-ink);
+  border-radius: 0.3em;
+  text-align: center;
+}
+
+.solved {
+  border-style: solid;
+  border-color: var(--color-correct-edge);
+  background: var(--color-correct);
+}
+
+.choices {
+  display: flex;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding-bottom: 10px;
+}
+
+.top {
+  position: absolute;
+  z-index: 300;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1.25rem) 0
+    calc(env(safe-area-inset-left) + 1.25rem);
+}
+
+.seed {
+  position: absolute;
+  right: calc(env(safe-area-inset-right) + 1.25rem);
+  bottom: calc(env(safe-area-inset-bottom) + 0.25rem);
+  margin: 0;
+  color: var(--color-white);
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+@keyframes grow {
+  from {
+    transform: scale(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom {
+    animation: none;
+  }
+  .mower {
+    transition: none;
+  }
+}

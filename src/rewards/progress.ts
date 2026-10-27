@@ -1,4 +1,5 @@
 import { factKey, fruitFacts } from '../challenges/fruit/createRound'
+import { mowerSums, sumKey } from '../challenges/mower/createRound'
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { levelKey, nextStation, stationLevel, type Level, type StationState } from '../challenges/levels'
@@ -126,6 +127,7 @@ const practisedIn: Record<ChallengeId, readonly string[]> = {
   sorting: words.map((word) => word.id),
   baskets: words.map((word) => word.id),
   fruit: fruitFacts(10).map(factKey),
+  mower: mowerSums(10, true).map(sumKey),
 }
 
 export function isUnlocked(condition: UnlockCondition, progress: Progress): boolean {

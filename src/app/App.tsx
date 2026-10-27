@@ -5,6 +5,7 @@ import { Baskets } from '../challenges/baskets/Baskets'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
 import { Fruit } from '../challenges/fruit/Fruit'
+import { Mower } from '../challenges/mower/Mower'
 import { Memory } from '../challenges/memory/Memory'
 import { Sorting } from '../challenges/sorting/Sorting'
 import { Spelling } from '../challenges/spelling/Spelling'
@@ -58,6 +59,7 @@ const challengeComponents = {
   sorting: Sorting,
   baskets: Baskets,
   fruit: Fruit,
+  mower: Mower,
 } satisfies Record<ChallengeId, unknown>
 
 export function App() {

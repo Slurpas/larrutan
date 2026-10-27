@@ -14,6 +14,8 @@ import { createMemoryRound } from '../challenges/memory/createRound'
 import { createSortingRound } from '../challenges/sorting/createRound'
 import { createBasketsRound } from '../challenges/baskets/createRound'
 import { createFruitRound } from '../challenges/fruit/createRound'
+import { createMowerRound } from '../challenges/mower/createRound'
+import { numberWord } from '../content/numbers'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
 import { words } from '../content/words'
@@ -144,6 +146,19 @@ describe('speech catalogue', () => {
       const { maxSum, choices } = levelParams('fruit', levelFor(seed))
       for (const text of everythingSaid(createFruitRound({ seed, maxSum, choices }), fruitVoice)) expect(catalogue).toContain(text)
     }
+  })
+
+  it('contains everything Gräsklipparen can say, at every level', () => {
+    for (const seed of seeds) {
+      const { maxResult, minus, sums, choices } = levelParams('mower', levelFor(seed))
+      for (const q of createMowerRound({ seed, maxResult, minus, sums, choices }).questions) {
+        // The sum read out, every number tapped, and the answer pointed at.
+        for (const value of [...q.parts, ...q.choices.map(Number)]) expect(catalogue).toContain(phrases.numberShort(numberWord(value)))
+        expect(catalogue).toContain(q.sign === '+' ? phrases.plus : phrases.minus)
+        expect(catalogue).toContain(phrases.hereIs(numberWord(Number(q.target))))
+      }
+    }
+    for (const text of [phrases.mowerIntro, phrases.mowerShort, phrases.mowerQuestion]) expect(catalogue).toContain(text)
   })
 
   it('contains everything Bokstavskorgarna can say, at every level', () => {

@@ -34,6 +34,7 @@ export const townOf: Record<ChallengeId, TownId> = {
   sorting: 'letters',
   baskets: 'letters',
   fruit: 'maths',
+  mower: 'maths',
 }
 
 /** Where the child stands on arriving: back in the world, outside the town just left; anywhere else, at the map's start. */

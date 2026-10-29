@@ -205,6 +205,34 @@ export function townSignAt(map: TileMap, tile: Tile): Station | undefined {
   return map.stations.filter((station) => 'town' in station).sort((a, b) => distance(a) - distance(b))[0]
 }
 
+/** The land beside a tile (not diagonally): where the child can jump in from, or climb out to. */
+export function banksOf(map: TileMap, tile: Tile): Tile[] {
+  return Object.values(directions)
+    .map((delta) => ({ col: tile.col + delta.col, row: tile.row + delta.row }))
+    .filter((near) => isWalkable(map, near))
+}
+
+/**
+ * Where the child falls in for a tap on water (src/world/splash.ts): the water tile nearest
+ * the tap that touches land, so a tap in the middle of the pond lands at its edge.
+ */
+export function splashSpot(map: TileMap, tapped: Tile): Tile | undefined {
+  if (kindAt(map, tapped) !== 'water') return undefined
+  let best: Tile | undefined
+  let bestDistance = Infinity
+  for (let row = 0; row < map.rows; row++)
+    for (let col = 0; col < map.cols; col++) {
+      const tile = { col, row }
+      if (kindAt(map, tile) !== 'water' || banksOf(map, tile).length === 0) continue
+      const distance = (col - tapped.col) ** 2 + (row - tapped.row) ** 2
+      if (distance < bestDistance) {
+        best = tile
+        bestDistance = distance
+      }
+    }
+  return best
+}
+
 /** The station the child is standing next to, if any. */
 export function stationNextTo(map: TileMap, tile: Tile): Station | undefined {
   return map.stations.find((station) => stationApproaches(map, station).some((t) => sameTile(t, tile)))

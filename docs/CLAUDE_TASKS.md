@@ -689,6 +689,15 @@ Status 2026-10-27: **done; a local commit, not pushed.**
 - **"Tand.":** a new take with ElevenLabs (about 5 credits; `retakes.ts`). The other sentences with "tand" ("Var är tanden?", "Bygg ordet tand!" and four more) keep their takes: say if any of them sounds wrong too.
 - **`npm run speech -- --max-credits N --only "Tand."`** makes just that sentence with ElevenLabs, while the 32 new maths sentences keep waiting (they come first in the catalogue, so a small budget would otherwise stop at them).
 
+#### Task 36 — Falling into the water
+- The user (2026-10-29): a short animation, a quick joke, when the character walks into the water: it falls in and comes up again.
+
+Status 2026-10-29: **done; a local commit, not pushed.**
+- **Tapping the water** walks the character to the nearest edge of the pond (`splashSpot` in `src/world/tileMap.ts`: the water tile nearest the tap that touches land) and in; **walking into it with the arrow keys** does it too. On every map with water: the world and both towns.
+- **The joke, about two seconds** (`src/world/splash.ts`, a pure timeline drawn on the real clock): a hop in, a splash (a new synthesised sound, drops and a ring on the water), the character sinks out of sight, two bubbles pop, the head bobs up looking at the child, and it climbs back out onto the bank it jumped from. Below the waterline the sprite is cut off, so hats and balloons go under too. Taps and keys wait until it is out.
+- No words, only sounds (`splash`, and `pop` for the bubbles), so no speech credits.
+- Tests: the timeline and the splash spot (unit), and a browser test that taps the pond, checks the splash and the bubbles were heard and the character is back on the bank, then walks in again with an arrow key. The test hooks gained `splashes`.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.
@@ -699,7 +708,7 @@ Not scheduled. Pull an item in when it becomes the most valuable next step.
 - Rhyme (rim) and syllable clapping (stavelser).
 - Lower-case letters.
 - Letter tracing with a finger.
-- Mathematics region.
+- ~~Mathematics region~~: the town of maths, Tasks 32–34.
 
 **Games** (ways to answer by playing, on the same rounds; the user's picks 2026-10-23)
 - **Ordbygget:** pick up letter boxes and carry them to build a short word ("Bygg ordet sol"). Spelling; needs letter sounds first (see Learning). Bygg ordet (Task 17) already spells with bubbles.

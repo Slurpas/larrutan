@@ -88,6 +88,33 @@ const sounds = {
       }
     }
   },
+  /** Falling into the water: a low "plop", a rush of spray dying down, and drops landing after it. */
+  splash(buffer) {
+    let noise = 4242
+    let low = 0
+    let phase = 0
+    for (let i = 0; i < buffer.length; i++) {
+      const t = i / RATE
+      // The spray: noise through a low-pass filter that closes as it dies down.
+      noise = (noise * 1103515245 + 12345) % 2147483648
+      const cutoff = 800 + 5200 * Math.exp(-t / 0.12)
+      low += (1 - Math.exp((-2 * Math.PI * cutoff) / RATE)) * ((noise / 2147483648) * 2 - 1 - low)
+      const spray = low * Math.min(1, t / 0.004) * (Math.exp(-t / 0.13) + 0.5 * Math.exp(-Math.max(0, t - 0.05) / 0.1) * (t > 0.05 ? 1 : 0))
+      // The plop: a short tone falling from 380 to 120 Hz.
+      phase += (2 * Math.PI * (120 + 260 * Math.exp(-t / 0.03))) / RATE
+      const plop = Math.sin(phase) * Math.min(1, t / 0.003) * Math.exp(-t / 0.07)
+      buffer[i] += 1.6 * spray + 0.8 * plop
+    }
+    // Drops falling back: tiny rising "plinks".
+    for (const [start, from] of [[0.13, 900], [0.19, 1300], [0.27, 1100], [0.33, 1600], [0.42, 1000]]) {
+      let plink = 0
+      for (let i = 0, at = Math.floor(start * RATE); at + i < buffer.length && i < 0.08 * RATE; i++) {
+        const t = i / RATE
+        plink += (2 * Math.PI * (from + 1400 * Math.min(1, t / 0.015))) / RATE
+        buffer[at + i] += 0.22 * Math.sin(plink) * Math.min(1, t / 0.002) * Math.exp(-t / 0.018)
+      }
+    }
+  },
   /** A new hat: a glittering run of high notes over a soft bell. */
   newItem(buffer) {
     addNote(buffer, { note: 'C6', start: 0, decay: 0.4, volume: 0.25 })
@@ -97,7 +124,7 @@ const sounds = {
   },
 }
 
-const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9, pop: 0.2, knock: 0.45 }
+const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9, pop: 0.2, knock: 0.45, splash: 0.7 }
 
 function toWav(samples) {
   const data = Buffer.alloc(samples.length * 2)

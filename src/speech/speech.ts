@@ -15,7 +15,7 @@ export type { VoiceStatus } from './browserVoice'
  * for small sounds (a bubble popping) that must never cut off what is being said.
  */
 
-export type SoundId = 'correct' | 'fanfare' | 'levelUp' | 'newItem' | 'pop' | 'knock'
+export type SoundId = 'correct' | 'fanfare' | 'levelUp' | 'newItem' | 'pop' | 'knock' | 'splash'
 /** Something to say (a sentence), play (a sound effect) or wait for (a pause, in milliseconds). */
 export type Utterance = string | { sound: SoundId } | { pause: number }
 

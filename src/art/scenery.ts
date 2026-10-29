@@ -1,7 +1,7 @@
 import { Pixels } from './pixels'
 
 /**
- * Our own scenery, for what Kenney's Tiny Town doesn't have: water and rocks.
+ * Our own scenery, for what Kenney's Tiny Town doesn't have: water (with a splash) and rocks.
  * 16×16 tiles in the shared palette (./palette.ts), lit from the top left.
  */
 
@@ -67,3 +67,8 @@ export function waterTile(edges: WaterEdges, variant: number): string[] {
   for (const [x, y] of ripples) if (tile.get(x, y) === 'u' && tile.get(x + 3, y) === 'u') tile.rect(x, y, 4, 1, 'U')
   return tile.toGrid()
 }
+
+/** Falling into the water (src/world/splash.ts): a ring spreading on the surface, a splashed drop, and a bubble. */
+export const ripple: readonly string[] = new Pixels(14, 6).ellipse(7, 3, 7, 3, 'w').ellipse(7, 3, 5, 1.8, '.').toGrid()
+export const drop: readonly string[] = ['wU', 'UU']
+export const bubble: readonly string[] = ['.ww.', 'w..w', 'w..w', '.ww.']

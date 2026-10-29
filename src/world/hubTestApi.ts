@@ -18,6 +18,8 @@ export interface HubTestApi {
   housePoint(kind: HouseKind): { x: number; y: number } | null
   /** How many times the child has knocked at the red house. */
   knocks(): number
+  /** How many times the character has fallen into the water. */
+  splashes(): number
 }
 
 declare global {

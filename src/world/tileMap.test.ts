@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { hubMap } from './hubMap'
 import { findPath } from './pathfinding'
 import { arrivalTile, places, townOf, type PlaceId } from './places'
-import { destinationOf, houseAt, houseNextTo, isWalkable, kindAt, parseMap, stationApproaches, stationNextTo, townSignAt, tryStep, type StationDef, type Tile } from './tileMap'
+import { banksOf, destinationOf, houseAt, houseNextTo, isWalkable, kindAt, parseMap, splashSpot, stationApproaches, stationNextTo, townSignAt, tryStep, type StationDef, type Tile } from './tileMap'
 
 const station: StationDef[] = [{ key: 'a', challenge: 'findLetter' }]
 
@@ -66,6 +66,16 @@ describe.each(Object.entries(places) as [PlaceId, (typeof places)[PlaceId]][])('
     expect(stationNextTo(map, map.start)).toBeUndefined()
   })
 
+  it('has water to fall into, with a bank to jump in from that can be reached from the start', () => {
+    const water = map.kinds.flatMap((kinds, row) => kinds.flatMap((kind, col) => (kind === 'water' ? [{ col, row }] : [])))
+    expect(water.length).toBeGreaterThan(0)
+    for (const tapped of water) {
+      const spot = splashSpot(map, tapped)!
+      expect(kindAt(map, spot)).toBe('water')
+      expect(findPath(map, map.start, banksOf(map, spot))).not.toBeNull()
+    }
+  })
+
   it('shows every sign from the start on the smallest iPad (1024×768)', () => {
     // The camera centres on the start: at 64 px tiles the visible area reaches 8 tiles left and right and 6 up and down; at 32 px, twice as far.
     const halfWidth = 1024 / tilePx / 2
@@ -110,6 +120,29 @@ describe('the towns', () => {
         if (kind !== 'townHouseBlue' && kind !== 'townHouseRed') expect(sign).toBeUndefined()
         else expect(sign && destinationOf(sign), `${col},${row}`).toBe(col < world.cols / 2 ? 'letters' : 'maths')
       }
+  })
+})
+
+describe('splashSpot', () => {
+  const pond = parseMap(['TTTTTTT', 'T.@...T', 'T.~~~.T', 'T.~~~.T', 'T.~~~TT', 'TTTTTTT'], [])
+
+  it('falls in where the child tapped, at the edge of the water', () => {
+    expect(splashSpot(pond, { col: 2, row: 2 })).toEqual({ col: 2, row: 2 })
+    expect(banksOf(pond, { col: 2, row: 2 })).toEqual([
+      { col: 2, row: 1 },
+      { col: 1, row: 2 },
+    ])
+  })
+
+  it('falls in at the nearest edge for a tap in the middle of the water', () => {
+    const spot = splashSpot(pond, { col: 3, row: 3 })!
+    expect(Math.abs(spot.col - 3) + Math.abs(spot.row - 3)).toBe(1)
+    expect(banksOf(pond, spot).length).toBeGreaterThan(0)
+  })
+
+  it('is only for water', () => {
+    expect(splashSpot(pond, { col: 1, row: 1 })).toBeUndefined()
+    expect(splashSpot(pond, { col: 0, row: 0 })).toBeUndefined()
   })
 })
 

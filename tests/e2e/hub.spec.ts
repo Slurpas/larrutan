@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test'
 import { challengeNames, type ChallengeId } from '../../src/challenges/challengeIds'
 import { hubMap } from '../../src/world/hubMap'
 import { findPath } from '../../src/world/pathfinding'
-import { stationApproaches, type Tile } from '../../src/world/tileMap'
+import { banksOf, splashSpot, stationApproaches, type Tile } from '../../src/world/tileMap'
 import { expect, test } from './fixtures'
 import { enterMap, playerTile, press, tapStation } from './helpers'
 
@@ -73,4 +73,30 @@ test('nothing on the map moves while a challenge is open', async ({ page, hasTou
   await page.keyboard.press('ArrowDown')
   await page.waitForTimeout(400)
   expect(await playerTile(page)).toEqual(spot)
+})
+
+test('walking into the pond: the character falls in, splashes, and climbs back out where it jumped in', async ({ page, hasTouch }) => {
+  await enterMap(page, hasTouch)
+  const splashes = () => page.evaluate(() => window.__larrutanHub!.splashes())
+  const played = (sound: string) => page.evaluate((name) => (window as unknown as { __playedClips: string[] }).__playedClips.some((url) => url.includes(`/${name}.mp3`)), sound)
+  // A tap in the middle of the pond: to its nearest edge, and in.
+  const tapped = { col: 21, row: 16 }
+  const water = splashSpot(hubMap, tapped)!
+  const point = await page.evaluate((t) => window.__larrutanHub!.tilePoint(t), tapped)
+  if (hasTouch) await page.touchscreen.tap(point!.x, point!.y)
+  else await page.mouse.click(point!.x, point!.y)
+  await expect.poll(splashes, { timeout: 15_000 }).toBe(1)
+  const bank = await playerTile(page)
+  expect(banksOf(hubMap, water)).toContainEqual(bank)
+  await expect.poll(() => played('splash')).toBe(true)
+  await expect.poll(() => played('pop')).toBe(true)
+  // Out again, on the bank, and free to walk.
+  await expect.poll(() => page.evaluate(() => window.__larrutanHub!.isMoving()), { timeout: 5_000 }).toBe(false)
+  expect(await playerTile(page)).toEqual(bank)
+
+  // Walking into the water with the arrow keys does it too.
+  await page.keyboard.press(arrowFor(bank, water))
+  await expect.poll(splashes).toBe(2)
+  await expect.poll(() => page.evaluate(() => window.__larrutanHub!.isMoving()), { timeout: 5_000 }).toBe(false)
+  expect(await playerTile(page)).toEqual(bank)
 })

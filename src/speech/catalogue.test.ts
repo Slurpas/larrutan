@@ -204,7 +204,7 @@ describe('speech catalogue', () => {
   })
 
   it('has a sound file for every sound effect (run `npm run sfx` to make them)', () => {
-    for (const sound of ['correct', 'fanfare', 'levelUp', 'newItem', 'pop', 'knock'] satisfies SoundId[]) {
+    for (const sound of ['correct', 'fanfare', 'levelUp', 'newItem', 'pop', 'knock', 'splash'] satisfies SoundId[]) {
       expect(existsSync(fileURLToPath(new URL(`../sound/sfx/${sound}.mp3`, import.meta.url))), sound).toBe(true)
     }
   })

@@ -60,6 +60,7 @@ export function createHubGame(parent: HTMLElement, options: HubSceneOptions): Hu
       tilePoint: (tile) => scene.tileScreenPoint(tile),
       housePoint: (kind) => scene.houseScreenPoint(kind),
       knocks: () => scene.getKnocks(),
+      splashes: () => scene.getSplashes(),
     }
   }
 

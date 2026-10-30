@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { TILE, cameraZoom } from './camera'
+import { TILE, cameraZoom, tapSlop } from './camera'
 import { hubMap } from './hubMap'
 import { places } from './places'
 
@@ -57,5 +57,14 @@ describe('cameraZoom', () => {
       expect(width / zoom, `${width}×${height}`).toBeLessThanOrEqual(mapWidth + 1e-9)
       expect(height / zoom, `${width}×${height}`).toBeLessThanOrEqual(mapHeight + 1e-9)
     }
+  })
+})
+
+describe('tapSlop', () => {
+  it('lets a finger hit a rock on a phone, and gives a little on an iPad', () => {
+    // An iPhone in landscape: 32 px tiles, so a rock's tile with the slop around it is 56 px across.
+    expect((1 + 2 * tapSlop(2)) * 2 * TILE).toBe(56)
+    expect(tapSlop(4)).toBe(2 / TILE)
+    expect(tapSlop(1)).toBe(6 / TILE)
   })
 })

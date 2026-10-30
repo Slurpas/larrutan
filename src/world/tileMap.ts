@@ -251,6 +251,33 @@ export function mishapSpot(map: TileMap, tapped: Tile, canReach: (tile: Tile) =>
   return best
 }
 
+/**
+ * The water, tree or rock a tap is on, or for a tree or rock just beside: fingers are big and
+ * rocks small, especially on a phone (src/world/camera.ts, `tapSlop`). A tall tree counts where
+ * it is drawn, its crown on the tile above too. `point` is in tiles (with fractions), `slop` too.
+ * The nearest wins; water only counts on it, so its banks stay for walking.
+ */
+export function mishapTapped(map: TileMap, point: { x: number; y: number }, slop: number): Tile | undefined {
+  const tapped = { col: Math.floor(point.x), row: Math.floor(point.y) }
+  if (mishapAt(map, tapped)) return tapped
+  let best: Tile | undefined
+  let bestDistance = Infinity
+  for (let row = tapped.row - 1; row <= tapped.row + 2; row++)
+    for (let col = tapped.col - 1; col <= tapped.col + 1; col++) {
+      const tile = { col, row }
+      const mishap = mishapAt(map, tile)
+      if (mishap !== 'bonk' && mishap !== 'trip') continue
+      const top = kindAt(map, tile) === 'tallTree' ? row - 1 : row
+      if (point.x < col - slop || point.x > col + 1 + slop || point.y < top - slop || point.y > row + 1 + slop) continue
+      const distance = Math.hypot(point.x - (col + 0.5), point.y - (top + row + 1) / 2)
+      if (distance < bestDistance) {
+        best = tile
+        bestDistance = distance
+      }
+    }
+  return best
+}
+
 /** The station the child is standing next to, if any. */
 export function stationNextTo(map: TileMap, tile: Tile): Station | undefined {
   return map.stations.find((station) => stationApproaches(map, station).some((t) => sameTile(t, tile)))

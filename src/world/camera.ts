@@ -20,3 +20,12 @@ export function cameraZoom(viewportWidth: number, viewportHeight: number, mapWid
   const showsEnoughTiles = whole <= preferred || viewportWidth / (whole * TILE) >= minTilesAcross
   return showsEnoughTiles ? whole : Math.max(preferred, toCover)
 }
+
+/**
+ * How far beside a small thing on the map (a rock, a tree) a tap still counts, in tiles: on a
+ * phone, where a tile is about 32 px, enough for a finger (a target about 56 px across); on an
+ * iPad a little. The user couldn't hit the rocks and single trees on their iPhone (2026-10-30).
+ */
+export function tapSlop(zoom: number): number {
+  return Math.min(6, Math.max(2, (56 / zoom - TILE) / 2)) / TILE
+}

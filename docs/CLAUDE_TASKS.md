@@ -708,6 +708,14 @@ Status 2026-10-30: **done; a local commit, not pushed.**
 - Taps and keys wait until it is back on its feet; a key held through it doesn't walk straight back in. Bushes, houses and signs are as before.
 - Tests: the timelines and the spots (unit), and browser tests for each: tapping a tree, walking over a rock with the arrow keys, the pond, and walking into a tree with the arrow keys. The test hook `splashes` became `mishaps` (a count of each).
 
+#### Task 38 — Playtest fix: hitting trees and rocks on a phone
+- The user (2026-10-30, on an iPhone): couldn't hit the single trees or the rocks.
+
+Status 2026-10-30: **done; a local commit, not pushed.**
+- **Reproduced** at the iPhone 13's size (750×342 in landscape): a tile there is 32 px, half the iPad's. Tapping a tall tree's leafy top walked under it, because the crown hangs over the walkable tile above the trunk and only the trunk counted. Tapping just above a rock walked next to it, because only a tap on its small tile counted.
+- **Now** a tree counts where it is drawn, crown included, and a tap just beside a tree or rock counts too (`mishapTapped` in `src/world/tileMap.ts`): up to 6 world pixels beside it on a phone, so the target is about 56 px across, and 2 on an iPad (`tapSlop` in `src/world/camera.ts`). The middle of the tiles next to them still just walks there, and water only counts when the tap is on it, so its banks stay for walking. Tapping a tall tree's crown no longer walks behind the tree; the arrow keys still can.
+- Tests: the tap rules (unit); the tree browser test now taps the crown, and a new one at the iPhone's size taps just above a rock.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

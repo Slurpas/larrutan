@@ -20,12 +20,14 @@ const played = (page: Page, sound: string) =>
   page.evaluate((name) => (window as unknown as { __playedClips: string[] }).__playedClips.some((url) => url.includes(`/${name}.mp3`)), sound)
 const standingStill = (page: Page) => expect.poll(() => page.evaluate(() => window.__larrutanHub!.isMoving()), { timeout: 5_000 }).toBe(false)
 
-/** A real tap (or click) on a map tile. */
-async function tapTile(page: Page, tile: Tile, hasTouch: boolean) {
+/** A real tap (or click) on a map tile; `x` and `y` say where in it, from 0 to 1 (the middle by default). */
+async function tapTile(page: Page, tile: Tile, hasTouch: boolean, x = 0.5, y = 0.5) {
   const point = await page.evaluate((t) => window.__larrutanHub!.tilePoint(t), tile)
-  if (!point) throw new Error(`Tile ${tile.col},${tile.row} is not on screen`)
-  if (hasTouch) await page.touchscreen.tap(point.x, point.y)
-  else await page.mouse.click(point.x, point.y)
+  const next = await page.evaluate((t) => window.__larrutanHub!.tilePoint(t), { col: tile.col + 1, row: tile.row + 1 })
+  if (!point || !next) throw new Error(`Tile ${tile.col},${tile.row} is not on screen`)
+  const at = { x: point.x + (x - 0.5) * (next.x - point.x), y: point.y + (y - 0.5) * (next.y - point.y) }
+  if (hasTouch) await page.touchscreen.tap(at.x, at.y)
+  else await page.mouse.click(at.x, at.y)
 }
 
 /** One arrow-key tap; waits until the character has arrived (or has had time to try). */
@@ -112,11 +114,12 @@ test('walking into the pond: the character falls in, splashes, and climbs back o
   expect(await playerTile(page)).toEqual(bank)
 })
 
-test('tapping a tree: the character walks into it, bonks its head and sees stars, then stands where it was', async ({ page, hasTouch }) => {
+test('tapping a tree, even its leafy top: the character walks into it, bonks its head and sees stars, then stands where it was', async ({ page, hasTouch }) => {
   await enterMap(page, hasTouch)
   const tree = { col: 22, row: 9 }
   expect(hubMap.kinds[tree.row]![tree.col]).toBe('tallTree')
-  await tapTile(page, tree, hasTouch)
+  // The crown hangs over the tile above the trunk, where a child taps "the tree".
+  await tapTile(page, { col: tree.col, row: tree.row - 1 }, hasTouch)
   await expect.poll(() => mishaps(page, 'bonk'), { timeout: 15_000 }).toBe(1)
   const spot = await playerTile(page)
   expect(banksOf(hubMap, tree)).toContainEqual(spot)
@@ -141,4 +144,19 @@ test('walking over a rock: the character trips, falls flat and gets up again', a
   await expect.poll(() => played(page, 'thud')).toBe(true)
   await standingStill(page)
   expect(await playerTile(page)).toEqual(from)
+})
+
+test.describe('on a phone, where the tiles are small', () => {
+  // An iPhone 13 in landscape, as Safari shows it: 32 px tiles.
+  test.use({ viewport: { width: 750, height: 342 } })
+
+  test('a tap just beside a rock still counts: the character trips over it', async ({ page, hasTouch }) => {
+    await enterMap(page, hasTouch)
+    const rock = { col: 24, row: 13 }
+    expect(hubMap.kinds[rock.row]![rock.col]).toBe('rock')
+    // Just above the rock's tile, the way a finger lands on something this small.
+    await tapTile(page, { col: rock.col, row: rock.row - 1 }, hasTouch, 0.5, 0.85)
+    await expect.poll(() => mishaps(page, 'trip'), { timeout: 15_000 }).toBe(1)
+    expect(banksOf(hubMap, rock)).toContainEqual(await playerTile(page))
+  })
 })

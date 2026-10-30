@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { hubMap } from './hubMap'
 import { findPath, reachableFrom } from './pathfinding'
 import { arrivalTile, places, townOf, type PlaceId } from './places'
-import { banksOf, destinationOf, houseAt, houseNextTo, isWalkable, kindAt, mishapAt, mishapSpot, parseMap, stationApproaches, stationNextTo, townSignAt, tryStep, type StationDef, type Tile } from './tileMap'
+import { banksOf, destinationOf, houseAt, houseNextTo, isWalkable, kindAt, mishapAt, mishapSpot, mishapTapped, parseMap, stationApproaches, stationNextTo, townSignAt, tryStep, type StationDef, type Tile } from './tileMap'
 
 const station: StationDef[] = [{ key: 'a', challenge: 'findLetter' }]
 
@@ -163,6 +163,39 @@ describe('mishapSpot', () => {
 
   it('is nothing on grass', () => {
     expect(mishapSpot(pond, { col: 1, row: 1 })).toBeUndefined()
+  })
+})
+
+describe('mishapTapped', () => {
+  // A rock at (2, 1), a tall tree at (4, 2) with its crown on (4, 1), water at (1, 3).
+  const map = parseMap(['TTTTTTT', 'T.R...T', 'T.@.Y.T', 'T~....T', 'TTTTTTT'], [])
+  const phone = 6 / 16
+  const iPad = 2 / 16
+
+  it('counts a tap on the rock, and just beside it, more so on a phone', () => {
+    expect(mishapTapped(map, { x: 2.5, y: 1.6 }, iPad)).toEqual({ col: 2, row: 1 })
+    expect(mishapTapped(map, { x: 2.5, y: 2.2 }, phone)).toEqual({ col: 2, row: 1 })
+    expect(mishapTapped(map, { x: 2.5, y: 2.2 }, iPad)).toBeUndefined()
+    expect(mishapTapped(map, { x: 1.7, y: 1.5 }, phone)).toEqual({ col: 2, row: 1 })
+  })
+
+  it('leaves the middle of the tiles beside it for walking', () => {
+    for (const point of [
+      { x: 2.5, y: 2.5 },
+      { x: 1.5, y: 1.5 },
+      { x: 3.5, y: 1.5 },
+    ])
+      expect(mishapTapped(map, point, phone)).toBeUndefined()
+  })
+
+  it('counts a tall tree where it is drawn, its crown too', () => {
+    expect(mishapTapped(map, { x: 4.5, y: 1.3 }, iPad)).toEqual({ col: 4, row: 2 })
+    expect(mishapTapped(map, { x: 4.5, y: 2.5 }, iPad)).toEqual({ col: 4, row: 2 })
+  })
+
+  it('counts water only when the tap is on it', () => {
+    expect(mishapTapped(map, { x: 1.5, y: 3.5 }, iPad)).toEqual({ col: 1, row: 3 })
+    expect(mishapTapped(map, { x: 2.1, y: 3.5 }, phone)).toBeUndefined()
   })
 })
 

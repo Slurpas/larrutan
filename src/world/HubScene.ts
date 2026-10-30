@@ -4,7 +4,7 @@ import { outfitFeetRow, outfitHeadTop, outfitSize, type CharacterFacing, type Ou
 import { tinyTown } from '../art/kenney'
 import { signPanel, signSize } from '../art/signs'
 import { playEffect } from '../speech/speech'
-import { TILE, cameraZoom } from './camera'
+import { TILE, cameraZoom, tapSlop } from './camera'
 import { groundTile } from './groundTiles'
 import { findPath, nearestWalkable, reachableFrom } from './pathfinding'
 import { mishapDuration, mishapEffects, mishapPose, waterline, type Mishap, type MishapEffect } from './mishaps'
@@ -17,6 +17,7 @@ import {
   kindAt,
   mishapAt,
   mishapSpot,
+  mishapTapped,
   sameTile,
   step,
   stationApproaches,
@@ -332,8 +333,9 @@ export class HubScene extends Phaser.Scene {
       // To the door: the child asked why they couldn't go into the houses (2026-10-25).
       this.walkTo([house.front], null, house)
     } else {
-      // A tap on the water, a tree or a rock: there, and into it (the user's jokes, 2026-10-29 and 30).
-      const obstacle = mishapSpot(this.map, tapped, reachableFrom(this.map, this.moveTarget ?? this.playerTile))
+      // A tap on the water, a tree or a rock (or just beside a tree or rock): there, and into it (the user's jokes, 2026-10-29 and 30).
+      const hit = mishapTapped(this.map, { x: world.x / TILE, y: world.y / TILE }, tapSlop(this.cameras.main.zoom))
+      const obstacle = hit && mishapSpot(this.map, hit, reachableFrom(this.map, this.moveTarget ?? this.playerTile))
       if (obstacle && this.walkTo(banksOf(this.map, obstacle), null, null, obstacle)) return
       const goal = nearestWalkable(this.map, tapped)
       if (goal) this.walkTo([goal], null)

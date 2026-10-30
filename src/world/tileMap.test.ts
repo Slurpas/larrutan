@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { hubMap } from './hubMap'
-import { findPath } from './pathfinding'
+import { findPath, reachableFrom } from './pathfinding'
 import { arrivalTile, places, townOf, type PlaceId } from './places'
-import { banksOf, destinationOf, houseAt, houseNextTo, isWalkable, kindAt, parseMap, splashSpot, stationApproaches, stationNextTo, townSignAt, tryStep, type StationDef, type Tile } from './tileMap'
+import { banksOf, destinationOf, houseAt, houseNextTo, isWalkable, kindAt, mishapAt, mishapSpot, parseMap, stationApproaches, stationNextTo, townSignAt, tryStep, type StationDef, type Tile } from './tileMap'
 
 const station: StationDef[] = [{ key: 'a', challenge: 'findLetter' }]
 
@@ -66,13 +66,15 @@ describe.each(Object.entries(places) as [PlaceId, (typeof places)[PlaceId]][])('
     expect(stationNextTo(map, map.start)).toBeUndefined()
   })
 
-  it('has water to fall into, with a bank to jump in from that can be reached from the start', () => {
-    const water = map.kinds.flatMap((kinds, row) => kinds.flatMap((kind, col) => (kind === 'water' ? [{ col, row }] : [])))
-    expect(water.length).toBeGreaterThan(0)
-    for (const tapped of water) {
-      const spot = splashSpot(map, tapped)!
-      expect(kindAt(map, spot)).toBe('water')
-      expect(findPath(map, map.start, banksOf(map, spot))).not.toBeNull()
+  it('has water to fall into and trees to bonk into, and a tap on any of them (or a rock) leads somewhere the child can walk into it from', () => {
+    const tiles = map.kinds.flatMap((kinds, row) => kinds.map((_, col) => ({ col, row })))
+    const mishaps = tiles.filter((tile) => mishapAt(map, tile))
+    expect(mishaps.some((tile) => mishapAt(map, tile) === 'splash')).toBe(true)
+    expect(mishaps.some((tile) => mishapAt(map, tile) === 'bonk')).toBe(true)
+    for (const tapped of mishaps) {
+      const spot = mishapSpot(map, tapped, reachableFrom(map, map.start))!
+      expect(mishapAt(map, spot), `${tapped.col},${tapped.row}`).toBe(mishapAt(map, tapped))
+      expect(findPath(map, map.start, banksOf(map, spot)), `${tapped.col},${tapped.row}`).not.toBeNull()
     }
   })
 
@@ -123,11 +125,19 @@ describe('the towns', () => {
   })
 })
 
-describe('splashSpot', () => {
-  const pond = parseMap(['TTTTTTT', 'T.@...T', 'T.~~~.T', 'T.~~~.T', 'T.~~~TT', 'TTTTTTT'], [])
+describe('mishapSpot', () => {
+  const pond = parseMap(['TTTTTTT', 'T.@.R.T', 'T.~~~.T', 'T.~~~.T', 'T.~~~TT', 'TTTTTTT'], [])
+
+  it('falls into water, bonks into trees and trips over rocks', () => {
+    expect(mishapAt(pond, { col: 2, row: 2 })).toBe('splash')
+    expect(mishapAt(pond, { col: 0, row: 3 })).toBe('bonk')
+    expect(mishapAt(pond, { col: 4, row: 1 })).toBe('trip')
+    expect(mishapAt(pond, { col: 1, row: 1 })).toBeUndefined()
+    expect(mishapSpot(pond, { col: 4, row: 1 })).toEqual({ col: 4, row: 1 })
+  })
 
   it('falls in where the child tapped, at the edge of the water', () => {
-    expect(splashSpot(pond, { col: 2, row: 2 })).toEqual({ col: 2, row: 2 })
+    expect(mishapSpot(pond, { col: 2, row: 2 })).toEqual({ col: 2, row: 2 })
     expect(banksOf(pond, { col: 2, row: 2 })).toEqual([
       { col: 2, row: 1 },
       { col: 1, row: 2 },
@@ -135,14 +145,24 @@ describe('splashSpot', () => {
   })
 
   it('falls in at the nearest edge for a tap in the middle of the water', () => {
-    const spot = splashSpot(pond, { col: 3, row: 3 })!
+    const spot = mishapSpot(pond, { col: 3, row: 3 })!
     expect(Math.abs(spot.col - 3) + Math.abs(spot.row - 3)).toBe(1)
     expect(banksOf(pond, spot).length).toBeGreaterThan(0)
   })
 
-  it('is only for water', () => {
-    expect(splashSpot(pond, { col: 1, row: 1 })).toBeUndefined()
-    expect(splashSpot(pond, { col: 0, row: 0 })).toBeUndefined()
+  it('bonks into the nearest tree that can be walked into, for a tap on one deep in the wood', () => {
+    expect(banksOf(pond, { col: 0, row: 0 })).toEqual([])
+    expect(mishapSpot(pond, { col: 0, row: 0 })).toEqual({ col: 1, row: 0 })
+  })
+
+  it('only picks a spot the child can get to', () => {
+    const walled = parseMap(['TTTTTT', 'T.T@.T', 'TTTTTT'], [])
+    expect(mishapSpot(walled, { col: 0, row: 1 })).toEqual({ col: 0, row: 1 })
+    expect(mishapSpot(walled, { col: 0, row: 1 }, reachableFrom(walled, walled.start))).toEqual({ col: 2, row: 1 })
+  })
+
+  it('is nothing on grass', () => {
+    expect(mishapSpot(pond, { col: 1, row: 1 })).toBeUndefined()
   })
 })
 

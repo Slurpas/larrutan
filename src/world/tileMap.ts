@@ -1,4 +1,5 @@
 import type { ChallengeId } from '../challenges/challengeIds'
+import type { Mishap } from './mishaps'
 
 export type TileKind =
   | 'grass'
@@ -205,25 +206,42 @@ export function townSignAt(map: TileMap, tile: Tile): Station | undefined {
   return map.stations.filter((station) => 'town' in station).sort((a, b) => distance(a) - distance(b))[0]
 }
 
-/** The land beside a tile (not diagonally): where the child can jump in from, or climb out to. */
+/** The land beside a tile (not diagonally): where the character can walk into it from. */
 export function banksOf(map: TileMap, tile: Tile): Tile[] {
   return Object.values(directions)
     .map((delta) => ({ col: tile.col + delta.col, row: tile.row + delta.row }))
     .filter((near) => isWalkable(map, near))
 }
 
+/** What happens to the character walking into a tile (src/world/mishaps.ts): it falls into water, bonks into a tree, trips over a rock. */
+export function mishapAt(map: TileMap, tile: Tile): Mishap | undefined {
+  switch (kindAt(map, tile)) {
+    case 'water':
+      return 'splash'
+    case 'tree':
+    case 'tallTree':
+      return 'bonk'
+    case 'rock':
+      return 'trip'
+    default:
+      return undefined
+  }
+}
+
 /**
- * Where the child falls in for a tap on water (src/world/splash.ts): the water tile nearest
- * the tap that touches land, so a tap in the middle of the pond lands at its edge.
+ * Where the character has its mishap for a tap on water, a tree or a rock: the tile of that
+ * kind nearest the tap with land beside it that the child can get to (`canReach`), so a tap in
+ * the middle of the pond (or of a wood) lands at its edge.
  */
-export function splashSpot(map: TileMap, tapped: Tile): Tile | undefined {
-  if (kindAt(map, tapped) !== 'water') return undefined
+export function mishapSpot(map: TileMap, tapped: Tile, canReach: (tile: Tile) => boolean = () => true): Tile | undefined {
+  const mishap = mishapAt(map, tapped)
+  if (!mishap) return undefined
   let best: Tile | undefined
   let bestDistance = Infinity
   for (let row = 0; row < map.rows; row++)
     for (let col = 0; col < map.cols; col++) {
       const tile = { col, row }
-      if (kindAt(map, tile) !== 'water' || banksOf(map, tile).length === 0) continue
+      if (mishapAt(map, tile) !== mishap || !banksOf(map, tile).some(canReach)) continue
       const distance = (col - tapped.col) ** 2 + (row - tapped.row) ** 2
       if (distance < bestDistance) {
         best = tile

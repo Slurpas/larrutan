@@ -115,6 +115,39 @@ const sounds = {
       }
     }
   },
+  /** Walking into a tree: a hollow, woody "tonk", and a springy "boing" after it. */
+  bonk(buffer) {
+    let noise = 777
+    let phase = 0
+    for (let i = 0; i < buffer.length; i++) {
+      const t = i / RATE
+      noise = (noise * 1103515245 + 12345) % 2147483648
+      const tonk = (Math.sin(2 * Math.PI * 420 * t) + 0.5 * Math.sin(2 * Math.PI * 1130 * t)) * Math.exp(-t / 0.035)
+      const click = ((noise / 2147483648) * 2 - 1) * Math.exp(-t / 0.004) * 0.7
+      // The boing: a rising tone that wobbles like a spring.
+      const s = Math.max(0, t - 0.03)
+      phase += (2 * Math.PI * (260 + 140 * (1 - Math.exp(-s / 0.05))) * (1 + 0.07 * Math.sin(2 * Math.PI * 13 * s))) / RATE
+      const boing = t > 0.03 ? Math.sin(phase) * Math.min(1, s / 0.01) * Math.exp(-s / 0.2) : 0
+      buffer[i] += tonk + click + 0.55 * boing
+    }
+  },
+  /** Tripping over a rock: a soft thump on the ground, a smaller bump as it settles, and a puff of dust. */
+  thud(buffer) {
+    for (const [start, volume] of [[0, 1], [0.1, 0.45]]) {
+      let noise = 31337
+      let low = 0
+      let phase = 0
+      for (let i = 0, at = Math.floor(start * RATE); at + i < buffer.length && i < 0.3 * RATE; i++) {
+        const t = i / RATE
+        phase += (2 * Math.PI * (80 + 100 * Math.exp(-t / 0.025))) / RATE
+        const thump = Math.sin(phase) * Math.min(1, t / 0.002) * Math.exp(-t / 0.08)
+        noise = (noise * 1103515245 + 12345) % 2147483648
+        low += 0.12 * ((noise / 2147483648) * 2 - 1 - low)
+        const dust = low * Math.exp(-t / 0.06) * 2.5
+        buffer[at + i] += volume * (thump + dust)
+      }
+    }
+  },
   /** A new hat: a glittering run of high notes over a soft bell. */
   newItem(buffer) {
     addNote(buffer, { note: 'C6', start: 0, decay: 0.4, volume: 0.25 })
@@ -124,7 +157,7 @@ const sounds = {
   },
 }
 
-const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9, pop: 0.2, knock: 0.45, splash: 0.7 }
+const lengths = { correct: 0.6, fanfare: 1.4, levelUp: 1.0, newItem: 0.9, pop: 0.2, knock: 0.45, splash: 0.7, bonk: 0.6, thud: 0.45 }
 
 function toWav(samples) {
   const data = Buffer.alloc(samples.length * 2)

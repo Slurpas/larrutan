@@ -51,3 +51,20 @@ export function nearestWalkable(map: TileMap, target: Tile): Tile | null {
   }
   return best
 }
+
+/** Whether the child can walk to a tile from `start` (one flood fill, then quick to ask). */
+export function reachableFrom(map: TileMap, start: Tile): (tile: Tile) => boolean {
+  const key = (t: Tile) => t.row * map.cols + t.col
+  const seen = new Set([key(start)])
+  const queue: Tile[] = [start]
+  for (let i = 0; i < queue.length; i++) {
+    const current = queue[i]!
+    for (const delta of Object.values(directions)) {
+      const next = { col: current.col + delta.col, row: current.row + delta.row }
+      if (seen.has(key(next)) || !isWalkable(map, next)) continue
+      seen.add(key(next))
+      queue.push(next)
+    }
+  }
+  return (tile) => isWalkable(map, tile) && seen.has(key(tile))
+}

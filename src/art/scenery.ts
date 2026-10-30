@@ -68,7 +68,26 @@ export function waterTile(edges: WaterEdges, variant: number): string[] {
   return tile.toGrid()
 }
 
-/** Falling into the water (src/world/splash.ts): a ring spreading on the surface, a splashed drop, and a bubble. */
+/** Little accidents (src/world/mishaps.ts): a ring spreading on the water, a splashed drop and a bubble; a star seen after a bonk; a puff of dust. */
 export const ripple: readonly string[] = new Pixels(14, 6).ellipse(7, 3, 7, 3, 'w').ellipse(7, 3, 5, 1.8, '.').toGrid()
 export const drop: readonly string[] = ['wU', 'UU']
 export const bubble: readonly string[] = ['.ww.', 'w..w', 'w..w', '.ww.']
+export const star: readonly string[] = new Pixels(7, 7)
+  .polygon(
+    [
+      [3.5, 0.5],
+      [4.4, 2.6],
+      [6.5, 2.7],
+      [4.9, 4.1],
+      [5.5, 6.4],
+      [3.5, 5.1],
+      [1.5, 6.4],
+      [2.1, 4.1],
+      [0.5, 2.7],
+      [2.6, 2.6],
+    ],
+    'y',
+  )
+  .set(3, 2, 'w')
+  .toGrid()
+export const dust: readonly string[] = new Pixels(6, 4).ellipse(3, 2, 3, 2, 'g').set(2, 1, 'w').set(3, 1, 'w').toGrid()

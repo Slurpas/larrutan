@@ -15,7 +15,7 @@ Every asset in the game, where it comes from, and under what terms. Update this 
 
 | What | Source | Licence | Notes |
 |---|---|---|---|
-| `src/sound/sfx/*.mp3` (chime, fanfare, level-up, new item, pop, knock, splash) | Synthesised from plain tones by `scripts/generate-sfx.mjs` (`npm run sfx`) | Ours | No samples or recordings used |
+| `src/sound/sfx/*.mp3` (chime, fanfare, level-up, new item, pop, knock, splash, bonk, thud) | Synthesised from plain tones by `scripts/generate-sfx.mjs` (`npm run sfx`) | Ours | No samples or recordings used |
 
 Before a public release, re-check ElevenLabs' terms for distributing audio made on the free plan (non-commercial, with credit).
 

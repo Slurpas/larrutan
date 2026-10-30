@@ -1,5 +1,6 @@
 import type { Outfit } from '../art/outfit'
 import type { ChallengeId } from '../challenges/challengeIds'
+import type { Mishap } from './mishaps'
 import type { HouseKind, Tile, TownId } from './tileMap'
 
 /** Lets browser tests find stations and the player. Only present in dev builds (see hubGame.ts). */
@@ -18,8 +19,8 @@ export interface HubTestApi {
   housePoint(kind: HouseKind): { x: number; y: number } | null
   /** How many times the child has knocked at the red house. */
   knocks(): number
-  /** How many times the character has fallen into the water. */
-  splashes(): number
+  /** How many times the character has fallen into the water, bonked into a tree and tripped over a rock. */
+  mishaps(): Record<Mishap, number>
 }
 
 declare global {

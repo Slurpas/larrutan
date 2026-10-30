@@ -6,17 +6,18 @@ import { signPanel, signSize } from '../art/signs'
 import { playEffect } from '../speech/speech'
 import { TILE, cameraZoom } from './camera'
 import { groundTile } from './groundTiles'
-import { findPath, nearestWalkable } from './pathfinding'
-import { splashDuration, splashEffects, splashPose, waterline, type SplashEffect } from './splash'
-import { addArtTextures, characterTextures, iconKeys, rockKey, shadowKey, signKey, splashKeys, tinyTownKey, waterTexture } from './textures'
+import { findPath, nearestWalkable, reachableFrom } from './pathfinding'
+import { mishapDuration, mishapEffects, mishapPose, waterline, type Mishap, type MishapEffect } from './mishaps'
+import { addArtTextures, characterTextures, iconKeys, mishapKeys, rockKey, shadowKey, signKey, tinyTownKey, waterTexture } from './textures'
 import {
   banksOf,
   destinationOf,
   houseAt,
   houseNextTo,
   kindAt,
+  mishapAt,
+  mishapSpot,
   sameTile,
-  splashSpot,
   step,
   stationApproaches,
   stationAt,
@@ -88,9 +89,11 @@ interface StationMarker {
 
 const tileCenter = (tile: Tile) => ({ x: (tile.col + 0.5) * TILE, y: (tile.row + 0.5) * TILE })
 
-/** The way from one tile to the next, as the character faces it. */
-const facingToward = (from: Tile, to: Tile): CharacterFacing =>
-  to.col > from.col ? 'side' : to.col < from.col ? 'left' : to.row > from.row ? 'down' : 'up'
+const tileKey = ({ col, row }: Tile) => `${col},${row}`
+
+/** The way from one tile to the next. */
+const directionToward = (from: Tile, to: Tile): Direction =>
+  to.col > from.col ? 'right' : to.col < from.col ? 'left' : to.row > from.row ? 'down' : 'up'
 
 /** Drops splashed up from the water: how far sideways and how high, in pixels. */
 const splashDrops = [
@@ -106,7 +109,7 @@ const splashDrops = [
  * The hub area: the child taps a spot to walk there, taps a sign to walk to it
  * and open its challenge, taps a house to walk to its door (the blue one is their
  * home; at the red one nobody answers), or uses the arrow keys / WASD and Enter / Space.
- * Walking into the water makes the character fall in and climb back out (src/world/splash.ts).
+ * Walking into the water, a tree or a rock is a little accident: a splash, a bonk, a trip (src/world/mishaps.ts).
  * 16×16 pixel art (docs/ART_DIRECTION.md): Kenney's Tiny Town scenery plus our
  * own water, rocks, signs and character (src/art).
  */
@@ -137,12 +140,16 @@ export class HubScene extends Phaser.Scene {
   private pendingHouse: House | null = null
   /** How many times the child has knocked at the red house (for tests). */
   private knocks = 0
-  /** Fallen into once the player arrives next to it. */
-  private pendingSplash: Tile | null = null
-  /** Falling into the water: from which bank into which water tile, when it started, and how far it has got (ms). */
-  private splash: { bank: Tile; water: Tile; started: number; elapsed: number } | null = null
-  /** How many times the child has fallen in (for tests). */
-  private splashes = 0
+  /** Walked into (water, a tree, a rock) once the player arrives next to it. */
+  private pendingMishap: Tile | null = null
+  /** A mishap under way: which, from which tile into which, when it started, and how far it has got (ms). */
+  private mishap: { kind: Mishap; from: Tile; into: Tile; direction: Direction; started: number; elapsed: number } | null = null
+  /** How many of each the child has had (for tests). */
+  private readonly mishapCounts: Record<Mishap, number> = { splash: 0, bonk: 0, trip: 0 }
+  /** Stars circling the head after a bonk. */
+  private stars: Phaser.GameObjects.Image[] = []
+  /** Each tree's images, by tile, so a bonked tree can shake. */
+  private readonly trees = new Map<string, Phaser.GameObjects.Image[]>()
   private readonly heldKeys: Direction[] = []
   /** A quick key tap still moves one step, even if the key is released before the next frame. */
   private queuedStep: Direction | null = null
@@ -194,8 +201,8 @@ export class HubScene extends Phaser.Scene {
     const delta = this.lastTime === null ? 0 : Math.min(now - this.lastTime, 100)
     this.lastTime = now
 
-    if (this.splash) {
-      this.animateSplash(now)
+    if (this.mishap) {
+      this.animateMishap(now)
       return
     }
 
@@ -211,10 +218,10 @@ export class HubScene extends Phaser.Scene {
         const house = this.pendingHouse
         this.pendingHouse = null
         this.goInto(house)
-      } else if (this.pendingSplash) {
-        const water = this.pendingSplash
-        this.pendingSplash = null
-        this.fallIn(water)
+      } else if (this.pendingMishap) {
+        const obstacle = this.pendingMishap
+        this.pendingMishap = null
+        this.stumbleInto(obstacle)
       }
     }
 
@@ -260,17 +267,17 @@ export class HubScene extends Phaser.Scene {
     const direction = keyDirections[event.key] ?? keyDirections[event.key.toLowerCase()]
     if (direction) {
       event.preventDefault()
-      if (this.splash) return
+      if (this.mishap) return
       // The keyboard takes over from any walk started by a tap.
       this.path = []
       this.pendingStation = null
       this.pendingHouse = null
-      this.pendingSplash = null
+      this.pendingMishap = null
       if (!this.heldKeys.includes(direction)) this.heldKeys.push(direction)
       if (!event.repeat) this.queuedStep = direction
     } else if ((event.key === 'Enter' || event.key === ' ') && !event.repeat) {
       event.preventDefault()
-      if (this.splash) return
+      if (this.mishap) return
       const station = this.moveTarget ? undefined : stationNextTo(this.map, this.playerTile)
       const house = this.moveTarget ? undefined : houseNextTo(this.map, this.playerTile)
       if (station) this.openStation(station)
@@ -294,9 +301,9 @@ export class HubScene extends Phaser.Scene {
     const direction = this.heldKeys.at(-1) ?? this.queuedStep
     this.queuedStep = null
     if (!direction) return null
-    const water = step(this.playerTile, direction)
-    if (kindAt(this.map, water) === 'water') {
-      this.fallIn(water)
+    const ahead = step(this.playerTile, direction)
+    if (mishapAt(this.map, ahead)) {
+      this.stumbleInto(ahead)
       return null
     }
     const next = tryStep(this.map, this.playerTile, direction)
@@ -304,8 +311,8 @@ export class HubScene extends Phaser.Scene {
   }
 
   private handlePointer(pointer: Phaser.Input.Pointer) {
-    // Nothing until the character is out of the water again.
-    if (this.splash) return
+    // Nothing until the character is back on its feet.
+    if (this.mishap) return
     const world = pointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2
     const tapped = { col: Math.floor(world.x / TILE), row: Math.floor(world.y / TILE) }
     const station = stationAt(this.map, tapped) ?? townSignAt(this.map, tapped)
@@ -316,7 +323,7 @@ export class HubScene extends Phaser.Scene {
       this.path = []
       this.pendingStation = null
       this.pendingHouse = null
-      this.pendingSplash = null
+      this.pendingMishap = null
       this.releaseKeys()
       this.onOpenMyThings()
     } else if (station) {
@@ -325,9 +332,9 @@ export class HubScene extends Phaser.Scene {
       // To the door: the child asked why they couldn't go into the houses (2026-10-25).
       this.walkTo([house.front], null, house)
     } else {
-      // A tap on the water: to its edge, and in (the user's joke, 2026-10-29).
-      const water = splashSpot(this.map, tapped)
-      if (water && this.walkTo(banksOf(this.map, water), null, null, water)) return
+      // A tap on the water, a tree or a rock: there, and into it (the user's jokes, 2026-10-29 and 30).
+      const obstacle = mishapSpot(this.map, tapped, reachableFrom(this.map, this.moveTarget ?? this.playerTile))
+      if (obstacle && this.walkTo(banksOf(this.map, obstacle), null, null, obstacle)) return
       const goal = nearestWalkable(this.map, tapped)
       if (goal) this.walkTo([goal], null)
     }
@@ -344,8 +351,8 @@ export class HubScene extends Phaser.Scene {
     return point.x >= body.left && point.x <= body.right && point.y >= body.top && point.y <= body.bottom
   }
 
-  /** Walks to the nearest goal, then opens the station, goes into the house or falls into the water, if given. False if no goal can be reached. */
-  private walkTo(goals: Tile[], station: Station | null, house: House | null = null, water: Tile | null = null): boolean {
+  /** Walks to the nearest goal, then opens the station, goes into the house or walks into the obstacle, if given. False if no goal can be reached. */
+  private walkTo(goals: Tile[], station: Station | null, house: House | null = null, obstacle: Tile | null = null): boolean {
     // Finish the step in progress, then follow the new route from there.
     const from = this.moveTarget ?? this.playerTile
     const path = findPath(this.map, from, goals)
@@ -354,80 +361,131 @@ export class HubScene extends Phaser.Scene {
     this.path = path
     this.pendingStation = station
     this.pendingHouse = house
-    this.pendingSplash = water
+    this.pendingMishap = obstacle
     return true
   }
 
-  /** From the tile the character stands on into the water next to it: it hops in, sinks, bobs up and climbs back out. */
-  private fallIn(water: Tile) {
+  /** From the tile the character stands on into the water, tree or rock next to it (src/world/mishaps.ts). */
+  private stumbleInto(obstacle: Tile) {
+    const kind = mishapAt(this.map, obstacle)
+    if (!kind) return
     this.path = []
     this.releaseKeys()
-    this.splashes++
-    this.splash = { bank: this.playerTile, water, started: performance.now(), elapsed: 0 }
+    this.mishapCounts[kind]++
+    const direction = directionToward(this.playerTile, obstacle)
+    this.mishap = { kind, from: this.playerTile, into: obstacle, direction, started: performance.now(), elapsed: 0 }
   }
 
-  /** The character as it is in the water now (src/world/splash.ts), and the splash, bubbles and rings on the way. */
-  private animateSplash(now: number) {
-    const splash = this.splash!
-    const elapsed = now - splash.started
-    for (const effect of splashEffects) if (splash.elapsed < effect.at && effect.at <= elapsed) this.showSplashEffect(effect, splash.water)
-    splash.elapsed = elapsed
+  /** The character as it is now in its mishap, and the splashes, stars and dust on the way. */
+  private animateMishap(now: number) {
+    const mishap = this.mishap!
+    const elapsed = now - mishap.started
+    for (const effect of mishapEffects(mishap.kind)) if (mishap.elapsed < effect.at && effect.at <= elapsed) this.showMishapEffect(effect)
+    mishap.elapsed = elapsed
 
-    const pose = splashPose(elapsed)
-    const bank = tileCenter(splash.bank)
-    const water = tileCenter(splash.water)
-    this.player.setPosition(bank.x + (water.x - bank.x) * pose.along, bank.y + (water.y - bank.y) * pose.along)
+    const pose = mishapPose(mishap.kind, elapsed, mishap.direction)
+    const from = tileCenter(mishap.from)
+    const into = tileCenter(mishap.into)
+    this.player.setPosition(from.x + (into.x - from.x) * pose.along, from.y + (into.y - from.y) * pose.along)
     this.player.setDepth(this.player.y + FEET_Y)
-    this.facing = pose.looks === 'front' ? 'down' : pose.looks === 'water' ? facingToward(splash.bank, splash.water) : facingToward(splash.water, splash.bank)
-    if (this.frameKey) this.playerSprite.setTexture(this.frameKey(this.facing, 0))
-    this.playerSprite.setY(FEET_Y - pose.lift + pose.sink).setVisible(pose.shown !== 0)
+    this.facing = pose.facing
+    const frame = pose.walking ? Math.floor((now / 1000) * WALK_FRAMES_PER_SECOND) % 4 : 0
+    if (this.frameKey) this.playerSprite.setTexture(this.frameKey(this.facing, frame))
+    this.playerSprite
+      .setPosition(pose.wobble, FEET_Y - pose.lift + pose.sink)
+      .setAngle(pose.angle)
+      .setVisible(pose.shown !== 0)
     // Below the waterline the character is hidden.
     if (pose.shown === null) this.playerSprite.setCrop()
     else if (pose.shown > 0) this.playerSprite.setCrop(0, 0, outfitSize.width, pose.shown)
-    this.playerShadow.setVisible(pose.along < 0.3)
+    this.playerShadow.setVisible(pose.angle === 0 && !(mishap.kind === 'splash' && pose.along >= 0.3))
+    this.drawStars(pose.stars, pose.wobble)
 
-    if (elapsed < splashDuration) return
-    this.splash = null
-    this.playerTile = splash.bank
-    this.playerSprite.setCrop().setVisible(true).setY(FEET_Y)
+    if (elapsed < mishapDuration(mishap.kind)) return
+    this.mishap = null
+    this.playerTile = mishap.from
+    this.playerSprite.setCrop().setVisible(true).setPosition(0, FEET_Y).setAngle(0)
     this.playerShadow.setVisible(true)
-    // A key held while falling in doesn't walk straight back in.
+    // A key held through the mishap doesn't walk straight back into it.
     this.releaseKeys()
     this.updateHighlight()
   }
 
-  private showSplashEffect(effect: SplashEffect, water: Tile) {
-    const center = tileCenter(water)
+  /** Three stars circling above the head, `angle` radians round; none when null. */
+  private drawStars(angle: number | null, wobble: number) {
+    if (angle === null) {
+      for (const star of this.stars) star.destroy()
+      this.stars = []
+      return
+    }
+    if (this.stars.length === 0) {
+      this.stars = [0, 1, 2].map(() => this.add.image(0, 0, mishapKeys.star))
+      this.player.add(this.stars)
+    }
+    const above = FEET_Y - (outfitFeetRow + 1 - outfitHeadTop) - 2
+    this.stars.forEach((star, i) => {
+      const a = angle + (i * 2 * Math.PI) / 3
+      star.setPosition(Math.round(wobble + 9 * Math.cos(a)), Math.round(above + 2.5 * Math.sin(a)))
+    })
+  }
+
+  private showMishapEffect(effect: MishapEffect) {
+    const { into } = this.mishap!
+    const center = tileCenter(into)
     const surface = center.y + waterline
-    // Rings lie on the water under the character; drops and bubbles are in front of it.
-    const under = center.y + FEET_Y - 0.5
-    const over = center.y + FEET_Y + 0.5
+    // Rings lie on the water under the character; drops, bubbles and dust are in front of it.
+    const under = this.player.depth - 0.5
+    const over = this.player.depth + 0.5
     const ring = (from: number, to: number) => {
-      const image = this.add.image(center.x, surface, splashKeys.ripple).setScale(from).setDepth(under)
+      const image = this.add.image(center.x, surface, mishapKeys.ripple).setScale(from).setDepth(under)
       this.tweens.add({ targets: image, scale: to, alpha: 0, duration: 600, ease: 'Quad.easeOut', onComplete: () => image.destroy() })
     }
-    if (effect.effect === 'splash') {
-      playEffect('splash')
-      ring(0.4, 1)
-      for (const [dx, height] of splashDrops) {
-        const image = this.add.image(center.x, surface, splashKeys.drop).setDepth(over)
-        this.tweens.addCounter({
-          from: 0,
-          to: 1,
-          duration: 420,
-          onUpdate: (tween) => {
-            const p = tween.getValue() ?? 0
-            image.setPosition(Math.round(center.x + dx * p), Math.round(surface - height * 4 * p * (1 - p) + 2 * p))
-          },
-          onComplete: () => image.destroy(),
-        })
+    switch (effect.effect) {
+      case 'splash':
+        playEffect('splash')
+        ring(0.4, 1)
+        for (const [dx, height] of splashDrops) {
+          const image = this.add.image(center.x, surface, mishapKeys.drop).setDepth(over)
+          this.tweens.addCounter({
+            from: 0,
+            to: 1,
+            duration: 420,
+            onUpdate: (tween) => {
+              const p = tween.getValue() ?? 0
+              image.setPosition(Math.round(center.x + dx * p), Math.round(surface - height * 4 * p * (1 - p) + 2 * p))
+            },
+            onComplete: () => image.destroy(),
+          })
+        }
+        break
+      case 'bubble': {
+        playEffect('pop')
+        const image = this.add.image(center.x + effect.dx, surface - 2, mishapKeys.bubble).setScale(0).setDepth(over)
+        this.tweens.add({ targets: image, scale: 1, duration: 120, hold: 60, onComplete: () => image.destroy() })
+        break
       }
-    } else if (effect.effect === 'bubble') {
-      playEffect('pop')
-      const image = this.add.image(center.x + effect.dx, surface - 2, splashKeys.bubble).setScale(0).setDepth(over)
-      this.tweens.add({ targets: image, scale: 1, duration: 120, hold: 60, onComplete: () => image.destroy() })
-    } else {
-      ring(0.3, 0.8)
+      case 'ripple':
+        ring(0.3, 0.8)
+        break
+      case 'bonk':
+        playEffect('bonk')
+        // The tree shakes.
+        for (const image of this.trees.get(tileKey(into)) ?? []) this.tweens.add({ targets: image, x: image.x + 1, duration: 45, yoyo: true, repeat: 3 })
+        break
+      case 'thud': {
+        playEffect('thud')
+        // Dust puffs up along the body, lying where it fell.
+        const angle = Phaser.Math.DegToRad(this.playerSprite.angle)
+        const feet = { x: this.player.x, y: this.player.y + FEET_Y }
+        for (const along of [8, 16, 24]) {
+          const image = this.add
+            .image(Math.round(feet.x + along * Math.sin(angle)), Math.round(feet.y - along * Math.cos(angle)), mishapKeys.dust)
+            .setScale(0.5)
+            .setDepth(over)
+          this.tweens.add({ targets: image, y: image.y - 3, scale: 1.3, alpha: 0, duration: 450, ease: 'Quad.easeOut', onComplete: () => image.destroy() })
+        }
+        break
+      }
     }
   }
 
@@ -497,12 +555,16 @@ export class HubScene extends Phaser.Scene {
         } else if (ground.kind === 'decor') {
           this.add.image(x, y, tinyTownKey, ground.under).setOrigin(0)
           if (ground.decor === 'rock') this.add.image(x, y, rockKey).setOrigin(0)
-          else this.add.image(x, y, tinyTownKey, ground.decor).setOrigin(0)
+          else {
+            const decor = this.add.image(x, y, tinyTownKey, ground.decor).setOrigin(0)
+            if (kindAt(this.map, { col, row }) === 'tree') this.trees.set(tileKey({ col, row }), [decor])
+          }
         } else {
           this.add.image(x, y, tinyTownKey, ground.under).setOrigin(0)
           const depth = y + TILE
-          this.add.image(x, y, tinyTownKey, ground.trunk).setOrigin(0).setDepth(depth)
-          this.add.image(x, y - TILE, tinyTownKey, ground.crown).setOrigin(0).setDepth(depth)
+          const trunk = this.add.image(x, y, tinyTownKey, ground.trunk).setOrigin(0).setDepth(depth)
+          const crown = this.add.image(x, y - TILE, tinyTownKey, ground.crown).setOrigin(0).setDepth(depth)
+          this.trees.set(tileKey({ col, row }), [trunk, crown])
         }
       }
     }
@@ -591,7 +653,7 @@ export class HubScene extends Phaser.Scene {
   }
 
   isMoving(): boolean {
-    return this.moveTarget !== null || this.path.length > 0 || this.splash !== null
+    return this.moveTarget !== null || this.path.length > 0 || this.mishap !== null
   }
 
   /** The middle of the character's body on screen, in CSS pixels relative to the canvas. */
@@ -609,8 +671,8 @@ export class HubScene extends Phaser.Scene {
     return this.knocks
   }
 
-  getSplashes(): number {
-    return this.splashes
+  getMishaps(): Record<Mishap, number> {
+    return { ...this.mishapCounts }
   }
 
   /** Where the middle of a tile is on screen, in CSS pixels relative to the canvas. */

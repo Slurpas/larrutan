@@ -698,6 +698,16 @@ Status 2026-10-29: **done; a local commit, not pushed.**
 - No words, only sounds (`splash`, and `pop` for the bubbles), so no speech credits.
 - Tests: the timeline and the splash spot (unit), and a browser test that taps the pond, checks the splash and the bubbles were heard and the character is back on the bank, then walks in again with an arrow key. The test hooks gained `splashes`.
 
+#### Task 37 — Bonking into trees, tripping over rocks
+- The user (2026-10-30): the character should also bonk its head when walking into a tree, and fall when walking over a rock: fun, short animations like the fall into the water.
+
+Status 2026-10-30: **done; a local commit, not pushed.**
+- **The three little accidents are one thing now** (`src/world/mishaps.ts`, which replaces `splash.ts`): which one happens where is `mishapAt` (water, trees and tall trees, rocks), and a tap leads to `mishapSpot`, the nearest such tile with land beside it the child can get to. That last part fixed a dead tap: a tree by a walled-in patch of grass in the town of letters led nowhere.
+- **Into a tree** (about 1.5 s): the character walks at the trunk, bonk (a new sound: a woody "tonk" and a springy "boing"), the tree shakes, the character bounces back and stands there wobbling with three stars circling its head, then shakes it off.
+- **Over a rock** (about 1.6 s): it steps onto the rock, trips and falls flat forward over it (a new "thud" sound, dust puffing up along the body), lies there a moment, then hops up and back, a little wobbly. Falling towards the child it lands on its front, so its back shows, upside down.
+- Taps and keys wait until it is back on its feet; a key held through it doesn't walk straight back in. Bushes, houses and signs are as before.
+- Tests: the timelines and the spots (unit), and browser tests for each: tapping a tree, walking over a rock with the arrow keys, the pond, and walking into a tree with the arrow keys. The test hook `splashes` became `mishaps` (a count of each).
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

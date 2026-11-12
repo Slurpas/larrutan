@@ -716,6 +716,17 @@ Status 2026-10-30: **done; a local commit, not pushed.**
 - **Now** a tree counts where it is drawn, crown included, and a tap just beside a tree or rock counts too (`mishapTapped` in `src/world/tileMap.ts`): up to 6 world pixels beside it on a phone, so the target is about 56 px across, and 2 on an iPad (`tapSlop` in `src/world/camera.ts`). The middle of the tiles next to them still just walks there, and water only counts when the tap is on it, so its banks stay for walking. Tapping a tall tree's crown no longer walks behind the tree; the arrow keys still can.
 - Tests: the tap rules (unit); the tree browser test now taps the crown, and a new one at the iPhone's size taps just above a rock.
 
+## The maths plan (a proposal, 2026-11-12)
+
+The user asked for a check of the maths games and a plan for the town of maths like the town of letters. Both are in **`docs/MATHS_PLAN.md`**: what is wrong today, the ladder of what to teach, five new games (Talkorgarna, Äggkartongen, Grodhoppet, Krokodilen, Affären) with their levels, what keeps a child going, and the speech it costs. **Not agreed yet:** the order, the themes and the questions in its §9 are the user's to decide.
+
+Proposed queue, one task at a time:
+- Task 39 — Gräsklipparen: the right first sentence ("I gräset gömmer sig tal."), and minus with dots a level earlier.
+- Task 40 — The map and the games on a phone: the level bar lies over the top row of signs at the iPhone's size, and Räkna frukterna's cards are cut off. Only if the children play on a phone.
+- Task 41 — Talkorgarna. Task 42 — Äggkartongen. Task 43 — Grodhoppet. Task 44 — Krokodilen.
+- Task 45 — Stars on the signs, and things to wear from the maths games.
+- Task 46 — Affären.
+
 ## Roadmap — later
 
 Not scheduled. Pull an item in when it becomes the most valuable next step.

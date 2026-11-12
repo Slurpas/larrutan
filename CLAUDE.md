@@ -5,6 +5,7 @@ Swedish literacy adventure game for children aged 5–7. Browser first, iPad is 
 - Requirements: `docs/PRD.md`
 - Task plan and roadmap: `docs/CLAUDE_TASKS.md`
 - Review and decision history: `docs/REVIEW.md`
+- Maths: what to teach and the games planned for the town of maths (a proposal, 2026-11-12): `docs/MATHS_PLAN.md`
 
 ## Roles
 

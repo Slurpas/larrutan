@@ -82,6 +82,8 @@ The child can always replay the instruction, retry, and leave a challenge.
 
 ## 5. Curriculum and challenges
 
+Maths (the town of maths, since Task 32) has its own plan, a proposal from 2026-11-12: `docs/MATHS_PLAN.md`. The rest of this section is about reading.
+
 ### Learning focus
 
 Swedish literacy first, deliberately small:

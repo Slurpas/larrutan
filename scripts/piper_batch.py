@@ -19,9 +19,11 @@ from piper import PiperVoice, SynthesisConfig
 def espeak_data_dir() -> Path:
     # espeak-ng cannot open its data from a path with non-ASCII characters
     # (like the ä in "Lärrutan"), so use a copy in the temp folder.
+    # Windows clears old files out of the temp folder but leaves the folders, so
+    # the copy is made again whenever a file espeak-ng needs is gone.
     target = Path(tempfile.gettempdir()) / "larrutan-espeak-ng-data"
-    if not target.exists():
-        shutil.copytree(Path(piper.__file__).parent / "espeak-ng-data", target)
+    if not (target / "phontab").exists():
+        shutil.copytree(Path(piper.__file__).parent / "espeak-ng-data", target, dirs_exist_ok=True)
     return target
 
 

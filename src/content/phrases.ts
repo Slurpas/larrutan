@@ -35,7 +35,7 @@ export const phrases = {
   fruitQuestion: 'Räkna frukterna! Hur många är det?',
   fruitShort: 'Hur många?',
   /** Gräsklipparen: the first time, after that, and when the mower finds a sum ("Vad blir det? Två. Plus. Ett."). */
-  mowerIntro: 'Klipp gräset! Under blommorna gömmer sig tal.',
+  mowerIntro: 'Klipp gräset! I gräset gömmer sig tal.',
   mowerShort: 'Klipp gräset!',
   mowerQuestion: 'Vad blir det?',
   plus: 'Plus.',
@@ -64,10 +64,10 @@ export const phrases = {
   countYourselfIntro: 'Nu räknar du själv!',
   oneNumberIntro: 'Nu syns bara en siffra!',
   noNumbersIntro: 'Nu syns inga siffror!',
-  /** Gräsklipparen's levels. */
+  /** Gräsklipparen's levels, in the order they come. */
   biggerNumbersIntro: 'Nu blir talen större!',
-  noDotsIntro: 'Nu försvinner prickarna!',
   minusIntro: 'Nu kommer minus också!',
+  noDotsIntro: 'Nu försvinner prickarna!',
   /** Ord och bild when the child reads the word: the word is only written. */
   readWordQuestion: 'Läs ordet!',
   /** At the end of a round after which the station opens a level higher. */

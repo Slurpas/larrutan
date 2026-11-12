@@ -716,16 +716,26 @@ Status 2026-10-30: **done; a local commit, not pushed.**
 - **Now** a tree counts where it is drawn, crown included, and a tap just beside a tree or rock counts too (`mishapTapped` in `src/world/tileMap.ts`): up to 6 world pixels beside it on a phone, so the target is about 56 px across, and 2 on an iPad (`tapSlop` in `src/world/camera.ts`). The middle of the tiles next to them still just walks there, and water only counts when the tap is on it, so its banks stay for walking. Tapping a tall tree's crown no longer walks behind the tree; the arrow keys still can.
 - Tests: the tap rules (unit); the tree browser test now taps the crown, and a new one at the iPhone's size taps just above a rock.
 
-## The maths plan (a proposal, 2026-11-12)
+## The maths plan (2026-11-12)
 
-The user asked for a check of the maths games and a plan for the town of maths like the town of letters. Both are in **`docs/MATHS_PLAN.md`**: what is wrong today, the ladder of what to teach, five new games (Talkorgarna, Äggkartongen, Grodhoppet, Krokodilen, Affären) with their levels, what keeps a child going, and the speech it costs. **Not agreed yet:** the order, the themes and the questions in its §9 are the user's to decide.
+The user asked for a check of the maths games and a plan for the town of maths like the town of letters. Both are in **`docs/MATHS_PLAN.md`**: what is wrong today, the ladder of what to teach, six new games (Äppelträdet, Talkorgarna, Grodhoppet, Krokodilen, Äggkartongen, Affären) with their levels, what keeps a child going, and the speech it costs.
 
-Proposed queue, one task at a time:
-- Task 39 — Gräsklipparen: the right first sentence ("I gräset gömmer sig tal."), and minus with dots a level earlier.
-- Task 40 — The map and the games on a phone: the level bar lies over the top row of signs at the iPhone's size, and Räkna frukterna's cards are cut off. Only if the children play on a phone.
-- Task 41 — Talkorgarna. Task 42 — Äggkartongen. Task 43 — Grodhoppet. Task 44 — Krokodilen.
-- Task 45 — Stars on the signs, and things to wear from the maths games.
-- Task 46 — Affären.
+**Agreed 2026-11-12:** the user's children can say the numbers in order but may not be able to count things, so a counting game (Äppelträdet) comes first, then the ladder in order; and Gräsklipparen is fixed before that. **Still open** (the plan's §9): whether the children play on a phone, the themes, stars on the signs, and when to spend credits on the maths voice.
+
+#### Task 39 — Gräsklipparen: the right first sentence, and minus with dots
+
+Status 2026-11-12: **done; a local commit, not pushed.**
+- **The first sentence** was "Klipp gräset! Under blommorna gömmer sig tal.", but the flowers have marked nothing since 2026-10-27. Now "Klipp gräset! I gräset gömmer sig tal." Said by Alma for now, as the old one was, so no ElevenLabs clip was thrown away; the maths voice now waits for about 398 credits.
+- **Minus comes a level earlier, with dots.** The levels are now: plus to 5 with dots; plus to 10 with dots; minus too, with dots; then no dots. A minus sum's dots are the first number's, in rows of five, with the ones taken away pale and crossed out in red (`sumDots` in `mower/createRound.ts`): the dots left are the answer. Before, minus first showed at the top level as bare digits.
+- **A child already at level 3** (plus without dots) gets the dots back and meets minus there, without hearing "Nu kommer minus också!" (a level is only announced on the way up).
+- **The speech generator** failed here because Windows had cleared the files out of the temp copy of espeak-ng's data but left its folders; `scripts/piper_batch.py` now makes the copy again when a file is missing.
+- Tests: the dots of every sum count up to its answer, and minus comes while there are dots (unit); a browser test opens level 3, hears the minus sentence and checks 5 − 3 shows five dots with three crossed out; the browser tests check the dots of every sum they answer, and none at level 4.
+
+Queue, one task at a time, each starting with a sketch of the screen for the user to approve:
+- Task 40 — The map and the games on a phone: the level bar lies over the top row of signs at the iPhone's size, and Räkna frukterna's cards are cut off. Only if the children play on a phone; the games below don't wait for it.
+- Task 41 — Äppelträdet (counting things). Task 42 — Talkorgarna. Task 43 — Grodhoppet. Task 44 — Krokodilen. Task 45 — Äggkartongen.
+- Task 46 — Stars on the signs, and things to wear from the maths games.
+- Task 47 — Affären.
 
 ## Roadmap — later
 

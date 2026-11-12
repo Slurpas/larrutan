@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { numberWords } from '../../content/numbers'
 import { findChoiceProblems } from '../choiceQuestion'
 import { levelParams, type Level } from '../levels'
-import { answerOf, createMowerRound, lawn, mowerSums, sumKey } from './createRound'
+import { answerOf, createMowerRound, lawn, mowerSums, sumDots, sumKey } from './createRound'
 import { answerSum, cellKey, currentSum, driveToward, isFinished, isRevealed, mowerScore, startMowing } from './mowerState'
 
 const seeds = Array.from({ length: 150 }, (_, i) => i * 7919 + 3)
@@ -47,6 +47,27 @@ describe('a Gräsklipparen round', () => {
 
   it('is the same for the same seed', () => {
     expect(roundAt(42, 4)).toEqual(roundAt(42, 4))
+  })
+
+  it('gives every sum dots that count up to its answer: minus crosses out the ones taken away', () => {
+    expect(sumDots({ parts: [2, 3], sign: '+' })).toEqual([
+      { dots: 2, crossed: 0 },
+      { dots: 3, crossed: 0 },
+    ])
+    expect(sumDots({ parts: [8, 3], sign: '-' })).toEqual([
+      { dots: 8, crossed: 3 },
+      { dots: 0, crossed: 0 },
+    ])
+    for (const sum of mowerSums(10, true)) {
+      const left = sumDots(sum).reduce((count, part) => count + part.dots - part.crossed, 0)
+      expect(left, sumKey(sum)).toBe(answerOf(sum))
+    }
+  })
+
+  it('brings in minus while there are still dots to count', () => {
+    const firstMinus = levels.find((level) => levelParams('mower', level).minus)!
+    expect(levelParams('mower', firstMinus).dots).toBe(true)
+    expect(levelParams('mower', 4)).toMatchObject({ minus: true, dots: false })
   })
 })
 

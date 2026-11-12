@@ -16,7 +16,7 @@ import { levelIntro, levelParams } from '../levels'
 import { RoundComplete } from '../RoundComplete'
 import { sceneScale } from '../sceneScale'
 import { WRONG_PAUSE_MS } from '../useChoiceRound'
-import { createMowerRound, sumKey, type Cell, type MowerQuestion } from './createRound'
+import { createMowerRound, sumDots, sumKey, type Cell, type MowerQuestion, type PartDots } from './createRound'
 import { answerSum, cellKey, currentSum, driveToward, isFinished, isRevealed, mowerScore, startMowing } from './mowerState'
 import cardStyles from '../ChoiceChallenge.module.css'
 import styles from './Mower.module.css'
@@ -47,9 +47,10 @@ const FINISH_MS = 1600
  * over a lawn, by tapping or dragging where to go (or the arrow keys). Sums hide in the tall
  * grass, unmarked; mowing over one stops the mower, the sum is read out ("Vad blir det? Två.
  * Plus. Ett.") and the child taps the answer among close numbers, then the mower drives on to
- * where it was going. A wrong number is named and greyed out; when only the answer is left it
- * is pointed at. An answered sum becomes a flower in bloom. Done when the whole lawn is mowed.
- * Nothing is timed.
+ * where it was going. On the easier levels the sum has dots to count; a minus sum's are the
+ * first number's, the ones taken away crossed out. A wrong number is named and greyed out; when
+ * only the answer is left it is pointed at. An answered sum becomes a flower in bloom. Done
+ * when the whole lawn is mowed. Nothing is timed.
  */
 export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox, onRoundComplete, onExit, onPlayAgain }: ChallengeScreenProps) {
   const params = levelParams('mower', level)
@@ -270,9 +271,9 @@ export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox,
       {shownSum && (
         <div className={styles.panel} style={{ top: lawnTop + lawnHeight + 12 }}>
           <span className={styles.sum} aria-label={`${shownSum.parts[0]} ${shownSum.sign === '+' ? 'plus' : 'minus'} ${shownSum.parts[1]}`} role="img">
-            <Part value={shownSum.parts[0]} dots={params.dots} />
+            <Part value={shownSum.parts[0]} dots={params.dots ? sumDots(shownSum)[0] : null} />
             <span className={styles.sign}>{shownSum.sign === '+' ? '+' : '−'}</span>
-            <Part value={shownSum.parts[1]} dots={params.dots} />
+            <Part value={shownSum.parts[1]} dots={params.dots ? sumDots(shownSum)[1] : null} />
             <span className={styles.sign}>=</span>
             <span className={cx(styles.answer, celebrating && styles.solved)}>{celebrating ? shownSum.target : '?'}</span>
           </span>
@@ -322,16 +323,17 @@ export function Mower({ seed, level, announceLevel, knowsChallenge, practiceBox,
   )
 }
 
-/** A number in the sum, with as many dots under it on the easier levels. */
-function Part({ value, dots }: { value: number; dots: boolean }) {
+/** A number in the sum, with its dots under it on the easier levels: in a minus sum the ones taken away are crossed out. */
+function Part({ value, dots }: { value: number; dots: PartDots | null }) {
   return (
     <span className={styles.part}>
       {value}
-      {dots && (
+      {dots && dots.dots > 0 && (
         <span className={styles.dots}>
-          {Array.from({ length: value }, (_, i) => (
-            <span key={i} className={styles.dot} />
-          ))}
+          {Array.from({ length: dots.dots }, (_, i) => {
+            const crossed = i >= dots.dots - dots.crossed
+            return <span key={i} data-dot={crossed ? 'crossed' : 'left'} className={cx(styles.dot, crossed && styles.crossed)} />
+          })}
         </span>
       )}
     </span>

@@ -78,7 +78,7 @@ export interface MowerLevel {
   maxResult: number
   /** Minus sums too (always with an answer of at least 1). */
   minus: boolean
-  /** Dots under each number, to count. */
+  /** Dots under the numbers, to count (`sumDots` in mower/createRound.ts). */
   dots: boolean
   /** How many sums hide in the lawn. */
   sums: number
@@ -149,12 +149,13 @@ export const stationLevels = {
     { params: { maxSum: 9, choices: 4, shown: 'first part' }, intro: phrases.oneNumberIntro },
     { params: { maxSum: 10, choices: 4, shown: 'nothing' }, intro: phrases.noNumbersIntro },
   ] satisfies Levels<FruitLevel>,
-  // The user's idea (2026-10-27): a lawnmower uncovers sums hidden in the grass.
+  // The user's idea (2026-10-27): a lawnmower uncovers sums hidden in the grass. Minus comes
+  // while there still are dots to count (Task 39): it used to arrive last, as bare digits.
   mower: [
     { params: { maxResult: 5, minus: false, dots: true, sums: 3, choices: 3 } },
     { params: { maxResult: 10, minus: false, dots: true, sums: 4, choices: 3 }, intro: phrases.biggerNumbersIntro },
-    { params: { maxResult: 10, minus: false, dots: false, sums: 4, choices: 4 }, intro: phrases.noDotsIntro },
-    { params: { maxResult: 10, minus: true, dots: false, sums: 5, choices: 4 }, intro: phrases.minusIntro },
+    { params: { maxResult: 10, minus: true, dots: true, sums: 4, choices: 4 }, intro: phrases.minusIntro },
+    { params: { maxResult: 10, minus: true, dots: false, sums: 5, choices: 4 }, intro: phrases.noDotsIntro },
   ] satisfies Levels<MowerLevel>,
 } as const satisfies Record<ChallengeId, Levels<unknown>>
 

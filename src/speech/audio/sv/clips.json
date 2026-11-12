@@ -114,15 +114,15 @@
       "stopgap": true
     },
     {
-      "text": "Nu försvinner prickarna!",
-      "file": "nu-forsvinner-prickarna-a54102c5.mp3",
-      "input": "Nu försvinner prickarna!",
-      "stopgap": true
-    },
-    {
       "text": "Nu kommer minus också!",
       "file": "nu-kommer-minus-ocksa-24b66c65.mp3",
       "input": "Nu kommer minus också!",
+      "stopgap": true
+    },
+    {
+      "text": "Nu försvinner prickarna!",
+      "file": "nu-forsvinner-prickarna-a54102c5.mp3",
+      "input": "Nu försvinner prickarna!",
       "stopgap": true
     },
     {
@@ -563,9 +563,9 @@
       "stopgap": true
     },
     {
-      "text": "Klipp gräset! Under blommorna gömmer sig tal.",
-      "file": "klipp-graset-under-blommorna-gommer-sig-f0c47f71.mp3",
-      "input": "Klipp gräset! Under blommorna gömmer sig tal.",
+      "text": "Klipp gräset! I gräset gömmer sig tal.",
+      "file": "klipp-graset-i-graset-gommer-sig-tal-73c0bfa9.mp3",
+      "input": "Klipp gräset! I gräset gömmer sig tal.",
       "stopgap": true
     },
     {

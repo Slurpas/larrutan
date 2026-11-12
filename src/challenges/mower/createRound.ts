@@ -42,6 +42,29 @@ export const sumKey = ({ parts: [a, b], sign }: Pick<MowerQuestion, 'parts' | 's
 
 export const answerOf = ({ parts: [a, b], sign }: Pick<MowerQuestion, 'parts' | 'sign'>) => (sign === '+' ? a + b : a - b)
 
+/** The dots under one number of a sum: how many, and how many of them (the last ones) are crossed out. */
+export interface PartDots {
+  dots: number
+  crossed: number
+}
+
+/**
+ * The dots under a sum's two numbers on the easier levels. The dots left to count are always
+ * the answer: plus has each number's dots, counted together; minus has the first number's
+ * dots with the ones taken away crossed out, and none under the second number (Task 39).
+ */
+export function sumDots({ parts: [a, b], sign }: Pick<MowerQuestion, 'parts' | 'sign'>): [PartDots, PartDots] {
+  return sign === '+'
+    ? [
+        { dots: a, crossed: 0 },
+        { dots: b, crossed: 0 },
+      ]
+    : [
+        { dots: a, crossed: b },
+        { dots: 0, crossed: 0 },
+      ]
+}
+
 /** Every sum up to `maxResult`: plus with two parts of at least 1, and with `minus` also minus sums whose answer is at least 1. */
 export function mowerSums(maxResult: number, minus: boolean): Pick<MowerQuestion, 'parts' | 'sign'>[] {
   const sums: Pick<MowerQuestion, 'parts' | 'sign'>[] = []

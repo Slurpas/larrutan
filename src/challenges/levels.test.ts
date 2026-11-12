@@ -145,7 +145,7 @@ describe('the levels of every station', () => {
       const [f, g] = [levelParams('fruit', lower), levelParams('fruit', higher)]
       expect(order.indexOf(g.shown)).toBeGreaterThan(order.indexOf(f.shown))
       expect(g.maxSum >= f.maxSum && g.choices >= f.choices).toBe(true)
-      // Gräsklipparen: bigger numbers, then no dots, then minus too; never fewer sums or choices.
+      // Gräsklipparen: bigger numbers, then minus too, then no dots; never fewer sums or choices.
       const [m, n] = [levelParams('mower', lower), levelParams('mower', higher)]
       expect(n.maxResult >= m.maxResult && n.sums >= m.sums && n.choices >= m.choices && (n.minus || !m.minus) && (m.dots || !n.dots)).toBe(true)
       expect(n.maxResult > m.maxResult || (m.dots && !n.dots) || (n.minus && !m.minus), `mower ${higher}`).toBe(true)

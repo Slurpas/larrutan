@@ -115,10 +115,35 @@
 }
 
 .dot {
+  position: relative;
   width: 0.2em;
   height: 0.2em;
   border-radius: 50%;
   background: var(--color-ink);
+}
+
+/* Taken away in a minus sum: the dot goes pale and gets a red cross, so only the dots left are counted. */
+.crossed {
+  background: var(--color-card-edge);
+}
+
+.crossed::before,
+.crossed::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -15%;
+  width: 0.045em;
+  height: 130%;
+  margin-left: -0.0225em;
+  border-radius: 0.02em;
+  /* The red of Räkna frukterna's apple numbers (FruitSum.module.css). */
+  background: #c34b35;
+  transform: rotate(45deg);
+}
+
+.crossed::after {
+  transform: rotate(-45deg);
 }
 
 .sign {

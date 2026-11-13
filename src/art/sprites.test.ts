@@ -9,9 +9,10 @@ import { palette } from './palette'
 import { pictures, pictureSize } from './pictures'
 import { rock, waterTile } from './scenery'
 import { cardBack } from './memory'
-import { apple, cards, fruitBasket, mouse, mowerIcon, piles, signSize, stationSign, sun } from './signs'
+import { apple, appleTreeIcon, cards, fruitBasket, mouse, mowerIcon, piles, signSize, stationSign, sun } from './signs'
 import { bloom, mowedGrass, mowerWithRider, tallGrass, wildFlowers } from './garden'
 import { basket } from './baskets'
+import { apple as treeApple, basketBack, basketFront, tree } from './appleTree'
 
 /** Every row the same width, and only palette colours (or "." for transparent). */
 function problems(grid: readonly string[]): string[] {
@@ -40,6 +41,11 @@ describe('sprites', () => {
       fruitBasket,
       basket,
       mowerIcon,
+      appleTreeIcon,
+      tree,
+      treeApple,
+      basketBack,
+      basketFront,
       tallGrass,
       mowedLight: mowedGrass(false),
       mowedDark: mowedGrass(true),

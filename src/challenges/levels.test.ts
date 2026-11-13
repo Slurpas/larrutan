@@ -149,6 +149,10 @@ describe('the levels of every station', () => {
       const [m, n] = [levelParams('mower', lower), levelParams('mower', higher)]
       expect(n.maxResult >= m.maxResult && n.sums >= m.sums && n.choices >= m.choices && (n.minus || !m.minus) && (m.dots || !n.dots)).toBe(true)
       expect(n.maxResult > m.maxResult || (m.dots && !n.dots) || (n.minus && !m.minus), `mower ${higher}`).toBe(true)
+      // Äppelträdet: picking and counting, then counting what is already in the basket, then picking as many as asked for.
+      const modes = ['pick', 'basket', 'make']
+      const [easier, harder] = [levelParams('appleTree', lower), levelParams('appleTree', higher)]
+      expect(modes.indexOf(harder.mode) > modes.indexOf(easier.mode) || (harder.mode === easier.mode && harder.max > easier.max), `appleTree ${higher}`).toBe(true)
       // Bokstavskorgarna's top level has more pictures, but no look-alikes: no two look-alike letters have four pictures each.
       const [p, q] = [levelParams('baskets', lower), levelParams('baskets', higher)]
       expect(q.sets * q.picturesPerSet).toBeGreaterThan(p.sets * p.picturesPerSet)

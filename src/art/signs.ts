@@ -114,3 +114,12 @@ export const mowerIcon: readonly string[] = (() => {
   icon.ellipse(4, 8, 2.1, 2.1, 'B').ellipse(11.5, 8.5, 1.5, 1.5, 'B')
   return icon.outline('o').toGrid()
 })()
+
+/** Äppelträdet: a little apple tree with three apples. */
+export const appleTreeIcon: readonly string[] = (() => {
+  const icon = new Pixels(13, 13)
+  icon.rect(5, 8, 3, 5, 'd').set(7, 9, 'D').set(7, 10, 'D').set(7, 11, 'D').set(7, 12, 'D')
+  icon.ellipse(6.5, 5, 6, 5, 'Q').ellipse(5, 3.5, 2.6, 2.2, 'q')
+  icon.rect(3, 5, 2, 2, 'r').rect(8, 3, 2, 2, 'r').rect(7, 7, 2, 2, 'r')
+  return icon.outline('o').toGrid()
+})()

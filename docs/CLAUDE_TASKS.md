@@ -724,16 +724,29 @@ The user asked for a check of the maths games and a plan for the town of maths l
 
 #### Task 39 — Gräsklipparen: the right first sentence, and minus with dots
 
-Status 2026-11-12: **done; a local commit, not pushed.**
+Status 2026-11-12: **done; pushed and live the same day** (the user's OK).
 - **The first sentence** was "Klipp gräset! Under blommorna gömmer sig tal.", but the flowers have marked nothing since 2026-10-27. Now "Klipp gräset! I gräset gömmer sig tal." Said by Alma for now, as the old one was, so no ElevenLabs clip was thrown away; the maths voice now waits for about 398 credits.
 - **Minus comes a level earlier, with dots.** The levels are now: plus to 5 with dots; plus to 10 with dots; minus too, with dots; then no dots. A minus sum's dots are the first number's, in rows of five, with the ones taken away pale and crossed out in red (`sumDots` in `mower/createRound.ts`): the dots left are the answer. Before, minus first showed at the top level as bare digits.
 - **A child already at level 3** (plus without dots) gets the dots back and meets minus there, without hearing "Nu kommer minus också!" (a level is only announced on the way up).
 - **The speech generator** failed here because Windows had cleared the files out of the temp copy of espeak-ng's data but left its folders; `scripts/piper_batch.py` now makes the copy again when a file is missing.
 - Tests: the dots of every sum count up to its answer, and minus comes while there are dots (unit); a browser test opens level 3, hears the minus sentence and checks 5 − 3 shows five dots with three crossed out; the browser tests check the dots of every sum they answer, and none at level 4.
 
+#### Task 41 — Äppelträdet: counting things
+
+Status 2026-11-13: **done; a local commit, not pushed.** Built as the user approved the sketch ("Yes, build it", 2026-11-13).
+- **The game** (`src/challenges/appleTree/`): an apple tree and a wicker basket on the meadow. The child taps an apple; it falls into the basket and the game says the next number ("Ett. Två. Tre."), and a yellow circle shows how many so far. A picked apple has left the tree, so none is counted twice and none skipped. When the tree is empty: "Hur många äpplen är det i korgen?" (the first time ever; after that "Hur många?"), and the child taps the number among close numbers. In the basket the apples lie in two rows of five (the first row at the back), so "five and two" can be seen.
+- **Levels:** 1 picks 2–5 apples; 2 picks 3–10 ("Nu blir det fler äpplen!"); 3 has 3–10 apples already in the basket, four numbers to choose from, and touching an apple gives it the next number ("Nu ligger äpplena redan i korgen!"); 4 asks for 3–8 apples with two or three more on the tree ("Nu ska du plocka så många som jag säger!", then "Plocka sex äpplen!" and, the first time, "Tryck på bocken när du är klar!"). The child taps the green tick when it is enough, and an apple tapped in the basket goes back up on the tree. Four trees a round (five at level 3).
+- **Help that teaches:** after a wrong number, or the tick with too many or too few, the apples in the basket count themselves aloud, each showing its number as it is said; then "För många!" or "För få!" at level 4, and the question again. The existing help stays underneath (a wrong number greys out; when only the answer is left it is pointed at, "Här är fem!").
+- **Choices made while building, easy to change in `levels.ts`:** level 1 starts at two apples, not one (one apple asked nothing); the game counts aloud at level 4 too, so the skill there is stopping in time, not counting alone; the tick, not the basket, says "enough" (the basket's apples are what the child taps to put one back). The empty basket's inside is dark; apples in the second row rest on the front rim, so all ten show whole.
+- **Remembers** each number ("7"), shared by all four levels, so a number the child gets wrong comes back more often.
+- **Art** (`src/art/appleTree.ts`): the tree (room for ten apples), the apple, and the basket in two layers (its back, and its front wall, with the apples between); a little apple tree on the sign (`appleTreeIcon` in `signs.ts`). The sign stands in the middle of the town of maths, right above where the child arrives.
+- **Speech:** 15 new sentences, said by Alma for free until the maths voice is made; the maths voice now waits for about 751 credits (`npm run speech -- --max-credits 751`). "tillsammans" got a pronunciation fix for Alma (stress on "-sam-").
+- **Not done:** the phone layout (Task 40). Not tried on a phone; by the layout's own numbers, an iPhone in landscape gets a small tree (an apple about 30 px wide).
+- Tests: rounds, picking, the help, putting back, the tick and the scores (unit); the art's apple places don't overlap and hang on the leaves; every sentence it can say has a clip. Browser tests, in Chromium and iPad WebKit, play level 1 through by touch, check the counting help after a wrong number at level 2, play level 3 with number keys after touching apples, and level 4 with one apple too many put back.
+
 Queue, one task at a time, each starting with a sketch of the screen for the user to approve:
 - Task 40 — The map and the games on a phone: the level bar lies over the top row of signs at the iPhone's size, and Räkna frukterna's cards are cut off. Only if the children play on a phone; the games below don't wait for it.
-- Task 41 — Äppelträdet (counting things). Task 42 — Talkorgarna. Task 43 — Grodhoppet. Task 44 — Krokodilen. Task 45 — Äggkartongen.
+- Task 42 — Talkorgarna. Task 43 — Grodhoppet. Task 44 — Krokodilen. Task 45 — Äggkartongen.
 - Task 46 — Stars on the signs, and things to wear from the maths games.
 - Task 47 — Affären.
 

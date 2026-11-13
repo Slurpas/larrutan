@@ -126,6 +126,24 @@
       "stopgap": true
     },
     {
+      "text": "Nu blir det fler äpplen!",
+      "file": "nu-blir-det-fler-applen-73be57e5.mp3",
+      "input": "Nu blir det fler äpplen!",
+      "stopgap": true
+    },
+    {
+      "text": "Nu ligger äpplena redan i korgen!",
+      "file": "nu-ligger-applena-redan-i-korgen-6021b6fd.mp3",
+      "input": "Nu ligger äpplena redan i korgen!",
+      "stopgap": true
+    },
+    {
+      "text": "Nu ska du plocka så många som jag säger!",
+      "file": "nu-ska-du-plocka-sa-manga-som-jag-sager-10d2a3c1.mp3",
+      "input": "Nu ska du plocka så många som jag säger!",
+      "stopgap": true
+    },
+    {
       "text": "Läs ordet!",
       "file": "las-ordet-d925c726.mp3",
       "input": "Läs ordet!"
@@ -590,6 +608,78 @@
       "text": "Minus.",
       "file": "minus-cdc00bd9.mp3",
       "input": "Minus.",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka alla äpplen! Vi räknar dem tillsammans.",
+      "file": "plocka-alla-applen-vi-raknar-dem-tillsam-4d3116eb.mp3",
+      "input": "Plocka alla äpplen! Vi räknar dem [[ tɪlsˈamːans. ]]",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka alla äpplen!",
+      "file": "plocka-alla-applen-b32f5ab9.mp3",
+      "input": "Plocka alla äpplen!",
+      "stopgap": true
+    },
+    {
+      "text": "Hur många äpplen är det i korgen?",
+      "file": "hur-manga-applen-ar-det-i-korgen-00860c91.mp3",
+      "input": "Hur många äpplen är det i korgen?",
+      "stopgap": true
+    },
+    {
+      "text": "Tryck på bocken när du är klar!",
+      "file": "tryck-pa-bocken-nar-du-ar-klar-afd9939d.mp3",
+      "input": "Tryck på bocken när du är klar!",
+      "stopgap": true
+    },
+    {
+      "text": "För många!",
+      "file": "for-manga-28251f0f.mp3",
+      "input": "För många!",
+      "stopgap": true
+    },
+    {
+      "text": "För få!",
+      "file": "for-fa-10c4b961.mp3",
+      "input": "För få!",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka tre äpplen!",
+      "file": "plocka-tre-applen-12b636f3.mp3",
+      "input": "Plocka tre äpplen!",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka fyra äpplen!",
+      "file": "plocka-fyra-applen-3a5470a1.mp3",
+      "input": "Plocka fyra äpplen!",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka fem äpplen!",
+      "file": "plocka-fem-applen-1e89d691.mp3",
+      "input": "Plocka fem äpplen!",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka sex äpplen!",
+      "file": "plocka-sex-applen-7c2a9e69.mp3",
+      "input": "Plocka sex äpplen!",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka sju äpplen!",
+      "file": "plocka-sju-applen-0ba92848.mp3",
+      "input": "Plocka [[ ʂˈʉː ]] äpplen!",
+      "stopgap": true
+    },
+    {
+      "text": "Plocka åtta äpplen!",
+      "file": "plocka-atta-applen-78e7c9e9.mp3",
+      "input": "Plocka åtta äpplen!",
       "stopgap": true
     },
     {

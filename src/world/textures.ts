@@ -3,14 +3,14 @@ import { composeCharacter, outfitKey, type CharacterFacing, type Outfit } from '
 import { palette } from '../art/palette'
 import { Pixels } from '../art/pixels'
 import { bubble, drop, dust, ripple, rock, star, waterTile, type WaterEdges } from '../art/scenery'
-import { apple, cards, fruitBasket, mouse, mowerIcon, piles, stationSign, sun } from '../art/signs'
+import { apple, appleTreeIcon, cards, fruitBasket, mouse, mowerIcon, piles, stationSign, sun } from '../art/signs'
 import { waterKey } from './groundTiles'
 
 /** The Kenney sheet, loaded as 16×16 frames (see src/art/kenney.ts). */
 export const tinyTownKey = 'tiny-town'
 
 export const signKey = (highlighted: boolean) => (highlighted ? 'sign-highlighted' : 'sign')
-export const iconKeys = { sun: 'icon-sun', apple: 'icon-apple', mouse: 'icon-mouse', cards: 'icon-cards', piles: 'icon-piles', fruitBasket: 'icon-fruit-basket', mower: 'icon-mower' } as const
+export const iconKeys = { sun: 'icon-sun', apple: 'icon-apple', mouse: 'icon-mouse', cards: 'icon-cards', piles: 'icon-piles', fruitBasket: 'icon-fruit-basket', mower: 'icon-mower', appleTree: 'icon-apple-tree' } as const
 export const rockKey = 'rock'
 export const shadowKey = 'shadow'
 /** Little accidents on the map (src/world/mishaps.ts). */
@@ -46,6 +46,7 @@ export function addArtTextures(scene: Phaser.Scene): void {
   addGridTexture(scene, iconKeys.piles, piles)
   addGridTexture(scene, iconKeys.fruitBasket, fruitBasket)
   addGridTexture(scene, iconKeys.mower, mowerIcon)
+  addGridTexture(scene, iconKeys.appleTree, appleTreeIcon)
   addGridTexture(scene, rockKey, rock)
   addGridTexture(scene, shadowKey, new Pixels(12, 4).ellipse(6, 2, 6, 2, 'o').toGrid())
   addGridTexture(scene, mishapKeys.ripple, ripple)

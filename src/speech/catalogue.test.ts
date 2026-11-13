@@ -15,6 +15,7 @@ import { createSortingRound } from '../challenges/sorting/createRound'
 import { createBasketsRound } from '../challenges/baskets/createRound'
 import { createFruitRound } from '../challenges/fruit/createRound'
 import { createMowerRound } from '../challenges/mower/createRound'
+import { createAppleRound } from '../challenges/appleTree/createRound'
 import { numberWord } from '../content/numbers'
 import { confusableLetters, letters } from '../content/letters'
 import { phrases } from '../content/phrases'
@@ -159,6 +160,23 @@ describe('speech catalogue', () => {
       }
     }
     for (const text of [phrases.mowerIntro, phrases.mowerShort, phrases.mowerQuestion]) expect(catalogue).toContain(text)
+  })
+
+  it('contains everything Äppelträdet can say, at every level', () => {
+    for (const seed of seeds) {
+      const level = levelFor(seed)
+      const round = createAppleRound({ seed, ...levelParams('appleTree', level) })
+      for (const q of round.questions) {
+        // Counting up to the most apples in the basket (the tree may hold more than asked for), every number tapped, the answer pointed at.
+        const most = Math.max(q.count, q.spots.length)
+        for (let n = 1; n <= most; n++) expect(catalogue).toContain(phrases.numberShort(numberWord(n)))
+        for (const choice of q.choices) expect(catalogue).toContain(phrases.numberShort(numberWord(Number(choice))))
+        expect(catalogue).toContain(round.mode === 'make' ? phrases.pickApples(numberWord(q.count)) : phrases.hereIs(numberWord(q.count)))
+      }
+    }
+    for (const text of [phrases.appleTreeIntro, phrases.appleTreeShort, phrases.appleQuestion, phrases.fruitShort, phrases.appleDoneHint, phrases.tooMany, phrases.tooFew]) {
+      expect(catalogue).toContain(text)
+    }
   })
 
   it('contains everything Bokstavskorgarna can say, at every level', () => {

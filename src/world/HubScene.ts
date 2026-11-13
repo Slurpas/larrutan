@@ -50,6 +50,7 @@ const signContent: Record<ChallengeId | TownId, { pictures: (keyof typeof iconKe
   baskets: { pictures: ['fruitBasket'], letters: 'A' },
   fruit: { pictures: ['apple'], letters: '1+2' },
   mower: { pictures: ['mower'], letters: '' },
+  appleTree: { pictures: ['appleTree'], letters: '' },
 }
 
 /** Walk frames per second, and where the feet are: the bottom of the tile the character stands on. */

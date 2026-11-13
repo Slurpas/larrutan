@@ -53,6 +53,16 @@ export function spokenGroups(): SpokenGroup[] {
       phrases.mowerQuestion,
       phrases.plus,
       phrases.minus,
+      phrases.appleTreeIntro,
+      phrases.appleTreeShort,
+      phrases.appleQuestion,
+      phrases.appleDoneHint,
+      phrases.tooMany,
+      phrases.tooFew,
+      // "Plocka sex äpplen!": every amount Äppelträdet's top level asks for.
+      ...stationLevels.appleTree.flatMap(({ params: { mode, min, max } }) =>
+        mode === 'make' ? numberWords.filter(({ value }) => value >= min && value <= max).map(({ word }) => phrases.pickApples(word)) : [],
+      ),
       ...numberWords.flatMap(({ word }) => [phrases.numberShort(word), phrases.hereIs(word)]),
     ],
   })

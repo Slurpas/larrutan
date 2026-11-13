@@ -1,4 +1,4 @@
-export type ChallengeId = 'findLetter' | 'firstLetter' | 'wordPicture' | 'spelling' | 'memory' | 'sorting' | 'baskets' | 'fruit' | 'mower'
+export type ChallengeId = 'findLetter' | 'firstLetter' | 'wordPicture' | 'spelling' | 'memory' | 'sorting' | 'baskets' | 'fruit' | 'mower' | 'appleTree'
 
 /** Names for adults, tests and accessibility; children see pictures. */
 export const challengeNames: Record<ChallengeId, string> = {
@@ -11,4 +11,5 @@ export const challengeNames: Record<ChallengeId, string> = {
   baskets: 'Bokstavskorgarna',
   fruit: 'Räkna frukterna',
   mower: 'Gräsklipparen',
+  appleTree: 'Äppelträdet',
 }

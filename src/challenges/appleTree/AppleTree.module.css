@@ -1,0 +1,280 @@
+/* Äppelträdet. --px is one art pixel of the meadow, --apple an apple's width. */
+.scene {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  overflow: clip;
+  background: linear-gradient(var(--color-sky-top), var(--color-sky-bottom));
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.grass,
+.soil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-size: calc(var(--px) * 16) calc(var(--px) * 16);
+  background-repeat: repeat-x;
+}
+
+.grass {
+  top: 0;
+  height: calc(var(--px) * 16);
+}
+
+.soil {
+  top: calc(var(--px) * 16);
+  bottom: 0;
+  background-repeat: repeat;
+}
+
+/* The tree, then the basket's back, the first row of apples, the basket's front, the second row. */
+.art {
+  position: absolute;
+  pointer-events: none;
+}
+
+.tree {
+  z-index: 1;
+}
+
+.basketBack {
+  z-index: 2;
+}
+
+.backRow {
+  z-index: 3;
+}
+
+.basketFront {
+  z-index: 4;
+}
+
+.frontRow,
+.onTree {
+  z-index: 5;
+}
+
+/* An apple: a button bigger than the apple, so it is easy to tap. It falls into the basket in an arc. */
+.apple {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition:
+    left 450ms ease-out,
+    top 450ms cubic-bezier(0.5, 0, 0.9, 0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.apple:disabled {
+  cursor: default;
+}
+
+.apple:focus-visible {
+  outline: 5px solid var(--color-focus);
+  outline-offset: -4px;
+  border-radius: 50%;
+}
+
+.onTree .appleArt {
+  animation: grow 400ms ease-out backwards;
+}
+
+/* On the top level the apples are already in the basket: they drop in when the question starts. */
+.inBasketFromStart .appleArt {
+  animation: drop 400ms ease-out backwards;
+}
+
+.apple:active .appleArt {
+  transform: scale(0.9);
+}
+
+/* An apple's number, while counting: in a small circle on the apple. */
+.number {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  min-width: calc(var(--apple) * 0.62);
+  height: calc(var(--apple) * 0.62);
+  padding: 0 0.15em;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: calc(var(--apple) * 0.42);
+  font-weight: 700;
+  line-height: 1;
+  animation: pop 300ms ease-out;
+}
+
+/* Beside the tree on a wide screen, above it on a tall one. */
+.panel {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  pointer-events: none;
+}
+
+.panel > * {
+  pointer-events: auto;
+}
+
+.beside {
+  flex-direction: column;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), var(--card-size));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  padding-bottom: 10px;
+}
+
+/* How many apples are in the basket so far, while picking. */
+.count {
+  display: grid;
+  place-items: center;
+  width: calc(var(--card-size) * 1.1);
+  height: calc(var(--card-size) * 1.1);
+  border: 5px solid var(--color-ink);
+  border-radius: 50%;
+  background: #ffe28a;
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: calc(var(--card-size) * 0.66);
+  font-weight: 700;
+  line-height: 1;
+  animation: pop 250ms ease-out;
+}
+
+/* The top level: how many to pick, and the tick for "enough". */
+.want {
+  display: flex;
+  align-items: center;
+  gap: 0.15em;
+  padding: 0.12em 0.3em;
+  border: 5px solid var(--color-ink);
+  border-radius: 1.5rem;
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-letters);
+  font-size: calc(var(--card-size) * 0.66);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.wantApple {
+  width: 0.7em;
+  height: 0.76em;
+}
+
+.solved {
+  border-color: var(--color-correct-edge);
+  background: var(--color-correct);
+}
+
+.done {
+  display: grid;
+  place-items: center;
+  width: var(--card-size);
+  height: var(--card-size);
+  padding: 0;
+  border: 5px solid var(--color-ink);
+  border-radius: 50%;
+  background: var(--color-correct);
+  box-shadow: 0 8px 0 var(--color-correct-edge);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.done svg {
+  width: 58%;
+  height: 58%;
+}
+
+.done:active {
+  transform: translateY(6px);
+  box-shadow: 0 2px 0 var(--color-correct-edge);
+}
+
+.done:focus-visible {
+  outline: 6px solid var(--color-focus);
+  outline-offset: 8px;
+}
+
+.doneCorrect {
+  animation: pop 300ms ease-out;
+}
+
+.top {
+  position: absolute;
+  z-index: 300;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1.25rem) 0
+    calc(env(safe-area-inset-left) + 1.25rem);
+}
+
+.seed {
+  position: absolute;
+  right: calc(env(safe-area-inset-right) + 1.25rem);
+  bottom: calc(env(safe-area-inset-bottom) + 0.25rem);
+  margin: 0;
+  color: var(--color-white);
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+@keyframes grow {
+  from {
+    transform: scale(0);
+  }
+}
+
+@keyframes drop {
+  from {
+    transform: translateY(-60%);
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apple {
+    transition: none;
+  }
+  .onTree .appleArt,
+  .inBasketFromStart .appleArt,
+  .number,
+  .count,
+  .doneCorrect {
+    animation: none;
+  }
+}

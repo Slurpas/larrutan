@@ -40,6 +40,18 @@ export const phrases = {
   mowerQuestion: 'Vad blir det?',
   plus: 'Plus.',
   minus: 'Minus.',
+  /**
+   * Äppelträdet: what to do the first time and after that; the question once the apples are in
+   * the basket (its short form is Räkna frukterna's "Hur många?"); and at the top level the
+   * number to pick, the tick, and what a wrong amount was.
+   */
+  appleTreeIntro: 'Plocka alla äpplen! Vi räknar dem tillsammans.',
+  appleTreeShort: 'Plocka alla äpplen!',
+  appleQuestion: 'Hur många äpplen är det i korgen?',
+  pickApples: (word: string) => `Plocka ${word} äpplen!`,
+  appleDoneHint: 'Tryck på bocken när du är klar!',
+  tooMany: 'För många!',
+  tooFew: 'För få!',
   /** A number on its own ("Sju."): a tapped number, or counting. */
   numberShort: (word: string) => `${word.charAt(0).toLocaleUpperCase('sv')}${word.slice(1)}.`,
   /** A turned letter card: just the letter ("A."). */
@@ -68,6 +80,10 @@ export const phrases = {
   biggerNumbersIntro: 'Nu blir talen större!',
   minusIntro: 'Nu kommer minus också!',
   noDotsIntro: 'Nu försvinner prickarna!',
+  /** Äppelträdet's levels. */
+  moreApplesIntro: 'Nu blir det fler äpplen!',
+  applesInBasketIntro: 'Nu ligger äpplena redan i korgen!',
+  pickAsManyIntro: 'Nu ska du plocka så många som jag säger!',
   /** Ord och bild when the child reads the word: the word is only written. */
   readWordQuestion: 'Läs ordet!',
   /** At the end of a round after which the station opens a level higher. */

@@ -1,6 +1,6 @@
 # Maths plan: the town of maths
 
-Status 2026-11-12: **the order is agreed; each game is still reviewed as a sketch before it is built.** Only Räkna frukterna and Gräsklipparen exist. The themes are the user's to change, and three questions in §9 are open.
+Status 2026-11-13: **the order is agreed; each game is still reviewed as a sketch before it is built.** Äppelträdet is built (Task 41), next to Räkna frukterna and Gräsklipparen. The themes are the user's to change, and three questions in §9 are open.
 
 The user asked (2026-11-12) for a check of the maths games, and a plan that does for maths what the town of letters does for reading: well thought through games that scale, teach, and make a child want to start and keep going.
 
@@ -71,7 +71,7 @@ A child who knows that 7 is 5 and 2, and that 7 needs 3 to make 10, adds without
 
 Every game has four levels, moved by the same rule as now (two good rounds go up, two poor ones go down), and remembers what was hard, item by item, so it comes back more often.
 
-### Äppelträdet (step 1: counting things) — working name
+### Äppelträdet (step 1: counting things) — built, Task 41
 
 - **Teaches:** counting things one by one, that the last number is how many, and making an amount that is asked for.
 - **Plays like:** an apple tree and a basket. The child taps an apple; it drops into the basket and the game says the next number ("Ett. Två. Tre."). A picked apple is gone from the tree, so it can't be counted twice, and none can be skipped, because the round goes on until the tree is empty. Then "Hur många?", and the child taps the digit. In the basket the apples lie in rows of five.
@@ -86,6 +86,7 @@ Every game has four levels, moved by the same rule as now (two good rounds go up
 
 - **Remembers:** each number.
 - **Built from:** the shared round and Räkna frukterna's number cards and counting help. New: the tree, the basket, the falling apple. **Size: small to medium.**
+- **As built (2026-11-13; details in `docs/CLAUDE_TASKS.md`, Task 41):** level 1 has 2–5 apples (one apple asked nothing), level 2 3–10, level 3 3–10 in the basket, level 4 asks for 3–8 with two or three more on the tree. At level 4 the child taps a green tick for "enough" (not the basket), puts an apple back by tapping it in the basket, and after a wrong amount hears "För många!" or "För få!". The game counts aloud at level 4 too. It has its own round (`appleTreeState.ts`) rather than the shared one, as Gräsklipparen does, because the question only comes once the tree is empty.
 - **Speech:** the counting uses the numbers that already exist ("Ett.", "Två."). New: the question, its short form, three level sentences, and "Plocka … äpplen!" for 1 to 10.
 
 ### Talkorgarna (step 2: amounts and digits)
@@ -195,7 +196,7 @@ Every game has four levels, moved by the same rule as now (two good rounds go up
 
 ## 7. Speech and credits
 
-Everything new is said by Alma for free until the user gives credits, as now (Task 31).
+Everything new is said by Alma for free until the user gives credits, as now (Task 31). Since Task 41 the maths voice waits for about 751 credits (the 32 sentences below, Gräsklipparen's new first sentence, and Äppelträdet's 15).
 
 | What | Sentences | Credits, about |
 |---|---|---|
@@ -216,7 +217,7 @@ One task at a time, each stopped for review, each starting with a sketch of the 
 |---|---|---|---|
 | 39 | Gräsklipparen: the right first sentence, and minus with dots | Small | Fixes what is wrong today, costs nothing. **Done 2026-11-12** |
 | 40 | The map and the games on a phone (findings 6 and 7) | Small | Only if the children play on a phone; waits for the user's answer, and the games below don't wait for it |
-| 41 | Äppelträdet | Small–medium | The first rung: counting things (the user, 2026-11-12) |
+| 41 | Äppelträdet | Small–medium | The first rung: counting things (the user, 2026-11-12). **Done 2026-11-13** |
 | 42 | Talkorgarna | Small | The second rung, and the cheapest game |
 | 43 | Grodhoppet | Medium | |
 | 44 | Krokodilen | Medium | |

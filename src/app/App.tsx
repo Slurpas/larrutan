@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import type { ChallengeId } from '../challenges/challengeIds'
 import { announcesLevel, stationLevel, type Level } from '../challenges/levels'
+import { AppleTree } from '../challenges/appleTree/AppleTree'
 import { Baskets } from '../challenges/baskets/Baskets'
 import { FindLetter } from '../challenges/findLetter/FindLetter'
 import { FirstLetter } from '../challenges/firstLetter/FirstLetter'
@@ -60,6 +61,7 @@ const challengeComponents = {
   baskets: Baskets,
   fruit: Fruit,
   mower: Mower,
+  appleTree: AppleTree,
 } satisfies Record<ChallengeId, unknown>
 
 export function App() {

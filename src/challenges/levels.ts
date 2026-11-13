@@ -1,4 +1,5 @@
 import { phrases } from '../content/phrases'
+import type { AppleMode } from './appleTree/createRound'
 import type { ChallengeId } from './challengeIds'
 
 /**
@@ -85,6 +86,18 @@ export interface MowerLevel {
   choices: number
 }
 
+/** Äppelträdet: counting apples (src/challenges/appleTree/createRound.ts). */
+export interface AppleTreeLevel {
+  /** Pick every apple, then say how many; count the apples already in the basket; or pick as many as asked for. */
+  mode: AppleMode
+  /** The fewest and the most apples to count. */
+  min: number
+  max: number
+  /** Number cards to choose from; none in 'make' (a tick says "enough"). */
+  choices: number
+  questions: number
+}
+
 interface StationLevel<P> {
   params: P
   /** Said before the first round at this level. */
@@ -157,6 +170,13 @@ export const stationLevels = {
     { params: { maxResult: 10, minus: true, dots: true, sums: 4, choices: 4 }, intro: phrases.minusIntro },
     { params: { maxResult: 10, minus: true, dots: false, sums: 5, choices: 4 }, intro: phrases.noDotsIntro },
   ] satisfies Levels<MowerLevel>,
+  // The first rung of maths (docs/MATHS_PLAN.md, the user's answer on 2026-11-12): counting things.
+  appleTree: [
+    { params: { mode: 'pick', min: 2, max: 5, choices: 3, questions: 4 } },
+    { params: { mode: 'pick', min: 3, max: 10, choices: 3, questions: 4 }, intro: phrases.moreApplesIntro },
+    { params: { mode: 'basket', min: 3, max: 10, choices: 4, questions: 5 }, intro: phrases.applesInBasketIntro },
+    { params: { mode: 'make', min: 3, max: 8, choices: 0, questions: 4 }, intro: phrases.pickAsManyIntro },
+  ] satisfies Levels<AppleTreeLevel>,
 } as const satisfies Record<ChallengeId, Levels<unknown>>
 
 export function levelParams<C extends ChallengeId>(challenge: C, level: Level): (typeof stationLevels)[C][number]['params'] {

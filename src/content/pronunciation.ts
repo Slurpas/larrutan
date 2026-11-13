@@ -54,6 +54,8 @@ export const pronunciations: Record<string, string> = {
   // Memory: long a in "paren" (not "parren"), and the stress on "-hop" in "ihop".
   paren: 'pˈɑːrən',
   ihop: 'ɪhˈuːp',
+  // Äppelträdet (Task 41): stress on "-sam-", not on the last syllable.
+  tillsammans: 'tɪlsˈamːans',
   // Long a in "stav".
   trollstav: 'trˈɔlstˌɑːv',
   trollstaven: 'trˈɔlstˌɑːvən',
